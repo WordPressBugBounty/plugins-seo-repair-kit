@@ -1,0 +1,112 @@
+/**
+ * CSS for the SEO Repair Kit Dashboard.
+ */
+
+#srk-dashboard form {
+  display: flex;
+  align-items: center;
+}
+
+.srk-dashboard-loader-container {
+  position: fixed;
+  top: 50%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+.srk-dashboard-loader {
+  width: 50px;
+  height: 50px;
+  border: solid 5px #0b1d51;
+  border-radius: 50%;
+  border-right-color: #0b1d51;
+  border-bottom-color: #f28500;
+  -webkit-transition: all 0.5s ease-in;
+  -webkit-animation-name: rotate;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  transition: all 0.5s ease-in;
+  animation-name: rotate;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+.srk-header {
+  display: flex;
+  margin-bottom: 20px;
+  margin-left: -20px;
+  padding: 13px 15px;
+  border-bottom: 1px solid #b5bfc9;
+  background: #fff;
+}
+
+.srk-logo-text {
+  font-size: 22px;
+  line-height: 17px;
+  margin: 11px auto 0 0;
+  color: #0b1d51;
+  position: relative;
+  display: block;
+}
+
+.srk-logo {
+  margin-right: 15px;
+  padding-right: 15px;
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+}
+
+.srk-dashboard-heading {
+  color: #0b1d51;
+  margin-bottom: 20px;
+}
+
+.srk-dashboard-button {
+  background-color: #0b1d51;
+  color: #fff;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 5px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  line-height: 10px;
+}
+
+.srk-dashboard-button:hover {
+  background-color: #f28500;
+  color: #fff;
+}
+
+#srk-post-type-dropdown:hover {
+  color: #0b1d51 !important;
+}
+
+#srk-post-type-dropdown,
+.srk-dashboard-button {
+  height: 30px;
+}

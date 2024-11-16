@@ -1,0 +1,50 @@
+/**
+ * CSS for the SEO Repair Kit Redirection submenu page.
+ */
+
+.seo-repair-kit-redirection {
+  margin-left: 50px;
+}
+
+.seo-repair-kit-redirection-heading {
+  color: #0b1d51;
+  margin: 40px 0 30px 80px;
+}
+
+.seo-repair-kit-no-records-found {
+  color: #0b1d51;
+  margin: 30px 0 0 100px;
+}
+.wp-redirection-list-table {
+  margin-top: 30px;
+}
+
+.srk-redirection-button, .srk-delete-record {
+  background-color: #0b1d51;
+  color: #fff;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.srk-delete-record:hover, .srk-redirection-button:hover {
+  background-color: #f28500;
+  color: #fff;
+}
+
+.seo-repair-kit-redirection label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #0b1d51;
+}
+
+.seo-repair-kit-redirection input[type="text"] {
+  width: 300px;
+  padding: 3px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box; 
+}

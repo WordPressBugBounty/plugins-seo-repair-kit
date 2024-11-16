@@ -1,0 +1,37 @@
+/**
+ * CSS for the SEO Repair Kit Settings submenu page.
+ */
+
+.seo-repair-kit-settings-background {
+  margin: 5% 0 0 32.5%;
+  width: 30%;
+  background: linear-gradient(to right, #e0e0e0, #f0f0f0);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 15px 15px 30px #bebebe, -15px -15px 30px #ffffff;
+}
+
+.seo-repair-kit-settings-post-type {
+  color: #0b1d51;
+  margin: 20px 0 10px 0;
+}
+
+.srk-settings-page-title {
+  color: #0b1d51;
+}
+
+.srk-settings-button {
+  margin-top: 10px;
+  background-color: #0b1d51;
+  color: #fff;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.srk-settings-button:hover {
+  background-color: #f28500;
+  color: #fff;
+}

@@ -1,0 +1,102 @@
+/**
+ * CSS for the SEO Repair Kit loader, Progress bar, No Links Message and Buttons.
+ * Defines keyframes for rotation animation and styles for a rotating circular loader.
+ */
+
+/* 
+* Define keyframes for rotation animation (for both standard and WebKit browsers) 
+*/
+
+/* Styles for the SEO Repair Kit loader */
+
+.seo-repair-kit-loader-container {
+  position: fixed;
+  top: 50%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+.seo-repair-kit-loader {
+  width: 50px;
+  height: 50px;
+  border: solid 5px #0b1d51;
+  border-radius: 50%;
+  border-right-color: #0b1d51;
+  border-bottom-color: #f28500;
+  -webkit-transition: all 0.5s ease-in;
+  -webkit-animation-name: rotate;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+
+  transition: all 0.5s ease-in;
+  animation-name: rotate;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+.wp-broken-links-list-table {
+  margin-top: 5px;
+}
+
+.blue-bar {
+  margin-bottom: 15px;
+  border-radius: 5px;
+  height: 20px;
+  width: 0%;
+  background-color: #0b1d51;
+}
+
+.srk-no-links-message {
+  text-align: center;
+  color: #0b1d51 !important;
+  font-size: 25px;
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  box-shadow: 0 0 10px rgba(1, 9, 117, 0.1);
+}
+
+.seo-repair-kit-broken-link-table h3 {
+  color: #0b1d51;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.button.button-primary.button-small.srk-internal-link-button,
+.button.button-primary.csv-download-button {
+  background-color: #0b1d51;
+  color: #fff;
+  padding: 1px 10px;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+}
+
+.button.button-primary.button-small.srk-internal-link-button:hover,
+.button.button-primary.csv-download-button:hover {
+  background-color: #f28500;
+  color: #fff;
+}
