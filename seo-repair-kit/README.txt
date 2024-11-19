@@ -1,11 +1,12 @@
-=== SEO Repair Kit ===
+=== SEO Repair Kit – SEO Content Monitoring, GSC Integration, Easy Content Tracker, Keyword Tracking, SEO Rank Tracking  ===
 Contributors: torontodigits
 Donate link: https://seorepairkit.com/
-Tags: broken link checker, alt text missing, 301 redirection, SEO, wordpress seo
+Tags: broken link checker, keyword journey, 301 redirection, SEO, WordPress SEO performance
 Requires at least: 5.0.0
-Tested up to: 6.5.3
+Tested up to: 6.7.0
 Requires PHP: 7.4.3
-Stable tag: 1.1.0
+Stable tag: 2.0.0
+Release Date: 19-11-2024
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,7 +18,11 @@ The plugin is available in English language.
 
 = Looking for an easy, user-friendly SEO plugin? =
 
-SEO Repair Kit by [TorontoDigits](https://www.torontodigits.com) stands out as a light weight, secure and fast plugin designed to seamlessly address various SEO-related tasks. This lightweight tool has a diverse array of functionalities, including efficient link scanning, adept handling of missing alt text for images, URL redirection management, and customizable settings. Users of SEO Repair Kit can anticipate a robust set of tools at their disposal, empowering them to enhance the SEO performance of their websites effortlessly. This comprehensive solution efficiently tackles common issues such as broken links, missing alt text, and the strategic management of URL redirections, ensuring a well-optimized and streamlined online presence.
+SEO Repair Kit by [TorontoDigits](https://www.torontodigits.com) is a lightweight, secure, and fast plugin tailored to address various SEO challenges seamlessly. Designed for efficiency, this tool includes robust functionalities such as advanced link scanning, missing image alt text detection, URL redirection management, and customizable settings.
+
+A key highlight of the plugin is its KeyTrack feature, which integrates with Google Search Console through the Google Site Kit plugin, a trusted WordPress plugin developed by Google. This ensures a secure and reliable configuration process for Search Console, giving users peace of mind when managing their website's SEO through a Google-certified tool.
+
+With its comprehensive suite of tools, SEO Repair Kit empowers users to enhance their website's SEO effortlessly, tackling common issues like broken links, missing alt text, strategic URL redirection, and now keyword tracking. It ensures a well-optimized, secure, and streamlined online presence.
 
 == Screenshots ==
 
@@ -28,6 +33,11 @@ SEO Repair Kit by [TorontoDigits](https://www.torontodigits.com) stands out as a
 4. SEO Repair Kit alt text missing scanning.
 5. SEO Repair Kit redirection.
 6. SEO Repair Kit settings.
+7. Keytrack Overview.
+8. KeyTrack Pages.
+9. KeyTrack Queries.
+10. KeyTrack Threshold Settings.
+11. Threshold Email Report.
 
 == Changelog ==
 
@@ -45,13 +55,22 @@ SEO Repair Kit by [TorontoDigits](https://www.torontodigits.com) stands out as a
 * FIX redirection from old URLs to new URLs.
 * FIX downloading CSV list of broken links.
 
+= 2.0.0 =
+
+* Introduced the KeyTrack feature for detailed SEO performance tracking.
+* Integrated Google Search Console support via Google Site Kit.
+* Added visual performance insights with line charts.
+* Introduced tabs for Overview, Pages, Queries, and Settings.
+* Added customizable date ranges for performance analysis.
+* Enabled threshold settings for custom performance monitoring.
+* Enhanced UI/UX with modal notifications and interactive elements.
+* Customized email report based on user preference settings for KeyTrack.
+
 == Upgrade Notice ==
 
-= 1.1.0 =
-This version includes new CRM integration functionality, enhanced performance, improved UI/UX, and a bulk update feature for alt text. It is a recommended upgrade for all users.
+= 2.0.0 =
 
-= 1.0.1 =
-This version is the first version of SEO Repair Kit in which functionalities of links scanning, retriving HTTP status codes of links, fixing the alt text of media images, redirection of internal links and settings of SEO Repair Kit are included. The upgrade version will be available soon.
+The upgraded KeyTrack feature in SEO Repair Kit now seamlessly integrates with Google Search Console through the Google Site Kit plugin, offering advanced keyword tracking tailored to your content strategy.
 
 = Plugin Features =
 
@@ -69,6 +88,10 @@ This version is the first version of SEO Repair Kit in which functionalities of 
 * Implements template redirects based on specified conditions.
 * Manages the plugin's settings.
 * Allows configuration of post types for SEO repairs.
+* KeyTrack Settings which allow users to setup targeted keywords based on content strategy.
+* KeyTrack track keywords efficiently based on content strategy by covering keyword position, impression, CTR & clicks.
+* KeyTrack is compatible with Google Site Kit & you can see advanced insights for all pages, queries etc.
+* KeyTrack is offering report via email based on user preference.
 
 == Configurations & Use ==
 
@@ -78,6 +101,8 @@ This version is the first version of SEO Repair Kit in which functionalities of 
 2. Go to Settings menu of "SEO Repair Kit" and select/unselect post types and save them for dashboard dropdown.
 3. Go to Alt Image Missing menu of "SEO Repair Kit" and add alt text of Media images.
 4. Go to Redirection menu of "SEO Repair Kit" and add complete old and new url and save redirection.
+5. To use KeyTrack feature, please see demo video below:.
+[youtube https://www.youtube.com/watch?v=uiWgcazUDcc]
 
 == Installation ==
 
@@ -126,5 +151,7 @@ SEO Repair Kit is an ideal solution for a diverse range of users, including busi
 = Do I need coding skills to use the SEO Repair Kit? =
 No, the SEO Repair Kit is designed to be beginner-friendly, and you can optimize your WordPress SEO without any coding knowledge. The plugin provides a user-friendly interface for easy configuration and management.
 
-= Where can I find more information about SEO Repair Kit? =  
-You can visit [SEO Repair Kit](https://www.seorepairkit.com)
+= How do I contact the SEO Repair Kit support team? =
+If you encounter any issues, need assistance, or have questions about using SEO Repair Kit, our dedicated support team is here to help. Please visit our support portal at [https://support.seorepairkit.com/](https://support.seorepairkit.com/) to submit your query. 
+
+You can also find helpful resources and documentation to resolve common issues on the support website.

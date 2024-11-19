@@ -2,9 +2,8 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
-/**
-* CSS for seo repair kit favicon
-*/
+
+/*CSS for seo repair kit favicon*/
 #adminmenu .wp-menu-image img {
   padding: 4px 0 0 !important;
   height: 25px;
@@ -21,3 +20,133 @@
   background-position: center;
   background-repeat: no-repeat;
 }
+
+/*overview table style start here*/
+.srkit-general-custom-table {
+  width: 100%;
+  margin: 2rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border-collapse: collapse;
+}
+
+.srkit-general-custom-table th {
+  padding: 1rem;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.srkit-general-custom-table th:first:child {
+  padding: 1rem;
+  text-align: center;
+  border: none;
+}
+
+.srkit-general-custom-table tr  td.center {
+  padding: 1rem;
+  text-align: center;
+  border: none;
+  font-size: 14px;
+  font-weight: 400;
+  color: #0B1D51;
+}
+
+.srkit-general-custom-table .record-link a{
+ color: #0B1D51;
+}
+
+.srkit-general-custom-table tr td.center:second-child {
+  padding: 1rem;
+  text-align: left;
+  border: none;
+}
+
+.srkit-general-custom-table tbody tr td:first-child {
+  padding: 10px;
+  text-align: left;
+  color: #0B1D51;
+  font-size: 14px;
+  padding-left: 20px;
+}
+
+.srkit-general-custom-table thead {
+  background-color: #FFFFFF;
+  font-weight: bold;
+  border-bottom: 0.5px solid #f0f0f1;
+  color: #0B1D51;
+}
+
+.srkit-general-custom-table  .redirection-header {
+  background-color: #FFFFFF;
+  font-weight: bold;
+  border-bottom: 0.5px solid #f0f0f1;
+  color: #0B1D51;
+  text-align: left;
+}
+
+.srkit-general-custom-table tbody tr {
+  background-color: #fefefe;
+  border-bottom: 0.5px solid #f0f0f1;
+}
+
+.srkit-general-custom-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.srkit-general-custom-table tbody tr:hover {
+  background-color: #E5EAF8;
+}
+
+.srkit-general-custom-table tbody tr td:first-child a {
+  font-size: 14px;
+  text-decoration: none;
+  padding-left: 10px;
+  color: #0B1D51;
+}
+
+.srkit-general-custom-table th.center-align,
+.srkit-general-custom-tabletd.center-align {
+  text-align: left;
+}
+
+.srkit-general-custom-table .srkit-center  .keywordname {
+  color: #0B1D51;
+  padding-left: 8px;
+}
+
+.srkit-general-custom-table tfoot tr td {
+  text-align: left;
+  padding: 16px;
+  border-top: 0.5px solid #f0f0f1;
+  font-weight: bold;
+  background-color: #FFFFFF;
+  color: #151D48;
+  font-size: 12px;
+  font-weight: 500;
+  color: #0B1D51;
+}
+
+.srkit-general-custom-table .srkit-google-search-console {
+  color: #F28500;
+  text-decoration: none; 
+  cursor: pointer;
+  padding: 8px;
+}
+
+.srkit-general-custom-table .srkit-google-search-console a {
+  color: #F28500;
+  text-decoration: none;
+}
+
+.srkit-general-custom-table .srkit-google-search-console a:hover {
+  text-decoration: underline;
+}
+
+.srkit-general-custom-table .srkit-google-search-console a:focus {
+  outline: 1px dotted #F28500;
+  outline-offset: 3px;
+  box-shadow: none; 
+}
+
+/*overview table style end here*/

@@ -16,7 +16,7 @@
  * Plugin Name:       SEO Repair Kit
  * Plugin URI:        https://seorepairkit.com
  * Description:       The ultimate WordPress plugin for fixing broken links and managing Alt Text quickly.
- * Version:           1.1.0
+ * Version:           2.0.0
  * Author:            TorontoDigits
  * Author URI:        https://torontodigits.com/
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.1 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'SEO_REPAIR_KIT_VERSION', '1.1.0' );
+define( 'SEO_REPAIR_KIT_VERSION', '2.0.0' );
 
 /**
  * The code that runs during plugin activation.

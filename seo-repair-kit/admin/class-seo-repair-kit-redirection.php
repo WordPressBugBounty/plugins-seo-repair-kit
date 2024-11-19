@@ -85,26 +85,29 @@ class SeoRepairKit_Redirection {
         $redirection_table = $this->db_srkitredirection->prefix . 'srkit_redirection_table';
         $srkit_redirectionrecords = $this->db_srkitredirection->get_results( "SELECT * FROM $redirection_table" );
         if ( $srkit_redirectionrecords ) {
-            echo '<table class="wp-redirection-list-table widefat fixed striped">';
-            echo '<thead>';
+            echo '<table class="srkit-general-custom-table">';
+            echo '<thead class="redirection-header">';
             echo '<tr>';
             echo '<th>' . esc_html__( 'NO', 'seo-repair-kit' ) . '</th>';
-            echo '<th>' . esc_html__( 'Old URL', 'seo-repair-kit' ) . '</th>';
-            echo '<th>' . esc_html__( 'New URL', 'seo-repair-kit' ) . '</th>';
-            echo '<th>' . esc_html__( 'Action', 'seo-repair-kit' ) . '</th>';
+            echo '<th class="center">' . esc_html__( 'Old URL', 'seo-repair-kit' ) . '</th>';
+            echo '<th class="center">' . esc_html__( 'New URL', 'seo-repair-kit' ) . '</th>';
+            echo '<th class="center">' . esc_html__( 'Action', 'seo-repair-kit' ) . '</th>';
+            echo '</tr>';
             echo '</thead>';
             echo '<tbody>';
             // Loop through redirection records and display them in the table
             foreach ( $srkit_redirectionrecords as $srkit_record ) {
                 echo '<tr>';
                 echo '<td>' . esc_html( $srkit_record->id ) . '</td>';
-                echo '<td><a href="' . esc_url( $srkit_record->old_url ) . '" target="_blank">' . esc_html( $srkit_record->old_url ) . '</a></td>';
-                echo '<td><a href="' . esc_url( $srkit_record->new_url ) . '" target="_blank">' . esc_html( $srkit_record->new_url ) . '</a></td>';
+                echo '<td class="record-link"><a href="' . esc_url( $srkit_record->old_url ) . '" target="_blank">' . esc_html( $srkit_record->old_url ) . '</a></td>';
+                echo '<td class="record-link"><a href="' . esc_url( $srkit_record->new_url ) . '" target="_blank">' . esc_html( $srkit_record->new_url ) . '</a></td>';
                 echo '<td><button class="srk-delete-record" data-record-id="' . esc_attr( $srkit_record->id ) . '">' . esc_html__( 'Delete', 'seo-repair-kit' ) . '</button></td>';
                 echo '</tr>';
             }
+            
             echo '</tbody>';
             echo '</table>';
+            
         } else {
             echo '<div class="seo-repair-kit-no-records-found">' . esc_html__( 'No records found.', 'seo-repair-kit' ) . '</div>';
         }

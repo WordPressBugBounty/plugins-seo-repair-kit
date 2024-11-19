@@ -79,13 +79,16 @@
 
 .srk-dashboard-heading {
   color: #0b1d51;
-  margin-bottom: 20px;
+  font-size: 24px;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 40px;
 }
 
 .srk-dashboard-button {
   background-color: #0b1d51;
   color: #fff;
-  padding: 7px 10px;
+  padding: 12px 15px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -106,7 +109,18 @@
   color: #0b1d51 !important;
 }
 
+#srk-post-type-dropdown, .srk-post-type-selection {
+color: #151D48;
+}
+
+#srk-post-type-dropdown, .srk-post-type-selection, .srk-dashboard-button {
+  font-size: 16px;
+  font-family: inherit;
+  font-weight: inherit;
+}
+
 #srk-post-type-dropdown,
 .srk-dashboard-button {
-  height: 30px;
+  height: 35px;
+  margin: 7px;
 }

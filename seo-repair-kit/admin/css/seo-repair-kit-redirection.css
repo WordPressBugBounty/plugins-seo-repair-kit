@@ -9,6 +9,11 @@
 .seo-repair-kit-redirection-heading {
   color: #0b1d51;
   margin: 40px 0 30px 80px;
+  color: #0b1d51;
+  font-size: 24px;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 40px;
 }
 
 .seo-repair-kit-no-records-found {
@@ -22,7 +27,7 @@
 .srk-redirection-button, .srk-delete-record {
   background-color: #0b1d51;
   color: #fff;
-  padding: 7px 10px;
+  padding: 12px 15px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -48,3 +53,60 @@
   border: 1px solid #ccc;
   box-sizing: border-box; 
 }
+
+
+/* overview table style start here */
+.srkit-general-custom-table, .custom-table {
+    width: 100%;
+    margin: 2rem 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border-collapse: collapse;
+}
+
+.srkit-general-custom-table th, .custom-table th {
+    padding: 1rem;
+    text-align: left;
+    border: none;
+}
+
+.srkit-general-custom-table td.center, .custom-table td.center {
+    text-align: center;
+}
+
+.srkit-general-custom-table td.left-keyword, .custom-table td.left-keyword {
+    color: #108080;
+}
+
+.srkit-general-custom-table thead, .custom-table thead {
+    background-color: #E5EAF8;
+    font-weight: bold;
+}
+
+.srkit-general-custom-table tbody tr td, .custom-table tbody tr td {
+    background-color: #fefefe;
+}
+
+.srkit-general-custom-table tbody tr, .custom-table tbody tr {
+    border-bottom: 0.5px solid #f0f0f1;
+}
+
+/* Remove hover effect on individual cells */
+.srkit-general-custom-table tbody tr:hover, .custom-table tbody tr:hover {
+    background-color: #F0F0F1; /* Full row changes on hover */
+}
+
+.srkit-general-custom-table tbody tr:last-child, .custom-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.srkit-general-custom-table tbody tr td:first-child a, .custom-table tbody tr td:first-child a {
+    font-size: 14px;
+    color: #108080;
+    text-decoration: none;
+    padding-left: 20px;
+}
+
+/* overview table style end here */
+
+

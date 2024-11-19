@@ -32,12 +32,12 @@ class SeoRepairKit_Settings {
         wp_enqueue_style( 'srk-settings-style' );
 
         ?>
+        <h2 class="srk-settings-page-title"> <?php esc_html_e( 'Settings', 'seo-repair-kit'  ); ?> </h2>
         <div class="seo-repair-kit-settings-background">
-            <h1 class="srk-settings-page-title"> <?php esc_html_e( 'Settings', 'seo-repair-kit'  ); ?> </h1>
             <form method="post" action="options.php">
                 <?php settings_fields( 'srk_post_types_settings' ); ?>
                 <?php do_settings_sections( 'post_types_menu' ); ?>
-                <h2 class="seo-repair-kit-settings-post-type"><?php esc_html_e( 'Select Post Types:', 'seo-repair-kit' ); ?></h2>
+                <h2 class="seo-repair-kit-settings-post-type"><?php esc_html_e( 'Select Post Types', 'seo-repair-kit' ); ?></h2>
                 <?php
                 $srkit_savedposttypes = get_option( 'td_blc_saved_post_types', array() );
                 $srkit_publicposttypes = get_post_types( array( 'public' => true ), 'objects' );

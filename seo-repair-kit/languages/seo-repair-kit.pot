@@ -17,6 +17,10 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "X-Generator: Loco https://localise.biz/"
 
+#: admin\class-seo-repair-kit-scan-links.php:64
+msgid "Broken Links"
+msgstr ""
+
 #: admin\class-seo-repair-kit-scan-links.php:88
 msgid "ID"
 msgstr ""
@@ -38,7 +42,7 @@ msgid "Link"
 msgstr ""
 
 #: admin\class-seo-repair-kit-scan-links.php:93
-#: admin\class-seo-repair-kit-admin.php:171
+#: admin\class-seo-repair-kit-admin.php:296
 #: admin\class-seo-repair-kit-scan-links.php:126
 #: admin\class-seo-repair-kit-redirection.php:72
 msgid "Redirection"
@@ -55,18 +59,6 @@ msgstr ""
 
 #: admin\class-seo-repair-kit-scan-links.php:96
 msgid "HTTP Status"
-msgstr ""
-
-#: admin\class-seo-repair-kit-dashboard.php:60
-msgid "Dashboard"
-msgstr ""
-
-#: admin\class-seo-repair-kit-dashboard.php:67
-msgid "Select Post Type:"
-msgstr ""
-
-#: admin\class-seo-repair-kit-dashboard.php:88
-msgid "Start Scan"
 msgstr ""
 
 #: admin\class-seo-repair-kit-scan-links.php:64
@@ -87,6 +79,18 @@ msgstr ""
 
 #: admin\class-seo-repair-kit-scan-links.php:174
 msgid "Invalid nonce"
+msgstr ""
+
+#: admin\class-seo-repair-kit-dashboard.php:63
+msgid "Dashboard"
+msgstr ""
+
+#: admin\class-seo-repair-kit-dashboard.php:70
+msgid "Select Post Type:"
+msgstr ""
+
+#: admin\class-seo-repair-kit-dashboard.php:91
+msgid "Start Scan"
 msgstr ""
 
 #: admin\class-seo-repair-kit-redirection.php:74
@@ -128,49 +132,61 @@ msgstr ""
 msgid "Error: Unable to delete the record."
 msgstr ""
 
-#: admin\class-seo-repair-kit-redirection.php:103
+#: admin\class-seo-repair-kit-redirection.php:186
 msgid "Delete"
 msgstr ""
 
-#: admin\class-seo-repair-kit-redirection.php:109
+#: admin\class-seo-repair-kit-redirection.php:112
 msgid "No records found."
 msgstr ""
 
-#: admin\class-seo-repair-kit-redirection.php:121
-#: admin\class-seo-repair-kit-redirection.php:170
+#: admin\class-seo-repair-kit-redirection.php:124
+#: admin\class-seo-repair-kit-redirection.php:173
 msgid "Error: Nonce verification failed."
 msgstr ""
 
-#: admin\class-seo-repair-kit-redirection.php:134
+#: admin\class-seo-repair-kit-redirection.php:137
 msgid "Saved successfully!"
 msgstr ""
 
-#: admin\class-seo-repair-kit-redirection.php:136
+#: admin\class-seo-repair-kit-redirection.php:139
 msgid "Error: Not saved successfully!"
 msgstr ""
 
-#: admin\class-seo-repair-kit-redirection.php:178
+#: admin\class-seo-repair-kit-redirection.php:181
 msgid "Error: Invalid record ID."
 msgstr ""
 
-#: admin\class-seo-repair-kit-redirection.php:191
+#: admin\class-seo-repair-kit-redirection.php:194
 msgid "Success"
 msgstr ""
 
-#: admin\class-seo-repair-kit-redirection.php:193
+#: admin\class-seo-repair-kit-redirection.php:196
 msgid "Error"
 msgstr ""
 
-#: admin\class-seo-repair-kit-redirection.php:203
+#: admin\class-seo-repair-kit-redirection.php:206
 msgid "Error: Redirection table not created successfully."
 msgstr ""
 
-#: admin\class-seo-repair-kit-admin.php:130
+#: admin\class-seo-repair-kit-admin.php:205
 msgid "Powered By:"
 msgstr ""
 
-#: admin\class-seo-repair-kit-admin.php:160
-msgid "Alt Image Missing"
+#: admin\class-seo-repair-kit-admin.php:274
+msgid "KeyTrack"
+msgstr ""
+
+#: admin\class-seo-repair-kit-admin.php:149
+msgid "SEO Repair Kit database update required"
+msgstr ""
+
+#: admin\class-seo-repair-kit-admin.php:150
+msgid "To keep your website’s SEO in top shape, we need to update your settings to the latest version. This process will run in the background and may take a few moments. Please sit tight, and thank you for your patience as we optimize your site for the best performance."
+msgstr ""
+
+#: admin\class-seo-repair-kit-admin.php:152
+msgid "Update Settings"
 msgstr ""
 
 #: admin\class-seo-repair-kit-alt-text.php:51
@@ -181,37 +197,41 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: admin\class-seo-repair-kit-alt-text.php:61
+#: admin\class-seo-repair-kit-alt-text.php:59
 msgid "Name"
 msgstr ""
 
-#: admin\class-seo-repair-kit-alt-text.php:54
+#: admin\class-seo-repair-kit-alt-text.php:60
 msgid "URL"
 msgstr ""
 
-#: admin\class-seo-repair-kit-alt-text.php:67
+#: admin\class-seo-repair-kit-alt-text.php:61
 msgid "Date Created"
 msgstr ""
 
-#: admin\class-seo-repair-kit-alt-text.php:70
+#: admin\class-seo-repair-kit-alt-text.php:62
 msgid "Add Alt Text"
 msgstr ""
 
-#: admin\class-seo-repair-kit-alt-text.php:96
+#: admin\class-seo-repair-kit-alt-text.php:86
 msgid "Want to add Alt Text"
 msgstr ""
 
-#: admin\class-seo-repair-kit-alt-text.php:109
+#: admin\class-seo-repair-kit-alt-text.php:100
 msgid "Items"
 msgstr ""
 
-#: admin\class-seo-repair-kit-admin.php:182
-#: admin\class-seo-repair-kit-settings.php:36
+#: admin\class-seo-repair-kit-admin.php:307
+#: admin\class-seo-repair-kit-settings.php:35
 msgid "Settings"
 msgstr ""
 
 #: admin\class-seo-repair-kit-settings.php:40
 msgid "Select Post Types:"
+msgstr ""
+
+#: admin\class-seo-repair-kit-settings.php:60
+msgid "Save"
 msgstr ""
 
 #: admin\js\class-seo-repair-kit-scan-links.js:97
@@ -220,4 +240,315 @@ msgstr ""
 
 #: admin\js\class-seo-repair-kit-scan-links.js:98
 msgid "Congrats Broken Links Not Found !"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:80
+#: admin\class-seo-repair-kit-keytrack.php:222
+#: admin\class-seo-repair-kit-alt-text.php:240
+msgid "SEO Repair Kit"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:85
+msgid "SEO Repair Kit plugin requires the Google Site Kit plugin to function properly. Please install and activate."
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:90
+msgid "Install the Google Site Kit plugin."
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:91
+msgid "Activate the Google Site Kit plugin."
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:93
+msgid "Set up Google Site Kit to integrate with SEO Repair Kit."
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:107
+msgid "Install & Activate Google Site Kit"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:116
+msgid "Activate Google Site Kit"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:226
+msgid "Search Console module is not connected. Please connect it through the Google Site Kit plugin."
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:230
+msgid "Go to Google Site Kit Settings."
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:231
+msgid "Create/Connect Google Account."
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:232
+msgid "Once your account is connected, you can quickly use the SEO Repair Kit KeyTrack feature."
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:235
+msgid "⚠️ Additional Message:', 'seo-repair-kit"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:239
+msgid "🔄 If the Search Console settings are already configured but the KeyTrack feature is still not working, try disconnecting and then reconnecting your Google Site Kit account."
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:244
+msgid "Go to Site Kit Settings"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:345
+msgid "Overview"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:346
+msgid "Pages"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:347
+msgid "Queries"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:348
+msgid "Threshold"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:325
+
+msgid "KeyTrack"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:356
+msgid "Total Clicks"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:361
+msgid "Total Impressions"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:366
+msgid "Average CTR"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:371
+msgid " Average Position"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:409
+msgid "Source"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:412
+msgid "Google Search Console"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:384
+#: admin\class-seo-repair-kit-keytrack.php:395
+msgid "Clicks"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:379
+msgid "Top 5 Pages"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:385
+#: admin\class-seo-repair-kit-keytrack.php:396
+msgid "Impressions"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:421
+msgid "Top 5 Queries"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:466
+msgid "Pages Data"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:530
+msgid "Queries Data"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:474
+msgid "Details"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:495
+msgid "View Details"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:537
+msgid "Position"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:588
+msgid "Settings class not found."
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:631
+msgid "CTR (%)"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:652
+msgid "Search Console Data"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:667
+msgid "Date"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:677
+msgid "Value"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:770
+msgid "Congratulations Google Site Kit Configured!"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack.php:771
+msgid "You can now enjoy the powerful KeyTrack feature of the SEO Repair Kit. This feature, integrated with Google Search Console."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:57
+msgid "Every 2 Minutes"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:62
+msgid "Every 7 Days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:67
+msgid "Every 14 Days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:72
+msgid "Every 28 Days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:77
+msgid "Every 90 Days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:88
+msgid "Demo For Next 2 Minutes"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:89
+msgid "7 days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:90
+msgid "14 days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:91
+msgid "28 days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:92
+msgid "90 days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:113
+msgid "No settings found in the srkit_keytrack_settings table."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:120
+msgid "No valid keywords found."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:157
+msgid "Switched to admin user:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:159
+msgid "No administrator user found."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:165
+msgid "Google Site Kit is not available."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:179
+msgid "Search Console is not connected."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:414
+msgid "Google Site Kit plugin is required for this plugin to work. Please install and activate it."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:467
+msgid "Settings saved and cron job scheduled successfully!"
+msgstr ""
+
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:534
+msgid "Performance Tracking Period:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:537
+msgid "Next 7 Days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:538
+msgid "Next 14 days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:539
+msgid "Next 28 days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:540
+msgid "Next 90 days"
+msgstr ""
+
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:513
+msgid "Threshold Settings"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:516
+msgid "Threshold Reference:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:519
+msgid "Target Your Keywords:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:529
+msgid "No keywords found."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:543
+msgid "Submit"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:548
+msgid "Settings form is temporarily disabled until the next scheduled run at:"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack-setting.php:576
+msgid "Total Clicks"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack-setting.php:577
+msgid "Total Impressions"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack-setting.php:578
+msgid "Average CTR"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack-setting.php:579
+msgid " Average Position"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-setting.php:623
+msgid "🚀 Set Up Your Thresholds to Track Website Content Performance Like a Pro! 📈"
+msgstr ""
+
+#: admin\class-seo-repair-kit-keytrack-setting.php:611
+msgid "Source:"
 msgstr ""

@@ -9,19 +9,24 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @link       https://seorepairkit.com
  * @since      1.0.1
- * @version    1.1.0
+ * @version    2.0.0
  * @author     TorontoDigits <support@torontodigits.com>
  */
 class SeoRepairKit_Activator {
 
     /**
      * Function to run during activation.
+     * Initializes tables and versioning.
      *
      * @since  1.0.1
+     * @version 2.0.0
      * @access public
      * @return void
      */
     public static function activate() {
+
+        // Manage to updates.
+        self::run_updates();
 
         // Manage error log table.
         self::srkit_create_log_table();
@@ -31,7 +36,60 @@ class SeoRepairKit_Activator {
 
         // Call the API activation function.
         self::srk_send_data_to_api();
+
+        // Create the keytrack settings table.
+        self::srkit_create_keytrack_table();
+
+        // Create table for saving Google Search Console data
+        self::create_gsc_data_table();
+
+        add_option( 'seo_repair_kit_version', SEO_REPAIR_KIT_VERSION );
     }
+
+    /**
+     * Function to manage plugin updates.
+     * Checks if version has changed and applies updates if necessary.
+     *
+     * @since  2.0.0
+     * @access public
+     * @return void
+     */
+    public static function update() {
+        $current_version = get_option( 'seo_repair_kit_version' );
+
+        if ( version_compare( $current_version, SEO_REPAIR_KIT_VERSION, '<' ) ) {
+            self::run_updates();
+            update_option( 'seo_repair_kit_version', SEO_REPAIR_KIT_VERSION );
+        }
+    }
+
+    /**
+     * Runs updates or creates tables if they don't exist.
+     *
+     * @since  2.0.0
+     * @access private
+     * @return void
+     */
+    private static function run_updates() {
+        self::srkit_create_log_table();
+        self::srkit_create_keytrack_table();
+        self::create_gsc_data_table();
+    }
+
+    /**
+     * Checks if a table exists in the database.
+     *
+     * @since 2.0.0
+     * @access private
+     * @param  string $table_name The name of the table to check.
+     * @return bool   True if table exists, false otherwise.
+     */
+    private static function table_exists( $table_name ) {
+        global $wpdb;
+
+        return $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) ) === $table_name;
+    }
+
     /**
      * Create or update error logs table in the database.
      *
@@ -60,6 +118,61 @@ class SeoRepairKit_Activator {
         // Update or create the table in the database.
         dbDelta( $srkit_tablequery );
     }
+
+    /**
+     * Create keytrack settings table in the database.
+     *
+     * @since 2.0.0
+     * @access private
+     * @return void
+     */
+    private static function srkit_create_keytrack_table() {
+        global $wpdb;
+
+        $keytrack_tablename = $wpdb->prefix . 'srkit_keytrack_settings';
+        $charset_collate    = $wpdb->get_charset_collate();
+
+        $keytrack_tablequery = "CREATE TABLE IF NOT EXISTS $keytrack_tablename ( 
+            id BIGINT NOT NULL AUTO_INCREMENT,
+            keytrack_name VARCHAR(255) NOT NULL,
+            selected_keywords LONGTEXT NOT NULL,
+            date_range VARCHAR(50) NOT NULL,
+            setting_value LONGTEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            next_run_at DATETIME NULL,
+            PRIMARY KEY (id)
+        ) $charset_collate;";
+
+        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+        dbDelta( $keytrack_tablequery );
+    }
+
+    /**
+     * Create a table to save both box summary data and individual keyword records.
+     *
+     * @since 2.0.0
+     * @access private
+     * @return void
+     */
+    private static function create_gsc_data_table() {
+        global $wpdb;
+
+        $tablename       = $wpdb->prefix . 'srkit_gsc_data';
+        $charset_collate = $wpdb->get_charset_collate();
+
+        $table_query = "CREATE TABLE IF NOT EXISTS $tablename ( 
+            id BIGINT NOT NULL AUTO_INCREMENT,
+            gsc_data LONGTEXT NOT NULL,
+            keytrack_name VARCHAR(255) NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (id)
+        ) $charset_collate;";
+
+        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+        dbDelta( $table_query );
+    }
+
     /**
      * Function to send activation notification email.
      *
@@ -83,7 +196,7 @@ class SeoRepairKit_Activator {
         // Send the email and return whether it was successful.
         return wp_mail( $srkit_mailto, $srkit_mailsubject, $srkit_mailmessage, $srkit_mailheaders );
     }
-
+    
     /**
      * Function to send data to the API on activation.
      *
@@ -101,7 +214,7 @@ class SeoRepairKit_Activator {
         $data = array(
             'websitename' => $site_title,
             'admin_email' => $admin_email,
-            'pluginversion' => '1.1.0',
+            'pluginversion' => SEO_REPAIR_KIT_VERSION,
             'noofposts' => absint( $post_count->publish ),
             'site_information' => wp_json_encode( $site_info ),
         );
@@ -261,6 +374,10 @@ class SeoRepairKit_Activator {
         return $info;
 
         }
+    }
+
+    if ( ! get_option( 'seo_repair_kit_version' ) ) {
+        add_option( 'seo_repair_kit_version', SEO_REPAIR_KIT_VERSION );
     }
 
 // Hook the activation function to the plugin activation hook.

@@ -4,4 +4,77 @@
 
 .image-alt-heading {
   color: #0b1d51;
+  font-size: 24px;
+  text-align: center;
+  font-weight: bold;
+  margin: 40px;
 }
+
+/* Overview table style start here */
+.srkit-general-custom-table, .custom-table {
+    width: 100%;
+    margin: 2rem 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border-collapse: collapse;
+}
+
+.srkit-general-custom-table th, .custom-table th {
+    padding: 1rem;
+    border: none;
+}
+.srkit-general-custom-table th {
+    border: none;
+    text-align: center;
+}
+
+.srkit-general-custom-table th:first-child, .custom-table th:first-child {
+    text-align: center;
+}
+
+.srkit-general-custom-table td.center, .custom-table td.center {
+    text-align: center;
+}
+
+.srkit-general-custom-table td.left-keyword, .custom-table td.left-keyword {
+    color: #108080;
+}
+
+.srkit-general-custom-table thead, .custom-table thead {
+    background-color: #E5EAF8;
+    font-weight: bold;
+}
+
+.srkit-general-custom-table tbody tr td, .custom-table tbody tr td {
+    background-color: #fefefe;
+}
+
+.srkit-general-custom-table tbody tr, .custom-table tbody tr {
+    border-bottom: 0.5px solid #f0f0f1;
+}
+
+/* Full row changes on hover */
+.srkit-general-custom-table tbody tr:hover, .custom-table tbody tr:hover {
+    background-color: #F0F0F1;
+}
+
+.srkit-general-custom-table tbody tr:last-child, .custom-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.srkit-general-custom-table tbody tr td:first-child a, .custom-table tbody tr td:first-child a {
+    font-size: 14px;
+    color: #108080;
+    text-decoration: none;
+    padding-left: 20px;
+}
+
+.srkit-general-custom-table .tfoot, .custom-table .tfoot {
+    background-color: #FFFFFF;
+    text-align: left !important;
+    padding-left: 20px !important;
+    padding-bottom: 8px !important;
+    border-bottom: 0.5px solid #f0f0f1;
+    margin: 10px;
+}
+/* Overview table style end here */

@@ -1,0 +1,462 @@
+/* Style of keytrack submenu page */
+
+.srkit-gsc-stat-box {
+  background-color: white;
+  padding: 20px 15px;
+  text-align: center;
+  border-radius: 10px;
+  width: 20%;
+  transition: all 0.8s cubic-bezier(0.15, 0.83, 0.66, 1);
+  cursor: pointer;
+}
+
+.srkit-gsc-stat-box p {
+  font-size: 1.5em;
+  font-weight: bold;
+  color:#0B1D51!important;
+}
+
+.srkit-gsc-chart {
+  width: 100% !important;
+}
+
+.srkit-gsc-navbar {
+  margin-top: -10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: 10px 25px;
+  margin-left: -21px;
+  height: 45px;
+}
+
+.srkit-gsc-navbar .srkit-gsc-brand {
+  color: #F28500;
+  font-size: 26px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.srkit-gsc-navbar .srkit-gsc-user-info {
+  display: flex;
+  align-items: center;
+}
+
+.srkit-gsc-navbar .srkit-gsc-user-info .srkit-gsc-help-icon,
+  .srkit-gsc-navbar .srkit-gsc-user-info .srkit-gsc-user-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    color: #F28500;
+    background-color: #FFF3E0;
+    border-radius: 50%;
+    
+  }
+.srkit-gsc-navbar .srkit-gsc-user-info .srkit-gsc-user-icon {
+  background-color: #FFB74D; 
+  color: #020101; 
+  height: 30px;
+  width:30px;
+}
+
+.srkit-gsc-navbar .srkit-gsc-user-info .srkit-gsc-user-icon span {
+  font-weight: bold;
+}
+
+.srkit-gsc-user-info {
+  display: flex;
+  align-items: center;
+}
+
+.srkit-gsc-user-info i{
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  color: white;
+}
+
+.srkit-gsc-user-info div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 10px;
+  color: #FF5F00;
+}
+
+.srkit-gsc-user-info h2 {
+  font-size: 18px;
+  margin: 0;
+  color: #333;
+}
+
+.srkit-gsc-user-info span {
+  font-size: 16px;
+  margin-top: 10px;
+  color: #F28500;
+}
+
+.srkit-gsc-help-icon{
+  margin-right: -10px;
+}
+
+.srkit-gsc-help-icon {
+  font-size: 20px;
+  color: #F28500;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left:20px;
+  background-color: #FFFAF1;
+}
+
+.srkit-gsc-user-icons{
+  justify-content: center;
+  align-items: center;
+  background-color:transparent;
+  width: 50px;
+  height: 50px;
+
+}
+
+.admin-avatar{
+  height: 30px;
+  width: 30px;
+  margin-left: 15px;
+  border-radius: 20px;
+}
+
+.srk-gsc-section {
+  margin-top: 55px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.srk-gsc-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.srk-gsc-date-selector {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 36px;
+  border-radius: 4px;
+}
+
+.srk-gsc-logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #0B1D51;
+  position: absolute;
+}
+
+.srk-gsc-navigation {
+  display: flex;
+  justify-content: center;
+  gap: 35px;
+  margin-bottom: 35px;
+  margin-top: 35px;
+  width: 100%;
+}
+
+.nav-item {
+  padding: 0px 20px;
+  font-size: 16px;
+  color: #0B1D51;
+  border-radius: 5px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+  
+.nav-item.active {
+  height: 45px;
+  width: 105px;
+  background-color: #FFFFFF;
+  color: #F28500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+}
+  
+.nav-item:focus {
+  outline: none;
+}
+
+.large-text {
+  width: 25em;
+}
+
+.view-details-btn {
+  background-color: #0B1D51;
+  color: #fff;
+  padding: 18px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 5px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  line-height: 10px;
+}
+
+.view-details-btn:hover {
+  background-color: #f28500;
+  color: #fff;
+}
+
+.srkit-container {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+}
+
+.srkit-left {
+  box-sizing: border-box;
+  width: 35%;
+  color: #0B1D51;
+  font-size: 14px !important;
+}
+
+.srkit-right {
+  padding-left: 20px;
+  box-sizing: border-box;
+  width: 65%; 
+  border-left: 3px solid #ddd;
+}
+
+
+
+/* General form container styles */
+
+.srkit-th-tab-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #0b1d51;
+}
+
+.srk-form-heading-style{
+  color: #0B1D51;
+  font-size: 22px !important;
+  font-weight: bold;
+}
+
+.srk-general-message-style {
+  text-align: center;
+  color: #0b1d51 !important;
+  font-size: 25px;
+  font-weight: 500;
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(1, 9, 117, 0.1);
+  width: 65%;
+  margin-top: 11%;
+  height: 78px;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.srkit-container {
+  display: flex!important;
+  margin-top: 20px;
+}
+
+
+/* Form styles */
+#keytrack-form {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 7px;
+}
+
+#keytrack-form label {
+  display: block;
+  font-weight: bold;
+  margin: 5px 0 10px 0;
+  color:#0B1D51;
+}
+
+#keytrack-form input[type="text"],
+#keytrack-form input[type="number"],
+#keytrack-form select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.srk-keytrack-settings-form-button {
+  background-color: #0b1d51;
+  color: #fff;
+  margin-top: 10px;
+  padding: 12px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.srk-keytrack-settings-form-button:hover {
+  background-color: #f28500;
+  color: #fff;
+}
+
+#keytrack-form .button {
+  background-color: #0073aa;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#keytrack-form .button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.chosen-container-multi .chosen-choices {
+  border-radius: 5px !important;
+  margin-bottom: 10px;
+
+}
+
+/* Stats box styles */
+.srkit-gsc-stats-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0 20px 0;
+}
+
+.srkit-gsc-stat-box h3 {
+  margin-top: 0;
+  font-size: 18px;
+  color: #F28500;
+}
+
+.srkit-gsc-stat-box p {
+  font-size: 30px;
+  margin: 10px 0 0;
+  color: #0B1D51;
+}
+
+/* Table styles */
+#results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+#results-table th, #results-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+#results-table th {
+  background-color: #f1f1f1;
+  font-weight: bold;
+}
+
+/* No data message */
+#no-data-message {
+  text-align: center;
+  color: #0b1d51;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+/* Countdown timer */
+#countdown-timer {
+  font-weight: bold;
+  color: #555;
+}
+
+
+/*Install google site kit Notification style start here*/
+
+.srkit-kt-notice-message{
+  background: #fff;
+  border: 1.5px solid #f28500 !important;
+  border-left-width: 4px !important;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+  margin: 50px 15px 2px;
+  padding: 20px;
+}
+
+.srkit-kt-install-sitekit-btn {
+  background-color: #0b1d51 !important;
+  color: #fff !important;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 5px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  line-height: 10px;
+  width: fit-content;
+  text-decoration: none;
+  transition-duration: 0.2s;
+  margin: 30px 0px 10px 0px;;
+}
+
+.srkit-kt-install-sitekit-btn:hover{
+  background-color: #f28500 !important;
+}
+
+.srk-notification-header {
+  display: flex;
+  align-content: center;
+  align-items: center;
+}
+
+.srkit-kt-steps {
+  list-style-type: disc;
+  margin-left: 20px;
+  font-size: 14px;
+}
+
+.srkit-kt-steps li {
+  margin-bottom: 15px;
+}
+
+.srk-notice-message {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.srk-notification-header-text{
+  color: #0b1d51;
+  font-weight: 700;
+}
+
+.srkit-kt-install-sitekit-btn:focus {
+  background-color: #f28500 !important;
+  color: #043959;
+  box-shadow: 0 0 0 1px #0b1d51;
+  outline: none;
+}
+/*Install google site kit Notification style end here*/

@@ -48,59 +48,49 @@ class SeoRepairKit_AltTextPage {
         ?>
         <div class="srk-image-alt">
             <h1 class="image-alt-heading">
-                <?php esc_html_e( 'Image Alt', 'seo-repair-kit' ); ?>
+                <?php esc_html_e( 'Image Alt Text', 'seo-repair-kit' ); ?>
             </h1>
             <!-- Table displaying images without alt text -->
-            <table class="wp-list-table widefat fixed striped">
-                <thead>
-                    <tr>
-                        <th>
-                            <?php esc_html_e( 'Image', 'seo-repair-kit' ); ?>
-                        </th>
-                        <th>
-                            <?php esc_html_e( 'Name', 'seo-repair-kit' ); ?>
-                        </th>
-                        <th>
-                            <?php esc_html_e( 'URL', 'seo-repair-kit' ); ?>
-                        </th>
-                        <th>
-                            <?php esc_html_e( 'Date Created', 'seo-repair-kit' ); ?>
-                        </th>
-                        <th>
-                            <?php esc_html_e( 'Add Alt Text', 'seo-repair-kit' ); ?>
-                        </th>
+            <table class="srkit-general-custom-table custom-table">
+            <thead>
+                <tr>
+                    <th class="center"><?php esc_html_e( 'Image', 'seo-repair-kit' ); ?></th>
+                    <th class="center"><?php esc_html_e( 'Name', 'seo-repair-kit' ); ?></th>
+                    <th class="center"><?php esc_html_e( 'URL', 'seo-repair-kit' ); ?></th>
+                    <th class="center"><?php esc_html_e( 'Date Created', 'seo-repair-kit' ); ?></th>
+                    <th class="center"><?php esc_html_e( 'Add Alt Text', 'seo-repair-kit' ); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ( $srkit_alttextposts as $srkit_alttextpost ):
+                    setup_postdata( $srkit_alttextpost ); ?>
+                    <tr class="custom-row">
+                        <td class="center">
+                            <img src="<?php echo esc_url( wp_get_attachment_url( $srkit_alttextpost->ID ) ); ?>" width="100" height="100" alt="<?php echo esc_attr( get_post_meta( $srkit_alttextpost->ID, '_wp_attachment_image_alt', true ) ); ?>">
+                        </td>
+                        <td class="center"><?php echo esc_html( get_the_title( $srkit_alttextpost->ID ) ); ?></td>
+                        <td class="center">
+                            <a href="<?php echo esc_url( wp_get_attachment_url( $srkit_alttextpost->ID ) ); ?>" target="_blank">
+                                <?php echo esc_html( wp_get_attachment_url( $srkit_alttextpost->ID ) ); ?>
+                            </a>
+                        </td>
+                        <td class="center"><?php echo esc_html( get_the_date( '', $srkit_alttextpost->ID ) ); ?></td>
+                        <td class="center">
+                            <?php
+                            $srkit_alttext = get_post_meta( $srkit_alttextpost->ID, '_wp_attachment_image_alt', true );
+                            if ( $srkit_alttext ) {
+                                echo esc_html( $srkit_alttext );
+                            } else {
+                                $srkit_medialibrarylink = admin_url( 'upload.php?item=' . $srkit_alttextpost->ID );
+                                echo '<a href="' . esc_url( $srkit_medialibrarylink ) . '" target="_blank">' . esc_html__( 'Want to add Alt Text', 'seo-repair-kit' ) . '</a>';
+                            }
+                            ?>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ( $srkit_alttextposts as $srkit_alttextpost ):
-                        setup_postdata( $srkit_alttextpost ); ?>
-                        <tr>
-                            <td><img src="<?php echo esc_url( wp_get_attachment_url( $srkit_alttextpost->ID ) ); ?>" width="100"
-                                    height="100"></td>
-                            <td>
-                                <?php echo esc_html( get_the_title( $srkit_alttextpost->ID ) ); ?>
-                            </td>
-                            <td>
-                                <?php echo esc_url( wp_get_attachment_url(  $srkit_alttextpost->ID ) ); ?>
-                            </td>
-                            <td>
-                                <?php echo esc_html( get_the_date( '', $srkit_alttextpost->ID ) ); ?>
-                            </td>
-                            <td>
-                                <?php
-                                $srkit_alttext = get_post_meta( $srkit_alttextpost->ID, '_wp_attachment_image_alt', true );
-                                if ( $srkit_alttext ) {
-                                    echo esc_html( $srkit_alttext );
-                                } else {
-                                    $srkit_medialibrarylink = admin_url( 'upload.php?item=' . $srkit_alttextpost->ID );
-                                    echo '<a href="' . esc_url( $srkit_medialibrarylink ) . '" target="_blank">' . esc_html__( 'Want to add Alt Text', 'seo-repair-kit' ) . '</a>';
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php wp_reset_postdata(); ?>
             <!-- Pagination for image list -->
             <div class="tablenav">
                 <div class="tablenav-pages">

@@ -21,20 +21,28 @@ class SeoRepairKit_Dashboard {
     {
         add_action( 'wp_ajax_get_scan_links_dashboard', array( $this, 'srkit_get_scanlinks_dashboard_callback' ) );
         add_action( 'wp_ajax_nopriv_get_scan_links_dashboard', array( $this, 'srkit_get_scanlinks_dashboard_callback' ) );
+
+        // Enqueue the necessary styles on all plugin pages
+        add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_and_scripts' ) );
     }
+
+    /**
+     * Enqueue styles and scripts for the navbar and dashboard functionality.
+     */
+     public function enqueue_styles_and_scripts() {
+        wp_enqueue_style( 'srk-dashboard-style' );
+        wp_enqueue_style( 'srk-scan-links-style' );
+        wp_enqueue_style( 'srkit-keytrack-style' );
+
+        wp_enqueue_script( 'seo-repair-kit-dashboard', plugin_dir_url( __FILE__ ) . 'js/seo-repair-kit-dashboard.js', array( 'jquery' ), '1.0.1', true );
+    }
+
     /**
      * Displays the SEO Repair Kit dashboard page.
      * Includes a form to select post types and initiate a scan.
      */
     public function seorepairkit_dashboard_page()
     {
-        // Enqueue Styles
-        wp_enqueue_style( 'srk-dashboard-style' );
-        wp_enqueue_style( 'srk-scan-links-style' );
-        
-        // Enqueue JavaScript
-        wp_enqueue_script( 'seo-repair-kit-dashboard', plugin_dir_url( __FILE__ ) . 'js/seo-repair-kit-dashboard.js', array( 'jquery' ), '1.0.1', true );
-
         // Localize the script to pass PHP variables to JavaScript
         wp_localize_script( 'seo-repair-kit-dashboard', 'SeoRepairKitDashboardVars', array( 
                 'ajaxurlsrkdashboard' => esc_url( admin_url( 'admin-ajax.php' ) ),
@@ -50,12 +58,7 @@ class SeoRepairKit_Dashboard {
         }
         ?>
         <div id="srk-dashboard">
-            <div class="srk-header">
-                <div class="srk-logo">
-                <img class="srk-logo-dashboard" src="<?php echo esc_url( plugin_dir_url( __FILE__ ) . 'images/SEO-Repair-Kit-logo.svg' ); ?>" alt="<?php esc_attr_e( 'SEO Repair Kit Logo', 'seo-repair-kit' ); ?>" style="max-width: auto; max-height: 50px; margin-left: 20px;">
-                </div>
-                <h1 class="srk-logo-text" id="srk-name-heading"><?php esc_html_e( 'SEO Repair Kit', 'seo-repair-kit' ); ?></h1>
-            </div>
+            
             <h2 class="srk-dashboard-heading">
                 <?php esc_html_e( 'Dashboard', 'seo-repair-kit' ); ?>
             </h2>
@@ -63,7 +66,7 @@ class SeoRepairKit_Dashboard {
             <!-- Form to select post types and start the scan -->
             <form method="post" action="">
                 <?php wp_nonce_field( 'srkSelectedPostType', 'srkSelectedPostType_nonce' ); ?>
-                <label for="srk-post-type-dropdown">
+                <label for="srk-post-type-dropdown" class="srk-post-type-selection">
                     <?php esc_html_e( 'Select Post Type:', 'seo-repair-kit' ); ?>
                 </label>
                 <select id="srk-post-type-dropdown" name="post_type_dropdown">
