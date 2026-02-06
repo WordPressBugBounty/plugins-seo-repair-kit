@@ -1,0 +1,128 @@
+/**
+ * SEO Repair Kit - Page Loader Styles
+ * 
+ * Light, modern loader that appears when page loading takes time.
+ * Only shows if loading exceeds threshold to avoid flicker.
+ * 
+ * @since 2.1.0
+ */
+
+/* Loader Overlay */
+.srk-page-loader-overlay {
+    position: fixed;
+    /* Exclude WordPress admin sidebar and header */
+    top: 32px; /* WordPress admin bar height */
+    left: 160px; /* WordPress admin sidebar width (default) */
+    width: calc(100% - 160px); /* Full width minus sidebar */
+    height: calc(100% - 32px); /* Full height minus admin bar */
+    min-height: calc(100vh - 32px);
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: 999999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    pointer-events: all;
+}
+
+/* Adjust for collapsed WordPress admin sidebar */
+body.folded .srk-page-loader-overlay,
+.folded .srk-page-loader-overlay {
+    left: 36px; /* Collapsed sidebar width */
+    width: calc(100% - 36px);
+}
+
+/* Adjust for mobile/tablet WordPress admin bar */
+@media screen and (max-width: 782px) {
+    .srk-page-loader-overlay {
+        top: 46px; /* Mobile admin bar height */
+        left: 0; /* No sidebar on mobile */
+        width: 100%;
+        height: calc(100% - 46px);
+        min-height: calc(100vh - 46px);
+    }
+}
+
+/* Loader Container */
+.srk-page-loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Spinner Animation */
+.srk-page-loader-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #0B1D51;
+    border-radius: 50%;
+    animation: srk-spin 1s linear infinite;
+}
+
+@keyframes srk-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Loader Text */
+.srk-page-loader-text {
+    color: #0B1D51;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+/* Pulse Animation for Text */
+.srk-page-loader-text {
+    animation: srk-pulse 2s ease-in-out infinite;
+}
+
+@keyframes srk-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+/* Active state - show loader */
+.srk-page-loader-overlay.active {
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Hide loader when page is fully loaded */
+body.srk-page-loaded .srk-page-loader-overlay {
+    opacity: 0;
+    visibility: hidden;
+    display: none !important;
+}
+
+/* Ensure loader is above WordPress admin elements */
+body.wp-admin .srk-page-loader-overlay {
+    z-index: 999999;
+}
+
+/* Responsive adjustments */
+@media (max-width: 782px) {
+    .srk-page-loader-spinner {
+        width: 40px;
+        height: 40px;
+        border-width: 3px;
+    }
+    
+    .srk-page-loader-text {
+        font-size: 12px;
+    }
+}

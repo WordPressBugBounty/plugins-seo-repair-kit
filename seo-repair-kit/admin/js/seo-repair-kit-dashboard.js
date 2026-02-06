@@ -1,16 +1,18 @@
 /**
- * WordPress-specific JavaScript for handling SEO Repair Kit dashboard functionality.
+ * Handles the Link Scanner AJAX flow inside the SEO Repair Kit admin.
  *
- * This script uses jQuery and is intended to be executed when the document is ready.
- * It captures the click event on the 'Start' button, retrieves the selected post type from the dropdown,
- * and sends an AJAX request to the server to fetch scan links for the selected post type.
- * The received response is then displayed in the designated element on the dashboard.
+ * Captures clicks on the Start button, sends the selected post type to the server,
+ * and renders the scan results without a full page reload.
  */
 
 jQuery(document).ready(function ($) {
   // Event handler for the click on the start button
   $("#start-button").on("click", function (e) {
     e.preventDefault();
+    
+    // Disable button during scan
+    var $button = $(this);
+    $button.prop("disabled", true).addClass("srk-loading");
 
     // Get the selected post type from the dropdown
     var srkSelectedPostType = $("#srk-post-type-dropdown").val();
@@ -19,7 +21,8 @@ jQuery(document).ready(function ($) {
     var srkitdashboard_nonce = SeoRepairKitDashboardVars.srkitdashboard_nonce;
 
     // Show the loader while waiting for the AJAX response
-    $("#srk-loader-container").show();
+    $("#srk-loader-container").addClass("show").fadeIn(200);
+    $("#scan-results").fadeOut(200);
 
     // AJAX request to get scan links and display results
     $.ajax({
@@ -32,11 +35,30 @@ jQuery(document).ready(function ($) {
       },
       success: function (response) {
         // Hide the loader after receiving the response
-        $("#srk-loader-container").hide();
+        $("#srk-loader-container").removeClass("show").fadeOut(200);
 
-        // Display the scan results in the designated element
-        $("#scan-results").html(response);
+        // Display the scan results in the designated element with fade in animation
+        $("#scan-results").html(response).hide().fadeIn(400);
+        
+        // Re-enable button
+        $button.prop("disabled", false).removeClass("srk-loading");
       },
+      error: function() {
+        // Hide loader on error
+        $("#srk-loader-container").removeClass("show").fadeOut(200);
+        $("#scan-results").fadeIn(200);
+        
+        // Re-enable button
+        $button.prop("disabled", false).removeClass("srk-loading");
+        
+        // Show error message
+        $("#scan-results").html(
+          '<div class="srk-card srk-empty">' +
+          '<h3>Scan Failed</h3>' +
+          '<p>An error occurred while scanning. Please try again.</p>' +
+          '</div>'
+        );
+      }
     });
   });
 });

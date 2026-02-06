@@ -61,6 +61,9 @@ class Seo_Repair_Kit {
 		}
 		$this->seo_repair_kit = 'seo-repair-kit';
 
+		// Check for plugin updates and run migrations
+		add_action('init', [$this, 'check_and_run_updates'], 1);
+
 		$this->srkitload_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
@@ -200,6 +203,27 @@ class Seo_Repair_Kit {
 	 */
 	public function get_version() {
 		return $this->version;
+	}
+
+	/**
+	 * Check for plugin updates and run migrations if needed.
+	 * This ensures migrations run on every plugin load, not just activation.
+	 *
+	 * @since     2.1.0
+	 * @access    private
+	 * @return    void
+	 */
+	public function check_and_run_updates() {
+		// Only run on admin side to avoid performance issues on frontend
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		// Include the activator class
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-activator.php';
+		
+		// Run the update check
+		SeoRepairKit_Activator::update();
 	}
 
 }

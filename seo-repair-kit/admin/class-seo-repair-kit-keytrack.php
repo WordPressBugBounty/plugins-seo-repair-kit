@@ -47,6 +47,10 @@ class SeoRepairKit_KeyTrack {
      * This includes external libraries like Chart.js, Chosen.js, and Font Awesome.
      */
     public function enqueue_scripts() {
+        // Scope assets to the KeyTrack admin page to avoid loading on every admin screen.
+        if ( empty( $_GET['page'] ) || 'seo-repair-kit-keytrack' !== sanitize_key( $_GET['page'] ) ) {
+            return;
+        }
         // Enqueue Chart.js library only if it hasn't been registered.
         $srkit_kt_chart_js_url = 'https://cdn.jsdelivr.net/npm/chart.js';
         if ( filter_var( $srkit_kt_chart_js_url, FILTER_VALIDATE_URL ) ) {
@@ -67,7 +71,7 @@ class SeoRepairKit_KeyTrack {
      * This page displays Google Search Console data and checks if the Google Site Kit plugin
      * is active. It also provides options to install or activate Site Kit if not active.
      */
-    public function SeoRepairKit_keytrack_page() {
+    public function seorepairkit_keytrack_page() {
         wp_enqueue_style( 'srkit-keytrack-style' );
 
         if ( ! current_user_can( 'manage_options' ) ) {

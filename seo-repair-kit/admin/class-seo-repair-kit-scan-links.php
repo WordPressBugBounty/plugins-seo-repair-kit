@@ -60,15 +60,26 @@ class SeoRepairKit_ScanLinks {
             <?php include plugin_dir_path( __FILE__ ) . 'js/seo-repair-kit-scan-links.js'; ?>
         </script>
 
-        <div class="seo-repair-kit-broken-link-table">
-        <h3><?php esc_html_e( 'Broken Links', 'seo-repair-kit' ); ?></h3>
-        </div>
-        <div class="progress-bar-container">
-            <div class="progress-label"></div>
-            <div class="blue-bar"></div>
-        </div>
-        <div class="seo-repair-kit-loader-container">
-            <div class="seo-repair-kit-loader"></div>
+        <!-- Scan Progress Section -->
+        <div class="srk-scan-progress-container">
+            <div class="srk-scan-progress-header">
+                <div class="srk-scan-progress-info">
+                    <span class="dashicons dashicons-update srk-spin"></span>
+                    <span class="srk-scan-status-text"><?php esc_html_e( 'Scanning links...', 'seo-repair-kit' ); ?></span>
+                </div>
+                <div class="srk-scan-progress-stats">
+                    <span class="srk-scanned-count">0</span>
+                    <span class="srk-scan-divider">/</span>
+                    <span class="srk-total-count">0</span>
+                    <span class="srk-scan-label"><?php esc_html_e( 'links', 'seo-repair-kit' ); ?></span>
+                </div>
+            </div>
+            <div class="srk-progress-bar-wrapper">
+                <div class="srk-progress-bar-track">
+                    <div class="srk-progress-bar-fill blue-bar"></div>
+                </div>
+                <div class="srk-progress-percentage progress-label">0%</div>
+            </div>
         </div>
         <?php 
 
@@ -81,22 +92,30 @@ class SeoRepairKit_ScanLinks {
         $srkit_scanposts = new WP_Query( $srkit_args );
 
         // Output HTML table header ?>
-        <div id="scan-row-counter"></div>
-        <table class="wp-broken-links-list-table widefat fixed striped" id="scan-table">
-        <thead>
-            <tr>
-                <th><?php esc_html_e( 'ID', 'seo-repair-kit' ); ?></th>
-                <th><?php esc_html_e( 'Title', 'seo-repair-kit' ); ?></th>
-                <th><?php esc_html_e( 'Post Type', 'seo-repair-kit' ); ?></th>
-                <th><?php esc_html_e( 'Status', 'seo-repair-kit' ); ?></th>
-                <th><?php esc_html_e( 'Link', 'seo-repair-kit' ); ?></th>
-                <th><?php esc_html_e( 'Redirection', 'seo-repair-kit' ); ?></th>
-                <th><?php esc_html_e( 'Link Text', 'seo-repair-kit' ); ?></th>
-                <th><?php esc_html_e( 'Edit', 'seo-repair-kit' ); ?></th>
-                <th><?php esc_html_e( 'HTTP Status', 'seo-repair-kit' ); ?></th>
-            </tr>
-        </thead>
-        <tbody>
+        <div class="srk-table-container srk-scan-table-container">
+            <div class="srk-table-header">
+                <div class="srk-table-title">
+                    <span class="dashicons dashicons-admin-links"></span>
+                    <h3><?php esc_html_e( 'Broken Links Found', 'seo-repair-kit' ); ?></h3>
+                </div>
+                <span class="srk-table-count" id="scan-row-counter"></span>
+            </div>
+            <div class="srk-table-scroll">
+                <table class="srk-404-table srk-scan-links-table" id="scan-table">
+                    <thead>
+                        <tr>
+                            <th class="srk-col-id"><?php esc_html_e( 'ID', 'seo-repair-kit' ); ?></th>
+                            <th class="srk-col-title"><?php esc_html_e( 'Title', 'seo-repair-kit' ); ?></th>
+                            <th class="srk-col-type"><?php esc_html_e( 'Type', 'seo-repair-kit' ); ?></th>
+                            <th class="srk-col-status"><?php esc_html_e( 'Status', 'seo-repair-kit' ); ?></th>
+                            <th class="srk-col-link"><?php esc_html_e( 'Link', 'seo-repair-kit' ); ?></th>
+                            <th class="srk-col-redirect"><?php esc_html_e( 'Redirect', 'seo-repair-kit' ); ?></th>
+                            <th class="srk-col-text"><?php esc_html_e( 'Link Text', 'seo-repair-kit' ); ?></th>
+                            <th class="srk-col-edit"><?php esc_html_e( 'Edit', 'seo-repair-kit' ); ?></th>
+                            <th class="srk-col-http"><?php esc_html_e( 'HTTP', 'seo-repair-kit' ); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
         <?php
 
         $srkit_indexed = 0;
@@ -115,20 +134,26 @@ class SeoRepairKit_ScanLinks {
 
                         // Output table row
                         echo '<tr data-indexed="' . esc_attr( $srkit_indexed ) . '">
-                        <td>' . esc_html( $srkit_postid ) . '</td>
-                        <td>' . esc_html( $srkit_posttitle ) . '</td>
-                        <td>' . esc_html( get_post_type() ) . '</td>
-                        <td>' . esc_html( get_post_status() ) . '</td>
-                        <td><a href="' . esc_url( $srkit_link ) . '" target="_blank">' . esc_url( $srkit_link ) . '</a></td>';
-                        echo '<td>';
-
+                        <td class="srk-col-id"><span class="srk-id-badge">' . esc_html( $srkit_postid ) . '</span></td>
+                        <td class="srk-col-title"><span class="srk-title-text">' . esc_html( $srkit_posttitle ) . '</span></td>
+                        <td class="srk-col-type"><span class="srk-type-badge">' . esc_html( get_post_type() ) . '</span></td>
+                        <td class="srk-col-status"><span class="srk-status-badge">' . esc_html( get_post_status() ) . '</span></td>
+                        <td class="srk-col-link">
+                            <div class="srk-url-cell">
+                                <code>' . esc_url( $srkit_link ) . '</code>
+                                <a href="' . esc_url( $srkit_link ) . '" target="_blank" class="srk-url-external" title="' . esc_attr__( 'Open URL', 'seo-repair-kit' ) . '"><span class="dashicons dashicons-external"></span></a>
+                            </div>
+                        </td>';
+                        echo '<td class="srk-col-redirect">';
                         if ( $srkit_isinternal ) {
-                            echo '<a href="' . esc_url( admin_url( 'admin.php?page=seo-repair-kit-redirection' ) ) . '" class="button button-primary button-small srk-internal-link-button" target="_blank">' . esc_html__( 'Redirection', 'seo-repair-kit' ) . '</a>';
+                            echo '<a href="' . esc_url( admin_url( 'admin.php?page=seo-repair-kit-redirection&source_url=' . urlencode( $srkit_link ) ) ) . '" class="srk-action-btn srk-btn-redirect" target="_blank" title="' . esc_attr__( 'Create Redirect', 'seo-repair-kit' ) . '"><span class="dashicons dashicons-migrate"></span></a>';
+                        } else {
+                            echo '<span class="srk-text-muted">—</span>';
                         }
                         echo '</td>';
-                        echo '<td>' . esc_html( $srkit_linktext ) . '</td>
-                        <td><a href="' . esc_url( $srkit_editlink ) . '" target="_blank">' . esc_html__( 'Edit', 'seo-repair-kit' ) . '</a></td>
-                        <td><span class="scan-http-status" data-link="' . esc_url( $srkit_link ) . '">' . esc_html__( 'Loading...', 'seo-repair-kit' ) . '</span></td>
+                        echo '<td class="srk-col-text"><span class="srk-link-text">' . esc_html( $srkit_linktext ) . '</span></td>
+                        <td class="srk-col-edit"><a href="' . esc_url( $srkit_editlink ) . '" target="_blank" class="srk-action-btn" title="' . esc_attr__( 'Edit Post', 'seo-repair-kit' ) . '"><span class="dashicons dashicons-edit"></span></a></td>
+                        <td class="srk-col-http"><span class="scan-http-status" data-link="' . esc_url( $srkit_link ) . '">' . esc_html__( 'Loading...', 'seo-repair-kit' ) . '</span></td>
                     </tr>';
                         $this->srklinksArray[] = esc_url( $srkit_link );
                         $srkit_indexed++;
@@ -139,12 +164,15 @@ class SeoRepairKit_ScanLinks {
 
         wp_reset_postdata();
         echo '</tbody>
-         </table>';
-         echo '<p><a href="#" id="download-links-csv" class="button button-primary csv-download-button ">' . esc_html__( 'Download Links CSV', 'seo-repair-kit' ) . '</a></p>';
+                </table>
+            </div>
+        </div>';
+        echo '<p class="srk-csv-download"><a href="#" id="download-links-csv" class="srk-dashboard-button srk-button-with-icon"><span class="dashicons dashicons-download"></span>' . esc_html__( 'Download CSV', 'seo-repair-kit' ) . '</a></p>';
 
         // Add nonce to the JavaScript
         $srkit_httpstatusnonce = wp_create_nonce( 'scan_http_status_nonce' );
-        echo '<script>var ajaxUrlsrkscan = "' . esc_url( admin_url( 'admin-ajax.php' ) ) . '"; var scanHttpStatusNonce = "' . esc_attr( $srkit_httpstatusnonce ) . '";</script>';
+        $summary_nonce         = wp_create_nonce( 'srk_scan_summary' );
+        echo '<script>var ajaxUrlsrkscan = "' . esc_url( admin_url( 'admin-ajax.php' ) ) . '"; var scanHttpStatusNonce = "' . esc_attr( $srkit_httpstatusnonce ) . '"; var scanSummaryNonce = "' . esc_attr( $summary_nonce ) . '"; var srkScanPostType = "' . esc_js( $this->srkSelectedPostType ) . '";</script>';
     }
 
     // Method to check if a link is internal
@@ -174,8 +202,8 @@ class SeoRepairKit_ScanLinks {
             wp_die( esc_html__( 'Invalid nonce', 'seo-repair-kit' ) );
         }
 
-        $srkit_link = isset( $_POST['link'] ) ? sanitize_text_field( $_POST['link'] ) : '';
-        $srkit_httpstatus = $this->srkit_get_http_status_code( esc_url( $srkit_link ) );
+        $srkit_link = isset( $_POST['link'] ) ? esc_url_raw( $_POST['link'] ) : '';
+        $srkit_httpstatus = $this->srkit_get_http_status_code( $srkit_link );
         echo esc_html( $srkit_httpstatus );
         wp_die();
     }

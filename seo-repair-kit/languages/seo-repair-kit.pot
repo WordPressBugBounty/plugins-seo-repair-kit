@@ -3,8 +3,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: SEO Repair Kit 1.0.1\n"
-"POT-Creation-Date: 2024-04-27 13:43+0000\n"
+"Project-Id-Version: SEO Repair Kit 2.1.1\n"
+"POT-Creation-Date: 2026-01-15 17:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: TorontoDigits <support@torontodigits.com>\n"
 "Language-Team: TorontoDigits <support@torontodigits.com>\n"
@@ -59,10 +59,6 @@ msgstr ""
 
 #: admin\class-seo-repair-kit-scan-links.php:96
 msgid "HTTP Status"
-msgstr ""
-
-#: admin\class-seo-repair-kit-scan-links.php:64
-msgid "Broken Links"
 msgstr ""
 
 #: admin\class-seo-repair-kit-scan-links.php:46
@@ -235,7 +231,7 @@ msgid "Save"
 msgstr ""
 
 #: admin\js\class-seo-repair-kit-scan-links.js:97
-msgid "Total Links:"
+msgid "Remaining Links:"
 msgstr ""
 
 #: admin\js\class-seo-repair-kit-scan-links.js:98
@@ -286,10 +282,6 @@ msgstr ""
 
 #: admin\class-seo-repair-kit-keytrack.php:232
 msgid "Once your account is connected, you can quickly use the SEO Repair Kit KeyTrack feature."
-msgstr ""
-
-#: admin\class-seo-repair-kit-keytrack.php:235
-msgid "⚠️ Additional Message:', 'seo-repair-kit"
 msgstr ""
 
 #: admin\class-seo-repair-kit-keytrack.php:239
@@ -551,4 +543,3033 @@ msgstr ""
 
 #: admin\class-seo-repair-kit-keytrack-setting.php:611
 msgid "Source:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:215
+msgid "Onboarding steps"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:218
+msgid "Exit guided setup"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:218
+msgid "Exit Guided Setup"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:229
+msgid "Loading..."
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:420
+msgid "Permission denied."
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:505
+msgid "Once Monthly"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:706
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:809
+msgid "Powered By: %s"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:810
+msgid "Powered By: TorontoDigits"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:899
+#: admin/class-seo-repair-kit-admin.php:900
+msgid "SEO Repair Kit"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:910
+#: admin/class-seo-repair-kit-admin.php:911
+msgid "Link Scanner"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:925
+#: admin/class-seo-repair-kit-admin.php:926
+msgid "Image Alt Missing"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:940
+#: admin/class-seo-repair-kit-admin.php:941
+msgid "Redirection"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:955
+#: admin/class-seo-repair-kit-admin.php:956
+msgid "KeyTrack"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:969
+#: admin/class-seo-repair-kit-admin.php:970
+msgid "Schema Manager"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:984
+#: admin/class-seo-repair-kit-admin.php:985
+msgid "AI Chatbot"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:1164
+#: admin/class-seo-repair-kit-admin.php:1165
+#: admin/class-seo-repair-kit-dashboard.php:354
+#: admin/class-seo-repair-kit-robots-llms.php:169
+msgid "Bot Manager"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:999
+#: admin/class-seo-repair-kit-admin.php:1000
+msgid "Settings"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:1014
+#: admin/class-seo-repair-kit-admin.php:1015
+msgid "Upgrade to Pro"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:1139
+msgid "Loading..."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:181
+msgid "Site SEO Analysis"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:184
+msgid "Re-check Status"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:193
+msgid "Issue"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:194
+msgid "Action"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:215
+msgid "View Details"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:227
+msgid "No SEO issues detected. Your site looks great!"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:236
+msgid "Your Plan"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:251
+msgid "Health check for links, schema, and redirects."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:252
+msgid "One place to launch all SEO Repair Kit tools."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:259
+msgid "Manage License"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:260
+msgid "Upgrade to Pro"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:272
+msgid "Key Tools"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:280
+msgid "Link Scanner"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:281
+msgid "Scan your site for broken links and fix them fast."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:290
+msgid "KeyTrack"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:291
+msgid "Monitor keyword rankings and search performance."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:297
+msgid "Pro"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:303
+msgid "Schema Manager"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:304
+msgid "Add and manage rich schema markup for content."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:310
+msgid "Pro"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:316
+msgid "AI Chatbot"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:317
+msgid "Get real-time SEO assistance and answers."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:326
+msgid "404 Monitor"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:327
+msgid "Track 404 errors and convert them into redirects."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:355
+msgid "Control search engines and AI crawlers with robots.txt and llms.txt."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:336
+msgid "Redirections"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:337
+msgid "Create and manage redirects to recover SEO value."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:346
+msgid "Image Alt Missing"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:347
+msgid "Find images missing alt text and improve accessibility."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:356
+msgid "Settings"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:357
+msgid "Configure how SEO Repair Kit works on your site."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:366
+msgid "Get Support"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:367
+msgid "Contact our team if you need help or have questions."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:384
+msgid "Permission denied."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:505
+msgid "Critical"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:506
+msgid "%d broken link found on your site."
+msgid_plural "%d broken links found on your site."
+msgstr[0] ""
+msgstr[1] ""
+
+#: admin/class-seo-repair-kit-dashboard.php:507
+msgid "Help Me Fix"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:516
+msgid "Passed"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:517
+msgid "No broken links detected. Your internal and external links look healthy."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:531
+msgid "Warning"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:532
+msgid "KeyTrack is not enabled. Enable it to track search performance."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:533
+msgid "Help Me Fix"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:542
+msgid "Passed"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:543
+msgid "KeyTrack is enabled. Your keyword performance is being monitored."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:115
+msgid "%s ago"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:115
+msgid "No scans yet"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:122
+msgid "Manual"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:123
+msgid "Daily"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:124
+msgid "Weekly"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:125
+msgid "Monthly"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:130
+msgid "Runs automatically (%s cadence)."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:131
+msgid "Launch scans manually whenever you need a health check."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:134
+msgid "%s URLs have been checked so far."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:135
+msgid "Run your first scan to capture a baseline."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:139
+msgid "%1$s%% of the scanned links need fixes."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:142
+msgid "Clean slate! No broken links were found."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:154
+msgid "Link Scanner & 404 Monitor"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:155
+msgid "Keep your site healthy by finding broken links before they hurt your SEO. Monitor 404 errors in real-time and convert them into redirects to preserve search rankings."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:159
+msgid "AUTOMATED SCANNING"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:163
+msgid "404 TRACKING"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:167
+msgid "SMART REDIRECTS"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:185
+msgid "Link Scanner"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:189
+msgid "404 Monitor"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:198
+msgid "Total links checked"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:203
+msgid "Broken links detected"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:206
+msgid "%s%%"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:211
+msgid "Healthy links"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:214
+msgid "%s%%"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:216
+msgid "Working links confirmed in your last scan."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:219
+msgid "Automation"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:232
+msgid "Select Post Type:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:244
+msgid "Start Scan"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:248
+msgid "Last scan"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:252
+msgid "Automation"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:263
+msgid "Scanning links..."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:274
+msgid "No scan yet!"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:275
+msgid "Pick a post type and click \"Start Scan\" to begin."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:360
+msgid "Error: 404 Monitor class file not found. Please deactivate and reactivate the plugin."
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:528
+msgid "Please fill in all required fields."
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:529
+msgid "Error: Unable to save the redirection."
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:530
+msgid "Are you sure you want to delete this redirection?"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:531
+msgid "Error: Unable to delete the record."
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:532
+msgid "Export generated successfully."
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:533
+msgid "Import completed successfully."
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:546
+msgid "Advanced Redirections"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:547
+msgid "Create and manage redirects to recover SEO value from 404 errors. Track redirect performance with detailed analytics and preserve your search rankings."
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:550
+msgid "SEO OPTIMIZED"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:558
+msgid "Redirections"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:559
+msgid "Redirect Logs"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:560
+msgid "Import/Export"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:561
+msgid "Settings"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:569
+msgid "Redirect Analytics"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:572
+msgid "Refresh"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:578
+msgid "Total Hits"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:582
+msgid "Total Redirections"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:586
+msgid "Active Redirections"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:590
+msgid "Most Hit Redirect"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:608
+msgid "Add New Redirection"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:614
+msgid "Source URL:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:616
+msgid "Enter the URL to redirect from"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:619
+msgid "Target URL:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:621
+msgid "Enter the URL to redirect to"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:627
+msgid "Redirect Type:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:639
+msgid "Use Regular Expression"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:646
+msgid "Add Redirection"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:655
+msgid "Existing Redirections"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:658
+msgid "Bulk Actions"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:659
+msgid "Activate"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:660
+msgid "Deactivate"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:661
+msgid "Delete"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:662
+msgid "Reset Hits"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:664
+msgid "Apply"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:666
+msgid "Reset All Hits"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:679
+msgid "Redirect Logs"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:680
+msgid "Clear Logs"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:685
+msgid "Date"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:686
+msgid "Action"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:687
+msgid "Source URL"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:688
+msgid "Target URL"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:689
+msgid "IP Address"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:690
+msgid "User Agent"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:691
+msgid "Referrer"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:121
+msgid "You do not have permission to view this page."
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:145
+msgid "License cache cleared successfully."
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:148
+msgid "Failed to clear license cache."
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:164
+msgid "Schema Manager"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:165
+msgid "Add structured data to your content to help search engines understand your pages better. Create valid JSON-LD schema that enhances your search results with rich snippets, ratings, and more."
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:169
+msgid "JSON-LD FORMAT"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:173
+msgid "RICH RESULTS"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:177
+msgid "SCHEMA.ORG COMPLIANT"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:196
+msgid "Schema Manager Overview"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:200
+msgid "Structured data, simplified."
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:201
+msgid "Map fields, preview, and publish valid JSON-LD."
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:206
+msgid "Supports Posts, Pages & CPTs"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:208
+msgid "One-click JSON-LD preview & copy"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:210
+msgid "Schema types: Article, BlogPosting, NewsArticle, FAQPage, HowTo, Product, JobPosting, Event, Course, Review, Recipe, LocalBusiness, Organization, Corporation, Reservation, MedicalCondition, MedicalWebPage, Website, VideoObject"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:217
+msgid "Get Premium"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:223
+msgid "Clear License Cache"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:228
+msgid "If your license status looks outdated, clear the cache and try again."
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:255
+msgid "JSON-LD complies with schema.org vocabulary and follows Google rich-result guidelines where applicable."
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:279
+msgid "Premium Required"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:281
+msgid "Schema Manager is part of the Premium plan. Upgrade to unlock all schema types, previews, and AI-assisted mapping."
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:285
+msgid "Upgrade to Premium"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:291
+msgid "Clear License Cache"
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:102
+msgid "SEO AI Assistant"
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:103
+msgid "Get instant, actionable SEO guidance. Ask questions about schema, sitemaps, Core Web Vitals, redirects, and more."
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:106
+msgid "AI POWERED"
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:175
+msgid "Chat Console"
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:175
+msgid "Chat Preview"
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:180
+msgid "Licensed & Active"
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:185
+msgid "Premium Feature"
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:196
+msgid "Configuration Required"
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:197
+msgid "Chatbot webhook URL is not available. Please contact support."
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:210
+msgid "Preparing chat interface…"
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:221
+msgid "SRK Chatbot Window"
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:226
+msgid "Conversations are processed securely. Do not share sensitive credentials."
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:288
+msgid "Upgrade to unlock Chatbot"
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:292
+msgid "Unlock the SEO AI Assistant"
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:293
+msgid "Chat in plain English and get instant, tailored guidance for your site—schema, sitemaps, Core Web Vitals, redirects, and more."
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:298
+msgid "Schema & CTR improvements"
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:62
+msgid "Settings"
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:63
+msgid "Configure your SEO Repair Kit preferences. Choose which post types to scan and manage 404 error monitoring."
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:76
+msgid "Post Types"
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:77
+msgid "Select which post types should be scanned for broken links."
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:106
+msgid "Save Post Types"
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:120
+msgid "404 Error Monitoring"
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:121
+msgid "Automatically track and log 404 errors on your website."
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:139
+msgid "Enable 404 Monitoring"
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:140
+msgid "When enabled, all 404 errors will be logged automatically for review in the 404 Monitor."
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:147
+msgid "How it works:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:148
+msgid "The 404 Monitor tracks visitors who land on non-existent pages. You can then create redirects to guide them to the right content and preserve your SEO rankings."
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:155
+msgid "Save 404 Settings"
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:169
+msgid "Weekly SEO Report Email"
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:170
+msgid "Enable or disable the automated SEO summary email and view the last send status."
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:187
+msgid "Enable Weekly Report Email"
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:189
+msgid "When enabled, SEO Repair Kit will send a summary email on the configured schedule."
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:195
+msgid "No weekly report has been sent yet."
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:208
+msgid "%s ago"
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:214
+msgid "Status: %s"
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:217
+msgid "Last sent: %s"
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:232
+msgid "Last weekly report status:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-settings.php:240
+msgid "Save Weekly Report Settings"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:86
+msgid "Upgrade to Pro"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:87
+msgid "Unlock powerful features like Schema Manager and the AI SEO Chatbot to supercharge your workflow."
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:96
+msgid "Upgrade to Pro"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:97
+msgid "Unlock powerful features like Schema Manager, AI SEO Chatbot, and advanced keyword tracking to supercharge your SEO workflow."
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:100
+msgid "PREMIUM FEATURES"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:111
+msgid "Your license has expired"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:114
+msgid "Renew Now"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:122
+msgid "Your license expires today."
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:124
+msgid "Your license will expire in %d day(s)."
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:127
+msgid "Renew Now"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:137
+msgid "Upgrade Card"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:141
+msgid "Take SEO to the Next Level!"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:142
+msgid "Everything you need to grow – in one toolkit."
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:151
+msgid "Expired"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:152
+msgid "Active · %d day(s) left"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:152
+msgid "Active"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:155
+msgid "Inactive"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:160
+msgid "Unlimited personal websites"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:161
+msgid "Free 15 Content AI credits"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:162
+msgid "Track 500 keywords"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:163
+msgid "Powerful Schema Generator"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:164
+msgid "24/7 Priority Support"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:170
+msgid "🔄 Renew License"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:170
+msgid "⚡ Upgrade Now"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:174
+msgid "Clear License Cache"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:180
+msgid "License Active – AI Chatbot Included"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:183
+msgid "Expires on"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:186
+msgid "%d day(s) left"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:193
+msgid "Clear License Cache"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:205
+msgid "Why Upgrade to Pro?"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:212
+msgid "Schema Manager"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:213
+msgid "Generate rich, valid schema for posts, pages, and custom types with a few clicks."
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:221
+msgid "AI SEO Chatbot"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:222
+msgid "Ask SEO questions in plain English and get actionable guidance, instantly."
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:230
+msgid "Keyword Tracking"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:231
+msgid "Monitor up to 500 keywords with trends and quick insights."
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:239
+msgid "Audit & Fixes"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:240
+msgid "Auto-detect critical issues, get step-by-step fixes, and track progress."
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:248
+msgid "Content Credits"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:249
+msgid "Get 15 AI content credits to boost titles, descriptions & FAQs."
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:257
+msgid "Priority Support"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:258
+msgid "Direct access to our support team with faster response times."
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:266
+msgid "License Status"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:268
+msgid "License Key"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:271
+msgid "Plan ID"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:274
+msgid "Status"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:277
+msgid "Expires At"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:280
+msgid "Chatbot Access"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:281
+msgid "Enabled"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:281
+msgid "Not included"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:296
+msgid "All payments are securely processed through Stripe. You will be redirected to complete your purchase."
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:200
+msgid "View Full Size"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:203
+msgid "Edit in Media Library"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:221
+msgid "Alt:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:228
+msgid "Add Alt Text"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:253
+msgid "Showing all %1$d images"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:260
+msgid "Showing %1$d to %2$d of %3$d"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:278
+msgid "Previous"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:283
+msgid "Previous"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:332
+msgid "Next"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:337
+msgid "Next"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:345
+msgid "Per page:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:351
+msgid "All"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:377
+msgid "Why Alt Text Matters"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:379
+msgid "Screen readers use alt text to describe images to visually impaired users"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:380
+msgid "Search engines index alt text to understand image content"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:381
+msgid "Alt text displays when images fail to load"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:390
+msgid "Best Practices"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:392
+msgid "Be descriptive but concise (under 125 characters)"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:393
+msgid "Include relevant keywords naturally"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:394
+msgid "Avoid starting with \"Image of\" or \"Picture of\""
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:204
+msgid "404 Error Monitor"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:212
+msgid "Total 404 Errors"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:214
+msgid "Total occurrences"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:217
+msgid "Unique URLs"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:219
+msgid "Distinct 404 pages"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:222
+msgid "Total Log Entries"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:224
+msgid "Logged entries"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:227
+msgid "Most Hit 404"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:236
+msgid "Highest count"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:248
+msgid "Filter by URL:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:249
+msgid "Search URL..."
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:253
+msgid "Filter by IP:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:254
+msgid "Search IP..."
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:258
+msgid "Order by:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:260
+msgid "Last Accessed"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:261
+msgid "Hit Count"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:262
+msgid "URL"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:263
+msgid "First Accessed"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:266
+msgid "Descending"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:267
+msgid "Ascending"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:272
+msgid "Filter"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:273
+msgid "Reset"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:282
+msgid "Bulk Actions"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:283
+msgid "Delete"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:284
+msgid "Ignore"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:286
+msgid "Apply"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:287
+msgid "Clear All Logs"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:288
+msgid "Export CSV"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:289
+msgid "Refresh Stats"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:299
+msgid "URL"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:300
+msgid "Count"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:301
+msgid "Referrer"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:302
+msgid "IP Address"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:303
+msgid "User Agent"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:304
+msgid "First Accessed"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:305
+msgid "Last Accessed"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:306
+msgid "Actions"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:346
+msgid "Create Redirect"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:348
+msgid "Delete"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:358
+msgid "No 404 errors found."
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:371
+msgid "Showing %1$d-%2$d of %3$d entries"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:388
+msgid "&laquo; Previous"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:72
+msgid "Are you sure you want to delete this 404 log?"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:73
+msgid "Are you sure you want to clear all 404 logs? This cannot be undone."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:74
+msgid "Are you sure you want to delete selected 404 logs?"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:75
+msgid "Error: Unable to delete 404 log."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:76
+msgid "404 logs cleared successfully."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:77
+msgid "Redirect created successfully from 404."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:78
+msgid "Error: Unable to create redirect."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:79
+msgid "Export generated successfully."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack.php:74
+msgid "Unauthorized user."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack.php:84
+msgid "SEO Repair Kit"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack.php:86
+msgid "SEO Repair Kit"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack.php:91
+msgid "SEO Repair Kit plugin requires the Google Site Kit plugin to function properly. Please install and activate."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack.php:96
+msgid "Install the Google Site Kit plugin."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack.php:97
+msgid "Activate the Google Site Kit plugin."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack.php:98
+msgid "Set up Google Site Kit to integrate with SEO Repair Kit."
+msgstr ""
+
+#: includes/class-seo-repair-kit-activator.php:220
+msgid "SEO Repair Kit Installation Notification"
+msgstr ""
+
+#: includes/class-seo-repair-kit-activator.php:223
+msgid "Hello TorontoDigits, a new website has activated your plugin. Please find the details below:"
+msgstr ""
+
+#: includes/class-seo-repair-kit-activator.php:224
+msgid "Website Title:"
+msgstr ""
+
+#: includes/class-seo-repair-kit-activator.php:225
+msgid "Website URL:"
+msgstr ""
+
+#: includes/class-seo-repair-kit-activator.php:226
+msgid "Admin Email:"
+msgstr ""
+
+#: includes/class-srk-onboarding-applier.php:21
+msgid "Once Weekly"
+msgstr ""
+
+#: admin/class-seo-repair-kit-weekly-summary.php:91
+msgid "Once Weekly (SEO Repair Kit)"
+msgstr ""
+
+#: admin/schema-generator/class-seo-repair-kit-article-news-blog-schema.php:40
+msgid "Author Schema Info"
+msgstr ""
+
+#: admin/schema-generator/class-seo-repair-kit-article-news-blog-schema.php:43
+msgid "Author Full Name"
+msgstr ""
+
+#: admin/schema-generator/class-seo-repair-kit-article-news-blog-schema.php:48
+msgid "Optional. Defaults to the user's display name."
+msgstr ""
+
+#: admin/schema-generator/class-seo-repair-kit-article-news-blog-schema.php:52
+msgid "Author Profile URL"
+msgstr ""
+
+#: admin/schema-generator/class-seo-repair-kit-article-news-blog-schema.php:57
+msgid "Optional. Defaults to the author archive URL."
+msgstr ""
+
+#: admin/schema-generator/class-seo-repair-kit-article-news-blog-schema.php:61
+msgid "Author Social Profiles (sameAs)"
+msgstr ""
+
+#: admin/schema-generator/class-seo-repair-kit-article-news-blog-schema.php:65
+msgid "One URL per line (Facebook, LinkedIn, etc.)"
+msgstr ""
+
+#: admin/schema-generator/class-seo-repair-kit-faq-manager.php:65
+msgid "FAQ Questions & Answers"
+msgstr ""
+
+#: admin/schema-generator/class-srk-event-schema-generator.php:166
+msgid "Ticket"
+msgstr ""
+
+#: admin/schema-generator/class-srk-course-schema-generator.php:180
+msgid "Course Enrollment"
+msgstr ""
+
+#: admin/class-seo-repair-kit-scan-links.php:68
+msgid "Scanning links..."
+msgstr ""
+
+#: admin/class-seo-repair-kit-scan-links.php:99
+msgid "Broken Links Found"
+msgstr ""
+
+#: admin/class-seo-repair-kit-scan-links.php:107
+msgid "ID"
+msgstr ""
+
+#: admin/class-seo-repair-kit-scan-links.php:108
+msgid "Title"
+msgstr ""
+
+#: admin/class-seo-repair-kit-scan-links.php:109
+msgid "Type"
+msgstr ""
+
+#: admin/class-seo-repair-kit-scan-links.php:110
+msgid "Status"
+msgstr ""
+
+#: admin/class-seo-repair-kit-scan-links.php:111
+msgid "Link"
+msgstr ""
+
+#: admin/class-seo-repair-kit-scan-links.php:112
+msgid "Redirect"
+msgstr ""
+
+#: admin/class-seo-repair-kit-scan-links.php:113
+msgid "Link Text"
+msgstr ""
+
+#: admin/class-seo-repair-kit-scan-links.php:114
+msgid "Edit"
+msgstr ""
+
+#: admin/class-seo-repair-kit-scan-links.php:115
+msgid "HTTP"
+msgstr ""
+
+#: admin/class-seo-repair-kit-scan-links.php:144
+msgid "Open URL"
+msgstr ""
+
+#: admin/class-seo-repair-kit-scan-links.php:149
+msgid "Create Redirect"
+msgstr ""
+
+#: admin/class-seo-repair-kit-scan-links.php:154
+msgid "Edit Post"
+msgstr ""
+
+#: admin/class-seo-repair-kit-scan-links.php:156
+msgid "Loading..."
+msgstr ""
+
+#: admin/class-seo-repair-kit-scan-links.php:170
+msgid "Download CSV"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:500
+msgid "Import/Export functionality"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:501
+msgid "Regex support for complex redirects"
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:47
+msgid "Unauthorized"
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:52
+msgid "Your license plan has expired. Please renew your plan to continue using Schema Manager features."
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:187
+msgid "Item name required"
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:444
+msgid "Unauthorized"
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:480
+msgid "Unauthorized"
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:578
+msgid "Unauthorized"
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:604
+msgid "Unauthorized"
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:635
+msgid "Unauthorized"
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:661
+msgid "Unauthorized"
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:664
+msgid "Invalid post type"
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:735
+msgid "Unauthorized"
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:803
+msgid "Unauthorized"
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:808
+msgid "Your license plan has expired. Please renew your plan to continue using Schema Manager features."
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:818
+msgid "Schema is required."
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:822
+msgid "Post type is required."
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:827
+msgid "Please enable at least one field."
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:870
+msgid "FAQ schema saved successfully in postmeta only!"
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:874
+msgid "No FAQ items found."
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:984
+msgid "Schema mapping and post meta saved successfully!"
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:1195
+msgid "Unauthorized"
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:1200
+msgid "Your license plan has expired. Please renew your plan to continue using Schema Manager features."
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:1210
+msgid "No FAQ items found"
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:1217
+msgid "FAQ Schema saved successfully to postmeta only"
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:1224
+msgid "Unauthorized"
+msgstr ""
+
+#: includes/class-seo-repair-kit-ajax-handlers.php:1230
+msgid "No post type provided"
+msgstr ""
+
+#: admin/class-seo-repair-kit-scan-links.php:199
+msgid "Invalid nonce"
+msgstr ""
+
+#: admin/class-seo-repair-kit-scan-links.php:220
+msgid "Error:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:230
+msgid "Onboarding steps"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:233
+msgid "Exit guided setup"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:233
+msgid "Exit Guided Setup"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:244
+msgid "Loading..."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:121
+msgid "Pro Plan"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:121
+msgid "Free Plan"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:122
+msgid "License active"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:122
+msgid "Upgrade to unlock all features"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:559
+msgid "Schema Manager is a Pro feature. Activate a Pro license to enable schema markup and rich results."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:560
+msgid "View Plans"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:569
+msgid "No schema markup is enabled. Turn on at least one schema type to improve rich results."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:579
+msgid "%d schema type is configured and active on your site."
+msgid_plural "%d schema types are configured and active on your site."
+msgstr[0] ""
+msgstr[1] ""
+
+#: admin/class-seo-repair-kit-dashboard.php:600
+msgid "AI Assistant is not enabled. Turn it on to get real-time SEO guidance inside WordPress."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:610
+msgid "AI Assistant is active. You can ask SEO questions and get instant answers."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:623
+msgid "Redirections are available. You can convert 404s into SEO-friendly redirects."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:632
+msgid "Review your 404 Error Monitor regularly to catch and fix high-traffic 404 pages."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:633
+msgid "Open 404 Monitor"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:648
+msgid "%d image is missing alt text. Fill in descriptive alt attributes to improve accessibility and image SEO."
+msgid_plural "%d images are missing alt text. Fill in descriptive alt attributes to improve accessibility and image SEO."
+msgstr[0] ""
+msgstr[1] ""
+
+#: admin/class-seo-repair-kit-dashboard.php:663
+msgid "No images are currently missing alt text. Your image accessibility looks good."
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:107
+msgid "Image Alt Text Manager"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:108
+msgid "Improve accessibility and SEO by adding descriptive alt text to your images. Search engines use alt text to understand image content."
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:111
+msgid "Accessibility & SEO"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:120
+msgid "Total Images"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:122
+msgid "Images in media library"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:126
+msgid "Missing Alt Text"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:128
+msgid "Need optimization"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:132
+msgid "With Alt Text"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:134
+msgid "Fully optimized"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:138
+msgid "Health Score"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:151
+msgid "Image Library"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:161
+msgid "All"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:166
+msgid "Missing Alt"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:171
+msgid "Has Alt"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:179
+msgid "No images found"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:182
+msgid "There are no images matching your current filter."
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:200
+msgid "View Full Size"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:203
+msgid "Edit in Media Library"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:221
+msgid "Alt:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:228
+msgid "Add Alt Text"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:253
+msgid "Showing all %1$d images"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:260
+msgid "Showing %1$d to %2$d of %3$d"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:278
+msgid "Previous"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:283
+msgid "Previous"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:310
+msgid "Next"
+msgstr ""
+
+#: admin/class-seo-repair-kit-alt-text.php:315
+msgid "Next"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:541
+msgid "Please fill in all required fields."
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:542
+msgid "Error: Unable to save the redirection."
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:543
+msgid "Are you sure you want to delete this redirection?"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:544
+msgid "Error: Unable to delete the record."
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:545
+msgid "Export generated successfully."
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:546
+msgid "Import completed successfully."
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:56
+msgid "Are you sure you want to delete this 404 log?"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:57
+msgid "Are you sure you want to clear all 404 logs? This cannot be undone."
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:58
+msgid "Are you sure you want to delete selected 404 logs?"
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:59
+msgid "Error: Unable to delete 404 log."
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:60
+msgid "404 logs cleared successfully."
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:61
+msgid "Redirect created successfully from 404."
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:62
+msgid "Error: Unable to create redirect."
+msgstr ""
+
+#: admin/class-seo-repair-kit-404-manager.php:63
+msgid "Export generated successfully."
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:284
+msgid "Enable Schema Types"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:285
+msgid "Select a schema type and map its fields to your post type."
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:291
+msgid "Schemas"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:338
+msgid "Configured"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:351
+msgid "Quick Schema Setup Steps"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:357
+msgid "Select a schema type"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:358
+msgid "Pick from Article, FAQ, HowTo, Product, and more."
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:363
+msgid "Choose the post type"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:364
+msgid "Apply the schema to Posts, Pages, or any CPT."
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:369
+msgid "Map fields to WordPress"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:370
+msgid "Connect schema fields with meta fields or content."
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:375
+msgid "Preview & validate"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:376
+msgid "Save your settings, preview JSON-LD, and test in Google's Rich Results or Schema Validator."
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:388
+msgid "Schema Already Configured"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:389
+msgid "Close"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:395
+msgid "Edit Configuration"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:396
+msgid "Cancel"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:403
+msgid "JSON-LD Preview — Save & Validate"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:409
+msgid "Generating JSON-LD Preview..."
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:415
+msgid "Save Schema"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:417
+msgid "Validate Schema"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:422
+msgid "Test with Google Rich Results Test"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:424
+msgid "Test with Google"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:429
+msgid "Copy the JSON-LD preview to clipboard"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:431
+msgid "Copy JSON"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-ui.php:442
+msgid "Google Rich Results Test:"
+msgstr ""
+
+#: includes/class-srk-onboarding-applier.php:21
+msgid "Once Weekly"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:770
+msgid "Threshold Settings"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:774
+msgid "Threshold Reference:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:777
+msgid "Target Your Keywords:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:794
+msgid "No keywords found."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:799
+msgid "Performance Tracking Period:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:802
+msgid "Demo For Next 2 Minutes"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:805
+msgid "Next 7 Days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:808
+msgid "Next 14 Days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:811
+msgid "Next 28 Days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:814
+msgid "Next 3 Months"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:822
+msgid "Submit"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:829
+msgid "Settings form is temporarily disabled until the next scheduled run at:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:833
+msgid "Make sure your admin email is set up to receive reports!"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:846
+msgid "Scheduled Cron Job:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:847
+msgid "Next run scheduled for:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:852
+msgid "Scheduled Cron Job:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:853
+msgid "No cron job currently scheduled."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:862
+msgid "Are you sure you want to clear the scheduled cron job?"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:864
+msgid "Clear Scheduled Cron Job"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:895
+msgid "Total Clicks"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:896
+msgid "Total Impressions"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:898
+msgid "Average CTR"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:900
+msgid "Average Position"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:907
+msgid "Keyword"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:908
+msgid "Clicks"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:909
+msgid "Impressions"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:910
+msgid "Position"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:954
+msgid "🚀 Set Up Your Thresholds to Track Website Content Performance Like a Pro! 📈 ✨ Get reports straight to your inbox! 📧"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:407
+msgid "📊 %s GSC Insights Are In! 🚀 Keyword Performance & Growth Report"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:559
+msgid "Scheduled cron job has been cleared successfully."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:566
+msgid "No scheduled cron job found to clear."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:577
+msgid "Google Site Kit plugin is required for this plugin to work. Please install and activate it."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:613
+msgid "Invalid request or missing nonce verification."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:627
+msgid "Threshold Reference name is required."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:636
+msgid "Please select at least one keyword to track."
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:688
+msgid "Failed to save settings. Database error: "
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:699
+msgid "Settings saved and cron job scheduled successfully!"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:69
+msgid "Every 2 Minutes"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:74
+msgid "Every 7 Days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:79
+msgid "Every 14 Days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:84
+msgid "Every 28 Days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-keytrack-settings.php:89
+msgid "Every 90 Days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:221
+msgid "SRK Chatbot Window"
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:288
+msgid "Upgrade to unlock Chatbot"
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:298
+msgid "Schema & CTR improvements"
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:302
+msgid "404s, sitemaps & robots.txt fixes"
+msgstr ""
+
+#: admin/class-seo-repair-kit-chatbot.php:306
+msgid "Keyword & On-Page recommendations"
+msgstr ""
+
+#: admin/class-seo-repair-kit-weekly-summary.php:73
+msgid "Every 7 Days (SEO Repair Kit)"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:676
+msgid "Your Pro license is not active. Some advanced features may be limited."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:684
+msgid "Your Pro license is active. All premium SEO features are available."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:694
+msgid "Complete the Guided Setup to make sure all SEO Repair Kit features are configured for your site."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:695
+msgid "Open Settings"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:469
+msgid "Total 404 Errors"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:471
+msgid "Total occurrences tracked"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:475
+msgid "Unique URLs"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:476
+msgid "Distinct 404 pages found"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:479
+msgid "Log Entries"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:481
+msgid "Total logged entries"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:484
+msgid "Most Hit 404"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:488
+msgid "Hits"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:497
+msgid "No data yet"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:514
+msgid "Filter by URL"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:516
+msgid "Search URL..."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:522
+msgid "Filter by IP"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:524
+msgid "Search IP..."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:530
+msgid "Sort by"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:534
+msgid "Last Accessed"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:535
+msgid "First Accessed"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:538
+msgid "Desc"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:539
+msgid "Asc"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:545
+msgid "Apply Filters"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:546
+msgid "Reset"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:556
+msgid "Bulk Actions"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:557
+msgid "Delete Selected"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:558
+msgid "Ignore Selected"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:560
+msgid "Apply"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:565
+msgid "Clear All Logs"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:569
+msgid "Export CSV"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:573
+msgid "Refresh Stats"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:585
+msgid "404 Error Logs"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:587
+msgid "%s entry"
+msgid_plural "%s entries"
+msgstr[0] ""
+msgstr[1] ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:594
+msgid "URL"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:595
+msgid "Hits"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:596
+msgid "IP Address"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:597
+msgid "User Agent"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:598
+msgid "First Seen"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:599
+msgid "Last Seen"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:600
+msgid "Actions"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:613
+msgid "Open URL"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:645
+msgid "Create Redirect"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:648
+msgid "Delete"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:660
+msgid "No 404 errors found"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:661
+msgid "Try adjusting your filters or check back later."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:677
+msgid "Showing all %1$d log entries"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:684
+msgid "Showing %1$d to %2$d of %3$d log entries"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:716
+msgid "Previous page"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:718
+msgid "Previous"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:723
+msgid "Previous"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:772
+msgid "Next page"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:773
+msgid "Next"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:778
+msgid "Next"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:786
+msgid "Per page:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:794
+msgid "All"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:801
+msgid "No 404 Errors Yet"
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:802
+msgid "404 error monitoring is active. Any 404 errors will be logged here automatically."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:818
+msgid "Invalid request."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:822
+msgid "Permission denied."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:828
+msgid "Security token missing. Please refresh the page and try again."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:833
+msgid "Security check failed. Please refresh the page and try again."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:838
+msgid "Invalid 404 log ID."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:848
+msgid "404 logs table does not exist."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:863
+msgid "404 log deleted successfully."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:865
+msgid "Failed to delete 404 log."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:877
+msgid "Invalid request."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:881
+msgid "Permission denied."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:887
+msgid "Security token missing. Please refresh the page and try again."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:892
+msgid "Security check failed. Please refresh the page and try again."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:899
+msgid "Invalid action or IDs."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:909
+msgid "404 logs table does not exist."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:917
+msgid "Invalid log IDs."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:938
+msgid "%d 404 log deleted."
+msgid_plural "%d 404 logs deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:944
+msgid "Failed to delete 404 logs."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:958
+msgid "%d 404 log ignored."
+msgid_plural "%d 404 logs ignored."
+msgstr[0] ""
+msgstr[1] ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:964
+msgid "Failed to ignore 404 logs."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:968
+msgid "Invalid action."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:980
+msgid "Invalid request."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:984
+msgid "Permission denied."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:990
+msgid "Security token missing. Please refresh the page and try again."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:995
+msgid "Security check failed. Please refresh the page and try again."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1007
+msgid "404 logs table does not exist."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1027
+msgid "Failed to clear 404 logs."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1054
+msgid "%d log entry cleared."
+msgid_plural "%d log entries cleared."
+msgstr[0] ""
+msgstr[1] ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1064
+msgid "Invalid request."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1070
+msgid "Permission denied."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1076
+msgid "Security token missing. Please refresh the page and try again."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1081
+msgid "Security check failed. Please refresh the page and try again."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1092
+msgid "Source URL and Target URL are required."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1113
+msgid "A redirect for this URL already exists."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1158
+msgid "Redirect created successfully."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1163
+msgid "Failed to create redirect."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1174
+msgid "Invalid request."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1178
+msgid "Permission denied."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1184
+msgid "Security token missing. Please refresh the page and try again."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1189
+msgid "Security check failed. Please refresh the page and try again."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1199
+msgid "404 logs table does not exist."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1209
+msgid "No 404 logs to export."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1260
+msgid "Invalid request."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1266
+msgid "Permission denied."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1272
+msgid "Security token missing. Please refresh the page and try again."
+msgstr ""
+
+#: admin/class-seo-repair-kit-link-scanner.php:1277
+msgid "Security check failed. Please refresh the page and try again."
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:501
+msgid "Migration details:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:505
+msgid "SEO Repair Kit v2.1.0:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:506
+msgid "Your existing data has been successfully migrated to the new enhanced system!"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:509
+msgid "New Features Available:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:511
+msgid "Enhanced redirection management with hit tracking"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:512
+msgid "Advanced redirect logs and analytics"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:513
+msgid "Import/Export functionality"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:514
+msgid "Regex support for complex redirects"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:820
+msgid "No redirect logs yet"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:832
+msgid "Showing all %1$d log entries"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:839
+msgid "Showing %1$d to %2$d of %3$d log entries"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:861
+msgid "Previous page"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:863
+msgid "Previous"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:868
+msgid "Previous"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:917
+msgid "Next page"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:918
+msgid "Next"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:923
+msgid "Next"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:931
+msgid "Per page:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:937
+msgid "All"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:156
+msgid "⚠️ Schema Conflicts Detected"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:157
+msgid "The following schema conflicts were detected on your site:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:164
+msgid "Impact:"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:165
+msgid "Conflicting schemas may be ignored by Google, which can hurt your SEO. Please review your schema assignments and remove conflicting schemas."
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:169
+msgid "Review Schema Assignments"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:172
+msgid "Dismiss"
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:238
+msgid "License cache cleared successfully."
+msgstr ""
+
+#: admin/class-seo-repair-kit-schema-manager.php:241
+msgid "Failed to clear license cache."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:129
+msgid "Schema type is required."
+msgstr ""
+
+
+#: includes/class-seo-repair-kit-schema-validator.php:248
+msgid "Required field \"%s\" is missing or not enabled."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:253
+msgid "The \"%s\" field is required by Schema.org for this schema type. Without it, Google may not display your content as a rich result."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:277
+msgid "Required field \"%s\" is missing or not enabled."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:282
+msgid "The \"%s\" field is required by Schema.org for this schema type. Without it, Google may not display your content as a rich result."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:326
+msgid "Field \"%s\" must be a valid URL."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:331
+msgid "The value \"%s\" is not a valid URL format. URLs must start with http:// or https:// and be properly formatted."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:334
+msgid "Please enter a valid URL starting with http:// or https://. For example: https://example.com/image.jpg"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:355
+msgid "Field \"%s\" must be a valid date."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:360
+msgid "The value \"%2$s\" for \"%1$s\" is not recognized as a valid date format. Dates should be in ISO 8601 format (YYYY-MM-DD) or a standard date format."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:364
+msgid "Please use ISO 8601 format (YYYY-MM-DD) or a standard date format like \"January 1, 2024\". For dates with time, use ISO 8601: 2024-01-01T10:00:00+00:00"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:383
+msgid "Field \"%s\" must be a valid number."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:388
+msgid "The value \"%2$s\" for \"%1$s\" is not a valid number. This field requires a numeric value."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:392
+msgid "Please enter a numeric value. For ratings, use numbers between 0 and 5. For counts, use whole numbers (integers)."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:405
+msgid "Field \"%s\" is typically between 0 and 5 for ratings."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:423
+msgid "Field \"%s\" must be a valid email address."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:447
+msgid "Schema must include @context set to \"https://schema.org\"."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:455
+msgid "Schema must include @type."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:464
+msgid "Product offers must be an object with @type \"Offer\"."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:469
+msgid "Product offers must include @type \"Offer\"."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:479
+msgid "FAQ schema must include at least one item in mainEntity."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:512
+msgid "Recommended field \"%s\" is missing. This may affect rich results appearance."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:578
+msgid "Name"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:579
+msgid "Headline"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:580
+msgid "Description"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:581
+msgid "Author"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:582
+msgid "Publisher"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:583
+msgid "Image"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:584
+msgid "Date Published"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:585
+msgid "Date Modified"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:586
+msgid "Offers"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:587
+msgid "Start Date"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:588
+msgid "End Date"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:589
+msgid "Address"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:590
+msgid "URL"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:591
+msgid "Main Entity"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:592
+msgid "Title"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:593
+msgid "Date Posted"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:594
+msgid "Valid Through"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:595
+msgid "Provider"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:596
+msgid "Item Reviewed"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:597
+msgid "Review Rating"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:598
+msgid "Rating Value"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:599
+msgid "Review Count"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:600
+msgid "Best Rating"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:601
+msgid "Worst Rating"
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:618
+msgid "Enable this field and map it to your post title or a custom field containing the name."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:619
+msgid "Enable this field and map it to your post title. This is the main headline of your article."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:620
+msgid "Enable this field and map it to post author or a custom field. You can use \"Post Default > Post Author\" for automatic mapping."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:621
+msgid "Enable this field and map it to your site name or organization. You can use \"Site Information > Site Name\" for automatic mapping."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:622
+msgid "For Product schemas, you need to provide pricing information. Map the price field or use WooCommerce product price if available."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:623
+msgid "Enable this field and map it to a date field. Use \"Post Default > Post Date\" for publication date or a custom date field."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:624
+msgid "Enable this field and provide your business address. You can use custom fields for street address, city, postal code, etc."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:625
+msgid "Enable this field and map it to post URL or a custom URL field. You can use \"Post Default > Post URL\" for automatic mapping."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:626
+msgid "Add at least one FAQ item with both a question and answer. Click \"Add FAQ Item\" to create FAQ entries."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:627
+msgid "Enable this field and provide a numeric rating value (typically between 0 and 5)."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:628
+msgid "Enable this field and provide the total number of reviews as a whole number."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:629
+msgid "Enable this field and map it to your post title or job title field."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:630
+msgid "Enable this field and map it to post date or a custom date field for when the job was posted."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:631
+msgid "Enable this field and provide the date when the job posting expires."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:632
+msgid "Enable this field and provide the name of the course provider or educational institution."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-validator.php:635
+msgid "Please enable this field and provide a valid value."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-conflict-detector.php:124
+msgid "Duplicate %1$s schema detected. Already output by %2$s."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-conflict-detector.php:145
+msgid "%1$s schema conflicts with %2$s schema already output by %3$s. Only one should be output per page."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-conflict-detector.php:165
+msgid "Product schema conflicts with Review schema already output by %s. Review should reference Product, not be separate."
+msgstr ""
+
+#: includes/class-seo-repair-kit-schema-conflict-detector.php:181
+msgid "Review schema conflicts with Product schema already output by %s. Review should reference Product, not be separate."
+msgstr ""
+
+#: admin/class-seo-repair-kit-robots-llms.php:1421
+#: public/class-seo-repair-kit-robots-public.php:270
+msgid "DeepSeek"
+msgstr ""
+
+#: admin/class-seo-repair-kit-robots-llms.php:1423
+#: public/class-seo-repair-kit-robots-public.php:272
+msgid "DeepSeek AI crawler"
+msgstr ""
+
+#: admin/class-seo-repair-kit-robots-llms.php:1426
+#: public/class-seo-repair-kit-robots-public.php:275
+msgid "Grok (xAI)"
+msgstr ""
+
+#: admin/class-seo-repair-kit-robots-llms.php:1428
+#: public/class-seo-repair-kit-robots-public.php:277
+msgid "xAI's Grok AI"
+msgstr ""
+
+#: admin/class-seo-repair-kit-robots-llms.php:1431
+#: public/class-seo-repair-kit-robots-public.php:280
+msgid "Qwen AI (Alibaba)"
+msgstr ""
+
+#: admin/class-seo-repair-kit-robots-llms.php:1433
+#: public/class-seo-repair-kit-robots-public.php:282
+msgid "Alibaba's Qwen AI"
+msgstr ""
+
+#: admin/class-seo-repair-kit-robots-llms.php:1436
+#: public/class-seo-repair-kit-robots-public.php:285
+msgid "Meta Llama"
+msgstr ""
+
+#: admin/class-seo-repair-kit-robots-llms.php:1438
+#: public/class-seo-repair-kit-robots-public.php:287
+msgid "Meta's Llama AI model"
+msgstr ""
+
+#: admin/class-seo-repair-kit-robots-llms.php:1441
+#: public/class-seo-repair-kit-robots-public.php:290
+msgid "Cohere"
+msgstr ""
+
+#: admin/class-seo-repair-kit-robots-llms.php:1443
+#: public/class-seo-repair-kit-robots-public.php:292
+msgid "Cohere AI crawler"
+msgstr ""
+
+#: admin/class-seo-repair-kit-robots-llms.php:1446
+#: public/class-seo-repair-kit-robots-public.php:295
+msgid "Mistral AI"
+msgstr ""
+
+#: admin/class-seo-repair-kit-robots-llms.php:1448
+#: public/class-seo-repair-kit-robots-public.php:297
+msgid "Mistral AI crawler"
+msgstr ""
+
+#: admin/class-seo-repair-kit-robots-llms.php:1451
+#: public/class-seo-repair-kit-robots-public.php:300
+msgid "Hugging Face"
+msgstr ""
+
+#: admin/class-seo-repair-kit-robots-llms.php:1453
+#: public/class-seo-repair-kit-robots-public.php:302
+msgid "Hugging Face AI models"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:338
+msgid "Lifetime Deal"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:340
+msgid "Get Lifetime Access"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:342
+msgid "Pay once, use forever! Get all Pro features with lifetime updates and support."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:345
+msgid "Starting from $199"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:346
+msgid "Save 67% vs Annual"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:348
+msgid "Claim Lifetime Deal"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:318
+msgid "One Time Payment - NO Renewal"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:322
+msgid "Limited Time Offer"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:327
+msgid "Days"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:332
+msgid "Hours"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:337
+msgid "Minutes"
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:342
+msgid "Seconds"
 msgstr ""

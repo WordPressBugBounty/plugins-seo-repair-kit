@@ -8,15 +8,27 @@
 
 jQuery(document).ready(function ($) {
   // Selecting relevant DOM elements
-  var loader = $(".seo-repair-kit-loader");
   var links = $("#scan-table .scan-http-status");
-  var progressBar = $(".progress-bar");
   var blueBar = $(".blue-bar");
   var progressLabel = $(".progress-label");
+  var progressContainer = $(".srk-scan-progress-container");
+  var scannedCount = $(".srk-scanned-count");
+  var totalCount = $(".srk-total-count");
+  var statusText = $(".srk-scan-status-text");
+  var spinIcon = $(".srk-scan-progress-info .dashicons");
 
   // Initializing variables for link processing
   var totalLinks = links.length;
   var processedLinks = 0;
+  var summarySubmitted = false;
+
+  // Initialize total count
+  totalCount.text(totalLinks);
+
+  if (!totalLinks) {
+    progressContainer.hide();
+    finalizeScan();
+  }
 
   // Hide CSV download button by default
   $("#download-links-csv").hide();
@@ -27,13 +39,27 @@ jQuery(document).ready(function ($) {
 
   function updateProgress() {
     var percentage = Math.floor((processedLinks / totalLinks) * 100);
-    progressBar.width(percentage + "%");
+    blueBar.css("width", percentage + "%");
     progressLabel.text(percentage + "%");
-    blueBar.width(percentage + "%");
+    scannedCount.text(processedLinks);
+
+    // Update status text based on progress
+    if (percentage < 100) {
+      statusText.text("Scanning links...");
+    }
 
     // Show CSV download button when processing is complete and broken links are found
-    if (percentage === 100 && updateRowCount() !== 0) {
-      $("#download-links-csv").show();
+    if (percentage === 100) {
+      var brokenCount = updateRowCount();
+      spinIcon.removeClass("srk-spin dashicons-update").addClass("dashicons-yes-alt");
+      statusText.text("Scan complete!");
+      progressContainer.addClass("srk-scan-complete");
+      
+      if (brokenCount !== 0) {
+        $("#download-links-csv").show();
+      } else {
+        $("#download-links-csv").hide();
+      }
     } else {
       $("#download-links-csv").hide();
     }
@@ -46,7 +72,7 @@ jQuery(document).ready(function ($) {
 
   function scanLink(index) {
     if (index >= links.length) {
-      loader.hide();
+      finalizeScan();
       return;
     }
 
@@ -94,7 +120,7 @@ jQuery(document).ready(function ($) {
 
   function updateRowCount() {
     var rowCount = $("#scan-table tbody tr").length;
-    var totalLinksString = "<?php esc_html_e('Total Links: ', 'seo-repair-kit'); ?>";
+    var totalLinksString = "<?php esc_html_e('Remaining Links: ', 'seo-repair-kit'); ?>";
     var congratsMessage = "<?php esc_html_e('Congrats Broken Links Not Found !', 'seo-repair-kit'); ?>";
     $("#scan-row-counter").text(totalLinksString + rowCount);
 
@@ -111,6 +137,34 @@ jQuery(document).ready(function ($) {
       $("#scan-row-counter + .srk-no-links-message").remove();
     }
     return rowCount;
+  }
+
+  function finalizeScan() {
+    if (summarySubmitted) {
+      return;
+    }
+    if (typeof ajaxUrlsrkscan === "undefined" || typeof scanSummaryNonce === "undefined") {
+      setTimeout(finalizeScan, 200);
+      return;
+    }
+
+    summarySubmitted = true;
+
+    var brokenRemaining = updateRowCount();
+    var workingLinks = totalLinks - brokenRemaining;
+
+    $.ajax({
+      url: ajaxUrlsrkscan,
+      type: "POST",
+      data: {
+        action: "srk_store_scan_stats",
+        nonce: scanSummaryNonce,
+        total_links: totalLinks,
+        broken_links: brokenRemaining,
+        working_links: workingLinks < 0 ? 0 : workingLinks,
+        post_type: typeof srkScanPostType !== "undefined" ? srkScanPostType : ""
+      }
+    });
   }
 
   // Initial update of row count

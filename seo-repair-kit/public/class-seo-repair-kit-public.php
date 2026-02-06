@@ -43,6 +43,14 @@ class Seo_Repair_Kit_Public {
 		$this->seo_repair_kit = $seo_repair_kit;
 		$this->version = $version;
 
+		// Initialize 404 monitor
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-seo-repair-kit-404-monitor.php';
+		new SeoRepairKit_404_Monitor();
+
+		// Initialize Bot Manager public (Robots & LLMs public functionality)
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-seo-repair-kit-robots-public.php';
+		new SeoRepairKit_Robots_Public();
+
 	}
 
 	/**

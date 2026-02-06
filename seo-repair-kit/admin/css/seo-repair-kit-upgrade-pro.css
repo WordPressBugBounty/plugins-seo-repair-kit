@@ -1,0 +1,818 @@
+/**
+ * SEO Repair Kit - Upgrade to Pro Page Styles
+ * Following Dashboard & Link Scanner UI patterns
+ */
+
+/* ============================================
+   WRAPPER & LAYOUT
+   ============================================ */
+   .srk-upgrade-wrap {
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+.srk-upgrade-wrap .srk-title,
+.srk-upgrade-wrap .srk-subtitle {
+    display: none;
+}
+
+/* ============================================
+   HERO SECTION (Link Scanner Style)
+   ============================================ */
+.srk-upgrade-hero {
+    background: linear-gradient(135deg, var(--srk-card) 0%, rgba(107, 78, 255, 0.03) 100%);
+    border: 1px solid var(--srk-border);
+    border-radius: 14px;
+    padding: 24px 26px;
+    margin-bottom: 20px;
+    box-shadow: var(--srk-shadow-card);
+    position: relative;
+    overflow: hidden;
+}
+
+.srk-upgrade-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(107, 78, 255, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(30%, -30%);
+    pointer-events: none;
+}
+
+.srk-upgrade-hero-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    position: relative;
+    z-index: 1;
+}
+
+.srk-upgrade-hero-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--srk-primary) 0%, var(--srk-primary-hover) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(107, 78, 255, 0.25);
+}
+
+.srk-upgrade-hero-icon .dashicons {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    color: #FFFFFF;
+    line-height: 1;
+}
+
+.srk-upgrade-hero-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.srk-upgrade-hero-text h1 {
+    margin: 0px 0 6px 0;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+
+.srk-upgrade-hero-text p {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: var(--srk-muted);
+    line-height: 1.6;
+    font-weight: 400;
+    max-width: 680px;
+}
+
+.srk-upgrade-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    background: var(--srk-card);
+    border: 1px solid var(--srk-border);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #111827;
+    transition: all 0.2s ease;
+}
+
+.srk-upgrade-hero-badge:hover {
+    background: var(--srk-card-hover);
+    border-color: var(--srk-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(107, 78, 255, 0.1);
+}
+
+.srk-upgrade-hero-badge .dashicons {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    color: var(--srk-primary);
+    line-height: 1;
+}
+
+/* ============================================
+   EXPIRY RIBBON
+   ============================================ */
+.srk-expiry-ribbon {
+    border-radius: 10px !important;
+    padding: 14px 18px !important;
+    margin: 0 0 20px 0 !important;
+    border-left-width: 4px !important;
+}
+
+.srk-expiry-ribbon p {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.srk-expiry-ribbon .button {
+    margin-left: auto;
+}
+
+/* ============================================
+   MAIN GRID LAYOUT
+   ============================================ */
+.srk-upgrade-grid {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+/* ============================================
+   CTA CARD (Left Sidebar - Dark Theme)
+   ============================================ */
+.srk-cta-card {
+    background: #0F142F;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--srk-shadow-card);
+    position: sticky;
+    top: 50px;
+}
+
+.srk-cta-head {
+    padding: 24px 22px 16px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    background: var(--srk-card-ghost);
+}
+
+.srk-cta-head .srk-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(145deg, var(--srk-primary), var(--srk-primary-80));
+    color: #fff;
+    font-size: 20px;
+}
+
+.srk-cta-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    color: #FFFFFF;
+    line-height: 1.3;
+}
+
+.srk-cta-sub {
+    margin: 4px 0 0 0;
+    font-size: 13px;
+    color: #A5B4FC;
+    line-height: 1.5;
+}
+
+/* License Status Pill */
+.srk-license-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 0 22px 14px;
+}
+
+.srk-pill-ok {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34D399;
+}
+
+.srk-pill-warning {
+    background: rgba(245, 158, 11, 0.15);
+    color: #FBBF24;
+}
+
+.srk-pill-danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: #F87171;
+}
+
+/* CTA Features List */
+.srk-cta-body {
+    padding: 0 22px 20px;
+    background: var(--srk-card-ghost);
+}
+
+.srk-feature {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.srk-feature:last-child {
+    border-bottom: none;
+}
+
+.srk-feature i.dashicons {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+    color: #34D399;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.srk-feature span {
+    font-size: 14px;
+    color: #C7D2FE;
+    line-height: 1.5;
+}
+
+/* CTA Footer */
+.srk-cta-footer {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 20px 22px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.srk-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.srk-btn-primary {
+    background: #F28500;
+    color: #FFFFFF;
+}
+
+.srk-btn-primary:hover {
+    transform: translateY(-2px);
+    color: #FFFFFF;
+}
+
+.srk-btn-secondary {
+    background: #f28500;
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.srk-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #FFFFFF;
+}
+
+.srk-cta-footer form {
+    margin-top: 10px;
+}
+
+.srk-license-message {
+    margin: 10px 0 0;
+    color: #A5B4FC;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.srk-license-active-status {
+    color: #34D399;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+}
+
+.srk-license-expiry-info {
+    margin: 0 0 14px 0;
+    color: #C7D2FE;
+    font-size: 13px;
+}
+
+/* ============================================
+   RIGHT CONTENT AREA
+   ============================================ */
+.srk-upgrade-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* ============================================
+   PANELS (Dashboard Style)
+   ============================================ */
+.srk-panel {
+    background: var(--srk-card);
+    border: 1px solid var(--srk-border);
+    border-radius: 14px;
+    padding: 22px 24px;
+    box-shadow: var(--srk-shadow-card);
+}
+
+.srk-panel-title {
+    margin: 0 0 18px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ============================================
+   BENEFITS GRID (Dashboard Key Tools Style)
+   ============================================ */
+.srk-benefits {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.srk-benefit {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: var(--srk-card);
+    border: 1.5px solid var(--srk-border);
+    border-radius: 12px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.srk-benefit::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--srk-border), transparent);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.srk-benefit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.srk-benefit:hover::before {
+    opacity: 1;
+}
+
+/* Benefit Icon Box (Dashboard Style) */
+.srk-benefit-icon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(249, 250, 251, 0.8), rgba(243, 244, 246, 0.6));
+    border-radius: 11px;
+    border: 1.5px solid var(--srk-border);
+    flex-shrink: 0;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.srk-benefit-icon .dashicons {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 1;
+    color: #4b5563;
+    transition: color 0.2s ease;
+}
+
+.srk-benefit:hover .srk-benefit-icon {
+    transform: scale(1.05);
+}
+
+.srk-benefit-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.srk-benefit-content h4 {
+    margin: 0 0 6px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    transition: color 0.2s ease;
+}
+
+.srk-benefit-content p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--srk-muted);
+    line-height: 1.5;
+}
+
+/* Schema Manager - Purple */
+.srk-benefit-schema {
+    border-left: 3px solid var(--srk-primary);
+}
+
+.srk-benefit-schema .srk-benefit-icon {
+    background: linear-gradient(135deg, rgba(107, 78, 255, 0.12), rgba(139, 92, 246, 0.08));
+    border-color: rgba(107, 78, 255, 0.25);
+}
+
+.srk-benefit-schema .srk-benefit-icon .dashicons {
+    color: var(--srk-primary);
+}
+
+.srk-benefit-schema:hover {
+    border-left-color: #5A3FE6;
+    background: linear-gradient(135deg, rgba(107, 78, 255, 0.04), rgba(139, 92, 246, 0.02));
+}
+
+.srk-benefit-schema:hover::before {
+    background: linear-gradient(90deg, transparent, var(--srk-primary), transparent);
+}
+
+.srk-benefit-schema:hover .srk-benefit-icon {
+    background: linear-gradient(135deg, rgba(107, 78, 255, 0.18), rgba(139, 92, 246, 0.12));
+    border-color: rgba(107, 78, 255, 0.35);
+    box-shadow: 0 2px 6px rgba(107, 78, 255, 0.2);
+}
+
+.srk-benefit-schema:hover .srk-benefit-content h4 {
+    color: var(--srk-primary);
+}
+
+/* AI Chatbot - Teal/Cyan */
+.srk-benefit-chatbot {
+    border-left: 3px solid #06B6D4;
+}
+
+.srk-benefit-chatbot .srk-benefit-icon {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(8, 145, 178, 0.08));
+    border-color: rgba(6, 182, 212, 0.25);
+}
+
+.srk-benefit-chatbot .srk-benefit-icon .dashicons {
+    color: #06B6D4;
+}
+
+.srk-benefit-chatbot:hover {
+    border-left-color: #0891B2;
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.04), rgba(8, 145, 178, 0.02));
+}
+
+.srk-benefit-chatbot:hover::before {
+    background: linear-gradient(90deg, transparent, #06B6D4, transparent);
+}
+
+.srk-benefit-chatbot:hover .srk-benefit-icon {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.18), rgba(8, 145, 178, 0.12));
+    border-color: rgba(6, 182, 212, 0.35);
+    box-shadow: 0 2px 6px rgba(6, 182, 212, 0.2);
+}
+
+.srk-benefit-chatbot:hover .srk-benefit-content h4 {
+    color: #06B6D4;
+}
+
+/* Keyword Tracking - Green */
+.srk-benefit-keytrack {
+    border-left: 3px solid #10B981;
+}
+
+.srk-benefit-keytrack .srk-benefit-icon {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(5, 150, 105, 0.08));
+    border-color: rgba(16, 185, 129, 0.25);
+}
+
+.srk-benefit-keytrack .srk-benefit-icon .dashicons {
+    color: #10B981;
+}
+
+.srk-benefit-keytrack:hover {
+    border-left-color: #059669;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.04), rgba(5, 150, 105, 0.02));
+}
+
+.srk-benefit-keytrack:hover::before {
+    background: linear-gradient(90deg, transparent, #10B981, transparent);
+}
+
+.srk-benefit-keytrack:hover .srk-benefit-icon {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(5, 150, 105, 0.12));
+    border-color: rgba(16, 185, 129, 0.35);
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
+}
+
+.srk-benefit-keytrack:hover .srk-benefit-content h4 {
+    color: #10B981;
+}
+
+/* Audit & Fixes - Orange */
+.srk-benefit-audit {
+    border-left: 3px solid #F59E0B;
+}
+
+.srk-benefit-audit .srk-benefit-icon {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(217, 119, 6, 0.08));
+    border-color: rgba(245, 158, 11, 0.25);
+}
+
+.srk-benefit-audit .srk-benefit-icon .dashicons {
+    color: #F59E0B;
+}
+
+.srk-benefit-audit:hover {
+    border-left-color: #D97706;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.04), rgba(217, 119, 6, 0.02));
+}
+
+.srk-benefit-audit:hover::before {
+    background: linear-gradient(90deg, transparent, #F59E0B, transparent);
+}
+
+.srk-benefit-audit:hover .srk-benefit-icon {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(217, 119, 6, 0.12));
+    border-color: rgba(245, 158, 11, 0.35);
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.2);
+}
+
+.srk-benefit-audit:hover .srk-benefit-content h4 {
+    color: #F59E0B;
+}
+
+/* Content Credits - Pink */
+.srk-benefit-credits {
+    border-left: 3px solid #EC4899;
+}
+
+.srk-benefit-credits .srk-benefit-icon {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.12), rgba(219, 39, 119, 0.08));
+    border-color: rgba(236, 72, 153, 0.25);
+}
+
+.srk-benefit-credits .srk-benefit-icon .dashicons {
+    color: #EC4899;
+}
+
+.srk-benefit-credits:hover {
+    border-left-color: #DB2777;
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.04), rgba(219, 39, 119, 0.02));
+}
+
+.srk-benefit-credits:hover::before {
+    background: linear-gradient(90deg, transparent, #EC4899, transparent);
+}
+
+.srk-benefit-credits:hover .srk-benefit-icon {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.18), rgba(219, 39, 119, 0.12));
+    border-color: rgba(236, 72, 153, 0.35);
+    box-shadow: 0 2px 6px rgba(236, 72, 153, 0.2);
+}
+
+.srk-benefit-credits:hover .srk-benefit-text h4 {
+    color: #EC4899;
+}
+
+/* Benefit text wrapper (alternative class) */
+.srk-benefit-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.srk-benefit-text h4 {
+    margin: 0 0 6px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    transition: color 0.2s ease;
+}
+
+.srk-benefit-text p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--srk-muted);
+    line-height: 1.5;
+}
+
+/* Priority Support - Blue */
+.srk-benefit-support {
+    border-left: 3px solid #3B82F6;
+}
+
+.srk-benefit-support .srk-benefit-icon {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(37, 99, 235, 0.08));
+    border-color: rgba(59, 130, 246, 0.25);
+}
+
+.srk-benefit-support .srk-benefit-icon .dashicons {
+    color: #3B82F6;
+}
+
+.srk-benefit-support:hover {
+    border-left-color: #2563EB;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.04), rgba(37, 99, 235, 0.02));
+}
+
+.srk-benefit-support:hover::before {
+    background: linear-gradient(90deg, transparent, #3B82F6, transparent);
+}
+
+.srk-benefit-support:hover .srk-benefit-icon {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(37, 99, 235, 0.12));
+    border-color: rgba(59, 130, 246, 0.35);
+    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2);
+}
+
+.srk-benefit-support:hover .srk-benefit-content h4 {
+    color: #3B82F6;
+}
+
+/* ============================================
+   LICENSE STATUS PANEL
+   ============================================ */
+.srk-license {
+    background: linear-gradient(135deg, var(--srk-card) 0%, rgba(107, 78, 255, 0.02) 100%);
+}
+
+.srk-kv {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 10px 16px;
+    align-items: center;
+}
+
+.srk-kv .key {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--srk-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.srk-kv .val {
+    font-size: 14px;
+    color: #111827;
+    font-weight: 500;
+    padding: 8px 12px;
+    background: var(--srk-card-hover);
+    border-radius: 8px;
+    border: 1px solid var(--srk-border);
+    word-break: break-all;
+}
+
+.srk-notice {
+    margin-top: 14px;
+}
+
+.srk-notice .notice {
+    margin: 0 !important;
+    border-radius: 8px !important;
+}
+
+/* ============================================
+   SECURITY NOTE
+   ============================================ */
+.srk-security-note {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.srk-security-note .dashicons {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: var(--srk-primary);
+}
+
+.srk-security-note p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--srk-muted);
+    line-height: 1.5;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 1100px) {
+    .srk-upgrade-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .srk-cta-card {
+        position: static;
+        max-width: 420px;
+        margin: 0 auto;
+    }
+
+    .srk-benefits {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .srk-upgrade-wrap {
+        padding: 0 16px;
+    }
+
+    .srk-upgrade-hero-content {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .srk-upgrade-hero-text h1 {
+        font-size: 16px;
+    }
+
+    .srk-benefits {
+        grid-template-columns: 1fr;
+    }
+
+    .srk-kv {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    .srk-kv .key {
+        margin-top: 8px;
+    }
+
+    .srk-panel {
+        padding: 18px 20px;
+    }
+
+    .srk-cta-card {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .srk-cta-head {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        background: var(--srk-card-ghost);
+    }
+
+    .srk-license-pill {
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        justify-content: center;
+    }
+}
