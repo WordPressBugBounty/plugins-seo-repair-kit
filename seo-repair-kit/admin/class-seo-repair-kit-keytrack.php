@@ -75,7 +75,7 @@ class SeoRepairKit_KeyTrack {
         wp_enqueue_style( 'srkit-keytrack-style' );
 
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( __( 'Unauthorized user.', 'seo-repair-kit' ) );
+            wp_die( esc_html__( 'Unauthorized user.', 'seo-repair-kit' ) );
         }
 
         // Check if Google Site Kit plugin is active; if not, show instructions.
@@ -266,7 +266,8 @@ class SeoRepairKit_KeyTrack {
                                 url: ajaxurl,
                                 type: 'POST',
                                 data: {
-                                    action: 'set_srk_transient_for_install'
+                                    action: 'set_srk_transient_for_install',
+                                    nonce: '<?php echo esc_js( wp_create_nonce( 'srk_transient_nonce' ) ); ?>'
                                 }
                             });
                         }
@@ -460,7 +461,7 @@ class SeoRepairKit_KeyTrack {
                         if ($srkit_kt_counter > 5) break; // Stop the loop after 5 rows
                     ?>
                         <tr>
-                            <td><?php echo $srkit_kt_counter; ?>. <a href="<?php echo esc_url( 'https://www.google.com/search?q=' . urlencode( $srkit_kt_row['keys'][0] ) ); ?>" target="_blank"><?php echo esc_html( $srkit_kt_row['keys'][0] ); ?></a></td>
+                            <td><?php echo (int) $srkit_kt_counter; ?>. <a href="<?php echo esc_url( 'https://www.google.com/search?q=' . urlencode( $srkit_kt_row['keys'][0] ) ); ?>" target="_blank"><?php echo esc_html( $srkit_kt_row['keys'][0] ); ?></a></td>
                             <td class="center"><?php echo esc_html( $srkit_kt_row['clicks'] ); ?></td>
                             <td class="center"><?php echo esc_html( $srkit_kt_row['impressions'] ); ?></td>
                             <?php 
@@ -507,7 +508,7 @@ class SeoRepairKit_KeyTrack {
                         $srkit_kt_encoded_permalink = urlencode($srkit_kt_page_url);
                     ?>
                         <tr>
-                            <td><?php echo $srkit_kt_counter . '.'; ?> <a href="<?php echo esc_url($srkit_kt_page_url); ?>" target="_blank"><?php echo esc_html($srkit_kt_row['keys'][0]); ?></a></td>
+                            <td><?php echo (int) $srkit_kt_counter . '.'; ?> <a href="<?php echo esc_url($srkit_kt_page_url); ?>" target="_blank"><?php echo esc_html($srkit_kt_row['keys'][0]); ?></a></td>
                             <td class="center"><?php echo esc_html($srkit_kt_row['clicks']); ?></td>
                             <td class="center"><?php echo esc_html($srkit_kt_row['impressions']); ?></td>
                             <?php 
@@ -567,7 +568,7 @@ class SeoRepairKit_KeyTrack {
                         $srkit_kt_counter = 1; 
                         foreach ($srkit_queries_data as $srkit_kt_row) { ?>
                             <tr>
-                                <td><?php echo $srkit_kt_counter . '.'; ?> 
+                                <td><?php echo (int) $srkit_kt_counter . '.'; ?> 
                                     <a href="https://www.google.com/search?q=<?php echo urlencode( $srkit_kt_row['keys'][0] ); ?>" target="_blank">
                                         <?php echo esc_html( $srkit_kt_row['keys'][0] ); ?>
                                     </a>
@@ -625,7 +626,7 @@ class SeoRepairKit_KeyTrack {
                     document.querySelector('.tablink').click();
                     
                     var ctx = document.getElementById('srkit-gsc-chart').getContext('2d');
-                    var jsonData = <?php echo $srkit_kt_data_json; ?>;
+                    var jsonData = <?php echo wp_json_encode( json_decode( $srkit_kt_data_json, true ) ); ?>;
                     var labels = jsonData.map(function(row) { return row.date; });
                     var clicksData = jsonData.map(function(row) { return row.clicks; });
                     var impressionsData = jsonData.map(function(row) { return row.impressions; });
@@ -834,8 +835,13 @@ add_action( 'wp_ajax_set_srk_transient_for_install', 'set_srk_transient_for_inst
 
 function set_srk_transient_for_install() {
 
+    // Verify nonce
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'srk_transient_nonce' ) ) {
+        wp_die( esc_html__( 'Security check failed.', 'seo-repair-kit' ), 403 );
+    }
+
     if ( ! current_user_can( 'manage_options' ) ) {
-        wp_die( __( 'Unauthorized user.', 'seo-repair-kit' ) );
+        wp_die( esc_html__( 'Unauthorized user.', 'seo-repair-kit' ), 403 );
     }
     
     set_transient( 'srk_redirected_from_repair_kit', true, 5 * MINUTE_IN_SECONDS );

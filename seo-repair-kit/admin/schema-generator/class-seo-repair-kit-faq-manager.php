@@ -96,11 +96,11 @@ class SeoRepairKit_FaqManager {
 				<div class="faq-row">
 					<p>
 						<label>Question:</label><br>
-						<input type="text" name="faq_items[<?php echo $index; ?>][question]" value="<?php echo esc_attr( $item['question'] ); ?>" style="width:100%;">
+						<input type="text" name="faq_items[<?php echo (int) $index; ?>][question]" value="<?php echo esc_attr( $item['question'] ); ?>" style="width:100%;">
 					</p>
 					<p>
 						<label>Answer:</label><br>
-						<textarea name="faq_items[<?php echo $index; ?>][answer]" style="width:100%; height:80px;"><?php echo esc_textarea( $item['answer'] ); ?></textarea>
+						<textarea name="faq_items[<?php echo (int) $index; ?>][answer]" style="width:100%; height:80px;"><?php echo esc_textarea( $item['answer'] ); ?></textarea>
 					</p>
 					<button type="button" class="remove-faq button">Remove</button>
 					<hr>

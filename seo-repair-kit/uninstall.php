@@ -28,27 +28,28 @@ global $wpdb;
 
 // Drop the Keytrack settings table
 $srkit_keytrack_table = $wpdb->prefix . 'srkit_keytrack_settings';
-$wpdb->query( "DROP TABLE IF EXISTS $srkit_keytrack_table" );
+// Escape table name by removing backticks and wrapping in backticks
+$wpdb->query( "DROP TABLE IF EXISTS `" . esc_sql( str_replace( '`', '', $srkit_keytrack_table ) ) . "`" );
 
 // Drop the Google Search Console data table
 $gsc_data_table = $wpdb->prefix . 'srkit_gsc_data';
-$wpdb->query( "DROP TABLE IF EXISTS $gsc_data_table" );
+$wpdb->query( "DROP TABLE IF EXISTS `" . esc_sql( str_replace( '`', '', $gsc_data_table ) ) . "`" );
 
 // Drop the Redirection table
 $srkit_redirection_table = $wpdb->prefix . 'srkit_redirection_table';
-$wpdb->query( "DROP TABLE IF EXISTS $srkit_redirection_table" );
+$wpdb->query( "DROP TABLE IF EXISTS `" . esc_sql( str_replace( '`', '', $srkit_redirection_table ) ) . "`" );
 
 // Drop the Redirection logs table
 $srkit_redirection_logs_table = $wpdb->prefix . 'srkit_redirection_logs';
-$wpdb->query( "DROP TABLE IF EXISTS $srkit_redirection_logs_table" );
+$wpdb->query( "DROP TABLE IF EXISTS `" . esc_sql( str_replace( '`', '', $srkit_redirection_logs_table ) ) . "`" );
 
 // Drop the 404 logs table
 $srkit_404_logs_table = $wpdb->prefix . 'srkit_404_logs';
-$wpdb->query( "DROP TABLE IF EXISTS $srkit_404_logs_table" );
+$wpdb->query( "DROP TABLE IF EXISTS `" . esc_sql( str_replace( '`', '', $srkit_404_logs_table ) ) . "`" );
 
 // Drop the plugin settings table (consent & settings)
 $srkit_plugin_settings_table = $wpdb->prefix . 'srkit_plugin_settings';
-$wpdb->query( "DROP TABLE IF EXISTS $srkit_plugin_settings_table" );
+$wpdb->query( "DROP TABLE IF EXISTS `" . esc_sql( str_replace( '`', '', $srkit_plugin_settings_table ) ) . "`" );
 
 // ============================================================================
 // 2. DELETE ALL OPTIONS FROM wp_options TABLE
@@ -77,3 +78,33 @@ $wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_t
 
 // Delete schema-related postmeta
 $wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE 'srk_%'" );
+
+// Delete ALL srk_meta related options
+$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'srk_meta%'" );
+
+// Delete ALL migration flags
+$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '%_migrated'" );
+$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'srk_%_migration_%'" );
+$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name = 'srk_meta_migration_done'" );
+$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name = 'srk_settings_migrated'" );
+
+// Delete all individual settings (just to be safe)
+$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'srk_%'" );
+
+
+// ============================================================================
+// 4. DELETE ANY ADDITIONAL POSTMETA (ENHANCE EXISTING SECTION)
+// ============================================================================
+
+// Also add specific meta keys to be safe:
+$wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE meta_key IN (
+    '_srk_meta_title',
+    '_srk_meta_description',
+    '_srk_focus_keyword',
+    '_srk_meta_keywords',
+    '_srk_canonical_url',
+    '_srk_advanced_settings'
+)" );
+
+// Delete any other possible srk postmeta patterns
+$wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE '_srk_%'" );

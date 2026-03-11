@@ -36,7 +36,7 @@ class SeoRepairKit_Dashboard {
             'srk-dashboard-status-refresh',
             plugin_dir_url( __FILE__ ) . 'js/srk-dashboard-status-refresh.js',
             array( 'jquery' ),
-            defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '1.0.0',
+            defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '2.1.3',
             true
         );
 
@@ -44,7 +44,7 @@ class SeoRepairKit_Dashboard {
             'srk-lifetime-deal-countdown',
             plugin_dir_url( __FILE__ ) . 'js/srk-lifetime-deal-countdown.js',
             array( 'jquery' ),
-            defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '1.0.0',
+            defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '2.1.3',
             true
         );
 
@@ -154,6 +154,7 @@ class SeoRepairKit_Dashboard {
         $schema_url        = admin_url( 'admin.php?page=srk-schema-manager' );
         $chatbot_url       = admin_url( 'admin.php?page=srk-ai-chatbot' );
         $bot_manager_url   = admin_url( 'admin.php?page=seo-repair-kit-robots-llms' );
+        $meta_manager_url  = admin_url( 'admin.php?page=seo-repair-kit-meta-manager' );
         $settings_url      = admin_url( 'admin.php?page=seo-repair-kit-settings' );
         $redirection_url   = admin_url( 'admin.php?page=seo-repair-kit-redirection' );
         $monitor_404_url   = admin_url( 'admin.php?page=seo-repair-kit-link-scanner' );
@@ -425,14 +426,14 @@ class SeoRepairKit_Dashboard {
                                     <p><?php esc_html_e( 'Track 404 errors and convert them into redirects.', 'seo-repair-kit' ); ?></p>
                                 </div>
                             </a>
-                            <!-- Bot Manager -->
-                            <a href="<?php echo esc_url( $bot_manager_url ); ?>" class="srk-plugin-item srk-tool-bot-manager">
+                            <!-- Meta Manager -->
+                            <a href="<?php echo esc_url( $meta_manager_url ); ?>" class="srk-plugin-item srk-tool-meta-manager">
                                 <div class="srk-plugin-icon">
-                                    <span class="dashicons dashicons-admin-tools"></span>
+                                    <span class="dashicons dashicons-admin-generic"></span>
                                 </div>
                                 <div class="srk-plugin-info">
-                                    <h5><?php esc_html_e( 'Bot Manager', 'seo-repair-kit' ); ?></h5>
-                                    <p><?php esc_html_e( 'Control search engines and AI crawlers with robots.txt and llms.txt.', 'seo-repair-kit' ); ?></p>
+                                    <h5><?php esc_html_e( 'Meta Manager', 'seo-repair-kit' ); ?></h5>
+                                    <p><?php esc_html_e( 'Manage meta tags and descriptions for your site.', 'seo-repair-kit' ); ?></p>
                                 </div>
                             </a>
                             <!-- Redirections -->
@@ -443,6 +444,16 @@ class SeoRepairKit_Dashboard {
                                 <div class="srk-plugin-info">
                                     <h5><?php esc_html_e( 'Redirections', 'seo-repair-kit' ); ?></h5>
                                     <p><?php esc_html_e( 'Create and manage redirects to recover SEO value.', 'seo-repair-kit' ); ?></p>
+                                </div>
+                            </a>
+                            <!-- Bot Manager -->
+                            <a href="<?php echo esc_url( $bot_manager_url ); ?>" class="srk-plugin-item srk-tool-bot-manager">
+                                <div class="srk-plugin-icon">
+                                    <span class="dashicons dashicons-admin-tools"></span>
+                                </div>
+                                <div class="srk-plugin-info">
+                                    <h5><?php esc_html_e( 'Bot Manager', 'seo-repair-kit' ); ?></h5>
+                                    <p><?php esc_html_e( 'Control search engines and AI crawlers with robots.txt and llms.txt.', 'seo-repair-kit' ); ?></p>
                                 </div>
                             </a>
                             <!-- Image Alt Missing -->

@@ -34,14 +34,14 @@ if ( ! function_exists('srk_render_notices_after_navbar') ) {
 
 			echo '<style id="srk-hide-default-notices">
 				/* Hide default notice placement ONLY on this SRK screen */
-				body.' . $body_class . ' #wpbody-content > .notice,
-				body.' . $body_class . ' #wpbody-content > .updated,
-				body.' . $body_class . ' #wpbody-content > .error,
-				body.' . $body_class . ' #wpbody-content > .update-nag,
-				body.' . $body_class . ' .wrap > .notice,
-				body.' . $body_class . ' .wrap > .updated,
-				body.' . $body_class . ' .wrap > .error,
-				body.' . $body_class . ' .wrap > .update-nag {
+				body.' . esc_attr( $body_class ) . ' #wpbody-content > .notice,
+				body.' . esc_attr( $body_class ) . ' #wpbody-content > .updated,
+				body.' . esc_attr( $body_class ) . ' #wpbody-content > .error,
+				body.' . esc_attr( $body_class ) . ' #wpbody-content > .update-nag,
+				body.' . esc_attr( $body_class ) . ' .wrap > .notice,
+				body.' . esc_attr( $body_class ) . ' .wrap > .updated,
+				body.' . esc_attr( $body_class ) . ' .wrap > .error,
+				body.' . esc_attr( $body_class ) . ' .wrap > .update-nag {
 					display: none !important;
 				}
 			</style>';
@@ -62,7 +62,8 @@ if ( ! function_exists('srk_render_notices_after_navbar') ) {
 				do_action( $hook );
 				$out = trim( ob_get_clean() );
 				if ( $out !== '' ) {
-					echo '<div class="srk-notices-proxy">' . $out . '</div>';
+					// $out contains HTML from admin notices, use wp_kses_post to allow safe HTML
+					echo '<div class="srk-notices-proxy">' . wp_kses_post( $out ) . '</div>';
 				}
 			}
 		}

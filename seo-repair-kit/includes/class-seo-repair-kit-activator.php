@@ -736,8 +736,8 @@ class SeoRepairKit_Activator {
             return $migration_result;
         }
         
-        // Get table columns
-        $columns = $wpdb->get_results( "SHOW COLUMNS FROM $table_name" );
+        // Get table columns using safe identifier escaping
+        $columns = $wpdb->get_results( $wpdb->prepare( "SHOW COLUMNS FROM `%1s`", str_replace( '`', '', $table_name ) ) );
         if ( empty( $columns ) ) {
             $migration_result['message'] = 'Could not read table structure';
             return $migration_result;
@@ -759,9 +759,12 @@ class SeoRepairKit_Activator {
         if ( $has_old_schema && $has_new_schema ) {
             // Migrate old records that haven't been migrated yet
             $old_records = $wpdb->get_results( 
-                "SELECT id, old_url, new_url FROM $table_name 
-                 WHERE (source_url IS NULL OR source_url = '') 
-                 AND old_url IS NOT NULL AND old_url != ''"
+                $wpdb->prepare(
+                    "SELECT id, old_url, new_url FROM `%1s` 
+                     WHERE (source_url IS NULL OR source_url = '') 
+                     AND old_url IS NOT NULL AND old_url != ''",
+                    str_replace( '`', '', $table_name )
+                )
             );
             
             if ( !empty( $old_records ) ) {

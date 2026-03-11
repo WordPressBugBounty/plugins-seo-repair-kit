@@ -3,10 +3,10 @@ Contributors: torontodigits
 Donate link: https://seorepairkit.com/
 Tags: SEO chatbot, schema markup, 404 monitor, broken link checker, 301 redirection
 Requires at least: 5.0.0
-Tested up to: 6.9.1
+Tested up to: 6.9.3
 Requires PHP: 7.4.3
-Stable tag: 2.1.2
-Release Date: 05-02-2026
+Stable tag: 2.1.3
+Release Date: 11-03-2026
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,7 @@ The ultimate WordPress plugin for SEO automation - from link fixing to AI-powere
 
 == Description ==
 
-**SEO Repair Kit v2.1.2** by [TorontoDigits](https://www.torontodigits.com) is a comprehensive WordPress SEO plugin that takes SEO management to the next level with **AI-powered tools** and **automated schema generation**. This all-in-one solution helps you maintain, monitor, and optimize your website's search engine performance.
+**SEO Repair Kit v2.1.3** by [TorontoDigits](https://www.torontodigits.com) is an advanced WordPress SEO plugin designed to automate and simplify technical SEO. It combines **AI-powered assistance, smart meta management, schema generation, keyword tracking, and site monitoring tools** to help you identify issues, fix SEO problems, and improve your website’s search engine visibility.
 
 = Key Features =
 
@@ -72,6 +72,18 @@ Automatic tracking and logging of 404 errors:
 * 404 error analytics and reporting
 * Easy redirect creation from 404 logs
 * Domain-based error tracking
+
+**📄 Meta Manager**
+Powerful on-page SEO meta controls for every major content surface in WordPress:
+* Global Settings for title separator, homepage meta, templates, and organization data
+* Content Types controls for post type-level title, description, robots, and advanced options
+* Taxonomies controls for category/tag/custom taxonomy SEO templates and robots directives
+* Archives controls for author/date/search archive metadata and robots behavior
+* Advanced robots controls with preview for noindex/nofollow/noarchive, max-snippet, max-image-preview, and max-video-preview directives
+* Dynamic SEO variables support including `%title%`, `%excerpt%`, `%site_title%`, `%sep%`, `%date%`, `%day%`, `%month%`, and `%year%`
+* Per-post SEO meta fields (title, description, robots, canonical) with safe fallback behavior
+* Built-in search result preview for SEO titles and descriptions
+* Fully integrated with Gutenberg Block Editor, and Elementor page builder for easy metadata management while editing content
 
 **🤖 Bot Manager**
 Comprehensive control over search engine and AI crawler access:
@@ -150,6 +162,18 @@ User-friendly guided setup wizard:
 
 == Changelog ==
 
+= 2.1.3 =
+* Introduced the new Meta Manager feature for centralized SEO metadata control
+* Added Global SEO settings for homepage metadata, title separators, and default templates
+* Added Content Types SEO templates for posts, pages, and custom post types
+* Added Taxonomies SEO templates for categories, tags, and custom taxonomies
+* Added Archive SEO controls for author archives, date archives, and search pages
+* Implemented advanced robots meta directives including noindex, nofollow, noarchive, max-snippet, and preview settings
+* Added dynamic SEO variables support such as `%title%`, `%excerpt%`, `%sit_title%`, `%sep%`, `%date%`, `%day%`, `%month%`, and `%year%`
+* Added per-post SEO meta box for custom title, description, robots directives, and canonical URL
+* Added full compatibility with Gutenberg Block Editor
+* Added support for Elementor editor for easy SEO metadata management while building pages
+
 = 2.1.2 =
 * Fixed XML output so the declaration is always at the start of the document
 * Minor stability improvements for bot management outputs
@@ -206,6 +230,9 @@ User-friendly guided setup wizard:
 * Improved error handling and user feedback
 
 == Upgrade Notice ==
+
+= 2.1.3 =
+**Feature Update:** This release introduces the new **Meta Manager** feature, allowing centralized control of SEO titles, descriptions, robots directives, and canonical settings across your WordPress site. Updating is strongly recommended to ensure improved security, stability, and enhanced SEO metadata management.
 
 = 2.1.2 =
 This update fixes XML output ordering to prevent declaration placement errors and includes minor stability improvements for bot management outputs.
@@ -311,34 +338,31 @@ The upgraded KeyTrack feature now seamlessly integrates with Google Search Conso
 = Bot Manager =
 
 1. Navigate to "SEO Repair Kit" > "Bot Manager" in the admin menu.
-2. **LLMs.txt Management**:
-   * Use the LLMs.txt Generator to create content discovery files for AI models
-   * Select which post types and taxonomies to include
-   * Configure AI bot access control (allow/block specific bots)
-   * Set posts/terms limit for each content type
-   * Add additional custom content
-   * Generate and preview the llms.txt file
-   * Save or edit the generated content manually
-   * Your llms.txt file will be available at: yoursite.com/llms.txt
-3. **Robots.txt Management**:
-   * Edit robots.txt content with the visual editor
-   * Validate robots.txt syntax in real-time
-   * Apply enhanced robots.txt with security and SEO best practices
+
+2. **LLMs.txt Management**
+   * Generate an llms.txt file for AI model discovery
+   * Select post types and taxonomies to include
+   * Allow or block specific AI bots
+   * Preview and edit the generated file
+   * Your file will be available at: yoursite.com/llms.txt
+
+3. **Robots.txt Management**
+   * Edit robots.txt using the visual editor
+   * Validate syntax and preview changes
+   * Apply enhanced SEO and security rules
    * Reset to WordPress recommended defaults
-   * Preview current configuration
-   * Your robots.txt file is available at: yoursite.com/robots.txt
-4. **AI Bot Access Control**:
-   * Select which AI bots can access your LLMs.txt file
-   * Supported bots: ChatGPT (GPTBot), Claude, Google Bard/Gemini, Perplexity, Bing Chat, You.com, Character.AI, CCBot, and more
-   * Blocked bots receive 403 Forbidden response
+   * Available at: yoursite.com/robots.txt
+
+4. **AI Bot Access Control**
+   * Allow or block AI crawlers such as GPTBot, Claude, Gemini, Perplexity, Bing Chat, and others
+   * Blocked bots receive a 403 response
    * Blocking rules are automatically added to robots.txt
-   * Bots not listed are allowed by default
-5. **Features**:
-   * Real-time validation for robots.txt
-   * Automatic sitemap detection and inclusion
-   * Enhanced security rules (blocks xmlrpc.php, search queries, etc.)
-   * Last updated timestamps
-   * Delete custom configurations to restore defaults
+
+5. **Additional Features**
+   * Real-time robots.txt validation
+   * Automatic sitemap detection
+   * Built-in security rules
+   * Easy reset to default configuration
 
 = KeyTrack - Keyword Performance Tracking =
 
@@ -380,25 +404,63 @@ The upgraded KeyTrack feature now seamlessly integrates with Google Search Conso
 8. Manage multiple schema types for different content types.
 9. Use the visual field mapper to easily configure complex schemas.
 
+= Meta Manager =
+
+1. Navigate to "SEO Repair Kit" > "Meta Manager".
+
+2. Configure SEO using these tabs:
+
+   **Global Meta**
+   * Set title separator, homepage SEO title & description
+   * Configure default SEO templates and knowledge graph
+
+   **Content Types**
+   * Define title and description templates for posts, pages, and CPTs
+   * Configure robots directives
+
+   **Taxonomies**
+   * Set SEO templates for categories, tags, and custom taxonomies
+   * Control indexing behavior
+
+   **Archives**
+   * Manage SEO settings for author, date, and search archives
+
+   **Advanced Settings**
+   * Configure robots directives (index/noindex, follow/nofollow, preview limits)
+   * Default robots: `index, follow, max-image-preview:large`
+   * Disable default to manually select directives
+   * Respects WordPress **Settings → Reading → Discourage search engines** option
+
+3. Save settings to apply SEO metadata automatically.
+
+4. Override metadata per post/page using the **SEO Repair Kit Meta Manager** box.
+
+5. **Editor Support**
+   * Works with Gutenberg and Elementor editors.
+
+6. Per-page options include:
+   * Custom SEO title
+   * Meta description
+   * Robots directives
+   * Canonical URL
+   * Search result preview
+
+7. If custom metadata is not defined, Meta Manager automatically applies the global template settings as a fallback.
+
 = AI Chatbot (Pro Feature) =
 
-1. Ensure you have an active Pro license (required for AI Chatbot).
-2. Navigate to "SEO Repair Kit" > "AI Chatbot" in the admin menu.
-3. Start a conversation with the AI assistant:
-   * Ask SEO-related questions
-   * Get troubleshooting help
-   * Request optimization suggestions
-   * Learn about plugin features
-4. The chatbot provides:
-   * Context-aware responses
-   * Real-time SEO guidance
-   * Feature explanations
-   * Best practice recommendations
-5. Use the chatbot for:
-   * Schema configuration help
-   * Redirection setup guidance
-   * KeyTrack configuration assistance
-   * General SEO questions
+1. Ensure you have an active Pro license.
+2. Navigate to "SEO Repair Kit" > "AI Chatbot".
+3. Ask the AI assistant for SEO guidance, troubleshooting, and optimization tips.
+
+The chatbot can help with:
+* Meta Manager configuration and SEO metadata guidance
+* Schema Manager setup
+* Redirection and broken link fixes
+* KeyTrack keyword tracking insights
+* General SEO best practices
+
+It provides context-aware responses and real-time suggestions directly inside the WordPress dashboard.
 
 = Settings Configuration =
 
@@ -435,30 +497,20 @@ The upgraded KeyTrack feature now seamlessly integrates with Google Search Conso
 
 = Advanced Features =
 
-1. **Scheduled Link Scanning**:
-   * Configure automatic link scans in onboarding or Settings
-   * Choose between manual, weekly, or monthly schedules
-   * Scans run automatically via WordPress cron
-
-2. **Bulk Operations**:
-   * Bulk update alt text for multiple images
-   * Export broken links to CSV
-   * Manage multiple redirects at once
-
-3. **Analytics & Reporting**:
+1. **Analytics & Reporting**:
    * Track redirect hit counts
    * Monitor 404 error patterns
    * Analyze KeyTrack performance trends
    * View comprehensive SEO health scores
 
-4. **Bot Management**:
+2. **Bot Management**:
    * Control AI crawler access to your content
    * Generate llms.txt files for AI model discovery
    * Manage robots.txt with visual editor
    * Block or allow specific AI bots
    * Server-level access control
 
-5. **Integration**:
+3. **Integration**:
    * Google Site Kit integration for KeyTrack
    * Google Search Console data access
    * REST API endpoints for external integrations
@@ -486,7 +538,10 @@ Alternatively, you can manually upload the plugin:
 
 == Frequently Asked Questions ==
 
-:= What's new in version 2.1.2? =
+= What's new in version 2.1.3? =
+Version 2.1.3 introduces the new **Meta Manager** feature, providing centralized control of SEO titles, meta descriptions, robots directives, and canonical URLs across your WordPress site. Users can now configure global SEO templates, manage metadata for content types, taxonomies, and archives, and override metadata directly within the Gutenberg, and Elementor.
+
+= What's new in version 2.1.2? =
 This update fixes XML output ordering to prevent declaration placement errors and includes minor stability improvements for bot management outputs.
 
 = What's new in version 2.1.1? =
@@ -494,6 +549,18 @@ Bot Manager has been introduced - a comprehensive feature for managing robots.tx
 
 = What's new in version 2.1.0? =
 AI Chatbot and Schema Manager are the two flagship features — offering AI-powered SEO support and multi-schema management for rich search results. The plugin also includes enhanced dashboard UI, improved performance, and better compatibility with the latest WordPress release.
+
+= What is Meta Manager and how does it help SEO? =
+Meta Manager allows you to centrally manage SEO titles, meta descriptions, robots directives, and canonical URLs across your WordPress website. It uses dynamic templates and variables to automatically generate optimized metadata for posts, pages, taxonomies, and archive pages.
+
+= Can I override SEO metadata for individual posts or pages? =
+Yes. Meta Manager adds an SEO meta box inside the editor where you can customize the SEO title, meta description, robots directives, and canonical URL for individual posts or pages. If left empty, the global template settings will be applied automatically.
+
+= Which editors are supported by Meta Manager? =
+Meta Manager is fully integrated with the WordPress Classic Editor, Gutenberg Block Editor, and Elementor page builder. The SEO Repair Kit Meta Manager box appears directly inside these editors so you can manage metadata while editing your content.
+
+= Does Meta Manager support dynamic SEO variables? =
+Yes. Meta Manager supports dynamic variables such as `%title%`, `%excerpt%`, `%site_title%`, `%sep%`, `%date%`, `%day%`, `%month%`, and `%year%`. These variables allow metadata to be automatically generated based on the content and site settings.
 
 = Does the Schema Manager support JSON-LD? =
 Yes, it automatically generates valid JSON-LD code compatible with Google's Structured Data guidelines. All schema markups are output as JSON-LD format in the page head.
@@ -530,9 +597,6 @@ It requires administrator permissions in your WordPress site to scan, detect iss
 
 = How does the plugin address missing alt text? =
 The plugin identifies images without alt text and provides options to generate or input appropriate descriptions. You can view all images missing alt text on a dedicated page and update them individually or in bulk.
-
-= Can the plugin handle bulk updates for alt text? =
-Absolutely. Our plugin includes a bulk update feature, allowing users to efficiently update alt text across multiple images simultaneously. This saves time and ensures consistent alt text throughout the website.
 
 = How does the weekly email report work? =
 The plugin automatically sends a comprehensive weekly SEO report to your admin email address. The report includes search performance metrics, broken links analysis, alt text status, redirection statistics, and more. You can enable or disable this feature in the Settings page.

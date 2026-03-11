@@ -1,0 +1,141 @@
+/*
+ * SEO Repair Kit - Admin Styles
+ * Version: 2.1.3
+ * Description: Gutenberg Stylesheet pannel
+ *  @author     TorontoDigits <support@torontodigits.com>
+ */
+.edit-post-sidebar .srk-meta-panel {
+    padding: 0;
+}
+
+/* Panel title */
+.srk-meta-panel .components-panel__body-toggle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+/* Save indicator */
+.srk-save-indicator {
+    background: #f0f6ff;
+    border: 1px solid #c5d9f1;
+    border-radius: 4px;
+    padding: 8px 12px;
+    text-align: center;
+    font-size: 12px;
+    color: #2271b1;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.srk-save-indicator.saved {
+    background: #edfaef;
+    border-color: #b7dfb9;
+    color: #2e7d32;
+}
+
+/* Form controls */
+.srk-meta-panel .components-base-control {
+    margin-bottom: 16px !important;
+}
+
+.srk-meta-panel .components-base-control__label {
+    font-weight: 600 !important;
+    color: #1d2327 !important;
+    margin-bottom: 4px !important;
+    display: block !important;
+}
+
+.srk-meta-panel .components-base-control__help {
+    color: #646970 !important;
+    font-size: 12px !important;
+    margin-top: 4px !important;
+    font-style: italic !important;
+}
+
+/* Input fields */
+.srk-meta-panel .components-text-control__input,
+.srk-meta-panel .components-textarea-control__input {
+    border: 1px solid #8c8f94 !important;
+    border-radius: 4px !important;
+    font-size: 13px !important;
+    padding: 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.srk-meta-panel .components-text-control__input:focus,
+.srk-meta-panel .components-textarea-control__input:focus {
+    border-color: #2271b1 !important;
+    box-shadow: 0 0 0 1px #2271b1 !important;
+    outline: 2px solid transparent !important;
+}
+
+.srk-meta-panel .components-textarea-control__input {
+    min-height: 80px !important;
+    resize: vertical !important;
+}
+
+/* Tag buttons */
+.srk-tag-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 8px 0;
+}
+
+.srk-tag-btn {
+    background: #f0f6ff !important;
+    border: 1px solid #c5d9f1 !important;
+    color: #2271b1 !important;
+    font-size: 11px !important;
+    padding: 4px 8px !important;
+    height: auto !important;
+    line-height: 1 !important;
+    border-radius: 3px !important;
+}
+
+.srk-tag-btn:hover {
+    background: #e1ecff !important;
+    border-color: #2271b1 !important;
+}
+
+/* Google preview */
+.srk-google-preview {
+    background: #f8f9fa;
+    border: 1px solid #dcdcde;
+    border-radius: 6px;
+    padding: 12px;
+    font-family: arial, sans-serif;
+    margin-top: 8px;
+}
+
+.srk-preview-url {
+    color: #202124;
+    font-size: 12px;
+    line-height: 1.3;
+    margin-bottom: 3px;
+    word-break: break-all;
+}
+
+.srk-preview-title {
+    color: #1a0dab;
+    font-size: 16px;
+    line-height: 1.3;
+    margin-bottom: 3px;
+    font-weight: normal;
+    word-break: break-word;
+}
+
+.srk-preview-description {
+    color: #4d5156;
+    font-size: 13px;
+    line-height: 1.58;
+    word-break: break-word;
+}
+
+/* Loading state */
+.srk-meta-panel .components-spinner {
+    display: block;
+    margin: 20px auto;
+}

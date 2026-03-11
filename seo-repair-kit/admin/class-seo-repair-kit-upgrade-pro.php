@@ -121,7 +121,7 @@ class SeoRepairKit_Upgrade {
                             <?php if ( $days_left <= 0 ) : ?>
                                 ⚠️ <?php esc_html_e( 'Your license expires today.', 'seo-repair-kit' ); ?>
                             <?php else : ?>
-                                ⚠️ <?php printf( esc_html__( 'Your license will expire in %d day(s).', 'seo-repair-kit' ), $days_left ); ?>
+                                ⚠️ <?php printf( esc_html__( 'Your license will expire in %d day(s).', 'seo-repair-kit' ), (int) $days_left ); ?>
                             <?php endif; ?>
                             <a class="button button-primary" target="_blank" href="<?php echo esc_url( $subscribe_url ); ?>">
                                 <?php esc_html_e( 'Renew Now', 'seo-repair-kit' ); ?>
@@ -183,7 +183,7 @@ class SeoRepairKit_Upgrade {
                                     <?php esc_html_e( 'Expires on', 'seo-repair-kit' ); ?>:
                                     <?php echo esc_html( date( 'F j, Y', $expires_ts ) ); ?>
                                     <?php if ( $days_left !== null ) : ?>
-                                        (<?php printf( esc_html__( '%d day(s) left', 'seo-repair-kit' ), max( 0, $days_left ) ); ?>)
+                                        (<?php printf( esc_html__( '%d day(s) left', 'seo-repair-kit' ), (int) max( 0, $days_left ) ); ?>)
                                     <?php endif; ?>
                                 </p>
                             <?php endif; ?>

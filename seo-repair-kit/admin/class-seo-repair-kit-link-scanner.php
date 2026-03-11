@@ -198,13 +198,13 @@ class SeoRepairKit_LinkScanner {
                 <div class="srk-link-summary-grid">
                     <div class="srk-link-summary-card srk-summary-total">
                         <span class="srk-summary-eyebrow"><?php esc_html_e( 'Total links checked', 'seo-repair-kit' ); ?></span>
-                        <div class="srk-summary-value"><?php echo number_format_i18n( $total_links ); ?></div>
+                        <div class="srk-summary-value"><?php echo esc_html( number_format_i18n( $total_links ) ); ?></div>
                         <p class="srk-summary-subtext"><?php echo esc_html( $scan_count_label ); ?></p>
                     </div>
                     <div class="srk-link-summary-card srk-summary-broken">
                         <span class="srk-summary-eyebrow"><?php esc_html_e( 'Broken links detected', 'seo-repair-kit' ); ?></span>
                         <div class="srk-summary-value">
-                            <?php echo number_format_i18n( $broken_links ); ?>
+                            <?php echo esc_html( number_format_i18n( $broken_links ) ); ?>
                             <span class="srk-summary-pill"><?php echo esc_html( sprintf( __( '%s%%', 'seo-repair-kit' ), number_format_i18n( $broken_percentage ) ) ); ?></span>
                         </div>
                         <p class="srk-summary-subtext"><?php echo esc_html( $broken_desc ); ?></p>
@@ -212,7 +212,7 @@ class SeoRepairKit_LinkScanner {
                     <div class="srk-link-summary-card srk-summary-working">
                         <span class="srk-summary-eyebrow"><?php esc_html_e( 'Healthy links', 'seo-repair-kit' ); ?></span>
                         <div class="srk-summary-value">
-                            <?php echo number_format_i18n( $working_links ); ?>
+                            <?php echo esc_html( number_format_i18n( $working_links ) ); ?>
                             <span class="srk-summary-pill srk-pill-success"><?php echo esc_html( sprintf( __( '%s%%', 'seo-repair-kit' ), number_format_i18n( $working_percentage ) ) ); ?></span>
                         </div>
                         <p class="srk-summary-subtext"><?php esc_html_e( 'Working links confirmed in your last scan.', 'seo-repair-kit' ); ?></p>
@@ -469,24 +469,24 @@ class SeoRepairKit_LinkScanner {
         <div class="srk-404-summary-grid">
             <div class="srk-link-summary-card srk-summary-404-total">
                 <span class="srk-summary-eyebrow"><?php esc_html_e( 'Total 404 Errors', 'seo-repair-kit' ); ?></span>
-                <div class="srk-summary-value"><?php echo number_format_i18n( $stats['total_hits'] ); ?></div>
+                <div class="srk-summary-value"><?php echo esc_html( number_format_i18n( $stats['total_hits'] ) ); ?></div>
                 <p class="srk-summary-subtext"><?php esc_html_e( 'Total occurrences tracked', 'seo-repair-kit' ); ?></p>
             </div>
             <div class="srk-link-summary-card srk-summary-404-unique">
                 <span class="srk-summary-eyebrow"><?php esc_html_e( 'Unique URLs', 'seo-repair-kit' ); ?></span>
-                <div class="srk-summary-value"><?php echo number_format_i18n( $stats['unique_urls'] ); ?></div>
+                <div class="srk-summary-value"><?php echo esc_html( number_format_i18n( $stats['unique_urls'] ) ); ?></div>
                 <p class="srk-summary-subtext"><?php esc_html_e( 'Distinct 404 pages found', 'seo-repair-kit' ); ?></p>
             </div>
             <div class="srk-link-summary-card srk-summary-404-logs">
                 <span class="srk-summary-eyebrow"><?php esc_html_e( 'Log Entries', 'seo-repair-kit' ); ?></span>
-                <div class="srk-summary-value"><?php echo number_format_i18n( $stats['total_404s'] ); ?></div>
+                <div class="srk-summary-value"><?php echo esc_html( number_format_i18n( $stats['total_404s'] ) ); ?></div>
                 <p class="srk-summary-subtext"><?php esc_html_e( 'Total logged entries', 'seo-repair-kit' ); ?></p>
             </div>
             <div class="srk-link-summary-card srk-summary-404-most">
                 <span class="srk-summary-eyebrow"><?php esc_html_e( 'Most Hit 404', 'seo-repair-kit' ); ?></span>
                 <div class="srk-summary-value">
                     <?php if ( $stats['most_hit'] ) : ?>
-                        <?php echo number_format_i18n( $stats['most_hit']->count ); ?>
+                        <?php echo esc_html( number_format_i18n( $stats['most_hit']->count ) ); ?>
                         <span class="srk-summary-pill"><?php esc_html_e( 'Hits', 'seo-repair-kit' ); ?></span>
                     <?php else : ?>
                         0
@@ -619,7 +619,7 @@ class SeoRepairKit_LinkScanner {
                                             </td>
                                             <td class="srk-col-count">
                                                 <span class="srk-badge-count <?php echo $log->count >= 10 ? 'srk-badge-high' : ( $log->count >= 5 ? 'srk-badge-medium' : '' ); ?>">
-                                                    <?php echo number_format_i18n( $log->count ); ?>
+                                                    <?php echo esc_html( number_format_i18n( $log->count ) ); ?>
                                                 </span>
                                             </td>
                                             <td class="srk-col-ip">
@@ -674,16 +674,16 @@ class SeoRepairKit_LinkScanner {
                             if ( $show_all ) {
                                 printf(
                                     esc_html__( 'Showing all %1$d log entries', 'seo-repair-kit' ),
-                                    $total_items
+                                    (int) $total_items
                                 );
                             } else {
                                 $start = $offset + 1;
                                 $end = min( $offset + $per_page, $total_items );
                                 printf(
                                     esc_html__( 'Showing %1$d to %2$d of %3$d log entries', 'seo-repair-kit' ),
-                                    $start,
-                                    $end,
-                                    $total_items
+                                    (int) $start,
+                                    (int) $end,
+                                    (int) $total_items
                                 );
                             }
                             ?>
@@ -1353,7 +1353,9 @@ class SeoRepairKit_LinkScanner {
             $this->create_404_table_directly();
         }
         
-        return ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) === $table_name );
+        // Check if table was created using prepared statement
+        $result = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) );
+        return ( $result === $table_name );
     }
 
     /**

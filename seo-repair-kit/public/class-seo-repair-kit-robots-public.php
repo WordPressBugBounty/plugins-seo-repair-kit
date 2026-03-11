@@ -28,7 +28,7 @@ class SeoRepairKit_Robots_Public {
      * @since    2.1.1
      */
     public function __construct() {
-        $this->version = defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '2.1.2';
+        $this->version = defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '2.1.3';
 
         // Override WordPress default robots.txt
         add_filter( 'robots_txt', array( $this, 'custom_robots_txt' ), 10, 2 );
@@ -154,8 +154,8 @@ class SeoRepairKit_Robots_Public {
         // Ensure valid UTF-8 encoding for plain text output
         $llms_content = wp_check_invalid_utf8( $llms_content, true );
         
-        // Output content
-        echo $llms_content;
+        // Output content - escape for extra security
+        echo esc_html( $llms_content );
         exit;
     }
     

@@ -13,6 +13,12 @@
  * @since      1.0.1
  * @author     TorontoDigits <support@torontodigits.com>
  */
+
+// If this file is called directly, abort.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 class Seo_Repair_Kit {
 
 	/**
@@ -57,7 +63,7 @@ class Seo_Repair_Kit {
 		if ( defined( 'SEO_REPAIR_KIT_VERSION' ) ) {
 			$this->version = SEO_REPAIR_KIT_VERSION;
 		} else {
-			$this->version = '1.0.1';
+			$this->version = '2.1.3';
 		}
 		$this->seo_repair_kit = 'seo-repair-kit';
 

@@ -504,7 +504,7 @@ class SeoRepairKit_Redirection
             echo '<div class="notice notice-success is-dismissible">';
             echo '<p><strong>' . esc_html__('SEO Repair Kit v2.1.0:', 'seo-repair-kit') . '</strong> ';
             echo esc_html__('Your existing data has been successfully migrated to the new enhanced system!', 'seo-repair-kit');
-            echo $log_text;
+            echo wp_kses_post( $log_text );
             echo '</p>';
             echo '<p><strong>' . esc_html__('New Features Available:', 'seo-repair-kit') . '</strong></p>';
             echo '<ul style="margin-left: 20px;">';
@@ -640,8 +640,8 @@ class SeoRepairKit_Redirection
                         <label for="redirect_type"><?php esc_html_e('Redirect Type:', 'seo-repair-kit'); ?></label>
                         <select id="redirect_type" name="redirect_type">
                             <?php foreach($this->redirect_types as $code => $name): ?>
-                                <option value="<?php echo $code; ?>" <?php selected($code, 301); ?>>
-                                    <?php echo $code . ' - ' . $name; ?>
+                                <option value="<?php echo esc_attr( $code ); ?>" <?php selected($code, 301); ?>>
+                                    <?php echo esc_html( $code . ' - ' . $name ); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -763,7 +763,7 @@ class SeoRepairKit_Redirection
                                     // For redirects, show source URL from redirection rule or accessed URL
                                     $source_url = $l->source_url ?: $l->accessed_url;
                                     if (!empty($source_url) && $source_url !== '-') {
-                                        echo '<td>' . $this->format_url_as_link($source_url, true) . '</td>';
+                                        echo '<td>' . wp_kses_post( $this->format_url_as_link($source_url, true) ) . '</td>';
                                     } else {
                                         echo '<td>' . esc_html($source_url) . '</td>';
                                     }
@@ -773,14 +773,14 @@ class SeoRepairKit_Redirection
                                     if ($admin_data && isset($admin_data['source_url'])) {
                                         $source_url = $admin_data['source_url'];
                                         if (!empty($source_url) && $source_url !== '-') {
-                                            echo '<td>' . $this->format_url_as_link($source_url, true) . '</td>';
+                                            echo '<td>' . wp_kses_post( $this->format_url_as_link($source_url, true) ) . '</td>';
                                         } else {
                                             echo '<td>' . esc_html($source_url) . '</td>';
                                         }
                                     } else {
                                         $accessed_url = $l->accessed_url;
                                         if (!empty($accessed_url) && $accessed_url !== '-' && filter_var($accessed_url, FILTER_VALIDATE_URL)) {
-                                            echo '<td>' . $this->format_url_as_link($accessed_url, true) . '</td>';
+                                            echo '<td>' . wp_kses_post( $this->format_url_as_link($accessed_url, true) ) . '</td>';
                                         } else {
                                             echo '<td>' . esc_html($accessed_url) . '</td>';
                                         }
@@ -792,7 +792,7 @@ class SeoRepairKit_Redirection
                                     // For redirects, show target URL from redirection rule
                                     $target_url = $l->target_url ?: '-';
                                     if (!empty($target_url) && $target_url !== '-') {
-                                        echo '<td>' . $this->format_url_as_link($target_url, false) . '</td>';
+                                        echo '<td>' . wp_kses_post( $this->format_url_as_link($target_url, false) ) . '</td>';
                                     } else {
                                         echo '<td>' . esc_html($target_url) . '</td>';
                                     }
@@ -802,7 +802,7 @@ class SeoRepairKit_Redirection
                                     if ($admin_data && isset($admin_data['target_url'])) {
                                         $target_url = $admin_data['target_url'];
                                         if (!empty($target_url) && $target_url !== '-') {
-                                            echo '<td>' . $this->format_url_as_link($target_url, false) . '</td>';
+                                            echo '<td>' . wp_kses_post( $this->format_url_as_link($target_url, false) ) . '</td>';
                                         } else {
                                             echo '<td>' . esc_html($target_url) . '</td>';
                                         }
@@ -830,16 +830,16 @@ class SeoRepairKit_Redirection
                             if ($logs_show_all) {
                                 printf(
                                     esc_html__('Showing all %1$d log entries', 'seo-repair-kit'),
-                                    $logs_total_items
+                                    (int) $logs_total_items
                                 );
                             } else {
                                 $logs_start = $logs_offset + 1;
                                 $logs_end = min($logs_offset + $logs_per_page, $logs_total_items);
                                 printf(
                                     esc_html__('Showing %1$d to %2$d of %3$d log entries', 'seo-repair-kit'),
-                                    $logs_start,
-                                    $logs_end,
-                                    $logs_total_items
+                                    (int) $logs_start,
+                                    (int) $logs_end,
+                                    (int) $logs_total_items
                                 );
                             }
                             ?>
@@ -888,10 +888,10 @@ class SeoRepairKit_Redirection
                                 // Show page numbers around current page
                                 for ($i = max(1, $logs_current_page - $logs_range); $i <= min($logs_total_pages, $logs_current_page + $logs_range); $i++) {
                                     if ($i == $logs_current_page) {
-                                        echo '<span class="srk-pagination-page srk-pagination-current">' . $i . '</span>';
+                                        echo '<span class="srk-pagination-page srk-pagination-current">' . (int) $i . '</span>';
                                     } else {
                                         $logs_page_url = add_query_arg('srk_logs_paged', $i, $logs_base_url);
-                                        echo '<a href="' . esc_url($logs_page_url) . '" class="srk-pagination-page">' . $i . '</a>';
+                                        echo '<a href="' . esc_url($logs_page_url) . '" class="srk-pagination-page">' . (int) $i . '</a>';
                                     }
                                 }
                                 ?>
@@ -905,7 +905,7 @@ class SeoRepairKit_Redirection
                                     <?php endif;
                                     $logs_last_url = add_query_arg('srk_logs_paged', $logs_total_pages, $logs_base_url);
                                     ?>
-                                    <a href="<?php echo esc_url($logs_last_url); ?>" class="srk-pagination-page"><?php echo $logs_total_pages; ?></a>
+                                    <a href="<?php echo esc_url($logs_last_url); ?>" class="srk-pagination-page"><?php echo (int) $logs_total_pages; ?></a>
                                 <?php endif; ?>
                             </div>
                             
@@ -1203,7 +1203,8 @@ class SeoRepairKit_Redirection
                     $migration_status = '';
                     
                     if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) ) === $table_name ) {
-                        $columns = $wpdb->get_results( "SHOW COLUMNS FROM $table_name" );
+                        // Use identifier escaping for table name in SHOW COLUMNS
+                        $columns = $wpdb->get_results( $wpdb->prepare( "SHOW COLUMNS FROM `%1s`", str_replace( '`', '', $table_name ) ) );
                         if ( $columns ) {
                             $column_names = array_column( $columns, 'Field' );
                             $has_old_schema = in_array( 'old_url', $column_names ) && in_array( 'new_url', $column_names );
@@ -1211,13 +1212,18 @@ class SeoRepairKit_Redirection
                             
                             if ( $has_old_schema && !$has_new_schema ) {
                                 $needs_migration = true;
-                                $old_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name" );
+                                // Use identifier escaping for table name in SELECT
+                                $old_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM `%1s`", str_replace( '`', '', $table_name ) ) );
                                 $migration_status = sprintf( esc_html__( 'Found %d records from old version that need migration.', 'seo-repair-kit' ), $old_count );
                             } elseif ( $has_old_schema && $has_new_schema ) {
+                                // Use identifier escaping for table name in SELECT
                                 $unmigrated = $wpdb->get_var( 
-                                    "SELECT COUNT(*) FROM $table_name 
-                                     WHERE (source_url IS NULL OR source_url = '') 
-                                     AND old_url IS NOT NULL AND old_url != ''"
+                                    $wpdb->prepare(
+                                        "SELECT COUNT(*) FROM `%1s` 
+                                         WHERE (source_url IS NULL OR source_url = '') 
+                                         AND old_url IS NOT NULL AND old_url != ''",
+                                        str_replace( '`', '', $table_name )
+                                    )
                                 );
                                 if ( $unmigrated > 0 ) {
                                     $needs_migration = true;
@@ -1933,13 +1939,13 @@ class SeoRepairKit_Redirection
                 </thead>
                 <tbody>
                     <?php foreach($redirections as $redirection): ?>
-                        <tr data-redirection-id="<?php echo $redirection->id; ?>" 
+                        <tr data-redirection-id="<?php echo (int) $redirection->id; ?>" 
                             data-source-url="<?php echo esc_attr($redirection->source_url); ?>"
                             data-target-url="<?php echo esc_attr($redirection->target_url); ?>"
                             data-redirect-type="<?php echo esc_attr($redirection->redirect_type); ?>"
                             data-is-regex="<?php echo $redirection->is_regex ? '1' : '0'; ?>"
                             data-status="<?php echo esc_attr($redirection->status); ?>">
-                            <td><input type="checkbox" class="srk-redirection-checkbox" value="<?php echo $redirection->id; ?>" /></td>
+                            <td><input type="checkbox" class="srk-redirection-checkbox" value="<?php echo (int) $redirection->id; ?>" /></td>
                             <td>
                                 <?php 
                                 $source_url = $redirection->source_url;
@@ -1949,7 +1955,7 @@ class SeoRepairKit_Redirection
                                     echo '<span class="srk-regex-badge">' . esc_html__('Regex', 'seo-repair-kit') . '</span>';
                                 } else {
                                     // Make source URL clickable
-                                    echo $this->format_url_as_link($source_url, true);
+                                    echo wp_kses_post( $this->format_url_as_link($source_url, true) );
                                 }
                                 ?>
                             </td>
@@ -1961,7 +1967,7 @@ class SeoRepairKit_Redirection
                                     $target_url = $redirection->target_url ?: '-';
                                     if ($target_url !== '-') {
                                         // Make target URL clickable
-                                        echo $this->format_url_as_link($target_url, false);
+                                        echo wp_kses_post( $this->format_url_as_link($target_url, false) );
                                     } else {
                                         echo esc_html($target_url);
                                     }
@@ -1969,24 +1975,24 @@ class SeoRepairKit_Redirection
                                 ?>
                             </td>
                             <td>
-                                <span class="srk-redirect-type srk-type-<?php echo $redirection->redirect_type; ?>">
-                                    <?php echo $redirection->redirect_type; ?>
+                                <span class="srk-redirect-type srk-type-<?php echo esc_attr( $redirection->redirect_type ); ?>">
+                                    <?php echo (int) $redirection->redirect_type; ?>
                                 </span>
                             </td>
                             <td>
-                                <span class="srk-status srk-status-<?php echo $redirection->status; ?>">
-                                    <?php echo ucfirst($redirection->status); ?>
+                                <span class="srk-status srk-status-<?php echo esc_attr( $redirection->status ); ?>">
+                                    <?php echo esc_html( ucfirst($redirection->status) ); ?>
                                 </span>
                             </td>
-                            <td><?php echo $redirection->hits; ?></td>
+                            <td><?php echo (int) $redirection->hits; ?></td>
                             <td>
-                                <button type="button" class="srk-btn srk-btn-small srk-edit-redirection" data-id="<?php echo $redirection->id; ?>">
+                                <button type="button" class="srk-btn srk-btn-small srk-edit-redirection" data-id="<?php echo (int) $redirection->id; ?>">
                                     <?php esc_html_e('Edit', 'seo-repair-kit'); ?>
                                 </button>
-                                <button type="button" class="srk-btn srk-btn-small srk-delete-redirection" data-id="<?php echo $redirection->id; ?>">
+                                <button type="button" class="srk-btn srk-btn-small srk-delete-redirection" data-id="<?php echo (int) $redirection->id; ?>">
                                     <?php esc_html_e('Delete', 'seo-repair-kit'); ?>
                                 </button>
-                                <button type="button" class="srk-btn srk-btn-small srk-reset-hits" data-id="<?php echo $redirection->id; ?>">
+                                <button type="button" class="srk-btn srk-btn-small srk-reset-hits" data-id="<?php echo (int) $redirection->id; ?>">
                                     <?php esc_html_e('Reset Hits', 'seo-repair-kit'); ?>
                                 </button>
                             </td>
@@ -2002,16 +2008,16 @@ class SeoRepairKit_Redirection
                         if ($show_all) {
                             printf(
                                 esc_html__('Showing all %1$d redirections', 'seo-repair-kit'),
-                                $total_items
+                                (int) $total_items
                             );
                         } else {
                             $start = $offset + 1;
                             $end = min($offset + $per_page, $total_items);
                             printf(
                                 esc_html__('Showing %1$d to %2$d of %3$d redirections', 'seo-repair-kit'),
-                                $start,
-                                $end,
-                                $total_items
+                                (int) $start,
+                                (int) $end,
+                                (int) $total_items
                             );
                         }
                         ?>
@@ -2059,10 +2065,10 @@ class SeoRepairKit_Redirection
                             // Show page numbers around current page
                             for ($i = max(1, $current_page - $range); $i <= min($total_pages, $current_page + $range); $i++) {
                                 if ($i == $current_page) {
-                                    echo '<span class="srk-pagination-page srk-pagination-current">' . $i . '</span>';
+                                    echo '<span class="srk-pagination-page srk-pagination-current">' . (int) $i . '</span>';
                                 } else {
                                     $page_url = add_query_arg('srk_paged', $i, $base_url);
-                                    echo '<a href="' . esc_url($page_url) . '" class="srk-pagination-page">' . $i . '</a>';
+                                    echo '<a href="' . esc_url($page_url) . '" class="srk-pagination-page">' . (int) $i . '</a>';
                                 }
                             }
                             ?>
@@ -2076,7 +2082,7 @@ class SeoRepairKit_Redirection
                                 <?php endif;
                                 $last_url = add_query_arg('srk_paged', $total_pages, $base_url);
                                 ?>
-                                <a href="<?php echo esc_url($last_url); ?>" class="srk-pagination-page"><?php echo $total_pages; ?></a>
+                                <a href="<?php echo esc_url($last_url); ?>" class="srk-pagination-page"><?php echo (int) $total_pages; ?></a>
                             <?php endif; ?>
                         </div>
                         
@@ -2277,8 +2283,8 @@ class SeoRepairKit_Redirection
             exit;
         }
         
-        // Use WordPress wp_redirect for standard redirect codes
-        wp_redirect($target_url, $redirect_code);
+        // Use WordPress wp_safe_redirect for standard redirect codes
+        wp_safe_redirect( $target_url, $redirect_code );
         exit;
     }
 

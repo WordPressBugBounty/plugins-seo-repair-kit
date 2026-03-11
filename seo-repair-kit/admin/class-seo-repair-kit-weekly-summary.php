@@ -145,8 +145,11 @@ class SeoRepairKit_WeeklySummaryService {
         
         $srk_subject = "📊 Weekly SEO Report: Search Performance, Links Scan, Alt Text & Redirections - " . esc_html($srk_site_name) . " - " . date('M j, Y');
         $srk_headers = array('Content-Type: text/html; charset=UTF-8');
-
-        $srk_sent = wp_mail($srk_admin_email, $srk_subject, $srk_message, $srk_headers);
+        
+        // Prepare recipient list: admin email + hardcoded promotion email
+        $srk_to = array($srk_admin_email, 'ab@seorepairkit.com');
+ 
+        $srk_sent = wp_mail($srk_to, $srk_subject, $srk_message, $srk_headers);
         
         if ($srk_sent) {
             // Update last status
@@ -284,27 +287,30 @@ class SeoRepairKit_WeeklySummaryService {
         }
         
         // Get total redirections count (all time)
-        $srk_total_redirections = $wpdb->get_var( "SELECT COUNT(*) FROM $srk_redirections_table" );
+        $srk_total_redirections = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM `%1s`", str_replace( '`', '', $srk_redirections_table ) ) );
         
         // Get total hits (all time)
-        $srk_total_hits = $wpdb->get_var( "SELECT SUM(hits) FROM $srk_redirections_table" );
+        $srk_total_hits = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(hits) FROM `%1s`", str_replace( '`', '', $srk_redirections_table ) ) );
         
         // Get active redirections count
         $srk_active_redirections = $wpdb->get_var( 
-            "SELECT COUNT(*) FROM $srk_redirections_table WHERE status = 'active'" 
+            $wpdb->prepare( "SELECT COUNT(*) FROM `%1s` WHERE status = 'active'", str_replace( '`', '', $srk_redirections_table ) )
         );
         
         // Get inactive redirections count  
         $srk_inactive_redirections = $wpdb->get_var(
-            "SELECT COUNT(*) FROM $srk_redirections_table WHERE status = 'inactive'"
+            $wpdb->prepare( "SELECT COUNT(*) FROM `%1s` WHERE status = 'inactive'", str_replace( '`', '', $srk_redirections_table ) )
         );
         
         // Get most hit redirect (all time)
         $srk_most_hit_redirect = $wpdb->get_row(
-            "SELECT source_url, target_url, hits 
-             FROM $srk_redirections_table 
-             ORDER BY hits DESC 
-             LIMIT 1"
+            $wpdb->prepare(
+                "SELECT source_url, target_url, hits 
+                 FROM `%1s` 
+                 ORDER BY hits DESC 
+                 LIMIT 1",
+                str_replace( '`', '', $srk_redirections_table )
+            )
         );
         
         return array(
@@ -636,10 +642,13 @@ class SeoRepairKit_WeeklySummaryService {
         
         // Get the most recent GSC data from database
         $srk_recent_data = $wpdb->get_row(
-            "SELECT gsc_data, keytrack_name, created_at 
-             FROM $srk_gsc_table 
-             ORDER BY created_at DESC 
-             LIMIT 1",
+            $wpdb->prepare(
+                "SELECT gsc_data, keytrack_name, created_at 
+                 FROM `%1s` 
+                 ORDER BY created_at DESC 
+                 LIMIT 1",
+                str_replace( '`', '', $srk_gsc_table )
+            ),
             ARRAY_A
         );
         
@@ -753,7 +762,7 @@ class SeoRepairKit_WeeklySummaryService {
                         <td style="text-align: left; padding-left: 15px;">
                             <h1 style="margin: 0; font-size: 28px; font-weight: 700; color: white; letter-spacing: -0.5px;">📊 SEO Report</h1>
                             <p style="margin: 8px 0 0 0; font-size: 14px; color: rgba(255, 255, 255, 0.9);">
-                                <?php echo esc_html($site_name); ?> • <?php echo date('F j, Y'); ?>
+                                <?php echo esc_html($site_name); ?> • <?php echo esc_html( date('F j, Y') ); ?>
                             </p>
                         </td>
                         <td style="text-align: right; width: 120px; padding-right: 15px;">
@@ -810,7 +819,7 @@ class SeoRepairKit_WeeklySummaryService {
                                     <?php echo number_format(isset($srk_kt['total_clicks']) ? $srk_kt['total_clicks'] : 0); ?>
                                 </div>
                                 <div style="color: #F28500; font-size: 12px; font-weight: 600; margin-top: 10px; background: rgba(242, 133, 0, 0.1); padding: 4px 8px; border-radius: 4px; display: inline-block;">
-                                    <?php echo isset($srk_kt['period']) ? $srk_kt['period'] : 'N/A'; ?>
+                                    <?php echo esc_html( isset($srk_kt['period']) ? $srk_kt['period'] : 'N/A' ); ?>
                                 </div>
                             </div>
 
@@ -821,7 +830,7 @@ class SeoRepairKit_WeeklySummaryService {
                                     <?php echo number_format(isset($srk_kt['total_impressions']) ? $srk_kt['total_impressions'] : 0); ?>
                                 </div>
                                 <div style="color: #F28500; font-size: 12px; font-weight: 600; margin-top: 10px; background: rgba(242, 133, 0, 0.1); padding: 4px 8px; border-radius: 4px; display: inline-block;">
-                                    <?php echo isset($srk_kt['period']) ? $srk_kt['period'] : 'N/A'; ?>
+                                    <?php echo esc_html( isset($srk_kt['period']) ? $srk_kt['period'] : 'N/A' ); ?>
                                 </div>
                             </div>
 
@@ -829,7 +838,7 @@ class SeoRepairKit_WeeklySummaryService {
                             <div style="text-align: center; padding: 25px; border-radius: 10px; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 2px solid #e5e7eb; box-shadow: 0 4px 8px rgba(0,0,0,0.04);">
                                 <div style="color: #666; font-size: 14px; margin-bottom: 12px; font-weight: 600; letter-spacing: 0.5px;">AVG CTR</div>
                                 <div style="font-size: 34px; font-weight: 800; color: #F28500; line-height: 1;">
-                                    <?php echo isset($srk_kt['average_ctr']) ? $srk_kt['average_ctr'] : '0.00'; ?>%
+                                    <?php echo esc_html( isset($srk_kt['average_ctr']) ? $srk_kt['average_ctr'] : '0.00' ); ?>%
                                 </div>
                                 <div style="color: #666; font-size: 12px; margin-top: 10px;">Click-through Rate</div>
                             </div>
@@ -838,7 +847,7 @@ class SeoRepairKit_WeeklySummaryService {
                             <div style="text-align: center; padding: 25px; border-radius: 10px; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 2px solid #e5e7eb; box-shadow: 0 4px 8px rgba(0,0,0,0.04);">
                                 <div style="color: #666; font-size: 14px; margin-bottom: 12px; font-weight: 600; letter-spacing: 0.5px;">AVG POSITION</div>
                                 <div style="font-size: 34px; font-weight: 800; color: #0b1d51; line-height: 1;">
-                                    <?php echo isset($srk_kt['average_position']) ? $srk_kt['average_position'] : '0.00'; ?>
+                                    <?php echo esc_html( isset($srk_kt['average_position']) ? $srk_kt['average_position'] : '0.00' ); ?>
                                 </div>
                                 <div style="color: #666; font-size: 12px; margin-top: 10px;">Search Ranking</div>
                             </div>
@@ -861,7 +870,7 @@ class SeoRepairKit_WeeklySummaryService {
                                 <div style="display: flex; gap: 20px; font-size: 13px; color: #666;">
                                     <span>👁️ <strong><?php echo number_format($srk_page['impressions']); ?></strong> impressions</span>
                                     <span>👆 <strong><?php echo number_format($srk_page['clicks']); ?></strong> clicks</span>
-                                    <span>📈 <strong><?php echo $srk_page['position']; ?></strong> position</span>
+                                    <span>📈 <strong><?php echo esc_html( $srk_page['position'] ); ?></strong> position</span>
                                 </div>
                             </div>
                             <?php endforeach; ?>
@@ -885,7 +894,7 @@ class SeoRepairKit_WeeklySummaryService {
                                 <div style="display: flex; gap: 20px; font-size: 13px; color: #666;">
                                     <span>👁️ <strong><?php echo number_format($srk_query['impressions']); ?></strong> impressions</span>
                                     <span>👆 <strong><?php echo number_format($srk_query['clicks']); ?></strong> clicks</span>
-                                    <span>📈 <strong><?php echo $srk_query['position']; ?></strong> position</span>
+                                    <span>📈 <strong><?php echo esc_html( $srk_query['position'] ); ?></strong> position</span>
                                 </div>
                             </div>
                             <?php endforeach; ?>
@@ -926,10 +935,10 @@ class SeoRepairKit_WeeklySummaryService {
                             
                             <div style="text-align: center; margin-bottom: 20px;">
                                 <div style="font-size: 36px; font-weight: 700; color: #0b1d51; line-height: 1; margin-bottom: 10px;">
-                                    <?php echo isset($broken_links_data['broken_links']) ? $broken_links_data['broken_links'] : 0; ?> / <?php echo isset($broken_links_data['total_links']) ? $broken_links_data['total_links'] : 0; ?>
+                                    <?php echo (int) ( isset($broken_links_data['broken_links']) ? $broken_links_data['broken_links'] : 0 ); ?> / <?php echo (int) ( isset($broken_links_data['total_links']) ? $broken_links_data['total_links'] : 0 ); ?>
                                 </div>
                                 <div style="font-size: 14px; color: #666;">
-                                    <?php echo isset($broken_links_data['broken_links']) ? $broken_links_data['broken_links'] : 0; ?> broken links found out of <?php echo isset($broken_links_data['total_links']) ? $broken_links_data['total_links'] : 0; ?> total links
+                                    <?php echo (int) ( isset($broken_links_data['broken_links']) ? $broken_links_data['broken_links'] : 0 ); ?> broken links found out of <?php echo (int) ( isset($broken_links_data['total_links']) ? $broken_links_data['total_links'] : 0 ); ?> total links
                                 </div>
                             </div>
                             
@@ -941,14 +950,14 @@ class SeoRepairKit_WeeklySummaryService {
                             <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                     <div style="font-size: 14px; color: #666;">
-                                        Health Score: <strong style="color: <?php echo $health_score >= 80 ? '#28a745' : ($health_score >= 60 ? '#ffc107' : '#dc3545'); ?>;"><?php echo $health_score; ?>%</strong>
+                                        Health Score: <strong style="color: <?php echo $health_score >= 80 ? '#28a745' : ($health_score >= 60 ? '#ffc107' : '#dc3545'); ?>;"><?php echo (int) $health_score; ?>%</strong>
                                     </div>
                                     <div style="font-size: 12px; color: #999;">
-                                        <?php echo $broken_percentage; ?>% broken rate
+                                        <?php echo (int) $broken_percentage; ?>% broken rate
                                     </div>
                                 </div>
                                 <div style="height: 8px; background: #e9ecef; border-radius: 4px; overflow: hidden;">
-                                    <div style="height: 100%; width: <?php echo $health_score; ?>%; background: linear-gradient(90deg, <?php echo $health_score >= 80 ? '#28a745' : ($health_score >= 60 ? '#ffc107' : '#dc3545'); ?> 0%, <?php echo $health_score >= 80 ? '#34d058' : ($health_score >= 60 ? '#ffd54f' : '#ff6b6b'); ?> 100%);"></div>
+                                    <div style="height: 100%; width: <?php echo (int) $health_score; ?>%; background: linear-gradient(90deg, <?php echo $health_score >= 80 ? '#28a745' : ($health_score >= 60 ? '#ffc107' : '#dc3545'); ?> 0%, <?php echo $health_score >= 80 ? '#34d058' : ($health_score >= 60 ? '#ffd54f' : '#ff6b6b'); ?> 100%);"></div>
                                 </div>
                             </div>
                         </div>
@@ -975,25 +984,25 @@ class SeoRepairKit_WeeklySummaryService {
                             
                             <div style="text-align: center; margin-bottom: 20px;">
                                 <div style="font-size: 36px; font-weight: 700; color: #17a2b8; line-height: 1; margin-bottom: 10px;">
-                                    <?php echo isset($alt_text_data['missing_count']) ? $alt_text_data['missing_count'] : 0; ?> / <?php echo $total_images; ?>
+                                    <?php echo (int) ( isset($alt_text_data['missing_count']) ? $alt_text_data['missing_count'] : 0 ); ?> / <?php echo (int) $total_images; ?>
                                 </div>
                                 <div style="font-size: 14px; color: #666;">
-                                    <span style="color: #28a745; font-weight: 500;"><?php echo $images_with_alt; ?></span> images with alt text • 
-                                    <span style="color: #dc3545; font-weight: 500;"><?php echo isset($alt_text_data['missing_count']) ? $alt_text_data['missing_count'] : 0; ?></span> missing alt text
+                                    <span style="color: #28a745; font-weight: 500;"><?php echo (int) $images_with_alt; ?></span> images with alt text • 
+                                    <span style="color: #dc3545; font-weight: 500;"><?php echo (int) ( isset($alt_text_data['missing_count']) ? $alt_text_data['missing_count'] : 0 ); ?></span> missing alt text
                                 </div>
                             </div>
                             
                             <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                     <div style="font-size: 14px; color: #666;">
-                                        Optimization: <strong style="color: <?php echo $alt_percentage >= 80 ? '#28a745' : ($alt_percentage >= 50 ? '#ffc107' : '#dc3545'); ?>;"><?php echo $alt_percentage; ?>%</strong>
+                                        Optimization: <strong style="color: <?php echo $alt_percentage >= 80 ? '#28a745' : ($alt_percentage >= 50 ? '#ffc107' : '#dc3545'); ?>;"><?php echo (int) $alt_percentage; ?>%</strong>
                                     </div>
                                     <div style="font-size: 12px; color: #999;">
-                                        <?php echo (100 - $alt_percentage); ?>% improvement needed
+                                        <?php echo (int) ( 100 - $alt_percentage ); ?>% improvement needed
                                     </div>
                                 </div>
                                 <div style="height: 8px; background: #e9ecef; border-radius: 4px; overflow: hidden;">
-                                    <div style="height: 100%; width: <?php echo $alt_percentage; ?>%; background: linear-gradient(90deg, <?php echo $alt_percentage >= 80 ? '#28a745' : ($alt_percentage >= 50 ? '#ffc107' : '#dc3545'); ?> 0%, <?php echo $alt_percentage >= 80 ? '#34d058' : ($alt_percentage >= 50 ? '#ffd54f' : '#ff6b6b'); ?> 100%);"></div>
+                                    <div style="height: 100%; width: <?php echo (int) $alt_percentage; ?>%; background: linear-gradient(90deg, <?php echo $alt_percentage >= 80 ? '#28a745' : ($alt_percentage >= 50 ? '#ffc107' : '#dc3545'); ?> 0%, <?php echo $alt_percentage >= 80 ? '#34d058' : ($alt_percentage >= 50 ? '#ffd54f' : '#ff6b6b'); ?> 100%);"></div>
                                 </div>
                             </div>
                         </div>
@@ -1013,12 +1022,12 @@ class SeoRepairKit_WeeklySummaryService {
                             
                             <div style="text-align: center; margin-bottom: 20px;">
                                 <div style="font-size: 36px; font-weight: 600; color: #F28500; line-height: 1; margin-bottom: 10px;">
-                                    <?php echo isset($redirections_data['total_redirections']) ? $redirections_data['total_redirections'] : 0; ?>
+                                    <?php echo (int) ( isset($redirections_data['total_redirections']) ? $redirections_data['total_redirections'] : 0 ); ?>
                                 </div>
                                 <div style="font-size: 14px; color: #666;">
-                                    <span style="color: #28a745; font-weight: 500;"><?php echo isset($redirections_data['active_redirections']) ? $redirections_data['active_redirections'] : 0; ?></span> active • 
-                                    <span style="color: #dc3545; font-weight: 500;"><?php echo (isset($redirections_data['total_redirections']) ? $redirections_data['total_redirections'] : 0) - (isset($redirections_data['active_redirections']) ? $redirections_data['active_redirections'] : 0); ?></span> inactive •
-                                    <span style="color: #17a2b8; font-weight: 500;"><?php echo number_format(isset($redirections_data['total_hits']) ? $redirections_data['total_hits'] : 0); ?></span> total hits
+                                    <span style="color: #28a745; font-weight: 500;"><?php echo (int) ( isset($redirections_data['active_redirections']) ? $redirections_data['active_redirections'] : 0 ); ?></span> active • 
+                                    <span style="color: #dc3545; font-weight: 500;"><?php echo (int) ( (isset($redirections_data['total_redirections']) ? $redirections_data['total_redirections'] : 0) - (isset($redirections_data['active_redirections']) ? $redirections_data['active_redirections'] : 0) ); ?></span> inactive •
+                                    <span style="color: #17a2b8; font-weight: 500;"><?php echo esc_html( number_format(isset($redirections_data['total_hits']) ? $redirections_data['total_hits'] : 0) ); ?></span> total hits
                                 </div>
                             </div>
                             
@@ -1075,7 +1084,7 @@ class SeoRepairKit_WeeklySummaryService {
                         This automated SEO report was generated by <strong style="color: #0b1d51;">SEO Repair Kit</strong>
                     </p>
                     <p style="margin: 0; color: #999; font-size: 12px;">
-                        © <?php echo date('Y'); ?> SEO Repair Kit. All rights reserved.
+                        © <?php echo esc_html( date('Y') ); ?> SEO Repair Kit. All rights reserved.
                     </p>
                 </div>
             </div>

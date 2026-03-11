@@ -210,24 +210,24 @@ class SeoRepairKit_404_Manager {
                 <div class="srk-stats-grid">
                     <div class="srk-stat-card">
                         <h3><?php esc_html_e( 'Total 404 Errors', 'seo-repair-kit' ); ?></h3>
-                        <div class="srk-stat-number"><?php echo number_format_i18n( $stats['total_hits'] ); ?></div>
+                        <div class="srk-stat-number"><?php echo esc_html( number_format_i18n( $stats['total_hits'] ) ); ?></div>
                         <p class="srk-stat-desc"><?php esc_html_e( 'Total occurrences', 'seo-repair-kit' ); ?></p>
                     </div>
                     <div class="srk-stat-card">
                         <h3><?php esc_html_e( 'Unique URLs', 'seo-repair-kit' ); ?></h3>
-                        <div class="srk-stat-number"><?php echo number_format_i18n( $stats['unique_urls'] ); ?></div>
+                        <div class="srk-stat-number"><?php echo esc_html( number_format_i18n( $stats['unique_urls'] ) ); ?></div>
                         <p class="srk-stat-desc"><?php esc_html_e( 'Distinct 404 pages', 'seo-repair-kit' ); ?></p>
                     </div>
                     <div class="srk-stat-card">
                         <h3><?php esc_html_e( 'Total Log Entries', 'seo-repair-kit' ); ?></h3>
-                        <div class="srk-stat-number"><?php echo number_format_i18n( $stats['total_404s'] ); ?></div>
+                        <div class="srk-stat-number"><?php echo esc_html( number_format_i18n( $stats['total_404s'] ) ); ?></div>
                         <p class="srk-stat-desc"><?php esc_html_e( 'Logged entries', 'seo-repair-kit' ); ?></p>
                     </div>
                     <div class="srk-stat-card">
                         <h3><?php esc_html_e( 'Most Hit 404', 'seo-repair-kit' ); ?></h3>
                         <div class="srk-stat-number">
                             <?php if ( $stats['most_hit'] ) : ?>
-                                <?php echo number_format_i18n( $stats['most_hit']->count ); ?>
+                                <?php echo esc_html( number_format_i18n( $stats['most_hit']->count ) ); ?>
                                 <small><?php echo esc_html( substr( $stats['most_hit']->url, 0, 50 ) . ( strlen( $stats['most_hit']->url ) > 50 ? '...' : '' ) ); ?></small>
                             <?php else : ?>
                                 0
@@ -317,7 +317,7 @@ class SeoRepairKit_404_Manager {
                                             <code><?php echo esc_html( $log->url ); ?></code>
                                         </td>
                                         <td>
-                                            <span class="srk-badge-count"><?php echo number_format_i18n( $log->count ); ?></span>
+                                            <span class="srk-badge-count"><?php echo esc_html( number_format_i18n( $log->count ) ); ?></span>
                                         </td>
                                         <td>
                                             <?php if ( ! empty( $log->referrer ) ) : ?>
@@ -366,9 +366,9 @@ class SeoRepairKit_404_Manager {
                                 <?php
                                 printf(
                                     esc_html__( 'Showing %1$d-%2$d of %3$d entries', 'seo-repair-kit' ),
-                                    $offset + 1,
-                                    min( $offset + $per_page, $total_items ),
-                                    $total_items
+                                    (int) ( $offset + 1 ),
+                                    (int) min( $offset + $per_page, $total_items ),
+                                    (int) $total_items
                                 );
                                 ?>
                             </div>
@@ -820,8 +820,9 @@ class SeoRepairKit_404_Manager {
         
         $table_name = $wpdb->prefix . 'srkit_404_logs';
         
-        // Check if table exists
-        if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) === $table_name ) {
+        // Check if table exists using prepared statement
+        $result = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) );
+        if ( $result === $table_name ) {
             return true;
         }
         
@@ -848,7 +849,9 @@ class SeoRepairKit_404_Manager {
             $this->create_404_table_directly();
         }
         
-        return ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) === $table_name );
+        // Check again if table was created using prepared statement
+        $result = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) );
+        return ( $result === $table_name );
     }
 
     /**

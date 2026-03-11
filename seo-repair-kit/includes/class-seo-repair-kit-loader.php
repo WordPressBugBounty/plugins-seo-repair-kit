@@ -10,6 +10,12 @@
  * @since      1.0.1
  * @author     TorontoDigits <support@torontodigits.com>
  */
+
+// If this file is called directly, abort.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 class Seo_Repair_Kit_Loader {
 
 	/**

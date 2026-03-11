@@ -1,0 +1,680 @@
+/*
+ * SEO Repair Kit
+ * Version: 2.1.3
+ * Description: Elementor Pannel stylesheet
+ *  @author     TorontoDigits <support@torontodigits.com>
+ */
+.elementor-control-srk_seo_meta_section {
+    background: #f8f9fa;
+    border-radius: 4px;
+    padding: 15px;
+}
+
+/* Headings */
+.elementor-control-srk_preview_heading .elementor-control-title,
+.elementor-control-srk_title_section .elementor-control-title,
+.elementor-control-srk_desc_section .elementor-control-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d2327;
+    border-bottom: 2px solid #007cba;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.elementor-control-srk_preview_subheading .elementor-control-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: #646970;
+    border: none;
+    padding: 0;
+    margin: 15px 0 5px 0;
+}
+
+/* SERP Preview */
+.srk-serp-preview {
+    background: white;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-family: Arial, sans-serif;
+    margin-bottom: 15px;
+}
+
+.srk-serp-url {
+    color: #70757a;
+    font-size: 12px;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.srk-serp-title {
+    color: #1a0dab;
+    font-size: 16px;
+    margin-bottom: 8px;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.srk-serp-desc {
+    color: #3c4043;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.srk-edit-snippet-btn {
+    background: #0B1D51 !important;
+    color: #fff !important;
+    border: 1px solid #0B1D51 !important;
+    padding: 8px 10px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    transition: all 0.2s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08) !important;
+}
+
+.srk-edit-snippet-btn:hover {
+    background: #F28500 !important;
+    border-color: #F28500 !important;
+}
+
+
+.srk-reset-btn {
+    background: #f0f0f1 !important;
+    color: #2c3338 !important;
+    border: 1px solid #dcdcde !important;
+    padding: 6px 12px !important;
+    border-radius: 3px !important;
+    font-size: 12px !important;
+    transition: all 0.3s ease !important;
+}
+
+.srk-reset-btn:hover {
+    background: #e0e0e0 !important;
+    border-color: #c3c4c7 !important;
+}
+
+/* Counters */
+.srk-counter {
+    background: #e9ecef;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #666;
+    margin: 10px 0;
+    transition: all 0.3s ease;
+}
+
+.srk-counter .srk-char-count {
+    font-weight: bold;
+    color: #1d2327;
+}
+
+.srk-counter.warning {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.srk-counter.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Sync Status */
+.srk-sync-status {
+    background: #f8f9fa;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #646970;
+    margin-top: 20px;
+}
+
+.srk-sync-status strong {
+    color: #1d2327;
+}
+
+/* Help text */
+.elementor-control-srk_title_counter .elementor-control-content,
+.elementor-control-srk_desc_counter .elementor-control-content {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+    margin-top: 5px;
+}
+
+/* Modal tag buttons */
+.srk-modal-tag {
+    background: #f0f0f1;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 4px 8px;
+    font-size: 12px;
+    color: #2c3338;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.srk-modal-tag:hover {
+    background: #e0e0e0;
+    border-color: #c3c4c7;
+}
+
+/* Responsive */
+@media (max-width: 1439px) {
+    .elementor-control-srk_seo_meta_section {
+        padding: 10px;
+    }
+
+    .srk-serp-title {
+        font-size: 14px;
+    }
+
+    .srk-serp-desc {
+        font-size: 12px;
+    }
+}
+
+/* Force border on any SRK preview box inside Elementor panel */
+.elementor-panel .srk-serp-preview,
+.elementor-panel .srk-snippet-preview,
+.elementor-panel .srk-preview-box {
+    border: 1px solid #dcdcde !important;
+    background: #fff !important;
+    border-radius: 8px !important;
+    padding: 14px !important;
+    margin-bottom: 12px !important;
+}
+
+/* SRK Toast */
+.srk-toast {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 9999999;
+    background: #1d2327;
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.25s ease;
+}
+
+.srk-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.srk-toast.success {
+    background: #0f5132;
+}
+
+.srk-toast.warning {
+    background: #664d03;
+}
+
+.srk-toast.error {
+    background: #842029;
+}
+
+/* ========== GUTENBERG STYLE TAG SYSTEM ========== */
+.srk-tag-chip {
+    display: inline-flex !important;
+    align-items: center !important;
+    background: #f0f0f0 !important;
+    border-radius: 4px !important;
+    padding: 2px 6px 2px 10px !important;
+    margin: 0 2px !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    border: 1px solid #ddd !important;
+    cursor: default !important;
+    user-select: none !important;
+    color: #2c3338 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif !important;
+}
+
+.srk-tag-chip:hover {
+    background: #e5e5e5 !important;
+    border-color: #c3c4c7 !important;
+}
+
+.srk-tag-delete {
+    cursor: pointer !important;
+    color: #8c8f94 !important;
+    font-size: 16px !important;
+    line-height: 1 !important;
+    width: 16px !important;
+    height: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-left: 4px !important;
+    border-radius: 50% !important;
+}
+
+.srk-tag-delete:hover {
+    color: #d63638 !important;
+    background: rgba(214, 54, 56, 0.1) !important;
+}
+
+.srk-relevant-tag {
+    font-size: 12px !important;
+    padding: 4px 10px !important;
+    background: #f0f6fc !important;
+    border: 1px solid #c5d9ed !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    color: #2271b1 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif !important;
+}
+
+.srk-relevant-tag:hover {
+    background: #e1ecf6 !important;
+    border-color: #a7c8e6 !important;
+    transform: translateY(-1px) !important;
+}
+
+.srk-relevant-tag span {
+    font-size: 14px !important;
+    font-weight: bold !important;
+}
+
+.srk-view-all-tags-btn {
+    font-size: 12px !important;
+    padding: 2px 8px !important;
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    color: #2271b1 !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    margin-left: 4px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s !important;
+}
+
+.srk-view-all-tags-btn:hover {
+    color: #135e96 !important;
+    text-decoration: underline !important;
+}
+
+/* All Tags Modal */
+.srk-all-tags-modal {
+    position: absolute !important;
+    z-index: 1000 !important;
+    background: #fff !important;
+    border: 1px solid #dcdcde !important;
+    border-radius: 6px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    width: 400px !important;
+    max-height: 400px !important;
+    overflow: hidden !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif !important;
+}
+
+.srk-tag-modal-header {
+    padding: 16px !important;
+    border-bottom: 1px solid #e2e4e7 !important;
+    background: #f8f9fa !important;
+}
+
+.srk-tag-modal-header h3 {
+    margin: 0 !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #1d2327 !important;
+}
+
+.srk-tag-modal-close {
+    background: none !important;
+    border: none !important;
+    font-size: 20px !important;
+    cursor: pointer !important;
+    color: #646970 !important;
+    width: 24px !important;
+    height: 24px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    transition: all 0.2s !important;
+}
+
+.srk-tag-modal-close:hover {
+    background: #f0f0f1 !important;
+    color: #1d2327 !important;
+}
+
+.srk-tag-search {
+    width: 100% !important;
+    padding: 8px 12px !important;
+    border: 1px solid #dcdcde !important;
+    border-radius: 4px !important;
+    font-size: 13px !important;
+    font-family: inherit !important;
+    margin-top: 12px !important;
+}
+
+.srk-tag-search:focus {
+    border-color: #007cba !important;
+    box-shadow: 0 0 0 1px #007cba !important;
+    outline: none !important;
+}
+
+.srk-tag-list {
+    max-height: 300px !important;
+    overflow-y: auto !important;
+}
+
+.srk-tag-modal-item {
+    padding: 12px 16px !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    transition: all 0.2s !important;
+}
+
+.srk-tag-modal-item:hover {
+    background: #f6f7f7 !important;
+}
+
+.srk-tag-modal-item:last-child {
+    border-bottom: none !important;
+}
+
+.srk-tag-modal-item span:first-child {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 24px !important;
+    height: 24px !important;
+    border-radius: 4px !important;
+    background: #f0f6fc !important;
+    color: #2271b1 !important;
+    margin-right: 12px !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    flex-shrink: 0 !important;
+}
+
+.srk-tag-modal-item>div {
+    flex: 1 !important;
+}
+
+.srk-tag-modal-item>div>div:first-child {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #1d2327 !important;
+    margin-bottom: 4px !important;
+}
+
+.srk-tag-modal-item>div>div:nth-child(2) {
+    font-size: 12px !important;
+    color: #646970 !important;
+    line-height: 1.4 !important;
+}
+
+.srk-tag-modal-item>div>div:last-child {
+    font-size: 11px !important;
+    color: #8c8f94 !important;
+    margin-top: 4px !important;
+    font-family: monospace !important;
+}
+
+/* Visual Input */
+.srk-tag-display {
+    min-height: 44px !important;
+    padding: 10px 14px !important;
+    border: 1px solid #dcdcde !important;
+    border-radius: 4px !important;
+    background: #fff !important;
+    cursor: text !important;
+    line-height: 1.5 !important;
+    white-space: pre-wrap !important;
+    outline: none !important;
+    font-size: 14px !important;
+    color: #2c3338 !important;
+    font-family: inherit !important;
+    transition: all 0.2s !important;
+}
+
+.srk-tag-display:focus {
+    border-color: #007cba !important;
+    box-shadow: 0 0 0 1px #007cba !important;
+}
+
+.srk-tag-display[contenteditable="true"]:empty:before {
+    content: attr(placeholder);
+    color: #8c8f94;
+    pointer-events: none;
+    display: block;
+}
+
+/* Character Counters in Modal */
+.srk-title-counter,
+.srk-desc-counter {
+    font-size: 12px !important;
+    color: #646970 !important;
+    margin-top: 8px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    font-family: inherit !important;
+}
+
+.srk-char-count {
+    font-weight: 500 !important;
+}
+
+/* Modal Improvements */
+.srk-modal-box {
+    background: white !important;
+    width: 800px !important;
+    max-width: 95% !important;
+    max-height: 95vh !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2) !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif !important;
+}
+
+.srk-modal-header {
+    padding: 20px 24px !important;
+    border-bottom: 1px solid #e2e4e7 !important;
+    background: #fff !important;
+}
+
+.srk-modal-body {
+    padding: 24px !important;
+    background: #f8f9fa !important;
+}
+
+.srk-modal-footer {
+    padding: 20px 24px !important;
+    border-top: 1px solid #e2e4e7 !important;
+    background: #fff !important;
+}
+
+.srk-snippet-preview {
+    padding: 20px !important;
+    background: #fff !important;
+    border: 2px solid #4f94d4 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.srk-preview-title {
+    font-size: 20px !important;
+    font-family: Arial, sans-serif !important;
+}
+
+.srk-preview-desc {
+    font-size: 15px !important;
+    font-family: Arial, sans-serif !important;
+}
+
+/* Section Styling */
+.srk-title-section,
+.srk-desc-section {
+    background: #fff !important;
+    padding: 20px !important;
+    border-radius: 8px !important;
+    border: 1px solid #e2e4e7 !important;
+    margin-bottom: 24px !important;
+}
+
+/* FIX: All Tags Dropdown Layout */
+.srk-all-tags-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    position: relative !important;
+    margin-top: 10px !important;
+    z-index: 10 !important;
+}
+
+.srk-all-tag-btn {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 8px 12px !important;
+    margin: 0 !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+    background: white !important;
+    transition: background 0.2s ease !important;
+}
+
+.srk-all-tag-btn:hover {
+    background: #f8f9fa !important;
+}
+
+/* FIX: Modal Layout */
+#srk-snippet-modal .srk-modal-box {
+    width: 700px !important;
+    max-height: 85vh !important;
+}
+
+.srk-modal-body {
+    overflow-y: auto !important;
+    max-height: calc(85vh - 140px) !important;
+}
+
+/* FIX: SERP Preview Loading */
+.srk-serp-preview-card {
+    min-height: 100px !important;
+    opacity: 1 !important;
+    transition: opacity 0.3s ease !important;
+}
+
+.srk-serp-preview-card.loading {
+    opacity: 0.7 !important;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%) !important;
+    background-size: 200% 100% !important;
+    animation: loading 1.5s infinite !important;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Advanced Settings Styles */
+.srk-robots-meta-grid {
+    transition: all 0.3s ease;
+}
+
+.srk-robots-checkbox {
+    cursor: pointer;
+}
+
+.srk-max-input,
+.srk-max-select {
+    transition: border-color 0.3s ease;
+}
+
+.srk-max-input:focus,
+.srk-max-select:focus {
+    border-color: #007cba;
+    outline: none;
+    box-shadow: 0 0 0 1px #007cba;
+}
+
+.srk-robots-preview-box {
+    transition: all 0.3s ease;
+}
+
+/* Toggle switch styling */
+.elementor-control-srk_use_default_settings .elementor-switch {
+    width: 50px;
+    height: 24px;
+}
+
+.elementor-control-srk_use_default_settings .elementor-switch-label {
+    background: #ccc;
+}
+
+.elementor-control-srk_use_default_settings .elementor-switch-input:checked+.elementor-switch-label {
+    background: #007cba;
+}
+
+.elementor-control-srk_use_default_settings .elementor-switch-handle {
+    width: 16px;
+    height: 16px;
+    left: 4px;
+    top: 4px;
+}
+
+.elementor-control-srk_use_default_settings .elementor-switch-input:checked+.elementor-switch-label .elementor-switch-handle {
+    left: calc(100% - 20px);
+}
+
+/* Apply button styling */
+.elementor-control-srk_apply_content_type_btn .elementor-button {
+    background: #2271b1;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.elementor-control-srk_apply_content_type_btn .elementor-button:hover {
+    background: #135e96;
+}
+
+/* FORCE max values in single row */
+.srk-max-values-section {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 12px !important;
+    align-items: flex-start;
+}
+
+.srk-max-values-section>div {
+    width: 100%;
+}

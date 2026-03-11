@@ -251,16 +251,16 @@ class SeoRepairKit_AltTextPage {
                             if ( $show_all ) {
                                 printf(
                                     esc_html__( 'Showing all %1$d images', 'seo-repair-kit' ),
-                                    $srkit_countposts
+                                    (int) $srkit_countposts
                                 );
                             } else {
                                 $start = $offset + 1;
                                 $end = min( $offset + $srkit_noperpage, $srkit_countposts );
                                 printf(
                                     esc_html__( 'Showing %1$d to %2$d of %3$d', 'seo-repair-kit' ),
-                                    $start,
-                                    $end,
-                                    $srkit_countposts
+                                    (int) $start,
+                                    (int) $end,
+                                    (int) $srkit_countposts
                                 );
                             }
                             ?>

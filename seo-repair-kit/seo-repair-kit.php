@@ -16,7 +16,7 @@
  * Plugin Name:       SEO Repair Kit
  * Plugin URI:        https://seorepairkit.com
  * Description:       SEO friendly AI assistant with Schema Manager, link repair, and keyword tracking tools.
- * Version:           2.1.2
+ * Version:           2.1.3
  * Author:            TorontoDigits
  * Author URI:        https://torontodigits.com/
  * License:           GPL-2.0+
@@ -34,7 +34,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Currently plugin version.
  * Start at version 1.0.1 and use SemVer - https://semver.org
  */
-define( 'SEO_REPAIR_KIT_VERSION', '2.1.2' );
+define( 'SEO_REPAIR_KIT_VERSION', '2.1.3' );
 
 /**
  * Secret Key
@@ -207,7 +207,6 @@ if (!defined('SEOREPAIRKIT_PLUGIN_FILE')) {
 // Include the weekly summary service
 require_once plugin_dir_path(__FILE__) . 'admin/class-seo-repair-kit-weekly-summary.php';
 
-// Initialize the service
 // Initialize the service
 add_action('plugins_loaded', function() {
     SeoRepairKit_WeeklySummaryService::get_instance();

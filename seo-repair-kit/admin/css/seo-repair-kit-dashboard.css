@@ -558,41 +558,78 @@
   color: #06B6D4;
 }
 
-/* Bot Manager - Purple/Violet */
-.srk-tool-bot-manager {
+/* Meta Manager - Purple/Violet */
+.srk-tool-meta-manager {
   border-left: 3px solid #8B5CF6;
 }
 
-.srk-tool-bot-manager .srk-plugin-icon {
+.srk-tool-meta-manager .srk-plugin-icon {
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(124, 58, 237, 0.08));
   border-color: rgba(139, 92, 246, 0.25);
 }
 
-.srk-tool-bot-manager .srk-plugin-icon .dashicons {
+.srk-tool-meta-manager .srk-plugin-icon .dashicons {
   color: #8B5CF6;
 }
 
-.srk-tool-bot-manager:hover {
+.srk-tool-meta-manager:hover {
   border-left-color: #7C3AED;
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.04), rgba(124, 58, 237, 0.02));
 }
 
-.srk-tool-bot-manager:hover::before {
+.srk-tool-meta-manager:hover::before {
   background: linear-gradient(90deg, transparent, #8B5CF6, transparent);
 }
 
-.srk-tool-bot-manager:hover .srk-plugin-icon {
+.srk-tool-meta-manager:hover .srk-plugin-icon {
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(124, 58, 237, 0.12));
   border-color: rgba(139, 92, 246, 0.35);
   box-shadow: 0 2px 6px rgba(139, 92, 246, 0.2);
 }
 
-.srk-tool-bot-manager:hover .srk-plugin-info h5 {
+.srk-tool-meta-manager:hover .srk-plugin-info h5 {
   color: #8B5CF6;
 }
 
-.srk-tool-bot-manager:hover .srk-plugin-icon .dashicons {
+.srk-tool-meta-manager:hover .srk-plugin-icon .dashicons {
   color: #8B5CF6;
+}
+
+/* Bot Manager - Teal/Cyan */
+.srk-tool-bot-manager {
+  border-left: 3px solid #34afad;
+}
+
+.srk-tool-bot-manager .srk-plugin-icon {
+  background: linear-gradient(135deg, rgba(52, 175, 173, 0.12), rgba(41, 140, 143, 0.08));
+  border-color: rgba(52, 175, 173, 0.25);
+}
+
+.srk-tool-bot-manager .srk-plugin-icon .dashicons {
+  color: #34afad;
+}
+
+.srk-tool-bot-manager:hover {
+  border-left-color: #298c8b;
+  background: linear-gradient(135deg, rgba(52, 175, 173, 0.04), rgba(41, 140, 143, 0.02));
+}
+
+.srk-tool-bot-manager:hover::before {
+  background: linear-gradient(90deg, transparent, #34afad, transparent);
+}
+
+.srk-tool-bot-manager:hover .srk-plugin-icon {
+  background: linear-gradient(135deg, rgba(52, 175, 173, 0.18), rgba(41, 140, 143, 0.12));
+  border-color: rgba(52, 175, 173, 0.35);
+  box-shadow: 0 2px 6px rgba(52, 175, 173, 0.2);
+}
+
+.srk-tool-bot-manager:hover .srk-plugin-info h5 {
+  color: #34afad;
+}
+
+.srk-tool-bot-manager:hover .srk-plugin-icon .dashicons {
+  color: #34afad;
 }
 
 /* 404 Monitor - Orange */

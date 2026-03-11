@@ -6,6 +6,11 @@
  * @subpackage  Schema
  */
 
+// If this file is called directly, abort.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'Seo_Repair_Kit_Schema_Integration' ) ) {
 
 	/**

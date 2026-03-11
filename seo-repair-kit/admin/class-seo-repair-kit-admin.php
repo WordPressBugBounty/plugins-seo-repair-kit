@@ -129,7 +129,7 @@ class SeoRepairKit_Admin {
                 'srk-setup-onboarding',
                 plugin_dir_url( __FILE__ ) . 'css/srk-setup-onboarding.css',
                 array(),
-                defined('SEO_REPAIR_KIT_VERSION') ? SEO_REPAIR_KIT_VERSION : '1.0'
+                defined('SEO_REPAIR_KIT_VERSION') ? SEO_REPAIR_KIT_VERSION : '2.1.3'
             );
 
             // Post types list for the “Your Site” step
@@ -144,7 +144,7 @@ class SeoRepairKit_Admin {
                 'srk-setup-onboarding-modal',
                 plugin_dir_url( __FILE__ ) . 'js/srk-setup-onboarding-modal.js',
                 array( 'jquery' ),
-                defined('SEO_REPAIR_KIT_VERSION') ? SEO_REPAIR_KIT_VERSION : '1.0',
+                defined('SEO_REPAIR_KIT_VERSION') ? SEO_REPAIR_KIT_VERSION : '2.1.3',
                 true
             );
 
@@ -300,22 +300,51 @@ class SeoRepairKit_Admin {
 			register_rest_route('srk/v1', '/trigger-subscribe', [
 				'methods' => 'GET',
 				'callback' => function($request) {
+					// Verify user is logged in and has admin capabilities
+					if ( ! current_user_can( 'manage_options' ) ) {
+						return new WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'seo-repair-kit' ), array( 'status' => 403 ) );
+					}
+					
 					$domain = $request->get_param('domain');
+					// Sanitize domain parameter
+					$domain = sanitize_text_field( $domain );
+					
 					return [
 						'redirect' => home_url('/wp-json/srk/v1/redirect-to-laravel?domain=' . urlencode($domain))
 					];
 				},
-				'permission_callback' => '__return_true'
+				'permission_callback' => function() {
+					return current_user_can( 'manage_options' );
+				}
 			]);
 			register_rest_route('srk/v1', '/redirect-to-laravel', [
 				'methods' => 'GET',
 				'callback' => function($request) {
+					// Verify user is logged in and has admin capabilities
+					if ( ! current_user_can( 'manage_options' ) ) {
+						return new WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'seo-repair-kit' ), array( 'status' => 403 ) );
+					}
+					
 					$domain = $request->get_param('domain');
+					// Sanitize domain parameter
+					$domain = sanitize_text_field( $domain );
+					
 					$laravel_url = SRK_API_Client::get_api_url( SRK_API_Client::ENDPOINT_TRIGGER_SUBSCRIBE, [ 'domain' => $domain ] );
-					wp_redirect($laravel_url);
+					
+					// Additional validation: Ensure URL is from trusted source
+					$allowed_hosts = apply_filters( 'srk_allowed_redirect_hosts', array( parse_url( SRK_API_Client::resolve_base_url(), PHP_URL_HOST ) ) );
+					$redirect_host = parse_url( $laravel_url, PHP_URL_HOST );
+					
+					if ( ! in_array( $redirect_host, $allowed_hosts, true ) ) {
+						return new WP_Error( 'rest_forbidden', esc_html__( 'Invalid redirect destination.', 'seo-repair-kit' ), array( 'status' => 403 ) );
+					}
+					
+					wp_safe_redirect( $laravel_url );
 					exit;
 				},
-				'permission_callback' => '__return_true'
+				'permission_callback' => function() {
+					return current_user_can( 'manage_options' );
+				}
 			]);
 		});
 
@@ -323,7 +352,9 @@ class SeoRepairKit_Admin {
             register_rest_route('srk/v1', '/redirect-to-plans', [
                 'methods' => 'GET',
                 'callback' => [$this, 'redirect_to_plans'],
-                'permission_callback' => '__return_true'
+                'permission_callback' => function() {
+                    return current_user_can( 'manage_options' );
+                }
             ]);
         });
 
@@ -366,6 +397,27 @@ class SeoRepairKit_Admin {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-ajax-handlers.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-schema-validator.php';
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-seo-repair-kit-weekly-summary.php';
+
+        // Meta manager file struture class-seo-repair-kit-meta-ajax-handlers.php
+       require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/meta-manager/class-seo-repair-kit-meta-manager-main.php';
+       require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-meta-output.php';
+       require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-meta-ajaxs.php';
+       
+       // New Meta Manager Core Classes
+       require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-meta-resolver.php';
+    //    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-post-meta-handler.php';
+       require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-meta-helper.php';
+       require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-gutenberg-integration.php';
+       require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-elementor-integration.php';
+       require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php';
+       
+       // Initialize integrations
+       new SRK_Post_Meta_Handler();
+       new SRK_Gutenberg_Integration();
+       new SRK_Meta_Manager_Taxonomies();
+       if ( did_action( 'elementor/loaded' ) || class_exists( '\Elementor\Plugin' ) ) {
+           new SRK_Elementor_Integration();
+       }
 		SeoRepairKit_AjaxHandlers::register();
 	}
 
@@ -732,9 +784,26 @@ class SeoRepairKit_Admin {
 
 
 	public function redirect_to_plans($request) {
+		// Verify user has admin capabilities
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return new WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'seo-repair-kit' ), array( 'status' => 403 ) );
+		}
+		
         $domain = $request->get_param('domain');
+		// Sanitize domain parameter
+		$domain = sanitize_text_field( $domain );
+		
 		$crm_url = SRK_API_Client::get_api_url( SRK_API_Client::ENDPOINT_SUBSCRIBE, [ 'domain' => $domain ] );
-        wp_redirect($crm_url);
+		
+		// Additional validation: Ensure URL is from trusted source
+		$allowed_hosts = apply_filters( 'srk_allowed_redirect_hosts', array( parse_url( SRK_API_Client::resolve_base_url(), PHP_URL_HOST ) ) );
+		$redirect_host = parse_url( $crm_url, PHP_URL_HOST );
+		
+		if ( ! in_array( $redirect_host, $allowed_hosts, true ) ) {
+			return new WP_Error( 'rest_forbidden', esc_html__( 'Invalid redirect destination.', 'seo-repair-kit' ), array( 'status' => 403 ) );
+		}
+		
+        wp_safe_redirect( $crm_url );
         exit;
     }
 
@@ -777,6 +846,9 @@ class SeoRepairKit_Admin {
 		// Register Page Loader CSS File
         wp_register_style( 'srk-page-loader-style', plugin_dir_url( __FILE__ ) . 'css/srk-page-loader.css', array(), $this->version, 'all' );
 		
+        // Register Schema Manager CSS File
+        wp_register_style('srk-meta-manager-css', plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-meta-manager.css', array(), $this->version, 'all' );
+
 		// Enqueue Admin CSS File
 		wp_enqueue_style( 'srk-admin-style' );
 		
@@ -845,7 +917,7 @@ class SeoRepairKit_Admin {
      */
     public function handle_update_settings() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'seo-repair-kit' ) );
 		}
 
 		// Call the public wrapper method, which internally uses private methods.
@@ -859,7 +931,7 @@ class SeoRepairKit_Admin {
 		delete_transient( 'srk_table_creation_check' );
 
 		// Redirect back after completing the action.
-		wp_redirect( admin_url() );
+		wp_safe_redirect( admin_url() );
 		exit;
 	}
 
@@ -953,6 +1025,7 @@ class SeoRepairKit_Admin {
 			'seo-repair-kit-redirection',
 			'seo-repair-kit-settings',
 			'seo-repair-kit-upgrade-pro',
+            'seo-repair-kit-meta-manager',
 		);
 
 		$is_srk_by_screen =
@@ -1027,6 +1100,7 @@ class SeoRepairKit_Admin {
         'seo-repair-kit-robots-llms',
         'seo-repair-kit-settings',
         'seo-repair-kit-upgrade-pro',
+        'seo-repair-kit-meta-manager',
     );
 
     $is_srk_by_screen =
@@ -1052,9 +1126,9 @@ class SeoRepairKit_Admin {
         <div class="srkit-gsc-user-info">
             <div class="srkit-gsc-help-icon">?</div>
             <div class="srkit-gsc-user-icons">
-                <img src="<?php echo $admin_avatar; ?>" alt="Admin Avatar" class="admin-avatar">
+                <img src="<?php echo esc_url( $admin_avatar ); ?>" alt="Admin Avatar" class="admin-avatar">
             </div>
-            <span class="srkit-gsc-user-text"><?php echo $admin_name; ?></span>
+            <span class="srkit-gsc-user-text"><?php echo esc_html( $admin_name ); ?></span>
         </div>
     </div>
     <?php
@@ -1149,6 +1223,21 @@ class SeoRepairKit_Admin {
 			'seo-repair-kit-keytrack',
 			array( $srkit_keytrack, 'seorepairkit_keytrack_page' )
 		);
+
+        /**
+         * Meta Manager
+         *
+         * @since 2.1.3
+         */
+        $srk_meta_manager = new SRK_Meta_Manager_Main();
+        add_submenu_page(
+            'seo-repair-kit-dashboard',
+            esc_html__( 'Meta Manager', 'seo-repair-kit' ),
+            esc_html__( 'Meta Manager', 'seo-repair-kit' ),
+            'manage_options',
+            'seo-repair-kit-meta-manager',
+            array( $srk_meta_manager, 'srk_render_meta_manager_page' )
+        );
 
         /**
 		 * Robots.txt & LLMs.txt Manager page.

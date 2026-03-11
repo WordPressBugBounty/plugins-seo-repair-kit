@@ -229,7 +229,7 @@ class SeoRepairKit_Settings {
                                 <span class="dashicons dashicons-info-outline"></span>
                                 <div class="srk-info-content">
                                     <strong><?php esc_html_e( 'Last weekly report status:', 'seo-repair-kit' ); ?></strong>
-                                    <p><?php echo $status_label; // Already escaped above ?></p>
+                                    <p><?php echo esc_html( $status_label ); ?></p>
                                 </div>
                             </div>
 
