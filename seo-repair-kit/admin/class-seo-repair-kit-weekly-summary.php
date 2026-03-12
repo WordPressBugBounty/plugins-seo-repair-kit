@@ -125,32 +125,33 @@ class SeoRepairKit_WeeklySummaryService {
 
         // Get dynamic URLs
         $dynamic_urls = array(
-            'upgrade_pro' => $this->srk_get_admin_page_url('seo-repair-kit-upgrade-pro'),
-            'dashboard' => $this->srk_get_admin_page_url('seo-repair-kit-dashboard'),
+            'upgrade_pro'  => $this->srk_get_admin_page_url('seo-repair-kit-upgrade-pro'),
+            'dashboard'    => $this->srk_get_admin_page_url('seo-repair-kit-dashboard'),
             'link_scanner' => $this->srk_get_admin_page_url('seo-repair-kit-link-scanner'),
-            'alt_image' => $this->srk_get_admin_page_url('alt-image-missing'),
-            'redirection' => $this->srk_get_admin_page_url('seo-repair-kit-redirection')
+            'alt_image'    => $this->srk_get_admin_page_url('alt-image-missing'),
+            'redirection'  => $this->srk_get_admin_page_url('seo-repair-kit-redirection')
         );
 
         // Build and send email
         $srk_message = $this->srk_build_email_template(array(
-            'site_name' => $srk_site_name,
-            'alt_text_data' => $srk_alt_text_data,
-            'redirections_data' => $srk_redirections_data,
-            'pro_plan_data' => $srk_pro_plan_data,
-            'broken_links_data' => $srk_broken_links_data,
-            'keytrack_data' => $srk_keytrack_data,
-            'urls' => $dynamic_urls
+            'site_name'          => $srk_site_name,
+            'alt_text_data'      => $srk_alt_text_data,
+            'redirections_data'  => $srk_redirections_data,
+            'pro_plan_data'      => $srk_pro_plan_data,
+            'broken_links_data'  => $srk_broken_links_data,
+            'keytrack_data'      => $srk_keytrack_data,
+            'urls'               => $dynamic_urls
         ));
         
         $srk_subject = "📊 Weekly SEO Report: Search Performance, Links Scan, Alt Text & Redirections - " . esc_html($srk_site_name) . " - " . date('M j, Y');
-        $srk_headers = array('Content-Type: text/html; charset=UTF-8');
-        
-        // Prepare recipient list: admin email + hardcoded promotion email
-        $srk_to = array($srk_admin_email, 'ab@seorepairkit.com');
- 
-        $srk_sent = wp_mail($srk_to, $srk_subject, $srk_message, $srk_headers);
-        
+
+        $srk_headers = array(
+            'Content-Type: text/html; charset=UTF-8',
+            'Reply-To: SEO Repair Kit <ab@seorepairkit.com>',
+        );
+
+        $srk_sent = wp_mail($srk_admin_email, $srk_subject, $srk_message, $srk_headers);
+
         if ($srk_sent) {
             // Update last status
             $this->srk_update_last_status('success', 'Email sent successfully');
@@ -751,6 +752,15 @@ class SeoRepairKit_WeeklySummaryService {
             'alt_image' => $this->srk_get_admin_page_url('alt-image-missing'),
             'redirection' => $this->srk_get_admin_page_url('seo-repair-kit-redirection')
         );
+
+        $srk_is_pro = !empty($pro_plan_data['is_pro']);
+        $srk_plan_status = isset($pro_plan_data['status']) ? $pro_plan_data['status'] : 'inactive';
+        $srk_plan_id = isset($pro_plan_data['plan_id']) ? $pro_plan_data['plan_id'] : 'free';
+        $srk_plan_message = isset($pro_plan_data['message']) ? $pro_plan_data['message'] : 'Free version';
+        $srk_plan_expires_at = isset($pro_plan_data['expires_at']) ? $pro_plan_data['expires_at'] : null;
+        $srk_plan_days_left = isset($pro_plan_data['days_left']) ? $pro_plan_data['days_left'] : null;
+        $srk_plan_is_expired = !empty($pro_plan_data['is_expired']);
+        $srk_plan_has_chatbot = !empty($pro_plan_data['has_chatbot']);
         
         ob_start();
         ?>
@@ -785,16 +795,54 @@ class SeoRepairKit_WeeklySummaryService {
                     </p>
                 </div>
 
-                <!-- Pro Plan Status Card -->
-                <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 25px; border-radius: 10px; margin: 25px 0; text-align: center; border: 2px solid #e9ecef; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
-                    <p style="margin: 0 0 15px 0; font-size: 17px; color: #0b1d51; font-weight: 600;">
-                        You're on the <span style="color: #F28500;">Free Plan</span>!<br>
-                        <span style="font-size: 15px; color: #666; font-weight: normal;">Unlock advanced features and get priority support by upgrading to Pro.</span>
-                    </p>
-                    <a href="<?php echo esc_url($urls['upgrade_pro']); ?>" style="display: inline-block; background: linear-gradient(135deg, #F28500 0%, #ff9a3c 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px; margin-top: 10px; box-shadow: 0 4px 12px rgba(242, 133, 0, 0.25); transition: all 0.3s ease; border: none;">
-                        🚀 Upgrade to Pro
-                    </a>
-                </div>
+                <!-- Dynamic Plan Status Card -->
+                <?php if ( $srk_is_pro ) : ?>
+                    <div style="background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%); padding: 25px; border-radius: 10px; margin: 25px 0; text-align: center; border: 2px solid #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.12);">
+                        <p style="margin: 0 0 12px 0; font-size: 18px; color: #065f46; font-weight: 700;">
+                            ✅ Your website is currently on the <span style="color: #F28500;">Pro Plan</span>
+                        </p>
+                        <p style="margin: 0 0 8px 0; font-size: 14px; color: #4b5563;">
+                            Plan ID: <strong><?php echo esc_html( strtoupper( $srk_plan_id ) ); ?></strong>
+                        </p>
+                        <p style="margin: 0 0 8px 0; font-size: 14px; color: #4b5563;">
+                            Status: <strong><?php echo esc_html( ucfirst( $srk_plan_status ) ); ?></strong>
+                        </p>
+                        <?php if ( ! empty( $srk_plan_expires_at ) ) : ?>
+                            <p style="margin: 0 0 8px 0; font-size: 14px; color: #4b5563;">
+                                Expires At: <strong><?php echo esc_html( date( 'F j, Y', strtotime( $srk_plan_expires_at ) ) ); ?></strong>
+                            </p>
+                        <?php endif; ?>
+                        <?php if ( $srk_plan_days_left !== null ) : ?>
+                            <p style="margin: 0 0 8px 0; font-size: 14px; color: #4b5563;">
+                                Days Left: <strong><?php echo esc_html( max( 0, (int) $srk_plan_days_left ) ); ?></strong>
+                            </p>
+                        <?php endif; ?>
+                        <p style="margin: 0; font-size: 14px; color: #4b5563;">
+                            AI Chatbot Access:
+                            <strong><?php echo $srk_plan_has_chatbot ? 'Enabled' : 'Not Included'; ?></strong>
+                        </p>
+                    </div>
+                <?php else : ?>
+                    <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 25px; border-radius: 10px; margin: 25px 0; text-align: center; border: 2px solid #e9ecef; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
+                        <p style="margin: 0 0 15px 0; font-size: 17px; color: #0b1d51; font-weight: 600;">
+                            You're currently on the <span style="color: #F28500;">Free Plan</span>!<br>
+                            <span style="font-size: 15px; color: #666; font-weight: normal;">Unlock advanced features and get priority support by upgrading to Pro.</span>
+                        </p>
+                        <?php if ( ! empty( $srk_plan_message ) ) : ?>
+                            <p style="margin: 0 0 15px 0; font-size: 14px; color: #666;">
+                                <?php echo esc_html( $srk_plan_message ); ?>
+                            </p>
+                        <?php endif; ?>
+                        <?php if ( $srk_plan_is_expired ) : ?>
+                            <p style="margin: 0 0 15px 0; font-size: 14px; color: #dc2626; font-weight: 600;">
+                                Your previous Pro plan has expired. Renew now to continue premium features.
+                            </p>
+                        <?php endif; ?>
+                        <a href="<?php echo esc_url($urls['upgrade_pro']); ?>" style="display: inline-block; background: linear-gradient(135deg, #F28500 0%, #ff9a3c 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px; margin-top: 10px; box-shadow: 0 4px 12px rgba(242, 133, 0, 0.25); transition: all 0.3s ease; border: none;">
+                            🚀 Upgrade to Pro
+                        </a>
+                    </div>
+                <?php endif; ?>
                 
                 <!-- Divider -->
                 <hr style="border: none; height: 1px; background: linear-gradient(to right, transparent, #e0e0e0, transparent); margin: 30px 0;">
@@ -916,10 +964,6 @@ class SeoRepairKit_WeeklySummaryService {
 
                 <!-- Technical Health Check Section - UPDATED DESIGN -->
                 <div style="margin-bottom: 60px;">
-                    <!-- <h2 style="margin: 0 0 30px 0; color: #0b1d51; font-size: 24px; font-weight: 700; border-bottom: 3px solid #F28500; padding-bottom: 12px; display: flex; align-items: center; gap: 10px;">
-                        Technical Health Check
-                    </h2> -->
-                    
                     <!-- Section 1: Broken Links -->
                     <div style="margin-bottom: 40px; padding-bottom: 25px; border-bottom: 1px solid #eee;">
                         <h3 style="margin: 0 0 20px 0; color: #0b1d51; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
@@ -1063,6 +1107,7 @@ class SeoRepairKit_WeeklySummaryService {
                         </div>
                     </div>
                 </div>
+
                 <!-- Dashboard CTA -->
                 <div style="text-align: center; margin: 40px 0 30px 0;">
                     <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 25px; border-radius: 12px; border: 2px dashed #F28500;">
@@ -1077,6 +1122,7 @@ class SeoRepairKit_WeeklySummaryService {
                         </a>
                     </div>
                 </div>
+
                 <!-- Footer -->
                 <div style="text-align: center; padding-top: 25px; border-top: 2px solid #e9ecef; margin-top: 30px;">
                     <p style="margin: 0 0 15px 0; color: #6c757d; font-size: 13px; line-height: 1.5; max-width: 500px; margin-left: auto; margin-right: auto;">

@@ -533,20 +533,12 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
             </footer>
             </div>';
 
-            // Send email to Admin + Promotion Email
-            $srkit_report_email_headers = [ 'Content-Type: text/html; charset=UTF-8' ];
- 
-            // Primary admin email
-            $primary_email = $srkit_admin_email_report;
- 
-            // Additional promotional email
-            $promo_email = 'ab@seorepairkit.com';
- 
-            // Build recipients array (prevents duplicates automatically)
-            $recipients = array_unique( array_filter( [ $primary_email, $promo_email ] ) );
- 
             // Send email
-            wp_mail( $recipients, $srkit_th_email_subject, $srkit_th_email_message, $srkit_report_email_headers );
+            $srkit_report_email_headers = [
+                'Content-Type: text/html; charset=UTF-8',
+                'Reply-To: SEO Repair Kit <ab@seorepairkit.com>',
+            ];
+            wp_mail( $srkit_admin_email_report, $srkit_th_email_subject, $srkit_th_email_message, $srkit_report_email_headers );
         }
 
         /**

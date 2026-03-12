@@ -3,10 +3,10 @@ Contributors: torontodigits
 Donate link: https://seorepairkit.com/
 Tags: SEO chatbot, schema markup, 404 monitor, broken link checker, 301 redirection
 Requires at least: 5.0.0
-Tested up to: 6.9.3
+Tested up to: 6.9.4
 Requires PHP: 7.4.3
-Stable tag: 2.1.3
-Release Date: 11-03-2026
+Stable tag: 2.1.4
+Release Date: 12-03-2026
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,7 @@ The ultimate WordPress plugin for SEO automation - from link fixing to AI-powere
 
 == Description ==
 
-**SEO Repair Kit v2.1.3** by [TorontoDigits](https://www.torontodigits.com) is an advanced WordPress SEO plugin designed to automate and simplify technical SEO. It combines **AI-powered assistance, smart meta management, schema generation, keyword tracking, and site monitoring tools** to help you identify issues, fix SEO problems, and improve your website’s search engine visibility.
+**SEO Repair Kit v2.1.4** by [TorontoDigits](https://www.torontodigits.com) is an advanced WordPress SEO plugin designed to automate and simplify technical SEO. It combines **AI-powered assistance, smart meta management, schema generation, keyword tracking, and site monitoring tools** to help you identify issues, fix SEO problems, and improve your website’s search engine visibility.
 
 = Key Features =
 
@@ -161,6 +161,10 @@ User-friendly guided setup wizard:
 15. Bot Manager - robots.txt and llms.txt management
 
 == Changelog ==
+
+= 2.1.4 =
+* Minor code update.
+* Tested up to WordPress 6.9.4
 
 = 2.1.3 =
 * Introduced the new Meta Manager feature for centralized SEO metadata control
