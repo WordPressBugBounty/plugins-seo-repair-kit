@@ -55,6 +55,9 @@ $wpdb->query( "DROP TABLE IF EXISTS `" . esc_sql( str_replace( '`', '', $srkit_p
 // 2. DELETE ALL OPTIONS FROM wp_options TABLE
 // ============================================================================
 
+// Delete Sitemap Manager settings explicitly
+delete_option( 'srk_sitemap_manager_settings' );
+
 // Delete all options with 'srk_' prefix
 $wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'srk_%'" );
 

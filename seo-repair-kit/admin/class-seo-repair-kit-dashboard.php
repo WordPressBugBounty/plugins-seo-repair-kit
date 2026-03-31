@@ -159,6 +159,7 @@ class SeoRepairKit_Dashboard {
         $redirection_url   = admin_url( 'admin.php?page=seo-repair-kit-redirection' );
         $monitor_404_url   = admin_url( 'admin.php?page=seo-repair-kit-link-scanner' );
         $alt_text_url      = admin_url( 'admin.php?page=alt-image-missing' );
+        $sitemap_manager_url  = admin_url( 'admin.php?page=seo-repair-kit-sitemap-manager' );
 		$upgrade_url       = admin_url( 'admin.php?page=seo-repair-kit-upgrade-pro' );
 		
 		// Build subscribe URL for direct upgrade (same as Upgrade Now button)
@@ -464,6 +465,16 @@ class SeoRepairKit_Dashboard {
                                 <div class="srk-plugin-info">
                                     <h5><?php esc_html_e( 'Image Alt Missing', 'seo-repair-kit' ); ?></h5>
                                     <p><?php esc_html_e( 'Find images missing alt text and improve accessibility.', 'seo-repair-kit' ); ?></p>
+                                </div>
+                            </a>
+                            <!-- Sitemap Manager -->
+                            <a href="<?php echo esc_url( $sitemap_manager_url ); ?>" class="srk-plugin-item srk-tool-404">
+                                <div class="srk-plugin-icon">
+                                    <span class="dashicons dashicons-networking"></span>
+                                </div>
+                                <div class="srk-plugin-info">
+                                    <h5><?php esc_html_e( 'Sitemap Manager', 'seo-repair-kit' ); ?></h5>
+                                    <p><?php esc_html_e( 'Control and customize your WordPress core sitemap easily.', 'seo-repair-kit' ); ?></p>
                                 </div>
                             </a>
                             <!-- Settings -->

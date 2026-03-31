@@ -93,7 +93,6 @@ class SRK_Meta_Manager_Global {
 
 		wp_add_inline_script(
 			'srk-meta-global',
-			'console.log("SRK Data Loaded:", srkMetaPreview); console.log("Author:", srkMetaPreview.site_author);',
 			'before'
 		);
 	}

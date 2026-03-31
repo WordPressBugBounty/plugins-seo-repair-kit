@@ -297,7 +297,7 @@
     }
 
     /**
-     * Open snippet editor modal
+     * Open snippet editor modal - FIXED with parsed counts
      */
     function openSnippetModal() {
         if (!$("#srk-snippet-modal").length) {
@@ -311,15 +311,18 @@
         srkPrev.title = model.get("srk_meta_title") || "";
         srkPrev.desc = model.get("srk_meta_description") || "";
 
-        $("#srk-modal-title").val(srkPrev.title || srkData.default_title || "");
-        $("#srk-modal-desc").val(srkPrev.desc || srkData.default_desc || "");
+        const titleVal = srkPrev.title || srkData.default_title || "";
+        const descVal = srkPrev.desc || srkData.default_desc || "";
+
+        $("#srk-modal-title").val(titleVal);
+        $("#srk-modal-desc").val(descVal);
 
         $("#srk-snippet-modal").css("display", "flex");
 
         bindModalEvents();
         updateModalPreview();
 
-        // Update character counts
+        // Update character counts with PARSED values
         updateCharCount($("#srk-modal-title"), 60);
         updateCharCount($("#srk-modal-desc"), 160);
     }
@@ -393,13 +396,17 @@
 
         // Live typing with character count
         $("#srk-modal-title, #srk-modal-desc")
-            .off("input")
-            .on("input", function () {
-                const $this = $(this);
-                const max = $this.is("#srk-modal-title") ? 60 : 160;
-                updateCharCount($this, max);
-                updateModalPreview();
-            });
+        .off("input")
+        .on("input", function () {
+        const $this = $(this);
+        const max = $this.is("#srk-modal-title") ? 60 : 160;
+        
+        // Update character count with PARSED value
+        updateCharCount($this, max);
+        
+        // Update preview
+        updateModalPreview();
+    });
 
         // Initialize view all tags
         initViewAllTags();
@@ -447,29 +454,51 @@
     }
 
     /**
-     * Update character count
+     * Update character count - FIXED to parse template tags
      */
     function updateCharCount($input, max) {
-        const count = $input.val().length;
+        const rawValue = $input.val() || '';
+        
+        // PARSE tags before counting for accurate length
+        const parsedValue = processTags(rawValue, $input.is("#srk-modal-title") ? 'title' : 'desc');
+        const count = parsedValue.length;
+        
         const $counter = $input.closest(".srk-title-section, .srk-desc-section").find(".srk-char-count");
         $counter.text(count + "/" + max);
 
+        // Color coding based on parsed count
         $counter.css("color",
             count === 0 ? "#646970" :
                 count > max ? "#d63638" :
                     count > max * 0.9 ? "#dba617" :
                         "#1d2327"
         );
+        
+        // Add visual indicator for over-limit
+        const $status = $input.closest(".srk-title-section, .srk-desc-section").find(".srk-limit-status");
+        if ($status.length) {
+            if (count > max) {
+                $status.html('⚠️ ' + (count - max) + ' over limit').addClass('warning').removeClass('good');
+            } else if (count > max * 0.9) {
+                $status.html('⚠️ Close to limit').addClass('warning').removeClass('good');
+            } else {
+                $status.html('✓ Good').addClass('good').removeClass('warning');
+            }
+        }
     }
 
     /**
-     * Update character counter
+     * Update character counter - FIXED to parse template tags
      */
     function updateCharacterCounter($field) {
         if (!$field.length) return;
-        const value = $field.val() || '';
-        const charCount = value.length;
+        const rawValue = $field.val() || '';
         const fieldName = $field.attr('name') || '';
+        
+        // PARSE tags before counting for accurate length
+        const type = fieldName.includes('title') ? 'title' : 'desc';
+        const parsedValue = processTags(rawValue, type);
+        const charCount = parsedValue.length;
 
         const $counter = $(`.srk-counter[data-target="${fieldName}"] .srk-char-count`);
         if ($counter.length) {
@@ -478,21 +507,33 @@
     }
 
     /**
-     * Initialize character counters
+     * Initialize character counters - FIXED
      */
     function initCharacterCounters() {
         $('.srk-snippet-field').on('input', function () {
-            updateCharacterCounter($(this));
+            const $field = $(this);
+            const rawValue = $field.val() || '';
+            const type = $field.attr('name')?.includes('title') ? 'title' : 'desc';
+            const max = type === 'title' ? 60 : 160;
+            
+            // Use the common updateCharCount function with parsing
+            updateCharCount($field, max);
         });
 
+        // Initial count on load - parse templates
         $('.srk-snippet-field').each(function () {
-            updateCharacterCounter($(this));
+            const $field = $(this);
+            const rawValue = $field.val() || '';
+            const type = $field.attr('name')?.includes('title') ? 'title' : 'desc';
+            const max = type === 'title' ? 60 : 160;
+            
+            updateCharCount($field, max);
         });
     }
 
     /**
- * Initialize reset buttons
- */
+     * Initialize reset buttons
+     */
     function initResetButtons() {
         $('.srk-reset-btn').off('click').on('click', function () {
             const type = $(this).data('type');

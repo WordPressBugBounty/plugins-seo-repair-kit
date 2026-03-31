@@ -116,7 +116,7 @@
         },
 
         /* ===============================
-           EVENTS
+        EVENTS - FIXED INPUT HANDLERS
         =============================== */
         bindEvents: function () {
             var self = this;
@@ -130,44 +130,50 @@
             this.elements.customSepInput.on('input', function () {
                 self.data.separator = $(this).val().substring(0, 3) || '-';
                 self.renderAll();
+                // Re-validate counts with new separator
+                self.refreshCharacterCounts();
             });
 
-            // Home title input with character counter
+            // Home title input with FIXED character counter
             this.elements.homeTitleInput.on('input', function () {
-                var value = $(this).val();
-
+                var rawValue = $(this).val();
+                
                 // Preserve spaces but clean up multiple spaces
-                value = value.replace(/\s+/g, ' ').trim();
+                rawValue = rawValue.replace(/\s+/g, ' ').trim();
 
-                self.data.homeTitle = value;
+                self.data.homeTitle = rawValue;
                 self.renderHomeTitle();
-                self.updateCharacterCount('title', value);
+                
+                // PARSE tags before counting for accurate length
+                var parsedValue = self.parseTags(rawValue);
+                self.updateCharacterCount('title', rawValue, parsedValue);
             });
 
-            // Home description input with character counter
+            // Home description input with FIXED character counter
             this.elements.homeDescInput.on('input', function () {
-                var value = $(this).val();
-
+                var rawValue = $(this).val();
+                
                 // Preserve spaces but clean up multiple spaces
-                value = value.replace(/\s+/g, ' ').trim();
+                rawValue = rawValue.replace(/\s+/g, ' ').trim();
 
-                self.data.homeDesc = value;
+                self.data.homeDesc = rawValue;
                 self.renderHomeDesc();
-                self.updateCharacterCount('desc', value);
+                
+                // PARSE tags before counting for accurate length
+                var parsedValue = self.parseTags(rawValue);
+                self.updateCharacterCount('desc', rawValue, parsedValue);
             });
 
-            // Tag buttons
+            // Tag buttons - already trigger 'input' event, so counters will auto-update
             $(document).on('click', '.srk-tag-btn', function (e) {
-
                 e.preventDefault();
-
                 self.insertTag($(this));
-
-                // Force preview refresh
+                
+                // Force preview and count refresh
                 setTimeout(function () {
                     self.renderAll();
+                    self.refreshCharacterCounts();
                 }, 10);
-
             });
 
             // Show more separators
@@ -183,16 +189,43 @@
             });
         },
 
-        /* ===============================
-           CHARACTER COUNTERS
-        =============================== */
-        initCharacterCounters: function () {
-            this.updateCharacterCount('title', this.data.homeTitle);
-            this.updateCharacterCount('desc', this.data.homeDesc);
+        /**
+         * Refresh character counts for both fields
+         * Used when separator changes or tags are inserted
+         */
+        refreshCharacterCounts: function () {
+            var rawTitle = this.elements.homeTitleInput.val() || '';
+            var rawDesc = this.elements.homeDescInput.val() || '';
+            
+            var parsedTitle = this.parseTags(rawTitle);
+            var parsedDesc = this.parseTags(rawDesc);
+            
+            this.updateCharacterCount('title', rawTitle, parsedTitle);
+            this.updateCharacterCount('desc', rawDesc, parsedDesc);
         },
 
-        updateCharacterCount: function (type, value) {
-            var count = value.length;
+        /* ===============================
+        CHARACTER COUNTERS - FIXED
+        =============================== */
+        initCharacterCounters: function () {
+            // Parse templates first, then count
+            var parsedTitle = this.parseTags(this.data.homeTitle || '%site_title% %sep% %tagline%');
+            var parsedDesc = this.parseTags(this.data.homeDesc || '%tagline%');
+            
+            this.updateCharacterCount('title', this.data.homeTitle, parsedTitle);
+            this.updateCharacterCount('desc', this.data.homeDesc, parsedDesc);
+        },
+
+        /**
+         * Update character count with PROPERLY PARSED template values
+         * 
+         * @param {string} type - 'title' or 'desc'
+         * @param {string} rawValue - Original template with tags (for display purposes)
+         * @param {string} parsedValue - Parsed value with tags replaced (for accurate counting)
+         */
+        updateCharacterCount: function (type, rawValue, parsedValue) {
+            // Use PARSED value for accurate character counting
+            var count = parsedValue ? parsedValue.length : 0;
             var $countEl, $statusEl;
             var maxLength = (type === 'title') ? 60 : 160;
 
@@ -204,10 +237,10 @@
                 $statusEl = this.elements.homeDescStatus;
             }
 
-            // Update count
+            // Update count display
             $countEl.text(count);
 
-            // Update status with warning/error
+            // Update status with warning/error indicators
             if (count === 0) {
                 $statusEl.html('').removeClass('warning error good');
             } else if (count > maxLength) {
@@ -511,7 +544,7 @@
         },
 
         /* ===============================
-           RESET TO DEFAULTS
+        RESET TO DEFAULTS - FIXED
         =============================== */
         resetDefaults: function () {
             if (!confirm('Are you sure you want to reset all global settings to defaults?')) return;
@@ -528,8 +561,13 @@
                 .trigger('change');
 
             this.renderAll();
-            this.updateCharacterCount('title', this.data.homeTitle);
-            this.updateCharacterCount('desc', this.data.homeDesc);
+            
+            // Use parsed values for accurate reset counting
+            var parsedTitle = this.parseTags(this.data.homeTitle);
+            var parsedDesc = this.parseTags(this.data.homeDesc);
+            
+            this.updateCharacterCount('title', this.data.homeTitle, parsedTitle);
+            this.updateCharacterCount('desc', this.data.homeDesc, parsedDesc);
         }
     };
 

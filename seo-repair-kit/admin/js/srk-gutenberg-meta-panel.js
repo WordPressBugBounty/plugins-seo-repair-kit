@@ -19,7 +19,6 @@ window.SRK_Gutenberg = {
 (function (wp) {
     'use strict';
 
-    console.log(' Checking WordPress packages for Gutenberg...');
 
     // Check for required packages
     if (!wp.plugins || !wp.editPost || !wp.element || !wp.components) {
@@ -45,8 +44,6 @@ window.SRK_Gutenberg = {
     const { useState, useEffect, useRef, useCallback, createElement, render, unmountComponentAtNode } = wp.element;
     const { useSelect, useDispatch } = wp.data;
     const { __ } = wp.i18n;
-
-    console.log('✅ All Gutenberg packages available');
 
     // Store Gutenberg components globally for Classic Editor to use
     window.SRK_Gutenberg.Modal = Modal;
@@ -118,7 +115,7 @@ window.SRK_Gutenberg = {
                 currentPost = window.wp.data.select('core/editor').getCurrentPost();
             }
         } catch (e) {
-            console.log('Could not get current post from WordPress data');
+           
         }
 
         return {
@@ -383,6 +380,102 @@ window.SRK_Gutenberg = {
 
     // Store TagModal globally for Classic Editor
     window.SRK_TagModal = TagModal;
+        // Character Counter Component - ADD THIS ENTIRE COMPONENT
+    const CharacterCounter = ({ value, type, srkData }) => {
+        const [count, setCount] = useState(0);
+        const [status, setStatus] = useState('');
+        const [statusClass, setStatusClass] = useState('');
+        
+        const maxLength = type === 'title' ? 60 : 160;
+        
+        useEffect(() => {
+            // Process template to get actual character count
+            const previewData = {
+                postTitle: srkData.postTitle || 'Sample Post Title',
+                postExcerpt: srkData.postExcerpt || 'Sample excerpt from a page/post.',
+                siteName: srkData.siteName || '',
+                siteDescription: srkData.siteDescription || '',
+                separator: srkData.separator || '-',
+                authorFirstName: srkData.authorFirstName || '',
+                authorLastName: srkData.authorLastName || '',
+                authorName: srkData.authorName || '',
+                categories: srkData.categories || '',
+                categoryTitle: srkData.categoryTitle || '',
+                currentDate: srkData.currentDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+                currentMonth: srkData.currentMonth || new Date().toLocaleDateString('en-US', { month: 'long' }),
+                currentYear: srkData.currentYear || new Date().getFullYear().toString(),
+            };
+            
+            // Process the template to get actual length
+            let processed = value;
+            if (processed) {
+                processed = processed
+                    .replace(/%title%/gi, previewData.postTitle)
+                    .replace(/%excerpt%/gi, previewData.postExcerpt)
+                    .replace(/%site_title%/gi, previewData.siteName)
+                    .replace(/%sitedesc%/gi, previewData.siteDescription)
+                    .replace(/%sep%/gi, previewData.separator)
+                    .replace(/%author_first_name%/gi, previewData.authorFirstName)
+                    .replace(/%author_last_name%/gi, previewData.authorLastName)
+                    .replace(/%author_name%/gi, previewData.authorName)
+                    .replace(/%categories%/gi, previewData.categories)
+                    .replace(/%term_title%/gi, previewData.categoryTitle)
+                    .replace(/%date%/gi, previewData.currentDate)
+                    .replace(/%month%/gi, previewData.currentMonth)
+                    .replace(/%year%/gi, previewData.currentYear)
+                    .replace(/%[a-z_]+%/gi, ''); // Remove any unknown tags
+                
+                // Clean up multiple spaces
+                processed = processed.replace(/\s+/g, ' ').trim();
+            }
+            
+            const charCount = processed ? processed.length : 0;
+            setCount(charCount);
+            
+            // Determine status
+            if (charCount === 0) {
+                setStatus('');
+                setStatusClass('');
+            } else if (charCount > maxLength) {
+                setStatus(`⚠️ ${charCount - maxLength} characters over limit`);
+                setStatusClass('error');
+            } else if (charCount > maxLength - 20) {
+                setStatus('⚠️ Getting close to limit');
+                setStatusClass('warning');
+            } else {
+                setStatus('✓ Good length');
+                setStatusClass('good');
+            }
+        }, [value, maxLength, srkData]);
+        
+        const getStatusColor = () => {
+            if (statusClass === 'error') return '#d63638';
+            if (statusClass === 'warning') return '#dba617';
+            if (statusClass === 'good') return '#00a32a';
+            return '#666';
+        };
+        
+        return createElement('span', {
+            style: {
+                marginLeft: 'auto',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '12px'
+            }
+        },
+            createElement('span', null, `${count} characters`),
+            createElement('span', {
+                style: { 
+                    color: getStatusColor(),
+                    fontWeight: statusClass === 'good' ? '500' : '400'
+                }
+            }, status),
+            createElement('span', {
+                style: { color: '#999' }
+            }, `(Recommended: up to ${maxLength})`)
+        );
+    };
 
     // Visual Tag Input Component
     const VisualTagInput = ({ value, onChange, placeholder, type = 'title', label, showDefaults = false, onResetToDefault }) => {
@@ -431,38 +524,50 @@ window.SRK_Gutenberg = {
             setIsEditModalOpen(true);
         }, []);
 
-        const handleInsertTag = useCallback((tag) => {
-            const currentValue = value || '';
+    const handleInsertTag = useCallback((tag) => {
+    const currentValue = value || '';
+    
+    if (editingTag !== null && editingTagIndex >= 0) {
+        // Replace existing tag (edit mode)
+        const segments = parseSegments(currentValue);
+        let newValue = '';
+        let currentTagIndex = 0;
 
-            if (editingTag !== null && editingTagIndex >= 0) {
-                const segments = parseSegments(currentValue);
-                let newValue = '';
-                let currentTagIndex = 0;
-
-                for (const segment of segments) {
-                    if (segment.type === 'tag') {
-                        if (segment.index === editingTagIndex) {
-                            newValue += tag;
-                        } else {
-                            newValue += segment.value;
-                        }
-                        currentTagIndex++;
-                    } else {
-                        newValue += segment.value;
-                    }
+        for (const segment of segments) {
+            if (segment.type === 'tag') {
+                if (segment.index === editingTagIndex) {
+                    newValue += tag;
+                } else {
+                    newValue += segment.value;
                 }
-
-                onChange(newValue);
-                setEditingTag(null);
-                setEditingTagIndex(-1);
+                currentTagIndex++;
             } else {
-                const cursorPos = inputRef.current ? inputRef.current.selectionStart : currentValue.length;
-                const before = currentValue.substring(0, cursorPos);
-                const after = currentValue.substring(cursorPos);
-                const newValue = before + (before && !before.endsWith(' ') ? ' ' : '') + tag + ' ' + after;
-                onChange(newValue);
+                newValue += segment.value;
             }
-        }, [value, editingTag, editingTagIndex, parseSegments, onChange]);
+        }
+
+        onChange(newValue);
+        setEditingTag(null);
+        setEditingTagIndex(-1);
+    } else {
+        // Insert new tag - FIX: Always append to end or use smart insertion
+        // Since we can't reliably get cursor position from hidden input,
+        // we'll append with space separation
+        
+        const trimmedValue = currentValue.trim();
+        let newValue;
+        
+        if (trimmedValue === '') {
+            newValue = tag + ' ';
+        } else {
+            // Check if last character is a space
+            const needsSpace = !trimmedValue.endsWith(' ');
+            newValue = trimmedValue + (needsSpace ? ' ' : '') + tag + ' ';
+        }
+        
+        onChange(newValue);
+    }
+}, [value, editingTag, editingTagIndex, parseSegments, onChange]);
 
         const handleDeleteTag = useCallback(() => {
             if (editingTag !== null && editingTagIndex >= 0) {
@@ -555,20 +660,19 @@ window.SRK_Gutenberg = {
                     )
                 ),
 
-                createElement('a', {
-                    href: '#',
+                createElement(Button, {
+                    isLink: true,
                     className: 'srk-view-all-tags',
                     onClick: (e) => {
                         e.preventDefault();
+                        e.stopPropagation();
                         setEditingTag(null);
                         setEditingTagIndex(-1);
                         setIsTagModalOpen(true);
                     },
                     style: {
                         marginLeft: '8px',
-                        fontSize: '12px',
-                        color: '#007cba',
-                        textDecoration: 'none'
+                        fontSize: '12px'
                     }
                 }, __('View all tags →', 'seo-repair-kit'))
             ),
@@ -669,14 +773,27 @@ window.SRK_Gutenberg = {
                 })
             ),
 
-            createElement('p', {
-                className: 'description',
+            // Character counter with limit - ADD THIS
+            createElement('div', {
                 style: {
                     margin: '4px 0 0 0',
                     fontSize: '12px',
-                    color: '#666'
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
                 }
-            }, type === 'title' ? __('Title shown in search results', 'seo-repair-kit') : __('Description shown in search results', 'seo-repair-kit')),
+            }, 
+                createElement('span', {
+                    style: { color: '#666' }
+                }, type === 'title' ? __('Title shown in search results', 'seo-repair-kit') : __('Description shown in search results', 'seo-repair-kit')),
+                
+                // Character counter - ADD THIS
+                createElement(CharacterCounter, {
+                    value: value || '',
+                    type: type,
+                    srkData: window.srkGutenbergData || {}
+                })
+            ),
 
             createElement(TagModal, {
                 isOpen: isTagModalOpen,
@@ -931,7 +1048,6 @@ window.SRK_Gutenberg = {
 
     // MAIN GUTENBERG SEO PANEL COMPONENT WITH TABS
     const SRKGutenbergSeoPanel = () => {
-        console.log('🎯 Gutenberg SEO Panel Component Initialized with Tabs');
 
         const post = useSelect((select) => {
             try {
@@ -995,11 +1111,8 @@ window.SRK_Gutenberg = {
         useEffect(() => {
             if (!postId) return;
 
-            console.log('Loading meta for post:', postId);
-
             // Get advanced settings from post meta
             let loadedAdvancedSettings = {};
-
             if (postMeta._srk_advanced_settings && typeof postMeta._srk_advanced_settings === 'object') {
                 loadedAdvancedSettings = postMeta._srk_advanced_settings;
             } else if (postMeta._srk_advanced_settings && typeof postMeta._srk_advanced_settings === 'string') {
@@ -1040,7 +1153,7 @@ window.SRK_Gutenberg = {
 
             // Load other meta values - use content type templates as defaults if empty
             if (postMeta._srk_meta_title) {
-                setMetaTitle(postMeta._srk_meta_title);
+                setMetaTitle(postMeta._srk_meta_title);  // ✅ This should already be raw template
             } else {
                 // Default to content type template
                 const contentTypeTemplate = srkData.contentTypeSettings?.title || srkData.defaultTitleTemplate;
@@ -1048,13 +1161,12 @@ window.SRK_Gutenberg = {
             }
 
             if (postMeta._srk_meta_description) {
-                setMetaDescription(postMeta._srk_meta_description);
+                setMetaDescription(postMeta._srk_meta_description);  // ✅ This should already be raw template
             } else {
                 // Default to content type template
                 const contentTypeTemplate = srkData.contentTypeSettings?.desc || srkData.defaultDescTemplate;
                 setMetaDescription(contentTypeTemplate);
             }
-
             if (postMeta._srk_canonical_url) {
                 setCanonicalUrl(postMeta._srk_canonical_url);
             }
@@ -1152,7 +1264,7 @@ window.SRK_Gutenberg = {
             }
         }, [postId, metaTitle, metaDescription, canonicalUrl, lastSyncTime, advancedSettings, editPost]);
 
-        // Save meta function WITH SYNC - FIXED VERSION (Respects Follow Mode)
+        // Save meta function WITH SYNC - FIXED VERSION (Saves raw templates like Classic Editor)
         const saveMetaData = async (includeAdvanced = true) => {
             if (!postId || isSaving) return;
 
@@ -1164,8 +1276,6 @@ window.SRK_Gutenberg = {
                     (advancedSettings.use_default_settings === '1' && !metaTitle && !metaDescription);
 
                 if (isFollowMode) {
-                    console.log('🔄 FOLLOW MODE: Saving only marker, not meta values');
-
                     // In Follow Mode: ONLY save the follow_mode marker, NO title/desc/canonical
                     const metaUpdates = {
                         _srk_meta_title: '',  // EMPTY - delete local override
@@ -1191,8 +1301,8 @@ window.SRK_Gutenberg = {
                         data: {
                             action: 'srk_save_meta_data',
                             post_id: postId,
-                            meta_title: '',  // EMPTY
-                            meta_description: '',  // EMPTY
+                            meta_title: '',  // EMPTY - save raw template, not processed
+                            meta_description: '',  // EMPTY - save raw template, not processed
                             template_title: '',
                             template_description: '',
                             canonical_url: '',  // EMPTY
@@ -1215,16 +1325,16 @@ window.SRK_Gutenberg = {
                     }
 
                 } else {
-                    // NORMAL MODE: Save actual values
-                    const previewData = getPreviewData();
-                    const processedTitle = processTemplate(metaTitle, previewData);
-                    const processedDescription = processTemplate(metaDescription, previewData);
+                    // NORMAL MODE: Save RAW TEMPLATES (with tags), not processed values
+                    // ✅ FIXED: Save the raw template with tags, same as Classic Editor
+                    const rawTitleTemplate = metaTitle || '';        // "%title% %sep% %site_title%"
+                    const rawDescTemplate = metaDescription || '';   // "%excerpt%"
 
                     const metaUpdates = {
-                        _srk_meta_title: processedTitle,
-                        _srk_meta_description: processedDescription,
-                        _srk_template_title: metaTitle,
-                        _srk_template_description: metaDescription,
+                        _srk_meta_title: rawTitleTemplate,        // ✅ Save RAW template with tags
+                        _srk_meta_description: rawDescTemplate,   // ✅ Save RAW template with tags
+                        _srk_template_title: rawTitleTemplate,     // Keep for reference
+                        _srk_template_description: rawDescTemplate,
                         _srk_canonical_url: canonicalUrl,
                         _srk_last_sync: Math.floor(Date.now() / 1000)
                     };
@@ -1241,10 +1351,10 @@ window.SRK_Gutenberg = {
                         data: {
                             action: 'srk_save_meta_data',
                             post_id: postId,
-                            meta_title: processedTitle,
-                            meta_description: processedDescription,
-                            template_title: metaTitle,
-                            template_description: metaDescription,
+                            meta_title: rawTitleTemplate,        // ✅ Send RAW template to PHP
+                            meta_description: rawDescTemplate,  // ✅ Send RAW template to PHP
+                            template_title: rawTitleTemplate,
+                            template_description: rawDescTemplate,
                             canonical_url: canonicalUrl,
                             advanced_settings: advancedSettings,
                             nonce: srkData.nonce
@@ -1268,7 +1378,6 @@ window.SRK_Gutenberg = {
                 setIsSaving(false);
             }
         };
-
         // Save advanced settings only - FIXED VERSION
         const saveAdvancedSettings = async () => {
             try {
@@ -1330,12 +1439,12 @@ window.SRK_Gutenberg = {
                 use_default_settings: '0'
             });
         };
+
         /**
          * Reset to Content Type Defaults - TRUE RESET VERSION
          * Deletes post meta and enters Follow Mode (dynamic sync)
          */
         const resetToDefaults = async () => {
-            console.log('🔄 TRUE RESET: Deleting post meta and entering Follow Mode...');
 
             if (!confirm('Reset to Content Type defaults? This will delete all custom SEO settings for this post and follow global Content Type settings dynamically.')) {
                 return;
@@ -1356,7 +1465,6 @@ window.SRK_Gutenberg = {
                 });
 
                 if (response.success) {
-                    console.log('✅ True Reset successful:', response.data);
                     // CRITICAL: Set new original values so button disables
                     setOriginalValues({
                         metaTitle: defaultTitle,
@@ -1414,8 +1522,6 @@ window.SRK_Gutenberg = {
                     setSyncNotificationType('success');
                     setShowSavedMessage(true);
                     setTimeout(() => setShowSavedMessage(false), 3000);
-
-                    console.log('✅ Post is now in FOLLOW MODE - No local meta saved');
                 } else {
                     console.error('❌ Reset failed:', response);
                     setSyncNotification(__('Reset failed', 'seo-repair-kit'));
@@ -1748,7 +1854,6 @@ window.SRK_Gutenberg = {
     };
 
     // Register the Gutenberg plugin
-    console.log('📝 Registering Gutenberg SEO Panel plugin with tabs...');
 
     try {
         registerPlugin('srk-gutenberg-seo-panel', {
@@ -1756,14 +1861,12 @@ window.SRK_Gutenberg = {
             icon: 'search'
         });
 
-        console.log('✅ Gutenberg SEO Panel registered successfully with tabs!');
     } catch (error) {
         console.error('❌ Error registering Gutenberg plugin:', error);
     }
 
 })(window.wp);
 
-console.log('✅ Gutenberg editor integration loaded with tabs');
 
 // ============================================================================
 // PART 2: CLASSIC EDITOR COMPONENTS
@@ -1775,7 +1878,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
 
     'use strict';
 
-    console.log('🔧 Initializing Classic Editor Integration with Tabs...');
 
     // Global data
     const srkData = window.srkGutenbergData || {};
@@ -1811,19 +1913,13 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
         use_default_settings: '1'
     };
     let activeTab = 'title-description';
-
-    console.log('📦 SRK Data Available for Classic Editor:', srkData);
-
     // Initialize when document is ready
     $(document).ready(function () {
-        console.log('🎯 Classic Editor Initializing...');
 
         if (!$('#srk-metabox-container').length) {
             console.error('❌ SRK Metabox container not found!');
             return;
         }
-
-        console.log('✅ SRK Metabox container found');
 
         initializeClassicUI();
         loadPostData();
@@ -1845,7 +1941,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
 
         // Also save when WordPress save button is clicked
         $(document).on('click', '#publish, #save-post', function () {
-            console.log('💾 WordPress save button clicked, saving SEO data...');
             saveMetaData(true);
         });
     });
@@ -1857,7 +1952,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
     function saveBeforeUnload() {
         if (!isDirty || isSaving) return;
 
-        console.log('🔄 Saving before page unload...');
         clearTimeout(saveTimeout);
         saveMetaData(true);
     }
@@ -1905,7 +1999,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
     function markAsDirty() {
         if (!isDirty) {
             isDirty = true;
-            console.log('📝 Form marked as dirty');
         }
     }
 
@@ -1914,7 +2007,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
      */
     function markAsClean() {
         isDirty = false;
-        console.log('✅ Form marked as clean');
     }
 
     /**
@@ -1923,7 +2015,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
     function startSync() {
         syncInterval = setInterval(checkForUpdates, srkData.syncInterval || 5000);
         $(window).on('focus', checkForUpdates);
-        console.log('🔄 Real-time sync started');
     }
 
     /**
@@ -1961,7 +2052,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
      * Update UI from sync data
      */
     function updateFromSync(data) {
-        console.log('🔄 Updating from sync:', data);
 
         const defaultTitle = srkData.defaultTitleTemplate || '%title% %sep% %site_title%';
         const defaultDesc = srkData.defaultDescTemplate || '%excerpt%';
@@ -2003,13 +2093,9 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
     }
 
     /**
-     * Update advanced settings UI
+     * Update advanced settings UI - WITHOUT CHECKBOX
      */
-    /**
- * Update advanced settings UI - WITHOUT CHECKBOX
- */
     function updateAdvancedSettingsUI() {
-        console.log('🔄 Updating advanced settings UI:', advancedSettings);
 
         // Update toggle switch visual state (NO CHECKBOX)
         const isUsingDefaults = advancedSettings.use_default_settings === '1';
@@ -2067,7 +2153,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
      * Load post data via AJAX
      */
     function loadPostData() {
-        console.log('📡 Loading post data...');
 
         if (!srkData.postId) {
             console.error('❌ No post ID available');
@@ -2081,12 +2166,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
         const initialCanonical = $('#srk_canonical_url').val();
         const initialAdvancedSettings = $('#srk_advanced_settings').val();
 
-        console.log('📝 Initial hidden values:', {
-            title: initialTitle,
-            desc: initialDesc,
-            canonical: initialCanonical,
-            advanced: initialAdvancedSettings
-        });
 
         // Update UI with initial values immediately
         if (initialTitle) {
@@ -2121,12 +2200,9 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
                 nonce: srkData.nonce
             },
             success: function (response) {
-                console.log('📡 Post data response:', response);
-
                 if (response.success) {
                     currentPostData = response.data;
                     lastSyncTime = parseInt(response.data.last_sync) || 0;
-                    console.log('✅ Post data loaded, last sync:', lastSyncTime);
 
                     if (response.data.meta_title && response.data.meta_title !== '') {
                         $(`.srk-value-input[data-type="title"]`).val(response.data.meta_title);
@@ -2167,7 +2243,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
      * Use sample data if AJAX fails
      */
     function useSampleData() {
-        console.log('📝 Using sample data...');
 
         currentPostData = {
             post_title: 'Sample Post Title',
@@ -2186,13 +2261,10 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
      * Initialize the Classic Editor UI with Tabs
      */
     function initializeClassicUI() {
-        console.log('🎨 Initializing Classic Editor UI with Tabs...');
 
         const metaTitle = $('#srk_meta_title').val();
         const metaDescription = $('#srk_meta_description').val();
         const canonicalUrl = $('#srk_canonical_url').val();
-
-        console.log('📝 Initial Values:', { metaTitle, metaDescription, canonicalUrl });
 
         // Create UI content with Tabs
         const uiContent = `
@@ -2420,8 +2492,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
                     </div>
                 </div>
             </div>
-       
-       
 
             <style>
                 /* Toggle switch blue when ON */
@@ -2484,7 +2554,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
         }
 
         $('#srk-metabox-container').html(uiContent);
-        console.log('✅ Classic UI with tabs injected');
         setupTabSwitching();
         // Create React container for Gutenberg modals
         createReactModalContainer();
@@ -2499,7 +2568,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
      * Create React modal container for Gutenberg modals
      */
     function createReactModalContainer() {
-        console.log('⚛️ Creating React modal container...');
 
         $('#srk-react-modal-container').remove();
 
@@ -2508,14 +2576,12 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
             style: 'position: fixed; z-index: 100000; top: 0; left: 0; width: 100%; height: 100%; display: none;'
         }).appendTo('body');
 
-        console.log('✅ React modal container created');
     }
 
     /**
- * Initialize Classic Editor components
- */
+     * Initialize Classic Editor components
+     */
     function initializeClassicComponents() {
-        console.log('🔧 Initializing Classic components with tabs...');
 
         // Setup visual inputs
         setupVisualInput('title');
@@ -2543,14 +2609,12 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
         // Initially hide non-active tab content
         $('.srk-tab-content').not('.active').hide();
 
-        console.log('✅ Classic components with tabs initialized');
     }
 
     /**
      * Setup visual tag input
      */
     function setupVisualInput(type) {
-        console.log('⚙️ Setting up visual input for:', type);
 
         const defaultTemplate = type === 'title' ?
             srkData.defaultTitleTemplate || '%title% %sep% %site_title%' :
@@ -2566,8 +2630,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
             currentValue = defaultTemplate;
         }
 
-        console.log('📝 Setting value for', type, ':', currentValue);
-
         const placeholder = processTemplateClassic(defaultTemplate, getPreviewData());
 
         renderDisplayFromValue(currentValue, type);
@@ -2575,14 +2637,12 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
         $(`#srk_meta_${type === 'description' ? 'description' : 'title'}`).val(currentValue);
         $(`.srk-tag-display[data-type="${type}"]`).attr('placeholder', placeholder);
 
-        console.log('✅ Visual input setup for:', type, 'value:', currentValue);
     }
 
     /**
      * Load relevant tags
      */
     function loadRelevantTags(type, container) {
-        console.log('🏷️ Loading relevant tags for:', type);
 
         const relevantTags = srkData.templateTagsRelevant ? srkData.templateTagsRelevant[type] : {};
 
@@ -2610,14 +2670,12 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
         `;
 
         $(container).html(html);
-        console.log('✅ Relevant tags loaded for:', type);
     }
 
     /**
      * Render display from value
      */
     function renderDisplayFromValue(value, type) {
-        console.log('🎨 Rendering display for', type, 'with value:', value);
 
         const segments = parseValueToSegments(value || '');
         let html = '';
@@ -2654,7 +2712,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
         $(`.srk-tag-display[data-type="${type}"]`).html(html);
         $(`.srk-value-input[data-type="${type}"]`).val(value);
 
-        console.log('✅ Display rendered for', type);
     }
 
     /**
@@ -2698,7 +2755,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
      * Update value from display
      */
     function updateValueFromDisplay(type) {
-        console.log('🔄 Updating value from display for:', type);
 
         const display = $(`.srk-tag-display[data-type="${type}"]`);
         const hidden = $(`.srk-value-input[data-type="${type}"]`);
@@ -2721,8 +2777,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
                 value += node.text() || '';
             }
         });
-
-        console.log('📝 New value for', type, ':', value);
         hidden.val(value);
 
         $(`#srk_meta_${type === 'description' ? 'description' : 'title'}`).val(value);
@@ -2791,16 +2845,14 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
         }
 
         saveTimeout = setTimeout(function () {
-            console.log('⏰ Auto-saving changes...');
             showSaveStatus('Auto-saving changes...', 'saving');
             saveMetaData();
         }, 2000);
     }
     /**
- * Initialize conditional fields for Classic Editor
- */
+     * Initialize conditional fields for Classic Editor
+     */
     function initConditionalFields() {
-        console.log('🔧 Initializing conditional fields...');
 
         // Function to toggle max snippet field
         function toggleMaxSnippet() {
@@ -2842,13 +2894,12 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
             }
         });
 
-        console.log('✅ Conditional fields initialized');
     }
+
     /**
      * Bind all Classic Editor events
      */
     function bindClassicEvents() {
-        console.log('🔗 Binding Classic Editor events with tabs...');
 
         // Tab switching
         $(document)
@@ -2983,7 +3034,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
                 e.preventDefault();
                 const tag = $(this).data('tag');
                 const type = $(this).data('type');
-                console.log('➕ Inserting relevant tag:', tag, 'into:', type);
                 insertTag(tag, type);
             })
 
@@ -2991,7 +3041,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
             .on('click', '.srk-view-all-tags', function (e) {
                 e.preventDefault();
                 const type = $(this).data('type');
-                console.log('📋 Opening GUTENBERG tag modal for:', type);
                 showGutenbergTagModal(type);
             })
 
@@ -3003,8 +3052,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
                 const tag = $(this).data('tag');
                 const type = $(this).data('type');
                 const tagIndex = $(this).data('tag-index');
-
-                console.log('✏️ Tag chip clicked:', tag, 'type:', type, 'index:', tagIndex);
 
                 if ($(e.target).hasClass('srk-tag-dropdown') || $(e.target).closest('.srk-tag-dropdown').length) {
                     showEditTagModal(tag, type, tagIndex);
@@ -3062,14 +3109,12 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
             }
         });
 
-        console.log('✅ Classic Editor events with tabs bound');
     }
 
     /**
      * Show Edit Snippet Modal
      */
     function showEditSnippetModal() {
-        console.log('📋 Showing Edit Snippet Modal');
 
         // Show modal
         $('#srk-edit-snippet-modal').show();
@@ -3082,7 +3127,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
      * Load modal tab content
      */
     function loadModalTabContent(tab) {
-        console.log('📄 Loading modal tab:', tab);
 
         const $content = $('#srk-modal-content');
         $content.empty();
@@ -3157,92 +3201,92 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
 
         } else if (tab === 'advanced') {
             $content.html(`
-        <div class="srk-advanced-section">
-            <!-- Use Default Settings Toggle -->
-            <div style="margin-bottom: 20px;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
-                    <label class="srk-toggle-switch" style="position: relative; display: inline-block; width: 50px; height: 24px;">
-                        <input type="checkbox" id="srk-modal-use-default-settings" ${advancedSettings.use_default_settings === '1' ? 'checked' : ''}>
-                        <span class="srk-toggle-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px;">
-                            <span class="srk-toggle-knob" style="position: absolute; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%;"></span>
-                        </span>
-                    </label>
-                    <span style="font-size: 13px; color: #1d2327; font-weight: 500;">
-                        ${srkData.i18n?.useDefaultSettings || 'Use Default Settings'}
-                    </span>
-                </div>
-            </div>
-           
-            <!-- Robots Meta Settings -->
-            <div id="srk-modal-robots-container" style="${advancedSettings.use_default_settings === '1' ? 'display: none;' : ''}">
-                <h4 style="margin-bottom: 15px; color: #1d2327;">
-                    ${srkData.i18n?.robotsMeta || 'Robots Meta Settings'}
-                </h4>
-               
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px;">
-                    <label style="display: flex; align-items: center; gap: 8px;">
-                        <input type="checkbox" id="srk-modal-robots-noindex" ${advancedSettings.robots_meta?.noindex === '1' ? 'checked' : ''}>
-                        <span>${srkData.i18n?.noIndex || 'No Index'}</span>
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 8px;">
-                        <input type="checkbox" id="srk-modal-robots-nofollow" ${advancedSettings.robots_meta?.nofollow === '1' ? 'checked' : ''}>
-                        <span>${srkData.i18n?.noFollow || 'No Follow'}</span>
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 8px;">
-                        <input type="checkbox" id="srk-modal-robots-noarchive" ${advancedSettings.robots_meta?.noarchive === '1' ? 'checked' : ''}>
-                        <span>${srkData.i18n?.noArchive || 'No Archive'}</span>
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 8px;">
-                        <input type="checkbox" id="srk-modal-robots-notranslate" ${advancedSettings.robots_meta?.notranslate === '1' ? 'checked' : ''}>
-                        <span>${srkData.i18n?.noTranslate || 'No Translate'}</span>
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 8px;">
-                        <input type="checkbox" id="srk-modal-robots-noimageindex" ${advancedSettings.robots_meta?.noimageindex === '1' ? 'checked' : ''}>
-                        <span>${srkData.i18n?.noImageIndex || 'No Image Index'}</span>
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 8px;">
-                        <input type="checkbox" id="srk-modal-robots-nosnippet" ${advancedSettings.robots_meta?.nosnippet === '1' ? 'checked' : ''}>
-                        <span>${srkData.i18n?.noSnippet || 'No Snippet'}</span>
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 8px;">
-                        <input type="checkbox" id="srk-modal-robots-noodp" ${advancedSettings.robots_meta?.noodp === '1' ? 'checked' : ''}>
-                        <span>${srkData.i18n?.noOdp || 'No ODP'}</span>
-                    </label>
-                </div>
-               
-                <!-- Max Values - WITH CONDITIONAL DISPLAY -->
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px;">
-                    <!-- MAX SNIPPET - Will be hidden when No Snippet is checked -->
-                    <div id="srk-modal-max-snippet-wrapper" style="display: block;">
-                        <label for="srk-modal-max-snippet" style="display: block; margin-bottom: 5px; font-size: 12px; font-weight: 600; color: #1d2327;">
-                            ${srkData.i18n?.maxSnippet || 'Max Snippet'}
-                        </label>
-                        <input type="number" id="srk-modal-max-snippet" class="small-text" min="-1" step="1" style="width: 100%;" value="${advancedSettings.robots_meta?.max_snippet || -1}">
+                <div class="srk-advanced-section">
+                    <!-- Use Default Settings Toggle -->
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                            <label class="srk-toggle-switch" style="position: relative; display: inline-block; width: 50px; height: 24px;">
+                                <input type="checkbox" id="srk-modal-use-default-settings" ${advancedSettings.use_default_settings === '1' ? 'checked' : ''}>
+                                <span class="srk-toggle-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px;">
+                                    <span class="srk-toggle-knob" style="position: absolute; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%;"></span>
+                                </span>
+                            </label>
+                            <span style="font-size: 13px; color: #1d2327; font-weight: 500;">
+                                ${srkData.i18n?.useDefaultSettings || 'Use Default Settings'}
+                            </span>
+                        </div>
                     </div>
-                   
-                    <!-- MAX VIDEO PREVIEW - Always visible -->
-                    <div>
-                        <label for="srk-modal-max-video-preview" style="display: block; margin-bottom: 5px; font-size: 12px; font-weight: 600; color: #1d2327;">
-                            ${srkData.i18n?.maxVideoPreview || 'Max Video Preview'}
-                        </label>
-                        <input type="number" id="srk-modal-max-video-preview" class="small-text" min="-1" step="1" style="width: 100%;" value="${advancedSettings.robots_meta?.max_video_preview || -1}">
-                    </div>
-                   
-                    <!-- MAX IMAGE PREVIEW - Will be hidden when No Image Index is checked -->
-                    <div id="srk-modal-max-image-wrapper" style="display: block;">
-                        <label for="srk-modal-max-image-preview" style="display: block; margin-bottom: 5px; font-size: 12px; font-weight: 600; color: #1d2327;">
-                            ${srkData.i18n?.maxImagePreview || 'Max Image Preview'}
-                        </label>
-                        <select id="srk-modal-max-image-preview" style="width: 100%;">
-                            <option value="none" ${advancedSettings.robots_meta?.max_image_preview === 'none' ? 'selected' : ''}>${srkData.i18n?.none || 'None'}</option>
-                            <option value="standard" ${advancedSettings.robots_meta?.max_image_preview === 'standard' ? 'selected' : ''}>${srkData.i18n?.standard || 'Standard'}</option>
-                            <option value="large" ${advancedSettings.robots_meta?.max_image_preview === 'large' ? 'selected' : ''}>${srkData.i18n?.large || 'Large'}</option>
-                        </select>
+                
+                    <!-- Robots Meta Settings -->
+                    <div id="srk-modal-robots-container" style="${advancedSettings.use_default_settings === '1' ? 'display: none;' : ''}">
+                        <h4 style="margin-bottom: 15px; color: #1d2327;">
+                            ${srkData.i18n?.robotsMeta || 'Robots Meta Settings'}
+                        </h4>
+                    
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px;">
+                            <label style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" id="srk-modal-robots-noindex" ${advancedSettings.robots_meta?.noindex === '1' ? 'checked' : ''}>
+                                <span>${srkData.i18n?.noIndex || 'No Index'}</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" id="srk-modal-robots-nofollow" ${advancedSettings.robots_meta?.nofollow === '1' ? 'checked' : ''}>
+                                <span>${srkData.i18n?.noFollow || 'No Follow'}</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" id="srk-modal-robots-noarchive" ${advancedSettings.robots_meta?.noarchive === '1' ? 'checked' : ''}>
+                                <span>${srkData.i18n?.noArchive || 'No Archive'}</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" id="srk-modal-robots-notranslate" ${advancedSettings.robots_meta?.notranslate === '1' ? 'checked' : ''}>
+                                <span>${srkData.i18n?.noTranslate || 'No Translate'}</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" id="srk-modal-robots-noimageindex" ${advancedSettings.robots_meta?.noimageindex === '1' ? 'checked' : ''}>
+                                <span>${srkData.i18n?.noImageIndex || 'No Image Index'}</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" id="srk-modal-robots-nosnippet" ${advancedSettings.robots_meta?.nosnippet === '1' ? 'checked' : ''}>
+                                <span>${srkData.i18n?.noSnippet || 'No Snippet'}</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" id="srk-modal-robots-noodp" ${advancedSettings.robots_meta?.noodp === '1' ? 'checked' : ''}>
+                                <span>${srkData.i18n?.noOdp || 'No ODP'}</span>
+                            </label>
+                        </div>
+                    
+                        <!-- Max Values - WITH CONDITIONAL DISPLAY -->
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px;">
+                            <!-- MAX SNIPPET - Will be hidden when No Snippet is checked -->
+                            <div id="srk-modal-max-snippet-wrapper" style="display: block;">
+                                <label for="srk-modal-max-snippet" style="display: block; margin-bottom: 5px; font-size: 12px; font-weight: 600; color: #1d2327;">
+                                    ${srkData.i18n?.maxSnippet || 'Max Snippet'}
+                                </label>
+                                <input type="number" id="srk-modal-max-snippet" class="small-text" min="-1" step="1" style="width: 100%;" value="${advancedSettings.robots_meta?.max_snippet || -1}">
+                            </div>
+                        
+                            <!-- MAX VIDEO PREVIEW - Always visible -->
+                            <div>
+                                <label for="srk-modal-max-video-preview" style="display: block; margin-bottom: 5px; font-size: 12px; font-weight: 600; color: #1d2327;">
+                                    ${srkData.i18n?.maxVideoPreview || 'Max Video Preview'}
+                                </label>
+                                <input type="number" id="srk-modal-max-video-preview" class="small-text" min="-1" step="1" style="width: 100%;" value="${advancedSettings.robots_meta?.max_video_preview || -1}">
+                            </div>
+                        
+                            <!-- MAX IMAGE PREVIEW - Will be hidden when No Image Index is checked -->
+                            <div id="srk-modal-max-image-wrapper" style="display: block;">
+                                <label for="srk-modal-max-image-preview" style="display: block; margin-bottom: 5px; font-size: 12px; font-weight: 600; color: #1d2327;">
+                                    ${srkData.i18n?.maxImagePreview || 'Max Image Preview'}
+                                </label>
+                                <select id="srk-modal-max-image-preview" style="width: 100%;">
+                                    <option value="none" ${advancedSettings.robots_meta?.max_image_preview === 'none' ? 'selected' : ''}>${srkData.i18n?.none || 'None'}</option>
+                                    <option value="standard" ${advancedSettings.robots_meta?.max_image_preview === 'standard' ? 'selected' : ''}>${srkData.i18n?.standard || 'Standard'}</option>
+                                    <option value="large" ${advancedSettings.robots_meta?.max_image_preview === 'large' ? 'selected' : ''}>${srkData.i18n?.large || 'Large'}</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    `);
+            `);
 
             // Bind modal advanced settings events WITH CONDITIONAL FIELDS
             function initModalConditionalFields() {
@@ -3538,7 +3582,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
      * Show Gutenberg Tag Modal in Classic Editor
      */
     function showGutenbergTagModal(type) {
-        console.log('🎬 Showing Gutenberg TagModal in Classic Editor for:', type);
 
         if (!window.SRK_Gutenberg || !window.SRK_Gutenberg.Modal || !window.SRK_Gutenberg.element) {
             console.error('❌ Gutenberg components not available');
@@ -3586,7 +3629,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
             }, [searchTerm, allTags, type, relevantTags]);
 
             const handleSelectTag = (tag) => {
-                console.log('🏷️ Tag selected in Gutenberg modal:', tag);
 
                 if (activeTab === 'title-description') {
                     insertTag(tag, type);
@@ -3751,15 +3793,12 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
                 container
             );
         }
-
-        console.log('✅ Gutenberg modal shown in Classic Editor');
     }
 
     /**
      * Hide Gutenberg Tag Modal
      */
     function hideGutenbergTagModal() {
-        console.log('👋 Hiding Gutenberg modal');
 
         const container = document.getElementById('srk-react-modal-container');
         if (container && window.SRK_Gutenberg.element && window.SRK_Gutenberg.element.unmountComponentAtNode) {
@@ -3772,7 +3811,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
      * Show edit tag modal (for tag chips)
      */
     function showEditTagModal(tag, type, tagIndex) {
-        console.log('✏️ Showing Gutenberg Edit/Delete Tag modal for:', tag, 'type:', type, 'index:', tagIndex);
 
         currentEditingTag = tag;
         currentEditingTagIndex = tagIndex;
@@ -3824,13 +3862,11 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
             }, [searchTerm, allTags, type, relevantTags]);
 
             const handleSelectTag = (newTag) => {
-                console.log('🔄 Replacing tag:', tag, 'with:', newTag);
                 replaceCurrentTag(newTag);
                 hideEditTagModal();
             };
 
             const handleDeleteTag = () => {
-                console.log('🗑️ Deleting tag:', tag);
                 deleteCurrentTag();
                 hideEditTagModal();
             };
@@ -4033,16 +4069,12 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
                 container
             );
         }
-
-        console.log(' Gutenberg Edit/Delete modal shown in Classic Editor');
     }
 
     /**
      * Hide edit tag modal
      */
     function hideEditTagModal() {
-        console.log(' Hiding Gutenberg edit modal');
-
         const container = document.getElementById('srk-react-modal-container');
         if (container && window.SRK_Gutenberg.element && window.SRK_Gutenberg.element.unmountComponentAtNode) {
             window.SRK_Gutenberg.element.unmountComponentAtNode(container);
@@ -4058,7 +4090,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
      * Fallback: Simple edit modal if Gutenberg not available
      */
     function showSimpleEditTagModal(tag, type, tagIndex) {
-        console.log(' Falling back to simple edit modal');
 
         currentEditingTag = tag;
         currentEditingTagIndex = tagIndex;
@@ -4103,7 +4134,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
      * Insert tag
      */
     function insertTag(tag, type) {
-        console.log('➕ Inserting tag:', tag, 'into:', type);
 
         const hidden = $(`.srk-value-input[data-type="${type}"]`);
         const display = $(`.srk-tag-display[data-type="${type}"]`);
@@ -4123,8 +4153,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
         markAsDirty();
         scheduleAutoSave();
         updatePreview();
-
-        console.log(' Tag inserted');
     }
 
     /**
@@ -4161,14 +4189,12 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
         scheduleAutoSave();
         updatePreview();
 
-        console.log(' Tag replaced');
     }
 
     /**
      * Delete current tag
      */
     function deleteCurrentTag() {
-        console.log(' Deleting tag:', currentEditingTag);
 
         if (!currentEditingTarget || currentEditingTagIndex === -1) {
             console.error('No editing target or index');
@@ -4203,16 +4229,13 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
         scheduleAutoSave();
         updatePreview();
 
-        console.log(' Tag deleted');
     }
 
     /**
      * Update UI with post data
      */
     function updateUIWithPostData() {
-        console.log(' Updating UI with post data...');
         updatePreview();
-        console.log(' UI updated with post data');
     }
 
     /**
@@ -4307,8 +4330,8 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
     }
 
     /**
-  * Save meta data - ONLY when Save button is clicked
-  */
+     * Save meta data - ONLY when Save button is clicked
+     */
     function saveMetaData(silent = false) {
         if (isSaving) {
             return Promise.resolve();
@@ -4445,10 +4468,6 @@ console.log('✅ Gutenberg editor integration loaded with tabs');
         updatePreview();
     }
 
-    /**
- * Reset all to defaults - TRUE RESET VERSION for Classic Editor
- * Deletes post meta and enters Follow Mode
- */
     /**
      * Reset all to defaults - TRUE RESET VERSION for Classic Editor
      * Deletes post meta and enters Follow Mode

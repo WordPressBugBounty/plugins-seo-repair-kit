@@ -96,6 +96,12 @@ class Seo_Repair_Kit {
 	private function srkitload_dependencies() {
 
 		/**
+		 * The class responsible for defining Sitemap Manager functionality
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-sitemap-manager.php';
+        SeoRepairKit_Sitemap_Manager::get_instance();
+
+		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */

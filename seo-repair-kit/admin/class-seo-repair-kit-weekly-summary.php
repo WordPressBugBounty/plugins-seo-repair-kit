@@ -83,8 +83,9 @@ class SeoRepairKit_WeeklySummaryService {
         // Clear any existing schedule first
         wp_clear_scheduled_hook('srk_weekly_seo_summary_cron');
         
-        // Schedule for testing - every 7 days
-        $scheduled = wp_schedule_event(time(), 'srk_seven_days', 'srk_weekly_seo_summary_cron');
+        // Schedule first run 7 days after activation, then repeat every 7 days
+        $first_run = time() + ( 7 * DAY_IN_SECONDS );
+        $scheduled = wp_schedule_event($first_run, 'srk_seven_days', 'srk_weekly_seo_summary_cron');
         
         return $scheduled;
     }

@@ -160,6 +160,7 @@ class SeoRepairKit_Admin {
                 'chatbot'     => admin_url( 'admin.php?page=srk-ai-chatbot' ),
                 'alt'         => admin_url( 'admin.php?page=alt-image-missing' ),
                 'redirection' => admin_url( 'admin.php?page=seo-repair-kit-redirection' ),
+                'sitemap'     => admin_url( 'admin.php?page=seo-repair-kit-sitemap-manager' ),
                 'settings'    => admin_url( 'admin.php?page=seo-repair-kit-settings' ),
                 'upgrade'     => admin_url( 'admin.php?page=seo-repair-kit-upgrade-pro' ),
             );
@@ -405,7 +406,6 @@ class SeoRepairKit_Admin {
        
        // New Meta Manager Core Classes
        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-meta-resolver.php';
-    //    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-post-meta-handler.php';
        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-meta-helper.php';
        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-gutenberg-integration.php';
        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-elementor-integration.php';
@@ -846,8 +846,11 @@ class SeoRepairKit_Admin {
 		// Register Page Loader CSS File
         wp_register_style( 'srk-page-loader-style', plugin_dir_url( __FILE__ ) . 'css/srk-page-loader.css', array(), $this->version, 'all' );
 		
-        // Register Schema Manager CSS File
+        // Register Meta Manager CSS File
         wp_register_style('srk-meta-manager-css', plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-meta-manager.css', array(), $this->version, 'all' );
+
+        // Register Sitemap Manager CSS File
+        wp_register_style( 'srk-sitemap-manager-style', plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-sitemap-manager.css', array(), $this->version, 'all' );
 
 		// Enqueue Admin CSS File
 		wp_enqueue_style( 'srk-admin-style' );
@@ -856,6 +859,13 @@ class SeoRepairKit_Admin {
 		if ( $this->is_srk_admin_page() ) {
 			wp_enqueue_style( 'srk-page-loader-style' );
 		}
+
+        // Enqueue Sitemap Manager CSS only on Sitemap Manager page
+        $page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+
+        if ( 'seo-repair-kit-sitemap-manager' === $page ) {
+            wp_enqueue_style( 'srk-sitemap-manager-style' );
+        }
     }
 
 	/**
@@ -1098,6 +1108,7 @@ class SeoRepairKit_Admin {
         'alt-image-missing',
         'seo-repair-kit-redirection',
         'seo-repair-kit-robots-llms',
+        'seo-repair-kit-sitemap-manager',
         'seo-repair-kit-settings',
         'seo-repair-kit-upgrade-pro',
         'seo-repair-kit-meta-manager',
@@ -1238,6 +1249,20 @@ class SeoRepairKit_Admin {
             'seo-repair-kit-meta-manager',
             array( $srk_meta_manager, 'srk_render_meta_manager_page' )
         );
+
+        /**
+		 * Sitemap Manager page.
+		 *
+		 * @since    2.1.5
+		 */
+		add_submenu_page(
+			'seo-repair-kit-dashboard',
+			esc_html__( 'Sitemap Manager', 'seo-repair-kit' ),
+			esc_html__( 'Sitemap Manager', 'seo-repair-kit' ),
+			'manage_options',
+			'seo-repair-kit-sitemap-manager',
+			array( SeoRepairKit_Sitemap_Manager::get_instance(), 'srk_render_sitemap_manager_page' )
+		);
 
         /**
 		 * Robots.txt & LLMs.txt Manager page.

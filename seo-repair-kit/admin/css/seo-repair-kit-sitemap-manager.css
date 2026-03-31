@@ -1,0 +1,591 @@
+/**
+ * CSS for the SEO Repair Kit Sitemap Manager page.
+ * Uses the same visual system as the plugin settings UI.
+ */
+
+/* CSS Variables */
+:root {
+  --srk-primary: #0B1D51;
+  --srk-primary-hover: #241180;
+  --srk-secondary: #F28500;
+  --srk-success: #10B981;
+  --srk-warning: #E1A500;
+  --srk-error: #D92C2C;
+  --srk-card: #FFFFFF;
+  --srk-card-hover: #F7F8FA;
+  --srk-border: #E5E7EB;
+  --srk-muted: #6B7280;
+  --srk-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Wrapper */
+.srk-sitemap-wrapper {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+/* Hero Section */
+.srk-sitemap-hero {
+  background: linear-gradient(135deg, var(--srk-card) 0%, rgba(107, 78, 255, 0.03) 100%);
+  border: 1px solid var(--srk-border);
+  border-radius: 14px;
+  padding: 24px 26px;
+  margin-bottom: 24px;
+  box-shadow: var(--srk-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.srk-sitemap-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle at center, rgba(107, 78, 255, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.srk-sitemap-hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.srk-sitemap-hero-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--srk-primary) 0%, var(--srk-primary-hover) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(11, 29, 81, 0.25);
+}
+
+.srk-sitemap-hero-icon .dashicons {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  color: #FFFFFF;
+  line-height: 1;
+}
+
+.srk-sitemap-hero-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.srk-sitemap-hero-text h1 {
+  margin: 0 0 6px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.srk-sitemap-hero-text p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--srk-muted);
+  line-height: 1.6;
+  max-width: 760px;
+}
+
+/* Top info grid */
+.srk-sitemap-top-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.srk-sitemap-top-box {
+  background: var(--srk-card-hover);
+  border: 1px solid var(--srk-border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-top: 18px;
+}
+
+.srk-sitemap-top-box h3 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.srk-sitemap-top-box p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--srk-muted);
+  line-height: 1.6;
+}
+
+.srk-sitemap-url {
+  display: inline-block;
+  margin-top: 8px;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  font-size: 12px;
+  word-break: break-word;
+  color: var(--srk-primary);
+  text-decoration: none;
+}
+
+.srk-sitemap-url:hover {
+  color: var(--srk-primary-hover);
+  text-decoration: underline;
+}
+
+/* Notices */
+.srk-sitemap-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: 10px;
+  margin-top: 18px;
+  border: 1px solid var(--srk-border);
+}
+
+.srk-sitemap-notice .dashicons {
+  flex-shrink: 0;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.srk-sitemap-notice-content {
+  flex: 1;
+}
+
+.srk-sitemap-notice-content strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.srk-sitemap-notice-content p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--srk-muted);
+  line-height: 1.6;
+}
+
+.srk-sitemap-notice-info {
+  background: linear-gradient(135deg, rgba(11, 29, 81, 0.06) 0%, rgba(11, 29, 81, 0.02) 100%);
+  border-color: rgba(11, 29, 81, 0.15);
+}
+
+.srk-sitemap-notice-info .dashicons {
+  color: var(--srk-primary);
+}
+
+.srk-sitemap-notice-warning {
+  background: linear-gradient(135deg, rgba(225, 165, 0, 0.10) 0%, rgba(225, 165, 0, 0.04) 100%);
+  border-color: rgba(225, 165, 0, 0.20);
+}
+
+.srk-sitemap-notice-warning .dashicons {
+  color: var(--srk-warning);
+}
+
+.srk-sitemap-notice-success {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.10) 0%, rgba(16, 185, 129, 0.04) 100%);
+  border-color: rgba(16, 185, 129, 0.20);
+}
+
+.srk-sitemap-notice-success .dashicons {
+  color: var(--srk-success);
+}
+
+/* Form layout */
+.srk-sitemap-form .submit {
+  display: none;
+}
+
+.srk-sitemap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 24px;
+}
+
+/* Card */
+.srk-sitemap-card {
+  background: var(--srk-card);
+  border: 1px solid var(--srk-border);
+  border-radius: 14px;
+  box-shadow: var(--srk-shadow);
+  overflow: hidden;
+}
+
+.srk-sitemap-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 24px 24px 0;
+}
+
+.srk-sitemap-card-icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(11, 29, 81, 0.10) 0%, rgba(11, 29, 81, 0.05) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.srk-sitemap-card-icon .dashicons {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+  color: var(--srk-primary);
+  line-height: 1;
+}
+
+.srk-sitemap-card-title h2 {
+  margin: 0 0 4px 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: #111827;
+  letter-spacing: -0.01em;
+}
+
+.srk-sitemap-card-title p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--srk-muted);
+  line-height: 1.5;
+}
+
+.srk-sitemap-card-body {
+  padding: 24px;
+}
+
+/* Toggle */
+.srk-sitemap-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  background: var(--srk-card-hover);
+  border: 1px solid var(--srk-border);
+  border-radius: 10px;
+}
+
+.srk-sitemap-toggle-switch {
+  flex-shrink: 0;
+  position: relative;
+  width: 52px;
+  height: 28px;
+}
+
+.srk-sitemap-toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.srk-sitemap-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #D1D5DB;
+  transition: all 0.3s ease;
+  border-radius: 28px;
+}
+
+.srk-sitemap-toggle-slider::before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #FFFFFF;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.srk-sitemap-toggle-switch input:checked + .srk-sitemap-toggle-slider {
+  background-color: var(--srk-secondary);
+}
+
+.srk-sitemap-toggle-switch input:checked + .srk-sitemap-toggle-slider::before {
+  transform: translateX(24px);
+}
+
+.srk-sitemap-toggle-content {
+  flex: 1;
+}
+
+.srk-sitemap-toggle-title {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.srk-sitemap-toggle-description {
+  display: block;
+  font-size: 13px;
+  color: var(--srk-muted);
+  line-height: 1.5;
+}
+
+/* Selection count */
+.srk-sitemap-selection-meta {
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--srk-muted);
+}
+
+/* Checkbox grid */
+.srk-sitemap-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+.srk-sitemap-checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--srk-card-hover);
+  border: 1px solid var(--srk-border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.srk-sitemap-checkbox-item:hover {
+  border-color: var(--srk-primary);
+  background: rgba(11, 29, 81, 0.03);
+}
+
+.srk-sitemap-checkbox-item input[type="checkbox"] {
+  display: none;
+}
+
+.srk-sitemap-checkbox-custom {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--srk-border);
+  border-radius: 5px;
+  background: var(--srk-card);
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.srk-sitemap-checkbox-item:hover .srk-sitemap-checkbox-custom {
+  border-color: var(--srk-primary);
+}
+
+.srk-sitemap-checkbox-item input[type="checkbox"]:checked + .srk-sitemap-checkbox-custom {
+  background: var(--srk-primary);
+  border-color: var(--srk-primary);
+}
+
+.srk-sitemap-checkbox-item input[type="checkbox"]:checked + .srk-sitemap-checkbox-custom::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  width: 5px;
+  height: 9px;
+  border: solid #FFFFFF;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.srk-sitemap-checkbox-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.srk-sitemap-checkbox-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.srk-sitemap-checkbox-slug {
+  font-size: 11px;
+  color: var(--srk-muted);
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+/* Footer info */
+.srk-sitemap-card-footer {
+  padding-top: 20px;
+  margin-top: 20px;
+  border-top: 1px solid var(--srk-border);
+}
+
+.srk-sitemap-footer-note {
+  display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	background: #fff3cd;
+	border: 1px solid #ffeeba;
+	border-left: 4px solid #ffc107;
+	padding: 12px 14px;
+	border-radius: 6px;
+	margin-top: 15px;
+}
+
+.srk-sitemap-footer-note .dashicons {
+  color: #856404;
+	margin-top: 2px;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 1;
+}
+
+.srk-sitemap-footer-note p {
+  margin: 0;
+	color: #856404;
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+/* Bottom save area */
+.srk-sitemap-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.srk-sitemap-save-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--srk-primary) 0%, var(--srk-primary-hover) 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(11, 29, 81, 0.25);
+}
+
+.srk-sitemap-save-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(11, 29, 81, 0.35);
+}
+
+.srk-sitemap-save-btn .dashicons {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 1;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .srk-sitemap-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .srk-sitemap-wrapper {
+    padding: 0 16px;
+    margin: 16px auto;
+  }
+
+  .srk-sitemap-hero {
+    padding: 20px;
+  }
+
+  .srk-sitemap-hero-content {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .srk-sitemap-hero-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .srk-sitemap-hero-icon .dashicons {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .srk-sitemap-hero-text h1 {
+    font-size: 18px;
+  }
+
+  .srk-sitemap-hero-text p {
+    font-size: 13px;
+  }
+
+  .srk-sitemap-card-header {
+    padding: 20px 20px 0;
+  }
+
+  .srk-sitemap-card-body {
+    padding: 20px;
+  }
+
+  .srk-sitemap-checkbox-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .srk-sitemap-toggle {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .srk-sitemap-actions {
+    display: block;
+  }
+
+  .srk-sitemap-save-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .srk-sitemap-top-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .srk-sitemap-card-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .srk-sitemap-checkbox-item {
+    padding: 12px 14px;
+  }
+
+  .srk-sitemap-notice {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

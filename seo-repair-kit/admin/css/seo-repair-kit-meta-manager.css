@@ -3842,3 +3842,30 @@
 .srk-section.collapsed .srk-section-toggle .dashicons {
     transform: rotate(-90deg);
 }
+
+/* change */
+
+/* Character counter styles for Gutenberg */
+.srk-tag-input-visual-wrapper {
+    position: relative;
+}
+
+.srk-counter-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    font-size: 12px;
+}
+
+.srk-counter-status.good {
+    color: #00a32a;
+}
+
+.srk-counter-status.warning {
+    color: #dba617;
+}
+
+.srk-counter-status.error {
+    color: #d63638;
+}
