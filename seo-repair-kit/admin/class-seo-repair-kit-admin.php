@@ -701,7 +701,7 @@ class SeoRepairKit_Admin {
 	function srk_check_and_store_license_after_payment() {
 		if (isset($_GET['srk_license_synced']) && $_GET['srk_license_synced'] === 'true') {
 			add_action('admin_notices', function () {
-				echo '<div class="notice notice-success is-dismissible"><p>License synced successfully. Schema Manager is now active!</p></div>';
+				echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'License synced successfully. Schema Manager is now active!', 'seo-repair-kit' ) . '</p></div>';
 			});
 			$this->get_license_status(site_url());
 		}
@@ -908,10 +908,10 @@ class SeoRepairKit_Admin {
 			if ( $screen->id === 'dashboard' || $screen->parent_base === 'seo-repair-kit-dashboard' ) {
 				?>
 				<div class="notice notice-info is-dismissible">
-					<h2>SEO Repair Kit database update required</h2>
-					<p>To keep your website's SEO in top shape, we need to update your settings to the latest version. This process will run in the background and may take a few moments. Please sit tight, and thank you for your patience as we optimize your site for the best performance.</p>
+					<h2><?php esc_html_e( 'SEO Repair Kit database update required', 'seo-repair-kit' ); ?></h2>
+					<p><?php esc_html_e( 'To keep your website SEO in top shape, we need to update your settings to the latest version. This process runs in the background and may take a few moments.', 'seo-repair-kit' ); ?></p>
 					<p>
-						<a href="<?php echo esc_url( admin_url( 'admin-post.php?action=srkit_update_settings' ) ); ?>" class="button button-primary">Update Settings</a>
+						<a href="<?php echo esc_url( admin_url( 'admin-post.php?action=srkit_update_settings' ) ); ?>" class="button button-primary"><?php esc_html_e( 'Update Settings', 'seo-repair-kit' ); ?></a>
 					</p>
 				</div>
 				<?php
@@ -980,7 +980,7 @@ class SeoRepairKit_Admin {
 								loader.id = 'srk-page-loader-overlay';
 								loader.className = 'srk-page-loader-overlay';
 								loader.setAttribute('aria-hidden', 'true');
-								loader.innerHTML = '<div class=\"srk-page-loader-container\"><div class=\"srk-page-loader-spinner\"></div><p class=\"srk-page-loader-text\">Loading...</p></div>';
+								loader.innerHTML = '<div class=\"srk-page-loader-container\"><div class=\"srk-page-loader-spinner\"></div><p class=\"srk-page-loader-text\"><?php echo esc_js( __( 'Loading...', 'seo-repair-kit' ) ); ?></p></div>';
 								document.body.appendChild(loader);
 							} catch (e) {
 								// Silently fail if appendChild fails

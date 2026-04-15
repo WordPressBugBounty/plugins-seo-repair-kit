@@ -91,9 +91,40 @@ class SRK_Gutenberg_Integration {
         add_action('init', array($this, 'force_custom_fields_support'), 99);
         
         add_action('wp_ajax_srk_reset_to_content_type', array($this, 'ajax_reset_to_content_type'));
-
         
     }
+
+    /**
+     * Sanitize template while preserving SEO smart tags like %current_day%, %title%, etc.
+     *
+     * @param string $value Raw value.
+     * @param bool   $multiline Whether textarea sanitization is needed.
+     * @return string
+     */
+    private function sanitize_template_value( $value, $multiline = false ) {
+        $value = (string) $value;
+
+        $placeholders = array();
+
+        $value = preg_replace_callback(
+            '/%[a-zA-Z0-9_]+%/',
+            function ( $matches ) use ( &$placeholders ) {
+                $key = '__SRK_TAG_' . count( $placeholders ) . '__';
+                $placeholders[ $key ] = $matches[0];
+                return $key;
+            },
+            $value
+        );
+
+        $value = $multiline ? sanitize_textarea_field( $value ) : sanitize_text_field( $value );
+
+        if ( ! empty( $placeholders ) ) {
+            $value = strtr( $value, $placeholders );
+        }
+
+        return $value;
+    }
+
     /**
      * Output meta tags in frontend header
      */
@@ -184,48 +215,50 @@ class SRK_Gutenberg_Integration {
         
         // Then replace all other generic tags (fallback for templates using %title% on custom post types)
         $processed = str_replace(
-            [
-                '%site_title%',
-                '%sitedesc%',
-                '%title%',  // Generic fallback
-                '%excerpt%', // Generic fallback
-                '%sep%',
-                '%author_first_name%',
-                '%author_last_name%',
-                '%author_name%',
-                '%categories%',
-                '%term_title%',
-                '%month%',
-                '%year%',
-                '%custom_field%',
-                '%permalink%',
-                '%content%',
-                '%post_date%',
-                '%post_day%'
-            ],
-            [
-                $site_name,
-                $site_description,
-                $post_title,  // Use actual post title
-                $post_excerpt, // Use actual post excerpt
-                $separator,
-                $author_data ? $author_data->first_name : '',
-                $author_data ? $author_data->last_name : '',
-                $author_data ? $author_data->display_name : '',
-                $categories,
-                $category_title,
-                date_i18n('F j, Y'),
-                date_i18n('d'),
-                date_i18n('F'),
-                date_i18n('Y'),
-                '', // Custom field - will need separate implementation
-                get_permalink($post_id),
-                wp_trim_words($post->post_content, 20, '...'),
-                get_the_date('F j, Y', $post_id),
-                get_the_date('d', $post_id)
-            ],
-            $processed
-        );
+        array(
+            '%site_title%',
+            '%sitedesc%',
+            '%title%',
+            '%excerpt%',
+            '%sep%',
+            '%author_first_name%',
+            '%author_last_name%',
+            '%author_name%',
+            '%categories%',
+            '%term_title%',
+            '%current_date%',
+            '%current_day%',
+            '%month%',
+            '%year%',
+            '%custom_field%',
+            '%permalink%',
+            '%content%',
+            '%post_date%',
+            '%post_day%',
+        ),
+        array(
+            $site_name,
+            $site_description,
+            $post_title,
+            $post_excerpt,
+            $separator,
+            $author_data ? $author_data->first_name : '',
+            $author_data ? $author_data->last_name : '',
+            $author_data ? $author_data->display_name : '',
+            $categories,
+            $category_title,
+            date_i18n( get_option( 'date_format' ) ),
+            date_i18n( 'l' ),
+            date_i18n( 'F' ),
+            date_i18n( 'Y' ),
+            '',
+            get_permalink( $post_id ),
+            wp_trim_words( $post->post_content, 20, '...' ),
+            get_the_date( 'F j, Y', $post_id ),
+            get_the_date( 'l', $post_id ),
+        ),
+        $processed
+    );
         
         // For preview in admin, return with proper escaping
         if ($for_preview) {
@@ -300,10 +333,12 @@ class SRK_Gutenberg_Integration {
                 <!-- Gutenberg will handle its own UI -->
                 <div id="srk-gutenberg-placeholder" style="display: none;"></div>
                 <!-- Hidden fields for Gutenberg (JS updates these) -->
-                <input type="hidden" id="srk_meta_title" name="srk_meta_title" value="<?php echo esc_attr($meta_title); ?>">
-                <input type="hidden" id="srk_meta_description" name="srk_meta_description" value="<?php echo esc_attr($meta_description); ?>">
-                <input type="hidden" id="srk_canonical_url" name="srk_canonical_url" value="<?php echo esc_url($canonical_url); ?>">
-                <input type="hidden" id="srk_advanced_settings" name="srk_advanced_settings" value="<?php echo esc_attr(wp_json_encode($advanced_settings)); ?>">
+                <input type="hidden" id="srk_meta_title" value="<?php echo esc_attr( $meta_title ); ?>" disabled="disabled">
+                <input type="hidden" id="srk_meta_description" value="<?php echo esc_attr( $meta_description ); ?>" disabled="disabled">
+                <input type="hidden" id="srk_canonical_url" value="<?php echo esc_url( $canonical_url ); ?>" disabled="disabled">
+                <input type="hidden" id="srk_advanced_settings" value="<?php echo esc_attr( wp_json_encode( $advanced_settings ) ); ?>" disabled="disabled">
+                <input type="hidden" id="srk_explicit_save_nonce" value="<?php echo esc_attr( wp_create_nonce( 'srk_explicit_save_action' ) ); ?>" disabled="disabled">
+                <input type="hidden" id="srk_last_sync" value="<?php echo esc_attr( $last_sync ? $last_sync : 0 ); ?>" disabled="disabled">
                 
                 <!-- Preview values for meta box -->
                 <div class="srk-meta-preview">
@@ -549,6 +584,7 @@ class SRK_Gutenberg_Integration {
             filemtime($classic_js_path),
             true
         );
+        wp_set_script_translations( 'srk-metabox-script', 'seo-repair-kit', WP_PLUGIN_DIR . '/seo-repair-kit/languages' );
         
         // 4. Enqueue CSS (unified + meta manager for shared components)
         $css_path = $css_dir . '/srk-gutenberg-meta-panel.css';
@@ -627,6 +663,7 @@ class SRK_Gutenberg_Integration {
             filemtime($gutenberg_js_path),
             true
         );
+        wp_set_script_translations( 'srk-gutenberg-meta-panel', 'seo-repair-kit', WP_PLUGIN_DIR . '/seo-repair-kit/languages' );
         
         // 4. Enqueue CSS
         $css_path = $css_dir . '/srk-gutenberg-meta-panel.css';
@@ -740,6 +777,14 @@ class SRK_Gutenberg_Integration {
                 'tag' => '%month%',
                 'description' => 'The current month name.'
             ),
+            'Current Date' => array(
+                'tag' => '%current_date%',
+                'description' => 'The current date.'
+            ),
+            'Current Day' => array(
+                'tag' => '%current_day%',
+                'description' => 'The current weekday name.'
+            ),
             'Current Year' => array(
                 'tag' => '%year%',
                 'description' => 'The current year.'
@@ -830,14 +875,14 @@ class SRK_Gutenberg_Integration {
             'categories' => $categories,
             'categoryTitle' => $category_title,
             'currentDate' => date_i18n('F j, Y'),
-            'currentDay' => date_i18n('d'),
+            'currentDay'   => date_i18n( 'l' ),
             'currentMonth' => date_i18n('F'),
             'currentYear' => date_i18n('Y'),
             'customField' => 'Custom Field Value',
             'permalink' => get_permalink($post_id),
             'postContent' => wp_trim_words($post->post_content, 20, '...'),
             'postDate' => get_the_date('F j, Y', $post_id),
-            'postDay' => get_the_date('d', $post_id),
+            'postDay' => get_the_date('l', $post_id),
             'postExcerpt' => $post_excerpt,
             'postTitle' => $post->post_title,
             
@@ -850,7 +895,7 @@ class SRK_Gutenberg_Integration {
             // Translation strings
             'i18n' => array(
                 'saving' => __('Saving...', 'seo-repair-kit'),
-                'saved' => __('Saved successfully!', 'seo-repair-kit'),
+                'saved'      => __( 'Saved successfully!', 'seo-repair-kit' ),
                 'error' => __('Error saving', 'seo-repair-kit'),
                 'synced' => __('Settings updated from other editor', 'seo-repair-kit'),
                 'reset' => __('Reset to Default', 'seo-repair-kit'),
@@ -867,7 +912,7 @@ class SRK_Gutenberg_Integration {
                 'viewAllTags' => __('View all tags →', 'seo-repair-kit'),
                 'selectTag' => __('Select a Tag', 'seo-repair-kit'),
                 'replaceDeleteTag' => __('Replace or Delete Tag', 'seo-repair-kit'),
-                'searchTags' => __('Search for an item...', 'seo-repair-kit'),
+                'searchTags' => __( 'Search for an item...', 'seo-repair-kit' ),
                 'deleteTag' => __('Delete Tag', 'seo-repair-kit'),
                 'cancel' => __('Cancel', 'seo-repair-kit'),
                 'noTitle' => __('(No title)', 'seo-repair-kit'),
@@ -935,6 +980,7 @@ class SRK_Gutenberg_Integration {
         // Save meta fields
         $this->update_post_meta_fields($post_id, $_POST);
     }
+
     
     /**
      * Update post meta fields
@@ -1042,7 +1088,7 @@ class SRK_Gutenberg_Integration {
             'post_content' => wp_trim_words($post->post_content, 50, '...'),
             'permalink' => get_permalink($post_id),
             'post_date' => get_the_date('F j, Y', $post_id),
-            'post_day' => get_the_date('d', $post_id),
+            'post_day' => get_the_date('l', $post_id),
             
             // Meta values
             'meta_title' => get_post_meta($post_id, '_srk_meta_title', true),
@@ -1098,9 +1144,17 @@ class SRK_Gutenberg_Integration {
         }
 
         // NORMAL MODE: Save actual values
-        $meta_title = isset($_POST['meta_title']) ? sanitize_text_field($_POST['meta_title']) : '';
-        $meta_description = isset($_POST['meta_description']) ? sanitize_text_field($_POST['meta_description']) : '';
-        $canonical_url = isset($_POST['canonical_url']) ? esc_url_raw($_POST['canonical_url']) : '';
+        $meta_title = isset( $_POST['meta_title'] )
+            ? $this->sanitize_template_value( wp_unslash( $_POST['meta_title'] ), false )
+            : '';
+
+        $meta_description = isset( $_POST['meta_description'] )
+            ? $this->sanitize_template_value( wp_unslash( $_POST['meta_description'] ), true )
+            : '';
+
+        $canonical_url = isset( $_POST['canonical_url'] )
+            ? esc_url_raw( wp_unslash( $_POST['canonical_url'] ) )
+            : '';
         
         // Only save if values are not empty
         if (!empty($meta_title)) {
@@ -1122,11 +1176,20 @@ class SRK_Gutenberg_Integration {
         }
         
         // Save templates if provided
-        if (isset($_POST['template_title'])) {
-            update_post_meta($post_id, '_srk_template_title', sanitize_text_field($_POST['template_title']));
+        if ( isset( $_POST['template_title'] ) ) {
+            update_post_meta(
+                $post_id,
+                '_srk_template_title',
+                $this->sanitize_template_value( wp_unslash( $_POST['template_title'] ), false )
+            );
         }
-        if (isset($_POST['template_description'])) {
-            update_post_meta($post_id, '_srk_template_description', sanitize_text_field($_POST['template_description']));
+
+        if ( isset( $_POST['template_description'] ) ) {
+            update_post_meta(
+                $post_id,
+                '_srk_template_description',
+                $this->sanitize_template_value( wp_unslash( $_POST['template_description'] ), true )
+            );
         }
         
         // Handle advanced settings
@@ -1150,6 +1213,7 @@ class SRK_Gutenberg_Integration {
             'post_id' => $post_id
         ]);
     }
+
     /**
      * AJAX: True Reset - Delete all post meta and enter Follow Mode
      * This ensures post follows Content Type dynamically without local override
@@ -1475,6 +1539,38 @@ class SRK_Gutenberg_Integration {
             );
         }
     }
+    /**
+     * Check whether current post is using Gutenberg.
+     *
+     * @param int $post_id Post ID.
+     * @return bool
+     */
+    private function is_gutenberg_post( $post_id = 0 ) {
+        $post = $post_id ? get_post( $post_id ) : null;
+
+        if ( $post && function_exists( 'use_block_editor_for_post' ) ) {
+            return use_block_editor_for_post( $post );
+        }
+
+        return false;
+    }
+
+    /**
+     * Check whether the current request is an explicit SRK save.
+     *
+     * @return bool
+     */
+    private function is_explicit_srk_save_request() {
+        return (
+            isset( $_POST['srk_explicit_save'] )
+            && wp_unslash( $_POST['srk_explicit_save'] ) === '1'
+            && isset( $_POST['srk_explicit_save_nonce'] )
+            && wp_verify_nonce(
+                sanitize_text_field( wp_unslash( $_POST['srk_explicit_save_nonce'] ) ),
+                'srk_explicit_save_action'
+            )
+        );
+    }
 
     /**
      * Sanitize _srk_advanced_settings for REST and save: only allowed keys; when use_default=1 do not store robots_meta.
@@ -1516,6 +1612,7 @@ class SRK_Gutenberg_Integration {
         $out['robots_meta'] = $robots;
         return $out;
     }
+    
     /**
      * Apply content type settings to new posts - FIXED VERSION
      */

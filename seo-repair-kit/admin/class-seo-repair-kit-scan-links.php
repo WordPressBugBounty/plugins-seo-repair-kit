@@ -57,6 +57,10 @@ class SeoRepairKit_ScanLinks {
         ?>
         <!-- Enqueue JavaScript -->
         <script>
+            var srkScanLinksI18n = {
+                remainingLinks: <?php echo wp_json_encode( esc_html__( 'Remaining Links: ', 'seo-repair-kit' ) ); ?>,
+                noBrokenLinks: <?php echo wp_json_encode( esc_html__( 'Congrats Broken Links Not Found !', 'seo-repair-kit' ) ); ?>
+            };
             <?php include plugin_dir_path( __FILE__ ) . 'js/seo-repair-kit-scan-links.js'; ?>
         </script>
 

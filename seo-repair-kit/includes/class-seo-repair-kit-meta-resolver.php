@@ -602,7 +602,7 @@ class SRK_Meta_Resolver {
 			: get_option( 'srk_title_separator', '-' );
 
 		$current_date  = date_i18n( get_option( 'date_format' ) );
-		$current_day   = date_i18n( 'j' );
+		$current_day   = date_i18n( 'l' );
 		$current_month = date_i18n( 'F' );
 		$current_year  = date_i18n( 'Y' );
 
@@ -611,8 +611,8 @@ class SRK_Meta_Resolver {
 			'%site_title%'        => get_bloginfo( 'name', 'display' ),
 			'%tagline%'           => get_bloginfo( 'description', 'display' ),
 			'%sitedesc%'          => get_bloginfo( 'description', 'display' ),
-			'%date%'              => $current_date,
-			'%day%'               => $current_day,
+			'%current_date%'              => $current_date,
+			'%current_day%'               => $current_day,
 			'%month%'             => $current_month,
 			'%year%'              => $current_year,
 			'%current_date%'      => $current_date,
@@ -662,12 +662,12 @@ class SRK_Meta_Resolver {
 				$replacements['%content%']    = $content_snippet;
 				$replacements['%permalink%']  = get_permalink( $post_id );
 				$replacements['%post_date%']  = get_the_date( 'F j, Y', $post_id );
-				$replacements['%post_day%']   = get_the_date( 'd', $post_id );
+				$replacements['%post_day%']   = get_the_date( 'l', $post_id );
 				$replacements['%post_month%'] = get_the_date( 'F', $post_id );
 				$replacements['%post_year%']  = get_the_date( 'Y', $post_id );
 
 				$replacements[ '%' . $post_type . '_date%' ]  = get_the_date( 'F j, Y', $post_id );
-				$replacements[ '%' . $post_type . '_day%' ]   = get_the_date( 'd', $post_id );
+				$replacements[ '%' . $post_type . '_day%' ]   = get_the_date( 'l', $post_id );
 				$replacements[ '%' . $post_type . '_month%' ] = get_the_date( 'F', $post_id );
 				$replacements[ '%' . $post_type . '_year%' ]  = get_the_date( 'Y', $post_id );
 

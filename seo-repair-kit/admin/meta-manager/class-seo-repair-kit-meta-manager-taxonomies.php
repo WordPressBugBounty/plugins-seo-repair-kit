@@ -185,6 +185,38 @@ class SRK_Meta_Manager_Taxonomies {
 		return $defaults;
 	}
 
+	/**
+	 * Sanitize taxonomy template values while preserving smart tags.
+	 *
+	 * @param string $value Raw posted value.
+	 * @param bool   $multiline Whether textarea sanitization should be used.
+	 * @return string
+	 */
+	private function srk_sanitize_taxonomy_template_value( $value, $multiline = false ) {
+		$value = (string) $value;
+
+		$placeholders = array();
+
+		$value = preg_replace_callback(
+			'/%[a-zA-Z0-9_]+%/',
+			function ( $matches ) use ( &$placeholders ) {
+				$key                  = '__SRK_TAX_TAG_' . count( $placeholders ) . '__';
+				$placeholders[ $key ] = $matches[0];
+				return $key;
+			},
+			$value
+		);
+
+		$value = $multiline
+			? sanitize_textarea_field( $value )
+			: sanitize_text_field( $value );
+
+		if ( ! empty( $placeholders ) ) {
+			$value = strtr( $value, $placeholders );
+		}
+
+		return $value;
+	}
 	private function get_smart_tags_for_taxonomy( $taxonomy_slug, $field_type = 'title' ) {
 		$taxonomy_obj = get_taxonomy( $taxonomy_slug );
 		$tax_label    = $taxonomy_obj ? $taxonomy_obj->labels->singular_name : ucfirst( str_replace( '_', ' ', $taxonomy_slug ) );
@@ -214,6 +246,11 @@ class SRK_Meta_Manager_Taxonomies {
 				'tag'         => '%current_date%',
 				'label'       => 'Current Date',
 				'description' => 'The current date, localized.',
+			),
+			'current_day'      => array(
+				'tag'         => '%current_day%',
+				'label'       => 'Current Day',
+				'description' => 'The current weekday name, localized.',
 			),
 			'current_month'    => array(
 				'tag'         => '%month%',
@@ -263,7 +300,7 @@ class SRK_Meta_Manager_Taxonomies {
 		);
 
 		if ( 'description' === $field_type ) {
-			$desc_tags       = array( 'term_description', 'term_title', 'site_title', 'tagline', 'current_date', 'post_count' );
+			$desc_tags       = array( 'term_description', 'term_title', 'site_title', 'tagline', 'current_date','current_day', 'post_count' );
 			$filtered_tags   = array();
 			foreach ( $smart_tags as $key => $tag ) {
 				if ( in_array( $key, $desc_tags, true ) ) {
@@ -945,7 +982,8 @@ class SRK_Meta_Manager_Taxonomies {
 			'%tagline%'          => get_bloginfo( 'description', 'display' ),
 			'%sitedesc%'         => get_bloginfo( 'description', 'display' ),
 			'%current_date%'     => date_i18n( get_option( 'date_format' ) ),
-			'%date%'             => date_i18n( get_option( 'date_format' ) ),
+			'%current_date%'             => date_i18n( get_option( 'date_format' ) ),
+			'%current_day%'              => date_i18n( 'l' ),
 			'%month%'            => date_i18n( 'F' ),
 			'%year%'             => date_i18n( 'Y' ),
 			'%custom_field%'     => '',
@@ -973,8 +1011,13 @@ class SRK_Meta_Manager_Taxonomies {
 			return;
 		}
 
-		$title       = isset( $_POST['srk_term_title'] ) ? sanitize_text_field( wp_unslash( $_POST['srk_term_title'] ) ) : '';
-		$description = isset( $_POST['srk_term_description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['srk_term_description'] ) ) : '';
+			$title = isset( $_POST['srk_term_title'] )
+			? $this->srk_sanitize_taxonomy_template_value( wp_unslash( $_POST['srk_term_title'] ), false )
+			: '';
+
+			$description = isset( $_POST['srk_term_description'] )
+				? $this->srk_sanitize_taxonomy_template_value( wp_unslash( $_POST['srk_term_description'] ), true )
+				: '';
 
 		$use_default = '1';
 

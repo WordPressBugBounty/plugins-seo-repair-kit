@@ -21,7 +21,6 @@
         const srkData = window.srkArchivesData;
 
         if (!srkData) {
-            console.error('srkArchivesData is not defined!');
             return template;
         }
 
@@ -35,7 +34,7 @@
             '%author_first_name%': 'John',
             '%author_last_name%': 'Doe',
             '%current_date%': new Date().toLocaleDateString(),
-            '%day%': new Date().getDate(),
+            '%current_day%': new Date().toLocaleString('en-US', { weekday: 'long' }),
             '%month%': new Date().toLocaleString('default', { month: 'long' }),
             '%year%': new Date().getFullYear(),
             '%search%': 'example search'
@@ -45,10 +44,10 @@
         if (archiveType === 'author') {
             replacements['%archive_title%'] = srkData.author_name || 'Admin';
             replacements['%archive_description%'] = 'Posts by ' + (srkData.author_name || 'Admin');
-            replacements['%date%'] = '';
+            replacements['%current_date%'] = '';
         } else if (archiveType === 'date') {
             // Use full date for archive_title, month-year for date
-            replacements['%date%'] = new Date().toLocaleString('default', {
+            replacements['%current_date%'] = new Date().toLocaleString('default', {
                 month: 'long',
                 year: 'numeric'
             });
@@ -57,7 +56,7 @@
 
             // Additional date tags
             const now = new Date();
-            replacements['%day%'] = now.getDate();
+            replacements['%current_day%'] = now.toLocaleString('en-US', { weekday: 'long' });
             replacements['%month%'] = now.toLocaleString('default', { month: 'long' });
             replacements['%year%'] = now.getFullYear();
             replacements['%current_date%'] = srkData.full_date || 'February 15, 2026';
@@ -66,7 +65,7 @@
         } else if (archiveType === 'search') {
             replacements['%archive_title%'] = 'Search Results';
             replacements['%archive_description%'] = 'Search results for "example search"';
-            replacements['%date%'] = '';
+            replacements['%current_date%'] = '';
         }
 
         // Replace all tags in the template

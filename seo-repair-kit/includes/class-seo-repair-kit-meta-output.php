@@ -121,264 +121,288 @@ class SRK_Meta_Output {
 		return true;
 	}
 
-	private function get_archive_title() {
-		$srk_meta          = get_option( 'srk_meta', array() );
-		$archives_settings = isset( $srk_meta['archives'] ) && is_array( $srk_meta['archives'] )
-			? $srk_meta['archives']
-			: array();
+private function get_archive_title() {
+	$srk_meta          = get_option( 'srk_meta', array() );
+	$archives_settings = isset( $srk_meta['archives'] ) && is_array( $srk_meta['archives'] )
+		? $srk_meta['archives']
+		: array();
 
-		$global_settings = isset( $srk_meta['global'] ) && is_array( $srk_meta['global'] )
-			? $srk_meta['global']
-			: array();
+	$global_settings = isset( $srk_meta['global'] ) && is_array( $srk_meta['global'] )
+		? $srk_meta['global']
+		: array();
 
-		$separator = isset( $global_settings['title_separator'] )
-			? $global_settings['title_separator']
-			: '-';
+	$separator = isset( $global_settings['title_separator'] )
+		? $global_settings['title_separator']
+		: '-';
 
-		$archive_type = '';
-		$author_name  = '';
-		$author_first = '';
-		$author_last  = '';
-		$author_bio   = '';
-		$date_str     = '';
-		$search_str   = '';
-		$post_type    = '';
+	$archive_type = '';
+	$context      = array();
 
-		if ( is_author() ) {
-			$archive_type = 'author';
-			$author       = get_queried_object();
+	if ( is_author() ) {
+		$archive_type = 'author';
+		$author       = get_queried_object();
 
-			if ( $author && is_object( $author ) && isset( $author->ID ) ) {
-				$author_name  = isset( $author->display_name ) ? $author->display_name : '';
-				$author_first = get_user_meta( $author->ID, 'first_name', true );
-				$author_last  = get_user_meta( $author->ID, 'last_name', true );
-				$author_bio   = get_user_meta( $author->ID, 'description', true );
-			}
-		} elseif ( is_date() ) {
-			$archive_type = 'date';
+		if ( $author && is_object( $author ) && isset( $author->ID ) ) {
+			$author_name  = isset( $author->display_name ) ? $author->display_name : '';
+			$author_first = get_user_meta( $author->ID, 'first_name', true );
+			$author_last  = get_user_meta( $author->ID, 'last_name', true );
+			$author_bio   = get_user_meta( $author->ID, 'description', true );
 
-			if ( is_day() ) {
-				$year     = get_query_var( 'year' );
-				$monthnum = get_query_var( 'monthnum' );
-				$day      = get_query_var( 'day' );
-				$date_str = date_i18n( get_option( 'date_format' ), strtotime( "$year-$monthnum-$day" ) );
-			} elseif ( is_month() ) {
-				$year     = get_query_var( 'year' );
-				$monthnum = get_query_var( 'monthnum' );
-				$date_str = date_i18n( 'F Y', strtotime( "$year-$monthnum-01" ) );
-			} elseif ( is_year() ) {
-				$year     = get_query_var( 'year' );
-				$date_str = $year;
-			} else {
-				$date_str = date_i18n( 'F Y' );
-			}
-		} elseif ( is_search() ) {
-			$archive_type = 'search';
-			$search_str   = get_search_query();
-		} elseif ( is_post_type_archive() ) {
-			$archive_type = 'post_type';
-			$post_type    = get_query_var( 'post_type' );
-
-			if ( is_array( $post_type ) ) {
-				$post_type = reset( $post_type );
-			}
-		}
-
-		if ( empty( $archive_type ) ) {
-			return '';
-		}
-
-		$settings = isset( $archives_settings[ $archive_type ] ) && is_array( $archives_settings[ $archive_type ] )
-			? $archives_settings[ $archive_type ]
-			: array();
-
-		if ( ! empty( $settings['title'] ) ) {
-			$template      = $settings['title'];
-			$current_date  = date_i18n( get_option( 'date_format' ) );
-			$current_day   = date_i18n( 'j' );
-			$current_month = date_i18n( 'F' );
-			$current_year  = date_i18n( 'Y' );
-
-			$replacements = array(
-				'%sep%'          => $separator,
-				'%site_title%'   => get_bloginfo( 'name' ),
-				'%sitedesc%'     => get_bloginfo( 'description' ),
-				'%current_date%' => $current_date,
-				'%day%'          => $current_day,
-				'%month%'        => $current_month,
-				'%year%'         => $current_year,
+			$context = array(
+				'author'              => $author_name,
+				'author_first_name'   => $author_first,
+				'author_last_name'    => $author_last,
+				'author_bio'          => $author_bio,
+				'archive_title'       => $author_name,
+				'archive_description' => $author_bio,
+				'date'                => '',
+				'search'              => '',
 			);
+		}
+	} elseif ( is_date() ) {
+		$archive_type = 'date';
 
-			if ( 'author' === $archive_type ) {
-				$replacements['%author%']               = $author_name;
-				$replacements['%author_first_name%']    = $author_first;
-				$replacements['%author_last_name%']     = $author_last;
-				$replacements['%author_bio%']           = $author_bio;
-				$replacements['%archive_title%']        = $author_name;
-				$replacements['%archive_description%']  = $author_bio;
-				$replacements['%date%']                 = '';
-			} elseif ( 'date' === $archive_type ) {
-				$replacements['%date%']                 = $date_str;
-				$replacements['%archive_title%']        = $date_str;
-				$replacements['%archive_description%']  = sprintf( __( 'Posts published in %s', 'seo-repair-kit' ), $date_str );
-			} elseif ( 'search' === $archive_type ) {
-				$replacements['%search%']               = $search_str;
-				$replacements['%archive_title%']        = sprintf( __( 'Search Results for: %s', 'seo-repair-kit' ), $search_str );
-				$replacements['%archive_description%']  = sprintf( __( 'Search results for %s', 'seo-repair-kit' ), $search_str );
-			} elseif ( 'post_type' === $archive_type ) {
-				$post_type_obj                          = get_post_type_object( $post_type );
-				$pt_name                                = $post_type_obj ? $post_type_obj->label : $post_type;
-				$pt_desc                                = $post_type_obj && ! empty( $post_type_obj->description ) ? $post_type_obj->description : '';
-				$replacements['%archive_title%']       = $pt_name;
-				$replacements['%archive_description%'] = $pt_desc;
-			}
+		if ( is_day() ) {
+			$year     = get_query_var( 'year' );
+			$monthnum = get_query_var( 'monthnum' );
+			$day      = get_query_var( 'day' );
+			$date_str = date_i18n( get_option( 'date_format' ), strtotime( "$year-$monthnum-$day" ) );
+		} elseif ( is_month() ) {
+			$year     = get_query_var( 'year' );
+			$monthnum = get_query_var( 'monthnum' );
+			$date_str = date_i18n( 'F Y', strtotime( "$year-$monthnum-01" ) );
+		} elseif ( is_year() ) {
+			$year     = get_query_var( 'year' );
+			$date_str = $year;
+		} else {
+			$date_str = date_i18n( 'F Y' );
+		}
 
-			$title = str_replace( array_keys( $replacements ), array_values( $replacements ), $template );
-			$title = preg_replace( '/%[a-z_]+%/i', '', $title );
-			$title = preg_replace( '/\s+/', ' ', $title );
-			$title = trim( $title );
-			$title = wp_strip_all_tags( $title );
+		$context = array(
+			'archive_title'       => $date_str,
+			'archive_description' => sprintf( __( 'Posts published in %s', 'seo-repair-kit' ), $date_str ),
+			'date'                => $date_str,
+			'search'              => '',
+		);
+	} elseif ( is_search() ) {
+		$archive_type = 'search';
+		$search_str   = get_search_query();
 
+		$context = array(
+			'archive_title'       => sprintf( __( 'Search Results for: %s', 'seo-repair-kit' ), $search_str ),
+			'archive_description' => sprintf( __( 'Search results for %s', 'seo-repair-kit' ), $search_str ),
+			'search'              => $search_str,
+			'date'                => '',
+		);
+	} elseif ( is_post_type_archive() ) {
+		$archive_type = 'post_type';
+		$post_type    = get_query_var( 'post_type' );
+
+		if ( is_array( $post_type ) ) {
+			$post_type = reset( $post_type );
+		}
+
+		$post_type_obj = get_post_type_object( $post_type );
+		$pt_name       = $post_type_obj ? $post_type_obj->label : $post_type;
+		$pt_desc       = $post_type_obj && ! empty( $post_type_obj->description ) ? $post_type_obj->description : '';
+
+		$context = array(
+			'archive_title'       => $pt_name,
+			'archive_description' => $pt_desc,
+			'date'                => '',
+			'search'              => '',
+		);
+	}
+
+	if ( empty( $archive_type ) ) {
+		return '';
+	}
+
+	$settings = isset( $archives_settings[ $archive_type ] ) && is_array( $archives_settings[ $archive_type ] )
+		? $archives_settings[ $archive_type ]
+		: array();
+
+	if ( ! empty( $settings['title'] ) ) {
+		$title = $this->replace_archive_variables( $settings['title'], $archive_type, $context );
+
+		if ( ! empty( $title ) ) {
 			return $title;
 		}
+	}
 
-		if ( 'author' === $archive_type ) {
-			return $author_name . ' ' . $separator . ' ' . get_bloginfo( 'name' );
-		} elseif ( 'date' === $archive_type ) {
-			return $date_str . ' ' . $separator . ' ' . get_bloginfo( 'name' );
-		} elseif ( 'search' === $archive_type ) {
-			return sprintf( __( 'Search Results for: %s', 'seo-repair-kit' ), $search_str );
-		} elseif ( 'post_type' === $archive_type ) {
-			$post_type_obj = get_post_type_object( $post_type );
-			$pt_name       = $post_type_obj ? $post_type_obj->label : $post_type;
+	if ( 'author' === $archive_type ) {
+		return $context['archive_title'] . ' ' . $separator . ' ' . get_bloginfo( 'name' );
+	} elseif ( 'date' === $archive_type ) {
+		return $context['archive_title'] . ' ' . $separator . ' ' . get_bloginfo( 'name' );
+	} elseif ( 'search' === $archive_type ) {
+		return $context['archive_title'];
+	} elseif ( 'post_type' === $archive_type ) {
+		return $context['archive_title'] . ' ' . $separator . ' ' . get_bloginfo( 'name' );
+	}
 
-			return $pt_name . ' ' . $separator . ' ' . get_bloginfo( 'name' );
-		}
+	return '';
+}
 
+private function replace_archive_variables( $template, $archive_type, $context = array() ) {
+	if ( empty( $template ) || empty( $archive_type ) ) {
 		return '';
 	}
 
+	$srk_meta        = get_option( 'srk_meta', array() );
+	$global_settings = isset( $srk_meta['global'] ) && is_array( $srk_meta['global'] )
+		? $srk_meta['global']
+		: array();
+
+	$separator = isset( $global_settings['title_separator'] )
+		? $global_settings['title_separator']
+		: get_option( 'srk_title_separator', '-' );
+
+	$current_date  = date_i18n( get_option( 'date_format' ) );
+	$current_day   = date_i18n( 'l' );
+	$current_month = date_i18n( 'F' );
+	$current_year  = date_i18n( 'Y' );
+
+	$replacements = array(
+		'%sep%'                 => $separator,
+		'%site_title%'          => get_bloginfo( 'name', 'display' ),
+		'%tagline%'             => get_bloginfo( 'description', 'display' ),
+		'%sitedesc%'            => get_bloginfo( 'description', 'display' ),
+		'%current_date%'        => $current_date,
+		'%current_date%'                => isset( $context['date'] ) ? $context['date'] : '',
+		'%current_day%'                 => $current_day,
+		'%month%'               => $current_month,
+		'%year%'                => $current_year,
+		'%archive_title%'       => isset( $context['archive_title'] ) ? $context['archive_title'] : '',
+		'%archive_description%' => isset( $context['archive_description'] ) ? $context['archive_description'] : '',
+		'%author%'              => isset( $context['author'] ) ? $context['author'] : '',
+		'%author_name%'         => isset( $context['author'] ) ? $context['author'] : '',
+		'%author_first_name%'   => isset( $context['author_first_name'] ) ? $context['author_first_name'] : '',
+		'%author_last_name%'    => isset( $context['author_last_name'] ) ? $context['author_last_name'] : '',
+		'%author_bio%'          => isset( $context['author_bio'] ) ? $context['author_bio'] : '',
+		'%search%'              => isset( $context['search'] ) ? $context['search'] : '',
+		'%permalink%'           => home_url( add_query_arg( array(), $GLOBALS['wp']->request ?? '' ) ),
+	); 
+
+	$result = str_replace( array_keys( $replacements ), array_values( $replacements ), $template );
+	$result = preg_replace( '/%[a-z_]+%/i', '', $result );
+	$result = preg_replace( '/\s+/', ' ', $result );
+	$result = trim( $result );
+	$result = wp_strip_all_tags( $result );
+
+	return $result;
+}
 	private function get_archive_description() {
-		$srk_meta          = get_option( 'srk_meta', array() );
-		$archives_settings = isset( $srk_meta['archives'] ) && is_array( $srk_meta['archives'] )
-			? $srk_meta['archives']
-			: array();
+	$srk_meta          = get_option( 'srk_meta', array() );
+	$archives_settings = isset( $srk_meta['archives'] ) && is_array( $srk_meta['archives'] )
+		? $srk_meta['archives']
+		: array();
 
-		$archive_type = '';
-		$author_bio   = '';
-		$author_name  = '';
-		$date_str     = '';
-		$search_str   = '';
-		$post_type    = '';
+	$archive_type = '';
+	$context      = array();
 
-		if ( is_author() ) {
-			$archive_type = 'author';
-			$author       = get_queried_object();
+	if ( is_author() ) {
+		$archive_type = 'author';
+		$author       = get_queried_object();
 
-			if ( $author && is_object( $author ) && isset( $author->ID ) ) {
-				$author_bio  = get_user_meta( $author->ID, 'description', true );
-				$author_name = isset( $author->display_name ) ? $author->display_name : '';
-			}
-		} elseif ( is_date() ) {
-			$archive_type = 'date';
+		if ( $author && is_object( $author ) && isset( $author->ID ) ) {
+			$author_name  = isset( $author->display_name ) ? $author->display_name : '';
+			$author_first = get_user_meta( $author->ID, 'first_name', true );
+			$author_last  = get_user_meta( $author->ID, 'last_name', true );
+			$author_bio   = get_user_meta( $author->ID, 'description', true );
 
-			if ( is_day() ) {
-				$year     = get_query_var( 'year' );
-				$monthnum = get_query_var( 'monthnum' );
-				$day      = get_query_var( 'day' );
-				$date_str = date_i18n( get_option( 'date_format' ), strtotime( "$year-$monthnum-$day" ) );
-			} elseif ( is_month() ) {
-				$year     = get_query_var( 'year' );
-				$monthnum = get_query_var( 'monthnum' );
-				$date_str = date_i18n( 'F Y', strtotime( "$year-$monthnum-01" ) );
-			} elseif ( is_year() ) {
-				$date_str = get_query_var( 'year' );
-			} else {
-				$date_str = date_i18n( 'F Y' );
-			}
-		} elseif ( is_search() ) {
-			$archive_type = 'search';
-			$search_str   = get_search_query();
-		} elseif ( is_post_type_archive() ) {
-			$archive_type = 'post_type';
-			$post_type    = get_query_var( 'post_type' );
-
-			if ( is_array( $post_type ) ) {
-				$post_type = reset( $post_type );
-			}
-		}
-
-		if ( empty( $archive_type ) ) {
-			return '';
-		}
-
-		$settings = isset( $archives_settings[ $archive_type ] ) && is_array( $archives_settings[ $archive_type ] )
-			? $archives_settings[ $archive_type ]
-			: array();
-
-		if ( ! empty( $settings['description'] ) ) {
-			$template      = $settings['description'];
-			$current_date  = date_i18n( get_option( 'date_format' ) );
-			$current_day   = date_i18n( 'j' );
-			$current_month = date_i18n( 'F' );
-			$current_year  = date_i18n( 'Y' );
-
-			$replacements = array(
-				'%sitedesc%'     => get_bloginfo( 'description' ),
-				'%current_date%' => $current_date,
-				'%day%'          => $current_day,
-				'%month%'        => $current_month,
-				'%year%'         => $current_year,
+			$context = array(
+				'author'              => $author_name,
+				'author_first_name'   => $author_first,
+				'author_last_name'    => $author_last,
+				'author_bio'          => $author_bio,
+				'archive_title'       => $author_name,
+				'archive_description' => $author_bio,
+				'date'                => '',
+				'search'              => '',
 			);
+		}
+	} elseif ( is_date() ) {
+		$archive_type = 'date';
 
-			if ( 'author' === $archive_type ) {
-				$replacements['%author_bio%']           = $author_bio;
-				$replacements['%author%']               = $author_name;
-				$replacements['%archive_description%']  = $author_bio;
-				$replacements['%date%']                 = '';
-				$replacements['%search%']               = '';
-			} elseif ( 'date' === $archive_type ) {
-				$replacements['%date%']                 = $date_str;
-				$replacements['%archive_description%']  = sprintf( __( 'Posts published in %s', 'seo-repair-kit' ), $date_str );
-			} elseif ( 'search' === $archive_type ) {
-				$replacements['%search%']               = $search_str;
-				$replacements['%archive_description%']  = sprintf( __( 'Search results for %s', 'seo-repair-kit' ), $search_str );
-			} elseif ( 'post_type' === $archive_type ) {
-				$post_type_obj                          = get_post_type_object( $post_type );
-				$pt_label                               = $post_type_obj ? $post_type_obj->label : $post_type;
-				$pt_desc                                = $post_type_obj && ! empty( $post_type_obj->description ) ? $post_type_obj->description : '';
-				$replacements['%archive_title%']       = $pt_label;
-				$replacements['%archive_description%'] = $pt_desc;
-			}
+		if ( is_day() ) {
+			$year     = get_query_var( 'year' );
+			$monthnum = get_query_var( 'monthnum' );
+			$day      = get_query_var( 'day' );
+			$date_str = date_i18n( get_option( 'date_format' ), strtotime( "$year-$monthnum-$day" ) );
+		} elseif ( is_month() ) {
+			$year     = get_query_var( 'year' );
+			$monthnum = get_query_var( 'monthnum' );
+			$date_str = date_i18n( 'F Y', strtotime( "$year-$monthnum-01" ) );
+		} elseif ( is_year() ) {
+			$date_str = get_query_var( 'year' );
+		} else {
+			$date_str = date_i18n( 'F Y' );
+		}
 
-			$description = str_replace( array_keys( $replacements ), array_values( $replacements ), $template );
-			$description = preg_replace( '/%[a-z_]+%/i', '', $description );
-			$description = preg_replace( '/\s+/', ' ', $description );
-			$description = trim( $description );
-			$description = wp_strip_all_tags( $description );
+		$context = array(
+			'archive_title'       => $date_str,
+			'archive_description' => sprintf( __( 'Posts published in %s', 'seo-repair-kit' ), $date_str ),
+			'date'                => $date_str,
+			'search'              => '',
+		);
+	} elseif ( is_search() ) {
+		$archive_type = 'search';
+		$search_str   = get_search_query();
 
+		$context = array(
+			'archive_title'       => sprintf( __( 'Search Results for: %s', 'seo-repair-kit' ), $search_str ),
+			'archive_description' => sprintf( __( 'Search results for %s', 'seo-repair-kit' ), $search_str ),
+			'search'              => $search_str,
+			'date'                => '',
+		);
+	} elseif ( is_post_type_archive() ) {
+		$archive_type = 'post_type';
+		$post_type    = get_query_var( 'post_type' );
+
+		if ( is_array( $post_type ) ) {
+			$post_type = reset( $post_type );
+		}
+
+		$post_type_obj = get_post_type_object( $post_type );
+		$pt_name       = $post_type_obj ? $post_type_obj->label : $post_type;
+		$pt_desc       = $post_type_obj && ! empty( $post_type_obj->description ) ? $post_type_obj->description : '';
+
+		$context = array(
+			'archive_title'       => $pt_name,
+			'archive_description' => $pt_desc,
+			'date'                => '',
+			'search'              => '',
+		);
+	}
+
+	if ( empty( $archive_type ) ) {
+		return '';
+	}
+
+	$settings = isset( $archives_settings[ $archive_type ] ) && is_array( $archives_settings[ $archive_type ] )
+		? $archives_settings[ $archive_type ]
+		: array();
+
+	if ( ! empty( $settings['description'] ) ) {
+		$description = $this->replace_archive_variables( $settings['description'], $archive_type, $context );
+
+		if ( ! empty( $description ) ) {
 			return $description;
 		}
-
-		if ( 'author' === $archive_type ) {
-			return $author_bio;
-		} elseif ( 'date' === $archive_type ) {
-			return sprintf( __( 'Posts published in %s', 'seo-repair-kit' ), $date_str );
-		} elseif ( 'search' === $archive_type ) {
-			return sprintf( __( 'Search results for %s', 'seo-repair-kit' ), $search_str );
-		} elseif ( 'post_type' === $archive_type ) {
-			$post_type_obj = get_post_type_object( $post_type );
-
-			if ( $post_type_obj && ! empty( $post_type_obj->description ) ) {
-				return wp_strip_all_tags( $post_type_obj->description );
-			}
-
-			return '';
-		}
-
-		return '';
 	}
 
+	if ( 'author' === $archive_type ) {
+		return isset( $context['author_bio'] ) ? $context['author_bio'] : '';
+	} elseif ( 'date' === $archive_type ) {
+		return isset( $context['archive_description'] ) ? $context['archive_description'] : '';
+	} elseif ( 'search' === $archive_type ) {
+		return isset( $context['archive_description'] ) ? $context['archive_description'] : '';
+	} elseif ( 'post_type' === $archive_type ) {
+		return isset( $context['archive_description'] ) ? $context['archive_description'] : '';
+	}
+
+	return '';
+}
 	public function emergency_archive_description_fix() {
 		if ( is_admin() || is_feed() ) {
 			return;
@@ -561,7 +585,8 @@ class SRK_Meta_Output {
 			'%tagline%'           => $site_description,
 			'%sitedesc%'          => $site_description,
 			'%sep%'               => $separator,
-			'%date%'              => date_i18n( get_option( 'date_format' ) ),
+			'%current_date%'      => date_i18n( get_option( 'date_format' ) ),
+			'%current_day%'       => date_i18n( 'l' ),
 			'%month%'             => date_i18n( 'F' ),
 			'%year%'              => date_i18n( 'Y' ),
 			'%current_date%'      => date_i18n( get_option( 'date_format' ) ),
@@ -601,7 +626,7 @@ class SRK_Meta_Output {
 				}
 
 				$replacements['%post_date%']  = get_the_date( 'F j, Y', $post_id );
-				$replacements['%post_day%']   = get_the_date( 'd', $post_id );
+				$replacements['%post_day%']   = get_the_date( 'l', $post_id );
 				$replacements['%post_month%'] = get_the_date( 'F', $post_id );
 				$replacements['%post_year%']  = get_the_date( 'Y', $post_id );
 
@@ -632,7 +657,7 @@ class SRK_Meta_Output {
 			$replacements['%content%']      = $site_description;
 			$replacements['%permalink%']    = home_url( '/' );
 			$replacements['%parent_title%'] = '';
-			$replacements['%post_date%']    = $replacements['%date%'];
+			$replacements['%post_date%']    = $replacements['%current_date%'];
 			$replacements['%post_month%']   = $replacements['%month%'];
 			$replacements['%post_year%']    = $replacements['%year%'];
 			$replacements['%categories%']   = '';
@@ -713,6 +738,7 @@ class SRK_Meta_Output {
 		}
 
 		$current_date  = date_i18n( get_option( 'date_format' ) );
+		$current_day   = date_i18n( 'l' );
 		$current_month = date_i18n( 'F' );
 		$current_year  = date_i18n( 'Y' );
 
@@ -725,6 +751,7 @@ class SRK_Meta_Output {
 			'%post_count%'        => $term->count,
 			'%term_description%'  => ! empty( $term->description ) ? wp_strip_all_tags( $term->description ) : '',
 			'%current_date%'      => $current_date,
+			'%current_day%'               => $current_day,
 			'%month%'             => $current_month,
 			'%year%'              => $current_year,
 			'%permalink%'         => $term_link,
@@ -793,6 +820,52 @@ class SRK_Meta_Output {
 
 		return $default_title;
 	}
+	private function get_taxonomy_description( $term ) {
+	if ( ! $term || ! isset( $term->term_id ) ) {
+		return '';
+	}
+
+	$term_id  = $term->term_id;
+	$taxonomy = $term->taxonomy;
+
+	// 1. Single term custom meta description (term edit screen)
+	$term_settings = get_term_meta( $term_id, '_srk_term_settings', true );
+	if ( is_array( $term_settings ) && ! empty( $term_settings['description'] ) ) {
+		$description = $this->replace_taxonomy_variables( $term_settings['description'], $term );
+		if ( ! empty( $description ) ) {
+			return $description;
+		}
+	}
+
+	// 2. Legacy / fallback term meta key support if ever used
+	$term_custom_description = get_term_meta( $term_id, '_srk_taxonomy_description', true );
+	if ( ! empty( $term_custom_description ) ) {
+		$description = $this->replace_taxonomy_variables( $term_custom_description, $term );
+		if ( ! empty( $description ) ) {
+			return $description;
+		}
+	}
+
+	// 3. Taxonomy-level template from Meta Manager settings
+	$taxonomy_settings = get_option( 'srk_meta_taxonomies_settings', array() );
+	if ( isset( $taxonomy_settings[ $taxonomy ] ) && is_array( $taxonomy_settings[ $taxonomy ] ) ) {
+		if ( ! empty( $taxonomy_settings[ $taxonomy ]['description_template'] ) ) {
+			$description_template = $taxonomy_settings[ $taxonomy ]['description_template'];
+			$description          = $this->replace_taxonomy_variables( $description_template, $term );
+
+			if ( ! empty( $description ) ) {
+				return $description;
+			}
+		}
+	}
+
+	// 4. Fallback to raw term description
+	if ( ! empty( $term->description ) ) {
+		return wp_strip_all_tags( $term->description );
+	}
+
+	return '';
+}
 
 	public function filter_archive_title( $title ) {
 		if ( ! is_category() && ! is_tag() && ! is_tax() ) {
@@ -851,75 +924,83 @@ class SRK_Meta_Output {
 		return '';
 	}
 
-	public function render_meta_description() {
-    if ( is_admin() || is_feed() ) {
-        return;
-    }
+public function render_meta_description() {
+	if ( is_admin() || is_feed() ) {
+		return;
+	}
 
-    $description = '';
+	$description = '';
 
-    $srk_meta          = get_option( 'srk_meta', array() );
-    $archives_settings = isset( $srk_meta['archives'] ) && is_array( $srk_meta['archives'] )
-        ? $srk_meta['archives']
-        : array();
-    $global            = isset( $srk_meta['global'] ) && is_array( $srk_meta['global'] )
-        ? $srk_meta['global']
-        : array();
+	$srk_meta          = get_option( 'srk_meta', array() );
+	$archives_settings = isset( $srk_meta['archives'] ) && is_array( $srk_meta['archives'] )
+		? $srk_meta['archives']
+		: array();
+	$global            = isset( $srk_meta['global'] ) && is_array( $srk_meta['global'] )
+		? $srk_meta['global']
+		: array();
 
-    // Keep length for reference but don't enforce it
-    $recommended_length = isset( $global['meta_description_length'] )
-        ? (int) $global['meta_description_length']
-        : 160;
+	$recommended_length = isset( $global['meta_description_length'] )
+		? (int) $global['meta_description_length']
+		: 160;
 
-    // [Rest of description gathering logic remains same...]
-    
-    if ( is_author() || is_date() || is_search() || is_post_type_archive() ) {
-        $archive_desc = $this->get_archive_description();
-        if ( ! empty( $archive_desc ) ) {
-            $description = $archive_desc;
-        }
-    }
+	if ( is_author() || is_date() || is_search() || is_post_type_archive() ) {
+		$archive_desc = $this->get_archive_description();
+		if ( ! empty( $archive_desc ) ) {
+			$description = $archive_desc;
+		}
+	}
 
-    if ( empty( $description ) && is_singular() ) {
-        $post_id = get_the_ID();
-        if ( $post_id ) {
-            $description = SRK_Meta_Resolver::get_meta_description( $post_id );
-        }
-    }
+	if ( empty( $description ) && is_singular() ) {
+		$post_id = get_the_ID();
+		if ( $post_id ) {
+			$description = SRK_Meta_Resolver::get_meta_description( $post_id );
+		}
+	}
 
-    if ( empty( $description ) && ( is_front_page() || is_home() ) ) {
-        $home_desc = isset( $global['home_desc'] )
-            ? $global['home_desc']
-            : get_option( 'srk_home_desc', '' );
+	if ( empty( $description ) && ( is_front_page() || is_home() ) ) {
+		$home_desc = isset( $global['home_desc'] )
+			? $global['home_desc']
+			: get_option( 'srk_home_desc', '' );
 
-        if ( ! empty( $home_desc ) ) {
-            $description = $this->replace_variables( $home_desc );
-        }
-    }
+		if ( ! empty( $home_desc ) ) {
+			$description = $this->replace_variables( $home_desc );
+		}
+	}
 
-    // [Taxonomy description logic...]
+	// FIX: Proper taxonomy description handling with smart tag replacement
+	if ( empty( $description ) && ( is_category() || is_tag() || is_tax() ) ) {
+		$term = get_queried_object();
 
-    if ( empty( $description ) ) {
-        $template = isset( $global['desc_template'] )
-            ? $global['desc_template']
-            : get_option( 'srk_desc_template', '%tagline%' );
+		if ( $term && isset( $term->term_id ) ) {
+			$taxonomy_description = $this->get_taxonomy_description( $term );
 
-        if ( ! empty( $template ) ) {
-            $description = $this->replace_variables( $template );
-        }
-    }
+			if ( ! empty( $taxonomy_description ) ) {
+				$description = $taxonomy_description;
+			}
+		}
+	}
 
-    if ( empty( $description ) ) {
-        $description = $this->generate_description_from_content();
-    }
+	if ( empty( $description ) ) {
+		$template = isset( $global['desc_template'] )
+			? $global['desc_template']
+			: get_option( 'srk_desc_template', '%tagline%' );
 
-    // OUTPUT: Full description without truncation
-    if ( ! empty( $description ) ) {
-        $description = wp_strip_all_tags( $description );
-        $description = trim( $description );
+		if ( ! empty( $template ) ) {
+			$description = $this->replace_variables( $template );
+		}
+	}
 
-        echo '<meta name="description" content="' . esc_attr( $description ) . '" />' . "\n";
-    }
+	if ( empty( $description ) ) {
+		$description = $this->generate_description_from_content();
+	}
+
+	if ( ! empty( $description ) ) {
+		$description = wp_strip_all_tags( $description );
+		$description = preg_replace( '/\s+/', ' ', $description );
+		$description = trim( $description );
+
+		echo '<meta name="description" content="' . esc_attr( $description ) . '" />' . "\n";
+	}
 }
 	private function generate_description_from_content() {
 		$description = '';

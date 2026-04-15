@@ -22,7 +22,6 @@ window.SRK_Gutenberg = {
 
     // Check for required packages
     if (!wp.plugins || !wp.editPost || !wp.element || !wp.components) {
-        console.error(' Required WordPress packages not available - Skipping Gutenberg');
         return;
     }
 
@@ -84,8 +83,8 @@ window.SRK_Gutenberg = {
             .replace(/%author_name%/gi, data.authorName || srkData.authorName || '')
             .replace(/%categories%/gi, data.categories || srkData.categories || '')
             .replace(/%term_title%/gi, data.categoryTitle || srkData.categoryTitle || '')
-            .replace(/%date%/gi, data.currentDate || srkData.currentDate || '')
-            .replace(/%day%/gi, data.currentDay || srkData.currentDay || '')
+            .replace(/%current_date%/gi, data.currentDate || srkData.currentDate || '')
+            .replace(/%current_day%/gi, data.currentDay || srkData.currentDay || '')
             .replace(/%month%/gi, data.currentMonth || srkData.currentMonth || '')
             .replace(/%year%/gi, data.currentYear || srkData.currentYear || '')
             .replace(/%custom_field%/gi, data.customField || srkData.customField || '')
@@ -128,7 +127,7 @@ window.SRK_Gutenberg = {
             categories: srkData.categories || '',
             categoryTitle: srkData.categoryTitle || '',
             currentDate: srkData.currentDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
-            currentDay: srkData.currentDay || new Date().getDate().toString(),
+            currentDay: srkData.currentDay || new Date().toLocaleString('en-US', { weekday: 'long' }),
             currentMonth: srkData.currentMonth || new Date().toLocaleDateString('en-US', { month: 'long' }),
             currentYear: srkData.currentYear || new Date().getFullYear().toString(),
             customField: srkData.customField || '',
@@ -380,7 +379,7 @@ window.SRK_Gutenberg = {
 
     // Store TagModal globally for Classic Editor
     window.SRK_TagModal = TagModal;
-        // Character Counter Component - ADD THIS ENTIRE COMPONENT
+    // Character Counter Component - ADD THIS ENTIRE COMPONENT
     const CharacterCounter = ({ value, type, srkData }) => {
         const [count, setCount] = useState(0);
         const [status, setStatus] = useState('');
@@ -420,7 +419,7 @@ window.SRK_Gutenberg = {
                     .replace(/%author_name%/gi, previewData.authorName)
                     .replace(/%categories%/gi, previewData.categories)
                     .replace(/%term_title%/gi, previewData.categoryTitle)
-                    .replace(/%date%/gi, previewData.currentDate)
+                    .replace(/%current_date%/gi, previewData.currentDate)
                     .replace(/%month%/gi, previewData.currentMonth)
                     .replace(/%year%/gi, previewData.currentYear)
                     .replace(/%[a-z_]+%/gi, ''); // Remove any unknown tags
@@ -1053,7 +1052,6 @@ window.SRK_Gutenberg = {
             try {
                 return select('core/editor').getCurrentPost();
             } catch (error) {
-                console.error('Error getting post:', error);
                 return null;
             }
         }, []);
@@ -1119,7 +1117,6 @@ window.SRK_Gutenberg = {
                 try {
                     loadedAdvancedSettings = JSON.parse(postMeta._srk_advanced_settings);
                 } catch (e) {
-                    console.error('Error parsing advanced settings:', e);
                 }
             }
 
@@ -1260,124 +1257,95 @@ window.SRK_Gutenberg = {
                     }
                 }
             } catch (error) {
-                console.error('❌ Sync error:', error);
             }
         }, [postId, metaTitle, metaDescription, canonicalUrl, lastSyncTime, advancedSettings, editPost]);
 
+        const getExplicitSavePayload = () => ({
+            srk_explicit_save: '1',
+            srk_explicit_save_nonce: document.getElementById('srk_explicit_save_nonce')?.value || ''
+        });
+
         // Save meta function WITH SYNC - FIXED VERSION (Saves raw templates like Classic Editor)
         const saveMetaData = async (includeAdvanced = true) => {
-            if (!postId || isSaving) return;
+                if (!postId || isSaving) return;
 
-            setIsSaving(true);
+                setIsSaving(true);
 
-            try {
-                // CHECK: Are we in Follow Mode?
-                const isFollowMode = advancedSettings.follow_mode === '1' ||
-                    (advancedSettings.use_default_settings === '1' && !metaTitle && !metaDescription);
+                try {
+                    const isFollowMode =
+                        advancedSettings.follow_mode === '1' ||
+                        (advancedSettings.use_default_settings === '1' && !metaTitle && !metaDescription);
 
-                if (isFollowMode) {
-                    // In Follow Mode: ONLY save the follow_mode marker, NO title/desc/canonical
-                    const metaUpdates = {
-                        _srk_meta_title: '',  // EMPTY - delete local override
-                        _srk_meta_description: '',  // EMPTY - delete local override
-                        _srk_template_title: '',  // EMPTY
-                        _srk_template_description: '',  // EMPTY
-                        _srk_canonical_url: '',  // EMPTY
-                        _srk_advanced_settings: {
-                            use_default_settings: '1',
-                            follow_mode: '1',
-                            show_meta_box: '1'
-                        },
-                        _srk_last_sync: Math.floor(Date.now() / 1000)
+                    let requestData = {
+                        action: 'srk_save_meta_data',
+                        post_id: postId,
+                        nonce: srkData.nonce,
+                        ...getExplicitSavePayload()
                     };
 
-                    // Use editPost to update meta only
-                    editPost({ meta: metaUpdates });
-
-                    // Save via AJAX - ONLY the marker, not values
-                    const response = await jQuery.ajax({
-                        url: srkData.ajaxUrl,
-                        type: 'POST',
-                        data: {
-                            action: 'srk_save_meta_data',
-                            post_id: postId,
-                            meta_title: '',  // EMPTY - save raw template, not processed
-                            meta_description: '',  // EMPTY - save raw template, not processed
+                    if (isFollowMode) {
+                        requestData = {
+                            ...requestData,
+                            meta_title: '',
+                            meta_description: '',
                             template_title: '',
                             template_description: '',
-                            canonical_url: '',  // EMPTY
+                            canonical_url: '',
                             advanced_settings: {
                                 use_default_settings: '1',
                                 follow_mode: '1',
                                 show_meta_box: '1'
                             },
-                            follow_mode: '1',  // Flag for PHP
-                            nonce: srkData.nonce
-                        }
-                    });
+                            follow_mode: '1'
+                        };
+                    } else {
+                        const rawTitleTemplate = metaTitle || '';
+                        const rawDescTemplate = metaDescription || '';
 
-                    if (response.success) {
-                        setLastSyncTime(response.data.last_sync);
-                        setSyncNotification(__('Following Content Type settings (no local override)', 'seo-repair-kit'));
-                        setSyncNotificationType('success');
-                        setShowSavedMessage(true);
-                        setTimeout(() => setShowSavedMessage(false), 3000);
+                        requestData = {
+                            ...requestData,
+                            meta_title: rawTitleTemplate,
+                            meta_description: rawDescTemplate,
+                            template_title: rawTitleTemplate,
+                            template_description: rawDescTemplate,
+                            canonical_url: canonicalUrl,
+                            advanced_settings: includeAdvanced ? advancedSettings : advancedSettings
+                        };
                     }
-
-                } else {
-                    // NORMAL MODE: Save RAW TEMPLATES (with tags), not processed values
-                    // ✅ FIXED: Save the raw template with tags, same as Classic Editor
-                    const rawTitleTemplate = metaTitle || '';        // "%title% %sep% %site_title%"
-                    const rawDescTemplate = metaDescription || '';   // "%excerpt%"
-
-                    const metaUpdates = {
-                        _srk_meta_title: rawTitleTemplate,        // ✅ Save RAW template with tags
-                        _srk_meta_description: rawDescTemplate,   // ✅ Save RAW template with tags
-                        _srk_template_title: rawTitleTemplate,     // Keep for reference
-                        _srk_template_description: rawDescTemplate,
-                        _srk_canonical_url: canonicalUrl,
-                        _srk_last_sync: Math.floor(Date.now() / 1000)
-                    };
-
-                    if (includeAdvanced) {
-                        metaUpdates._srk_advanced_settings = advancedSettings;
-                    }
-
-                    editPost({ meta: metaUpdates });
 
                     const response = await jQuery.ajax({
                         url: srkData.ajaxUrl,
                         type: 'POST',
-                        data: {
-                            action: 'srk_save_meta_data',
-                            post_id: postId,
-                            meta_title: rawTitleTemplate,        // ✅ Send RAW template to PHP
-                            meta_description: rawDescTemplate,  // ✅ Send RAW template to PHP
-                            template_title: rawTitleTemplate,
-                            template_description: rawDescTemplate,
-                            canonical_url: canonicalUrl,
-                            advanced_settings: advancedSettings,
-                            nonce: srkData.nonce
-                        }
+                        data: requestData
                     });
 
                     if (response.success) {
                         setLastSyncTime(response.data.last_sync);
-                        setSyncNotification(__('SEO settings saved successfully!', 'seo-repair-kit'));
+
+                        setOriginalValues({
+                            metaTitle,
+                            metaDescription,
+                            canonicalUrl,
+                            advancedSettings: JSON.parse(JSON.stringify(advancedSettings))
+                        });
+                        setHasFormChanges(false);
+
+                        setSyncNotification(
+                            isFollowMode
+                                ? __('Following Content Type settings (no local override)', 'seo-repair-kit')
+                                : __('SEO settings saved successfully!', 'seo-repair-kit')
+                        );
                         setSyncNotificationType('success');
                         setShowSavedMessage(true);
                         setTimeout(() => setShowSavedMessage(false), 3000);
                     }
+                } catch (error) {
+                    setSyncNotification(__('Error saving SEO settings', 'seo-repair-kit'));
+                    setSyncNotificationType('error');
+                } finally {
+                    setIsSaving(false);
                 }
-
-            } catch (error) {
-                console.error('❌ Error saving meta:', error);
-                setSyncNotification(__('Error saving SEO settings', 'seo-repair-kit'));
-                setSyncNotificationType('error');
-            } finally {
-                setIsSaving(false);
-            }
-        };
+            };
         // Save advanced settings only - FIXED VERSION
         const saveAdvancedSettings = async () => {
             try {
@@ -1386,9 +1354,6 @@ window.SRK_Gutenberg = {
                     _srk_advanced_settings: advancedSettings,
                     _srk_last_sync: Math.floor(Date.now() / 1000)
                 };
-
-                // Use editPost to update meta only
-                editPost({ meta: metaUpdates });
 
                 // Save via AJAX only
                 const response = await jQuery.ajax({
@@ -1410,14 +1375,12 @@ window.SRK_Gutenberg = {
                     setTimeout(() => setShowSavedMessage(false), 3000);
                 }
             } catch (error) {
-                console.error('❌ Error saving advanced settings:', error);
                 setSyncNotification(__('Error saving advanced settings', 'seo-repair-kit'));
                 setSyncNotificationType('error');
             }
         };
 
         // Update the modal save button handler in Gutenberg:
-        // Change this part in the modal footer:
         createElement(Button, {
             isPrimary: true,
             onClick: async () => {
@@ -1496,21 +1459,6 @@ window.SRK_Gutenberg = {
 
                     setAdvancedSettings(followModeSettings);
 
-                    // STEP 4: Update WordPress editor meta to reflect clean state
-                    // IMPORTANT: Only save _srk_advanced_settings with follow_mode flag
-                    // DO NOT save _srk_meta_title or _srk_meta_description
-                    editPost({
-                        meta: {
-                            _srk_meta_title: '',  // Empty = deleted
-                            _srk_meta_description: '',  // Empty = deleted  
-                            _srk_canonical_url: '',  // Empty = deleted
-                            _srk_template_title: '',  // Empty = deleted
-                            _srk_template_description: '',  // Empty = deleted
-                            _srk_advanced_settings: followModeSettings,  // Only this survives
-                            _srk_last_sync: Math.floor(Date.now() / 1000)
-                        }
-                    });
-
                     // Update hidden fields
                     $('#srk_meta_title').val('');
                     $('#srk_meta_description').val('');
@@ -1523,13 +1471,11 @@ window.SRK_Gutenberg = {
                     setShowSavedMessage(true);
                     setTimeout(() => setShowSavedMessage(false), 3000);
                 } else {
-                    console.error('❌ Reset failed:', response);
                     setSyncNotification(__('Reset failed', 'seo-repair-kit'));
                     setSyncNotificationType('error');
                 }
 
             } catch (error) {
-                console.error('❌ Error during reset:', error);
                 setSyncNotification(__('Error during reset', 'seo-repair-kit'));
                 setSyncNotificationType('error');
             } finally {
@@ -1862,22 +1808,16 @@ window.SRK_Gutenberg = {
         });
 
     } catch (error) {
-        console.error('❌ Error registering Gutenberg plugin:', error);
     }
 
 })(window.wp);
 
-
-// ============================================================================
-// PART 2: CLASSIC EDITOR COMPONENTS
-// ============================================================================
 // ============================================================================
 // PART 2: CLASSIC EDITOR COMPONENTS WITH ADVANCED TABS
 // ============================================================================
 (function ($) {
 
     'use strict';
-
 
     // Global data
     const srkData = window.srkGutenbergData || {};
@@ -1917,7 +1857,6 @@ window.SRK_Gutenberg = {
     $(document).ready(function () {
 
         if (!$('#srk-metabox-container').length) {
-            console.error('❌ SRK Metabox container not found!');
             return;
         }
 
@@ -1925,36 +1864,8 @@ window.SRK_Gutenberg = {
         loadPostData();
         startSync();
 
-        // Add beforeunload handler to save on page unload
-        $(window).on('beforeunload', function (e) {
-            if (isDirty) {
-                const confirmationMessage = 'You have unsaved SEO changes. Are you sure you want to leave?';
-                (e || window.event).returnValue = confirmationMessage;
-                return confirmationMessage;
-            }
-        });
-
-        // Save on window unload
-        $(window).on('unload', function () {
-            saveBeforeUnload();
-        });
-
-        // Also save when WordPress save button is clicked
-        $(document).on('click', '#publish, #save-post', function () {
-            saveMetaData(true);
-        });
     });
 
-
-    /**
-     * Save before page unload
-     */
-    function saveBeforeUnload() {
-        if (!isDirty || isSaving) return;
-
-        clearTimeout(saveTimeout);
-        saveMetaData(true);
-    }
     function checkFormChanges() {
         const currentTitle = $('.srk-value-input[data-type="title"]').val();
         const currentDesc = $('.srk-value-input[data-type="description"]').val();
@@ -2043,7 +1954,6 @@ window.SRK_Gutenberg = {
                 }
             },
             error: function (xhr, status, error) {
-                console.error('❌ Sync error:', error);
             }
         });
     }
@@ -2155,7 +2065,6 @@ window.SRK_Gutenberg = {
     function loadPostData() {
 
         if (!srkData.postId) {
-            console.error('❌ No post ID available');
             useSampleData();
             return;
         }
@@ -2187,7 +2096,6 @@ window.SRK_Gutenberg = {
                 advancedSettings = JSON.parse(initialAdvancedSettings);
                 updateAdvancedSettingsUI();
             } catch (e) {
-                console.error('❌ Error parsing advanced settings:', e);
             }
         }
 
@@ -2228,12 +2136,10 @@ window.SRK_Gutenberg = {
 
                     updateUIWithPostData();
                 } else {
-                    console.error('❌ Error loading post data');
                     useSampleData();
                 }
             },
             error: function (xhr, status, error) {
-                console.error('❌ AJAX error:', error);
                 useSampleData();
             }
         });
@@ -2760,7 +2666,6 @@ window.SRK_Gutenberg = {
         const hidden = $(`.srk-value-input[data-type="${type}"]`);
 
         if (!display.length || !hidden.length) {
-            console.error('❌ Elements not found for update:', type);
             return;
         }
 
@@ -3584,7 +3489,6 @@ window.SRK_Gutenberg = {
     function showGutenbergTagModal(type) {
 
         if (!window.SRK_Gutenberg || !window.SRK_Gutenberg.Modal || !window.SRK_Gutenberg.element) {
-            console.error('❌ Gutenberg components not available');
             alert('Gutenberg components not loaded. Please refresh the page.');
             return;
         }
@@ -3817,7 +3721,6 @@ window.SRK_Gutenberg = {
         currentEditingTarget = type;
 
         if (!window.SRK_Gutenberg || !window.SRK_Gutenberg.Modal || !window.SRK_Gutenberg.element) {
-            console.error('❌ Gutenberg components not available');
             showSimpleEditTagModal(tag, type, tagIndex);
             return;
         }
@@ -4139,7 +4042,6 @@ window.SRK_Gutenberg = {
         const display = $(`.srk-tag-display[data-type="${type}"]`);
 
         if (!hidden.length || !display.length) {
-            console.error(' Elements not found for insert:', type);
             return;
         }
 
@@ -4197,7 +4099,6 @@ window.SRK_Gutenberg = {
     function deleteCurrentTag() {
 
         if (!currentEditingTarget || currentEditingTagIndex === -1) {
-            console.error('No editing target or index');
             return;
         }
 
@@ -4272,7 +4173,7 @@ window.SRK_Gutenberg = {
             categories: srkData.categories || 'Uncategorized',
             categoryTitle: srkData.categoryTitle || 'Uncategorized',
             currentDate: srkData.currentDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
-            currentDay: srkData.currentDay || new Date().getDate().toString(),
+            currentDay: srkData.currentDay || new Date().toLocaleString('en-US', { weekday: 'long' }),
             currentMonth: srkData.currentMonth || new Date().toLocaleDateString('en-US', { month: 'long' }),
             currentYear: srkData.currentYear || new Date().getFullYear().toString(),
             customField: srkData.customField || 'Custom Field Value',
@@ -4316,8 +4217,8 @@ window.SRK_Gutenberg = {
             .replace(/%author_name%/g, data.authorName || '')
             .replace(/%categories%/g, data.categories || '')
             .replace(/%term_title%/g, data.categoryTitle || '')
-            .replace(/%date%/g, data.currentDate || '')
-            .replace(/%day%/g, data.currentDay || '')
+            .replace(/%current_date%/g, data.currentDate || '')
+            .replace(/%current_day%/g, data.currentDay || '')
             .replace(/%month%/g, data.currentMonth || '')
             .replace(/%year%/g, data.currentYear || '')
             .replace(/%custom_field%/g, data.customField || '')
@@ -4382,8 +4283,8 @@ window.SRK_Gutenberg = {
                                 $('#srk-saved-text').fadeOut();
                             }, 2000);
 
-                            showSaveStatus(srkData.i18n?.saved || 'SEO settings saved successfully!', 'success');
-                            showSyncNotification('✅ ' + (srkData.i18n?.saved || 'SEO settings saved successfully!'));
+                            showSaveStatus(srkData.i18n?.saved || __('Saved successfully!', 'seo-repair-kit'), 'success');
+                            showSyncNotification('✅ ' + (srkData.i18n?.saved || __('Saved successfully!', 'seo-repair-kit')));
                         }
 
                         resolve(response);
@@ -4396,7 +4297,6 @@ window.SRK_Gutenberg = {
                     }
                 },
                 error: function (xhr, status, error) {
-                    console.error('❌ Save error:', error);
                     if (!silent) {
                         showSaveStatus(srkData.i18n?.error + ': ' + error || 'Save failed: ' + error, 'error');
                         showSyncNotification('❌ ' + (srkData.i18n?.error || 'Save failed: ') + error, true);
@@ -4425,30 +4325,24 @@ window.SRK_Gutenberg = {
      * Integrate with WordPress form submission
      */
     function integrateWithWordPressForm() {
-        $(document).on('click', '#publish, #save-post, #post #save-action input[type="submit"]', function (e) {
-            saveMetaData(true);
-
+        /**
+         * Classic editor should only submit current field values with the post form.
+         * Do NOT call AJAX here.
+         * Do NOT auto-save here.
+         */
+        $(document).on('click', '#publish, #save-post, #post #save-action input[type="submit"]', function () {
             const titleValue = $(`.srk-value-input[data-type="title"]`).val();
             const descValue = $(`.srk-value-input[data-type="description"]`).val();
             const canonicalValue = $('#srk-canonical-input').val();
 
-            $(`#srk_meta_title`).val(titleValue);
-            $(`#srk_meta_description`).val(descValue);
-            $(`#srk_canonical_url`).val(canonicalValue);
-            $(`#srk_advanced_settings`).val(JSON.stringify(advancedSettings));
-            $(`#srk_last_sync`).val(Math.floor(Date.now() / 1000));
+            $('#srk_meta_title').val(titleValue);
+            $('#srk_meta_description').val(descValue);
+            $('#srk_canonical_url').val(canonicalValue);
+            $('#srk_advanced_settings').val(JSON.stringify(advancedSettings));
+            $('#srk_last_sync').val(Math.floor(Date.now() / 1000));
         });
 
-        $('#post').on('submit', function (e) {
-            saveMetaData(true);
-        });
-
-        $(window).on('beforeunload', function () {
-            if (hasChanges()) {
-                saveMetaData(true);
-            }
-        });
-
+        $('#post').off('submit.srk');
     }
 
     /**
@@ -4528,7 +4422,7 @@ window.SRK_Gutenberg = {
                     showSyncNotification('✅ Reset to Content Type defaults - Dynamic follow mode active');
 
                 } else {
-                    showSaveStatus('Reset failed', 'error');
+                    showSaveStatus(srkData.i18n?.resetFailed || __('Reset failed', 'seo-repair-kit'), 'error');
                 }
                 // Set new original values (disables save button)
                 const contentTypeSettings = srkData.contentTypeSettings || {};
@@ -4549,7 +4443,6 @@ window.SRK_Gutenberg = {
                 $('#srk-save').prop('disabled', true).css('opacity', '0.5');
             },
             error: function (xhr, status, error) {
-                console.error('❌ Reset error:', error);
                 showSaveStatus('Reset error: ' + error, 'error');
             }
         });

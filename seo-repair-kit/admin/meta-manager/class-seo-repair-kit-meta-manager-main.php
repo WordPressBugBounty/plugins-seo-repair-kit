@@ -213,7 +213,7 @@ class SRK_Meta_Manager_Main {
 
 			$current_date = date_i18n( 'F Y' );
 			$full_date    = date_i18n( 'F j, Y' );
-			$day          = date_i18n( 'j' );
+			$day          = date_i18n( 'l' );
 			$month        = date_i18n( 'F' );
 			$year         = date_i18n( 'Y' );
 
@@ -352,14 +352,14 @@ class SRK_Meta_Manager_Main {
 				'authorName'      => $author_display_name,
 				'categoryTitle'   => $sample_category_title,
 				'currentDate'     => date_i18n( 'F j, Y' ),
-				'currentDay'      => date_i18n( 'd' ),
+				'currentDay' => date_i18n( 'l' ),
 				'currentMonth'    => date_i18n( 'F' ),
 				'currentYear'     => date_i18n( 'Y' ),
 				'customField'     => 'Custom Field Value',
 				'permalink'       => esc_url( get_site_url() . '/sample-post/' ),
 				'postContent'     => 'Sample post content text...',
 				'postDate'        => date_i18n( 'F j, Y', strtotime( '-7 days' ) ),
-				'postDay'         => date_i18n( 'd', strtotime( '-7 days' ) ),
+				'postDay'         => date_i18n( 'l', strtotime( '-7 days' ) ),
 			)
 		);
 
@@ -376,6 +376,41 @@ class SRK_Meta_Manager_Main {
 			)
 		);
 	}
+
+		/**
+		 * Sanitize template values while preserving smart tags like %current_day%, %site_title%, etc.
+		 *
+		 * @param string $value Raw posted value.
+		 * @param bool   $multiline Whether to use textarea sanitization.
+		 * @return string
+		 */
+		private function srk_sanitize_template_value( $value, $multiline = false ) {
+			$value = (string) $value;
+
+			$placeholders = array();
+
+			$value = preg_replace_callback(
+				'/%[a-zA-Z0-9_]+%/',
+				function ( $matches ) use ( &$placeholders ) {
+					$key                 = '__SRK_TAG_' . count( $placeholders ) . '__';
+					$placeholders[ $key ] = $matches[0];
+					return $key;
+				},
+				$value
+			);
+
+			if ( $multiline ) {
+				$value = sanitize_textarea_field( $value );
+			} else {
+				$value = sanitize_text_field( $value );
+			}
+
+			if ( ! empty( $placeholders ) ) {
+				$value = strtr( $value, $placeholders );
+			}
+
+			return $value;
+		}
 
 	/**
 	 * Save global settings to separate option
@@ -424,12 +459,19 @@ class SRK_Meta_Manager_Main {
 		foreach ( $fields as $post_key => $meta_key ) {
 			if ( isset( $_POST[ $post_key ] ) ) {
 				$posted_value = wp_unslash( $_POST[ $post_key ] );
-				if ( in_array( $meta_key, array( 'home_desc', 'desc_template' ), true ) ) {
-					$global_settings[ $meta_key ] = sanitize_textarea_field( $posted_value );
+
+				if ( in_array( $meta_key, array( 'home_title', 'title_template' ), true ) ) {
+					$global_settings[ $meta_key ] = $this->srk_sanitize_template_value( $posted_value, false );
+
+				} elseif ( in_array( $meta_key, array( 'home_desc', 'desc_template' ), true ) ) {
+					$global_settings[ $meta_key ] = $this->srk_sanitize_template_value( $posted_value, true );
+
 				} elseif ( 'contact_email' === $meta_key ) {
 					$global_settings[ $meta_key ] = sanitize_email( $posted_value );
+
 				} elseif ( 'org_logo' === $meta_key ) {
 					$global_settings[ $meta_key ] = esc_url_raw( $posted_value );
+
 				} elseif ( in_array( $meta_key, array( 'meta_description_length' ), true ) ) {
 					$global_settings[ $meta_key ] = absint( $posted_value );
 					if ( 'meta_description_length' === $meta_key ) {
@@ -624,7 +666,7 @@ class SRK_Meta_Manager_Main {
 	 */
 	public function srk_cleanup_knowledge_graph_data() {
 		$current_version = get_option( 'srk_plugin_version', '2.1.3' );
-		$new_version     = '2.1.5';
+		$new_version     = '2.1.6';
 
 		if ( version_compare( $current_version, $new_version, '<' ) ) {
 			$srk_meta = get_option( 'srk_meta', array() );
@@ -832,7 +874,6 @@ class SRK_Meta_Manager_Main {
 		register_setting( 'srk_meta_archives_settings', 'srk_enable_date_archive' );
 		register_setting( 'srk_meta_archives_settings', 'srk_date_archive_title' );
 		register_setting( 'srk_meta_archives_settings', 'srk_search_title' );
-
 		register_setting( 'srk_meta_advanced_settings', 'srk_global_robots_meta' );
 	}
 
@@ -863,7 +904,7 @@ class SRK_Meta_Manager_Main {
 			'%author_name%',
 			'%categories%',
 			'%term_title%',
-			'%date%',
+			'%current_date%',
 			'%month%',
 			'%year%',
 			'%custom_field%',
@@ -884,7 +925,7 @@ class SRK_Meta_Manager_Main {
 			'%author_name%',
 			'%categories%',
 			'%term_title%',
-			'%date%',
+			'%current_date%',
 			'%month%',
 			'%year%',
 			'%custom_field%',
@@ -1040,8 +1081,8 @@ class SRK_Meta_Manager_Main {
 				$data = wp_unslash( $_POST['srk_archives'][ $archive_key ] );
 
 				$show              = isset( $data['show_in_search'] ) && '1' === $data['show_in_search'] ? '1' : '0';
-				$title             = isset( $data['title'] ) ? sanitize_text_field( $data['title'] ) : '';
-				$description       = isset( $data['description'] ) ? sanitize_textarea_field( $data['description'] ) : '';
+				$title             = isset( $data['title'] ) ? $this->srk_sanitize_template_value( $data['title'], false ) : '';
+				$description       = isset( $data['description'] ) ? $this->srk_sanitize_template_value( $data['description'], true ) : '';
 				$nofollow          = isset( $data['nofollow'] ) && '1' === $data['nofollow'] ? '1' : '0';
 				$noindex           = isset( $data['noindex'] ) && '1' === $data['noindex'] ? '1' : '0';
 				$noarchive         = isset( $data['noarchive'] ) && '1' === $data['noarchive'] ? '1' : '0';
@@ -1319,7 +1360,31 @@ class SRK_Meta_Manager_Main {
 		return $output;
 	}
 }
+function srk_preserve_smart_tags_for_taxonomy_template( $value, $multiline = false ) {
+	$value = (string) $value;
 
+	$placeholders = array();
+
+	$value = preg_replace_callback(
+		'/%[a-zA-Z0-9_]+%/',
+		function ( $matches ) use ( &$placeholders ) {
+			$key                  = '__SRK_TAXONOMY_TAG_' . count( $placeholders ) . '__';
+			$placeholders[ $key ] = $matches[0];
+			return $key;
+		},
+		$value
+	);
+
+	$value = $multiline
+		? sanitize_textarea_field( $value )
+		: sanitize_text_field( $value );
+
+	if ( ! empty( $placeholders ) ) {
+		$value = strtr( $value, $placeholders );
+	}
+
+	return $value;
+}
 /**
  * Sanitize taxonomy settings callback
  *
@@ -1343,10 +1408,10 @@ function srk_sanitize_taxonomy_settings_callback( $input ) {
 				: '0';
 
 		$output[ $taxonomy ]['title_template'] =
-			sanitize_text_field( $settings['title_template'] ?? '' );
+			srk_preserve_smart_tags_for_taxonomy_template( $settings['title_template'] ?? '', false );
 
 		$output[ $taxonomy ]['description_template'] =
-			sanitize_textarea_field( $settings['description_template'] ?? '' );
+			srk_preserve_smart_tags_for_taxonomy_template( $settings['description_template'] ?? '', true );
 
 		if ( isset( $settings['robots'] ) && is_array( $settings['robots'] ) ) {
 			$r = $settings['robots'];
@@ -1395,14 +1460,14 @@ function srk_parse_template( $template, $post_id = null ) {
 		'%author_name%'       => $author_id ? get_the_author_meta( 'display_name', $author_id ) : '',
 		'%categories%'        => $post_id ? implode( ', ', wp_get_post_categories( $post_id, array( 'fields' => 'names' ) ) ) : '',
 		'%term_title%'        => $post_id ? ( ( $cats = wp_get_post_categories( $post_id, array( 'fields' => 'names' ) ) ) ? $cats[0] : '' ) : '',
-		'%date%'              => date_i18n( 'F j, Y' ),
+		'%current_date%'              => date_i18n( 'F j, Y' ),
 		'%month%'             => date_i18n( 'F' ),
 		'%year%'              => date_i18n( 'Y' ),
 		'%custom_field%'      => '',
 		'%permalink%'         => $post_id ? get_permalink( $post_id ) : '',
 		'%content%'           => $post_id ? wp_trim_words( wp_strip_all_tags( get_post_field( 'post_content', $post_id ) ), 30 ) : '',
 		'%post_date%'         => $post_id ? get_the_date( 'F j, Y', $post_id ) : '',
-		'%post_day%'          => $post_id ? get_the_date( 'd', $post_id ) : '',
+		'%post_day%'          => $post_id ? get_the_date( 'l', $post_id ) : '',
 	);
 
 	$result = str_replace( array_keys( $replacements ), array_values( $replacements ), $template );

@@ -37,8 +37,6 @@
             this.initCustomSeparator();
             this.initCharacterCounters();
 
-            // Note: Organization/Person schema functionality has been removed
-            // as it's now handled by the dedicated Schema Manager
         },
 
         /* ===============================
@@ -357,11 +355,14 @@
                     day: 'numeric'
                 }),
 
-                '%date%': now.toLocaleDateString('en-US', {
+                '%current_date%': now.toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
                 }),
+              '%current_day%': now.toLocaleDateString('en-US', {
+                            weekday: 'long'
+                        }),
 
                 '%month%': now.toLocaleDateString('en-US', {
                     month: 'long'

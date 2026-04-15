@@ -98,6 +98,10 @@ class SRK_Meta_Manager_Archives {
 					'label' => __( 'Author Last Name', 'seo-repair-kit' ),
 					'desc'  => __( 'The last name of the post author.', 'seo-repair-kit' ),
 				),
+				'%current_day%'                => array(
+					'label' => __( 'Current Day', 'seo-repair-kit' ),
+					'desc'  => __( 'The current weekday name, localized.', 'seo-repair-kit' ),
+				),
 				'%month%'              => array(
 					'label' => __( 'Current Month', 'seo-repair-kit' ),
 					'desc'  => __( 'The current month, localized.', 'seo-repair-kit' ),
@@ -776,7 +780,8 @@ class SRK_Meta_Manager_Archives {
 			'%tags%'               => 'Example Tag 1, Example Tag 2',
 			'%author_first_name%'  => 'John',
 			'%author_last_name%'   => 'Doe',
-			'%date%'               => date_i18n( get_option( 'date_format' ) ),
+			'%current_date%'               => date_i18n( get_option( 'date_format' ) ),
+			'%current_day%'                => date_i18n( 'l' ),
 			'%month%'              => date_i18n( 'F' ),
 			'%year%'               => date_i18n( 'Y' ),
 			'%current_date%'       => date_i18n( get_option( 'date_format' ) ),
@@ -792,20 +797,20 @@ class SRK_Meta_Manager_Archives {
 				$replacements['%author_bio%']          = $author_bio;
 				$replacements['%archive_title%']       = $author_name;
 				$replacements['%archive_description%'] = 'Posts by ' . $author_name;
-				$replacements['%date%']                = '';
+				$replacements['%current_date%']                = '';
 				break;
 
 			case 'date':
 				$current_date = date_i18n( 'F Y' );
 				$full_date    = date_i18n( 'F j, Y' );
-				$day          = date_i18n( 'j' );
+				$day          = date_i18n( 'l' );
 				$month        = date_i18n( 'F' );
 				$year         = date_i18n( 'Y' );
 
-				$replacements['%date%']                = $current_date;
+				$replacements['%current_date%']                = $current_date;
 				$replacements['%archive_title%']       = $full_date;
 				$replacements['%archive_description%'] = 'Archive for ' . $full_date;
-				$replacements['%day%']                   = $day;
+				$replacements['%current_day%']                   = $day;
 				$replacements['%month%']                 = $month;
 				$replacements['%year%']                  = $year;
 				$replacements['%current_date%']          = $full_date;
@@ -818,7 +823,7 @@ class SRK_Meta_Manager_Archives {
 				$replacements['%search%']              = $search_term;
 				$replacements['%archive_title%']       = 'Search Results';
 				$replacements['%archive_description%'] = 'Search results for "' . $search_term . '"';
-				$replacements['%date%']                = '';
+				$replacements['%current_date%']                = '';
 				$replacements['%author%']              = '';
 				$replacements['%author_bio%']          = '';
 				break;

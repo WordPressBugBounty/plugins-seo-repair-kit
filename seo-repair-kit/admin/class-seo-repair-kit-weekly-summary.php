@@ -1,1170 +1,1210 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
 }
 
 /**
  * SeoRepairKit_WeeklySummaryService class.
  *
  * Handles weekly summary report data collection and email sending
- * 
+ *
  * @link       https://seorepairkit.com
  * @since      1.0.1
  * @author     TorontoDigits <support@torontodigits.com>
  */
 class SeoRepairKit_WeeklySummaryService {
 
-    private static $instance = null;
+	private static $instance = null;
 
-    /**
-     * Get instance
-     */
-    public static function get_instance() {
-        if ( null === self::$instance ) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
+	/**
+	 * Get instance
+	 */
+	public static function get_instance() {
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
 
-    /**
-     * Initialize the class
-     */
-    public function __construct() {
-        // Register cron schedule
-        add_filter('cron_schedules', array($this, 'srk_add_cron_schedules'));
-        
-        // Register cron hook
-        add_action('srk_weekly_seo_summary_cron', array($this, 'srk_send_complete_seo_summary'));
-        
-        // Initialize on plugins_loaded to ensure hooks are set
-        add_action('plugins_loaded', array($this, 'srk_init_cron'));
-        
-        // Schedule cron on plugin activation
-        register_activation_hook(SEOREPAIRKIT_PLUGIN_FILE, array($this, 'srk_schedule_weekly_cron'));
-        
-        // Clear cron on plugin deactivation
-        register_deactivation_hook(SEOREPAIRKIT_PLUGIN_FILE, array($this, 'srk_clear_weekly_cron'));
-    }
+	/**
+	 * Initialize the class
+	 */
+	public function __construct() {
+		// Register cron schedule.
+		add_filter( 'cron_schedules', array( $this, 'srk_add_cron_schedules' ) );
 
-    /**
-     * Get dynamic admin URL for a specific page
-     */
-    private function srk_get_admin_page_url($page_slug) {
-        return admin_url('admin.php?page=' . $page_slug);
-    }
+		// Register cron hook.
+		add_action( 'srk_weekly_seo_summary_cron', array( $this, 'srk_send_complete_seo_summary' ) );
 
-    /**
-     * Initialize cron
-     */
-    public function srk_init_cron() {
-        // Ensure cron is scheduled when plugin loads
-        if (!wp_next_scheduled('srk_weekly_seo_summary_cron')) {
-            $this->srk_schedule_weekly_cron();
-        }
-    }
+		// Initialize on plugins_loaded to ensure hooks are set.
+		add_action( 'plugins_loaded', array( $this, 'srk_init_cron' ) );
 
-    /**
-     * Add custom cron schedules
-     */
-    public function srk_add_cron_schedules($schedules) {
-        // Add 7 days schedule for testing
-        $schedules['srk_seven_days'] = array(
-            'interval' => 7 * DAY_IN_SECONDS,
-            'display'  => __('Every 7 Days (SEO Repair Kit)'),
-        );
-        
-        return $schedules;
-    }
+		// Schedule cron on plugin activation.
+		register_activation_hook( SEOREPAIRKIT_PLUGIN_FILE, array( $this, 'srk_schedule_weekly_cron' ) );
 
-    /**
-     * Schedule the weekly cron job
-     */
-    public function srk_schedule_weekly_cron() {
-        // Clear any existing schedule first
-        wp_clear_scheduled_hook('srk_weekly_seo_summary_cron');
-        
-        // Schedule first run 7 days after activation, then repeat every 7 days
-        $first_run = time() + ( 7 * DAY_IN_SECONDS );
-        $scheduled = wp_schedule_event($first_run, 'srk_seven_days', 'srk_weekly_seo_summary_cron');
-        
-        return $scheduled;
-    }
+		// Clear cron on plugin deactivation.
+		register_deactivation_hook( SEOREPAIRKIT_PLUGIN_FILE, array( $this, 'srk_clear_weekly_cron' ) );
+	}
 
-    /**
-     * Clear the cron job on deactivation
-     */
-    public function srk_clear_weekly_cron() {
-        wp_clear_scheduled_hook('srk_weekly_seo_summary_cron');
-    }
+	/**
+	 * Get dynamic admin URL for a specific page
+	 */
+	private function srk_get_admin_page_url( $page_slug ) {
+		return admin_url( 'admin.php?page=' . $page_slug );
+	}
 
-    /**
-     * Send complete SEO summary email
-     */
-    public function srk_send_complete_seo_summary() {
-        // Check if weekly reports are enabled
-        $weekly_report_enabled = get_option('srk_weekly_report_enabled', true);
-        
-        if (!$weekly_report_enabled) {
-            $this->srk_update_last_status('disabled', 'Weekly reports are disabled in settings');
-            return false;
-        }
-        
-        $srk_admin_email = get_option('admin_email');
-        $srk_site_name   = get_bloginfo('name');
+	/**
+	 * Initialize cron
+	 */
+	public function srk_init_cron() {
+		// Ensure cron is scheduled when plugin loads.
+		if ( ! wp_next_scheduled( 'srk_weekly_seo_summary_cron' ) ) {
+			$this->srk_schedule_weekly_cron();
+		}
+	}
 
-        if (!is_email($srk_admin_email)) {
-            $this->srk_update_last_status('failed', 'Invalid admin email address');
-            return false;
-        }
+	/**
+	 * Add custom cron schedules
+	 */
+	public function srk_add_cron_schedules( $schedules ) {
+		// Add 7 days schedule for testing.
+		$schedules['srk_seven_days'] = array(
+			'interval' => 7 * DAY_IN_SECONDS,
+			'display'  => __( 'Every 7 Days (SEO Repair Kit)', 'seo-repair-kit' ),
+		);
 
-        // Collect all data
-        $srk_alt_text_data = $this->srk_get_alt_text_data();
-        $srk_redirections_data = $this->srk_get_redirections_summary_data();
-        $srk_pro_plan_data = $this->srk_get_pro_plan_status();
-        $srk_broken_links_data = $this->srk_get_broken_links_data();
-        $srk_keytrack_data = $this->srk_get_keytrack_data();
+		return $schedules;
+	}
 
-        // Get dynamic URLs
-        $dynamic_urls = array(
-            'upgrade_pro'  => $this->srk_get_admin_page_url('seo-repair-kit-upgrade-pro'),
-            'dashboard'    => $this->srk_get_admin_page_url('seo-repair-kit-dashboard'),
-            'link_scanner' => $this->srk_get_admin_page_url('seo-repair-kit-link-scanner'),
-            'alt_image'    => $this->srk_get_admin_page_url('alt-image-missing'),
-            'redirection'  => $this->srk_get_admin_page_url('seo-repair-kit-redirection')
-        );
+	/**
+	 * Schedule the weekly cron job
+	 */
+	public function srk_schedule_weekly_cron() {
+		// Clear any existing schedule first.
+		wp_clear_scheduled_hook( 'srk_weekly_seo_summary_cron' );
 
-        // Build and send email
-        $srk_message = $this->srk_build_email_template(array(
-            'site_name'          => $srk_site_name,
-            'alt_text_data'      => $srk_alt_text_data,
-            'redirections_data'  => $srk_redirections_data,
-            'pro_plan_data'      => $srk_pro_plan_data,
-            'broken_links_data'  => $srk_broken_links_data,
-            'keytrack_data'      => $srk_keytrack_data,
-            'urls'               => $dynamic_urls
-        ));
-        
-        $srk_subject = "📊 Weekly SEO Report: Search Performance, Links Scan, Alt Text & Redirections - " . esc_html($srk_site_name) . " - " . date('M j, Y');
+		// Schedule first run 7 days after activation, then repeat every 7 days.
+		$first_run = time() + ( 7 * DAY_IN_SECONDS );
+		$scheduled = wp_schedule_event( $first_run, 'srk_seven_days', 'srk_weekly_seo_summary_cron' );
 
-        $srk_headers = array(
-            'Content-Type: text/html; charset=UTF-8',
-            'Reply-To: SEO Repair Kit <ab@seorepairkit.com>',
-        );
+		return $scheduled;
+	}
 
-        $srk_sent = wp_mail($srk_admin_email, $srk_subject, $srk_message, $srk_headers);
+	/**
+	 * Clear the cron job on deactivation
+	 */
+	public function srk_clear_weekly_cron() {
+		wp_clear_scheduled_hook( 'srk_weekly_seo_summary_cron' );
+	}
 
-        if ($srk_sent) {
-            // Update last status
-            $this->srk_update_last_status('success', 'Email sent successfully');
-        } else {
-            // Update last status
-            $this->srk_update_last_status('failed', 'Failed to send email - check server mail configuration');
-        }
-        
-        return $srk_sent;
-    }
+	/**
+	 * Send complete SEO summary email
+	 */
+	public function srk_send_complete_seo_summary() {
+		// Check if weekly reports are enabled.
+		$weekly_report_enabled = get_option( 'srk_weekly_report_enabled', true );
 
-    /**
-     * Update the last weekly report status
-     */
-    private function srk_update_last_status($status, $message = '') {
-        $last_status = array(
-            'status' => $status,
-            'message' => $message,
-            'timestamp' => current_time('mysql')
-        );
-        
-        update_option('srk_weekly_report_last_status', $last_status);
-    }
+		if ( ! $weekly_report_enabled ) {
+			$this->srk_update_last_status( 'disabled', __( 'Weekly reports are disabled in settings', 'seo-repair-kit' ) );
+			return false;
+		}
 
-    /**
-     * Get alt text data (ALL TIME - no date filtering)
-     */
-    public function srk_get_alt_text_data() {
-        $srk_args = array(
-            'post_type'      => 'attachment',
-            'post_mime_type' => 'image',
-            'numberposts'    => -1,
-            'fields'         => 'ids',
-        );
-        
-        $srk_images = get_posts($srk_args);
-        $srk_missing_count = 0;
-        $srk_total_images = count($srk_images);
+		$srk_admin_email = get_option( 'admin_email' );
+		$srk_site_name   = get_bloginfo( 'name' );
 
-        foreach ($srk_images as $srk_image_id) {
-            $srk_alt = get_post_meta($srk_image_id, '_wp_attachment_image_alt', true);
-            if (empty($srk_alt)) {
-                $srk_missing_count++;
-            }
-        }
+		if ( ! is_email( $srk_admin_email ) ) {
+			$this->srk_update_last_status( 'failed', __( 'Invalid admin email address', 'seo-repair-kit' ) );
+			return false;
+		}
 
-        return array(
-            'total_images' => $srk_total_images,
-            'missing_count' => $srk_missing_count,
-            'period' => 'All Time'
-        );
-    }
+		// Collect all data.
+		$srk_alt_text_data     = $this->srk_get_alt_text_data();
+		$srk_redirections_data = $this->srk_get_redirections_summary_data();
+		$srk_pro_plan_data     = $this->srk_get_pro_plan_status();
+		$srk_broken_links_data = $this->srk_get_broken_links_data();
+		$srk_keytrack_data     = $this->srk_get_keytrack_data();
 
-    /**
-     * Get Pro Plan status information
-     */
-    public function srk_get_pro_plan_status() {
-        $srk_domain = site_url();
-        $srk_cache_key = 'srk_license_status_' . md5( $srk_domain );
-        
-        // Try to get cached license info first
-        $srk_cached_license = get_transient( $srk_cache_key );
-        
-        if ( $srk_cached_license !== false ) {
-            $srk_license_info = $srk_cached_license;
-        } else {
-            // If not cached, create admin instance and get fresh data
-            if ( class_exists( 'SeoRepairKit_Admin' ) ) {
-                $srk_admin = new SeoRepairKit_Admin( '', '' );
-                $srk_license_info = $srk_admin->get_license_status( $srk_domain );
-            } else {
-                // Fallback if Admin class not available
-                $srk_license_info = array(
-                    'status' => 'inactive',
-                    'expires_at' => null,
-                    'has_chatbot_feature' => false,
-                    'message' => 'Free version',
-                    'license_key' => 'N/A',
-                    'plan_id' => 'free'
-                );
-            }
-        }
-        
-        $srk_license_status = $srk_license_info['status'] ?? 'inactive';
-        $srk_expiration = $srk_license_info['expires_at'] ?? null;
-        $srk_has_chatbot = ! empty( $srk_license_info['has_chatbot_feature'] );
-        $srk_license_message = $srk_license_info['message'] ?? 'Free version';
-        $srk_plan_id = $srk_license_info['plan_id'] ?? 'free';
-        
-        // Calculate days remaining
-        $srk_expires_ts = $srk_expiration ? strtotime( $srk_expiration ) : 0;
-        $srk_days_left = $srk_expires_ts ? $this->srk_days_until( $srk_expires_ts ) : null;
-        $srk_is_expired = ( $srk_expires_ts && $srk_days_left !== null && $srk_days_left < 0 );
-        
-        return array(
-            'status' => $srk_license_status,
-            'expires_at' => $srk_expiration,
-            'days_left' => $srk_days_left,
-            'is_expired' => $srk_is_expired,
-            'has_chatbot' => $srk_has_chatbot,
-            'message' => $srk_license_message,
-            'plan_id' => $srk_plan_id,
-            'is_pro' => ( $srk_license_status === 'active' && ! $srk_is_expired )
-        );
-    }
+		// Get dynamic URLs.
+		$dynamic_urls = array(
+			'upgrade_pro'  => $this->srk_get_admin_page_url( 'seo-repair-kit-upgrade-pro' ),
+			'dashboard'    => $this->srk_get_admin_page_url( 'seo-repair-kit-dashboard' ),
+			'link_scanner' => $this->srk_get_admin_page_url( 'seo-repair-kit-link-scanner' ),
+			'alt_image'    => $this->srk_get_admin_page_url( 'alt-image-missing' ),
+			'redirection'  => $this->srk_get_admin_page_url( 'seo-repair-kit-redirection' ),
+		);
 
-    /**
-     * Get redirections summary data from database (ALL TIME - no date filtering)
-     */
-    public function srk_get_redirections_summary_data() {
-        global $wpdb;
-        
-        $srk_redirections_table = $wpdb->prefix . 'srkit_redirection_table';
-        
-        // Check if table exists
-        $srk_table_exists = $wpdb->get_var( $wpdb->prepare( 
-            "SHOW TABLES LIKE %s", 
-            $srk_redirections_table 
-        ) );
-        
-        if ( $srk_table_exists !== $srk_redirections_table ) {
-            return array(
-                'total_redirections' => 0,
-                'total_hits' => 0,
-                'active_redirections' => 0,
-                'inactive_redirections' => 0,
-                'most_hit_redirect' => array(
-                    'from' => 'N/A',
-                    'to' => 'N/A', 
-                    'hits' => 0
-                ),
-                'period' => 'All Time'
-            );
-        }
-        
-        // Get total redirections count (all time)
-        $srk_total_redirections = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM `%1s`", str_replace( '`', '', $srk_redirections_table ) ) );
-        
-        // Get total hits (all time)
-        $srk_total_hits = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(hits) FROM `%1s`", str_replace( '`', '', $srk_redirections_table ) ) );
-        
-        // Get active redirections count
-        $srk_active_redirections = $wpdb->get_var( 
-            $wpdb->prepare( "SELECT COUNT(*) FROM `%1s` WHERE status = 'active'", str_replace( '`', '', $srk_redirections_table ) )
-        );
-        
-        // Get inactive redirections count  
-        $srk_inactive_redirections = $wpdb->get_var(
-            $wpdb->prepare( "SELECT COUNT(*) FROM `%1s` WHERE status = 'inactive'", str_replace( '`', '', $srk_redirections_table ) )
-        );
-        
-        // Get most hit redirect (all time)
-        $srk_most_hit_redirect = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT source_url, target_url, hits 
-                 FROM `%1s` 
-                 ORDER BY hits DESC 
+		// Build and send email.
+		$srk_message = $this->srk_build_email_template(
+			array(
+				'site_name'          => $srk_site_name,
+				'alt_text_data'      => $srk_alt_text_data,
+				'redirections_data'  => $srk_redirections_data,
+				'pro_plan_data'      => $srk_pro_plan_data,
+				'broken_links_data'  => $srk_broken_links_data,
+				'keytrack_data'      => $srk_keytrack_data,
+				'urls'               => $dynamic_urls,
+			)
+		);
+
+		$srk_subject = sprintf(
+			__( '📊 Weekly SEO Report: Search Performance, Links Scan, Alt Text & Redirections - %1$s - %2$s', 'seo-repair-kit' ),
+			$srk_site_name,
+			date_i18n( 'M j, Y' )
+		);
+
+		$srk_headers = array(
+			'Content-Type: text/html; charset=UTF-8',
+			'Reply-To: SEO Repair Kit <ab@seorepairkit.com>',
+		);
+
+		$srk_sent = wp_mail( $srk_admin_email, $srk_subject, $srk_message, $srk_headers );
+
+		if ( $srk_sent ) {
+			// Update last status.
+			$this->srk_update_last_status( 'success', __( 'Email sent successfully', 'seo-repair-kit' ) );
+		} else {
+			// Update last status.
+			$this->srk_update_last_status( 'failed', __( 'Failed to send email - check server mail configuration', 'seo-repair-kit' ) );
+		}
+
+		return $srk_sent;
+	}
+
+	/**
+	 * Update the last weekly report status
+	 */
+	private function srk_update_last_status( $status, $message = '' ) {
+		$last_status = array(
+			'status'    => $status,
+			'message'   => $message,
+			'timestamp' => current_time( 'mysql' ),
+		);
+
+		update_option( 'srk_weekly_report_last_status', $last_status );
+	}
+
+	/**
+	 * Get alt text data (ALL TIME - no date filtering)
+	 */
+	public function srk_get_alt_text_data() {
+		$srk_args = array(
+			'post_type'      => 'attachment',
+			'post_mime_type' => 'image',
+			'numberposts'    => -1,
+			'fields'         => 'ids',
+		);
+
+		$srk_images        = get_posts( $srk_args );
+		$srk_missing_count = 0;
+		$srk_total_images  = count( $srk_images );
+
+		foreach ( $srk_images as $srk_image_id ) {
+			$srk_alt = get_post_meta( $srk_image_id, '_wp_attachment_image_alt', true );
+			if ( empty( $srk_alt ) ) {
+				$srk_missing_count++;
+			}
+		}
+
+		return array(
+			'total_images'  => $srk_total_images,
+			'missing_count' => $srk_missing_count,
+			'period'        => __( 'All Time', 'seo-repair-kit' ),
+		);
+	}
+
+	/**
+	 * Get Pro Plan status information
+	 */
+	public function srk_get_pro_plan_status() {
+		$srk_domain    = site_url();
+		$srk_cache_key = 'srk_license_status_' . md5( $srk_domain );
+
+		// Try to get cached license info first.
+		$srk_cached_license = get_transient( $srk_cache_key );
+
+		if ( false !== $srk_cached_license ) {
+			$srk_license_info = $srk_cached_license;
+		} else {
+			// If not cached, create admin instance and get fresh data.
+			if ( class_exists( 'SeoRepairKit_Admin' ) ) {
+				$srk_admin        = new SeoRepairKit_Admin( '', '' );
+				$srk_license_info = $srk_admin->get_license_status( $srk_domain );
+			} else {
+				// Fallback if Admin class not available.
+				$srk_license_info = array(
+					'status'              => 'inactive',
+					'expires_at'          => null,
+					'has_chatbot_feature' => false,
+					'message'             => __( 'Free version', 'seo-repair-kit' ),
+					'license_key'         => __( 'N/A', 'seo-repair-kit' ),
+					'plan_id'             => 'free',
+				);
+			}
+		}
+
+		$srk_license_status  = $srk_license_info['status'] ?? 'inactive';
+		$srk_expiration      = $srk_license_info['expires_at'] ?? null;
+		$srk_has_chatbot     = ! empty( $srk_license_info['has_chatbot_feature'] );
+		$srk_license_message = $srk_license_info['message'] ?? __( 'Free version', 'seo-repair-kit' );
+		$srk_plan_id         = $srk_license_info['plan_id'] ?? 'free';
+
+		// Calculate days remaining.
+		$srk_expires_ts = $srk_expiration ? strtotime( $srk_expiration ) : 0;
+		$srk_days_left  = $srk_expires_ts ? $this->srk_days_until( $srk_expires_ts ) : null;
+		$srk_is_expired = ( $srk_expires_ts && null !== $srk_days_left && $srk_days_left < 0 );
+
+		return array(
+			'status'      => $srk_license_status,
+			'expires_at'  => $srk_expiration,
+			'days_left'   => $srk_days_left,
+			'is_expired'  => $srk_is_expired,
+			'has_chatbot' => $srk_has_chatbot,
+			'message'     => $srk_license_message,
+			'plan_id'     => $srk_plan_id,
+			'is_pro'      => ( 'active' === $srk_license_status && ! $srk_is_expired ),
+		);
+	}
+
+	/**
+	 * Get redirections summary data from database (ALL TIME - no date filtering)
+	 */
+	public function srk_get_redirections_summary_data() {
+		global $wpdb;
+
+		$srk_redirections_table = $wpdb->prefix . 'srkit_redirection_table';
+
+		// Check if table exists.
+		$srk_table_exists = $wpdb->get_var(
+			$wpdb->prepare(
+				'SHOW TABLES LIKE %s',
+				$srk_redirections_table
+			)
+		);
+
+		if ( $srk_table_exists !== $srk_redirections_table ) {
+			return array(
+				'total_redirections'   => 0,
+				'total_hits'           => 0,
+				'active_redirections'  => 0,
+				'inactive_redirections'=> 0,
+				'most_hit_redirect'    => array(
+					'from' => __( 'N/A', 'seo-repair-kit' ),
+					'to'   => __( 'N/A', 'seo-repair-kit' ),
+					'hits' => 0,
+				),
+				'period'               => __( 'All Time', 'seo-repair-kit' ),
+			);
+		}
+
+		// Get total redirections count (all time).
+		$srk_total_redirections = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM `%1s`', str_replace( '`', '', $srk_redirections_table ) ) );
+
+		// Get total hits (all time).
+		$srk_total_hits = $wpdb->get_var( $wpdb->prepare( 'SELECT SUM(hits) FROM `%1s`', str_replace( '`', '', $srk_redirections_table ) ) );
+
+		// Get active redirections count.
+		$srk_active_redirections = $wpdb->get_var(
+			$wpdb->prepare( "SELECT COUNT(*) FROM `%1s` WHERE status = 'active'", str_replace( '`', '', $srk_redirections_table ) )
+		);
+
+		// Get inactive redirections count.
+		$srk_inactive_redirections = $wpdb->get_var(
+			$wpdb->prepare( "SELECT COUNT(*) FROM `%1s` WHERE status = 'inactive'", str_replace( '`', '', $srk_redirections_table ) )
+		);
+
+		// Get most hit redirect (all time).
+		$srk_most_hit_redirect = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT source_url, target_url, hits
+                 FROM `%1s`
+                 ORDER BY hits DESC
                  LIMIT 1",
-                str_replace( '`', '', $srk_redirections_table )
-            )
-        );
-        
-        return array(
-            'total_redirections' => $srk_total_redirections ? intval($srk_total_redirections) : 0,
-            'total_hits' => $srk_total_hits ? intval($srk_total_hits) : 0,
-            'active_redirections' => $srk_active_redirections ? intval($srk_active_redirections) : 0,
-            'inactive_redirections' => $srk_inactive_redirections ? intval($srk_inactive_redirections) : 0,
-            'most_hit_redirect' => $srk_most_hit_redirect ? array(
-                'from' => $srk_most_hit_redirect->source_url,
-                'to' => $srk_most_hit_redirect->target_url,
-                'hits' => intval($srk_most_hit_redirect->hits)
-            ) : array(
-                'from' => 'N/A',
-                'to' => 'N/A',
-                'hits' => 0
-            ),
-            'period' => 'All Time'
-        );
-    }
+				str_replace( '`', '', $srk_redirections_table )
+			)
+		);
 
-    /**
-     * Get broken links scanning data from stored scan results
-     */
-    public function srk_get_broken_links_data() {
-        // Get stored scan snapshot data (accurate results from actual link scanning)
-        $link_snapshot = get_option('srk_last_links_snapshot', array());
-        
-        if (!is_array($link_snapshot)) {
-            $link_snapshot = array();
-        }
-        
-        // Get accurate data from stored scan results
-        $srk_total_links = isset($link_snapshot['totalLinks']) ? (int) $link_snapshot['totalLinks'] : 0;
-        $srk_broken_links = isset($link_snapshot['brokenLinks']) ? (int) $link_snapshot['brokenLinks'] : 0;
-        $srk_working_links = isset($link_snapshot['workingLinks']) ? (int) $link_snapshot['workingLinks'] : max(0, $srk_total_links - $srk_broken_links);
-        $srk_last_scan_ts = isset($link_snapshot['timestamp']) ? (int) $link_snapshot['timestamp'] : 0;
-        
-        // Get total posts count for reference
-        $srk_args = array(
-            'post_type' => array('post', 'page'),
-            'post_status' => 'publish',
-            'posts_per_page' => -1,
-            'fields' => 'ids',
-        );
-        
-        $srk_posts = get_posts($srk_args);
-        $srk_total_posts = count($srk_posts);
-        
-        // Count posts with links (posts that were scanned)
-        $srk_posts_with_links = 0;
-        if (!empty($link_snapshot['postTypes']) && is_array($link_snapshot['postTypes'])) {
-            $srk_posts_with_links = count($link_snapshot['postTypes']);
-        }
-        
-        // Calculate broken percentage
-        $srk_broken_percentage = $srk_total_links > 0 ? round(($srk_broken_links / $srk_total_links) * 100, 1) : 0;
-        
-        // Determine period label based on last scan
-        $srk_period = 'All Time';
-        if ($srk_last_scan_ts > 0) {
-            $srk_scan_date = date('M j, Y', $srk_last_scan_ts);
-            $srk_period = 'Last scan: ' . $srk_scan_date;
-        }
-        
-        return array(
-            'total_links' => $srk_total_links,
-            'broken_links' => $srk_broken_links,
-            'total_posts' => $srk_total_posts,
-            'posts_with_links' => $srk_posts_with_links,
-            'healthy_links' => $srk_working_links,
-            'broken_percentage' => $srk_broken_percentage,
-            'period' => $srk_period,
-            'last_scan_timestamp' => $srk_last_scan_ts
-        );
-    }
+		return array(
+			'total_redirections'    => $srk_total_redirections ? intval( $srk_total_redirections ) : 0,
+			'total_hits'            => $srk_total_hits ? intval( $srk_total_hits ) : 0,
+			'active_redirections'   => $srk_active_redirections ? intval( $srk_active_redirections ) : 0,
+			'inactive_redirections' => $srk_inactive_redirections ? intval( $srk_inactive_redirections ) : 0,
+			'most_hit_redirect'     => $srk_most_hit_redirect ? array(
+				'from' => $srk_most_hit_redirect->source_url,
+				'to'   => $srk_most_hit_redirect->target_url,
+				'hits' => intval( $srk_most_hit_redirect->hits ),
+			) : array(
+				'from' => __( 'N/A', 'seo-repair-kit' ),
+				'to'   => __( 'N/A', 'seo-repair-kit' ),
+				'hits' => 0,
+			),
+			'period'                => __( 'All Time', 'seo-repair-kit' ),
+		);
+	}
 
-    /**
-     * Get KeyTrack data - Fetch fresh GSC data for last 7 days for weekly email
-     */
-    public function srk_get_keytrack_data() {
-        // For weekly email, always use last 7 days period
-        // Note: GSC data has 2-3 day delay, so we use yesterday as end date
-        // Using -6 days from yesterday gives us exactly 7 days of data (including yesterday)
-        $srk_end_date = date('Y-m-d', strtotime('-1 day')); // Yesterday (accounting for GSC delay)
-        $srk_start_date = date('Y-m-d', strtotime('-6 days', strtotime($srk_end_date))); // 6 days before yesterday = 7 days total
-        
-        // Try to fetch fresh GSC data for last 7 days
-        $srk_fresh_data = $this->srk_fetch_fresh_gsc_data($srk_start_date, $srk_end_date);
-        
-        if ($srk_fresh_data && $srk_fresh_data['status'] === 'success') {
-            // Use fresh data with "Last 7 Days" period
-            $srk_fresh_data['data']['period'] = 'Last 7 Days';
-            return $srk_fresh_data;
-        }
-        
-        // Fallback: Return empty data structure instead of misleading stored data
-        // Stored data might be from different date range (90 days, 28 days, etc.)
-        return array(
-            'status' => 'no_data',
-            'message' => 'Unable to fetch fresh GSC data for last 7 days. Please ensure Google Site Kit is connected.',
-            'data' => array(
-                'total_clicks' => 0,
-                'total_impressions' => 0,
-                'average_ctr' => '0.00',
-                'average_position' => '0.00',
-                'top_pages' => array(),
-                'top_queries' => array(),
-                'period' => 'Last 7 Days',
-                'keytrack_name' => 'Weekly Report',
-                'last_updated' => date('Y-m-d H:i:s')
-            )
-        );
-    }
-    
-    /**
-     * Fetch fresh GSC data from Google Search Console for specified date range
-     */
-    private function srk_fetch_fresh_gsc_data($start_date, $end_date) {
-        // Check if Google Site Kit is available
-        if (!class_exists('Google\Site_Kit\Plugin')) {
-            return false;
-        }
-        
-        // Set up user context for Site Kit authentication
-        $srk_admin_email = sanitize_email(get_bloginfo('admin_email'));
-        $srk_admin_user = false;
-        
-        if (is_email($srk_admin_email)) {
-            $srk_admin_user = get_user_by('email', $srk_admin_email);
-        }
-        
-        // Fallback: first administrator by role
-        if (!$srk_admin_user) {
-            $srk_admins = get_users(array('role' => 'administrator'));
-            if (!empty($srk_admins)) {
-                $srk_admin_user = $srk_admins[0];
-            }
-        }
-        
-        if (!$srk_admin_user) {
-            return false;
-        }
-        
-        wp_set_current_user($srk_admin_user->ID);
-        
-        // Build Site Kit objects
-        try {
-            $srk_sitekit_instance = \Google\Site_Kit\Plugin::instance();
-            $srk_sitekit_context = $srk_sitekit_instance->context();
-            $srk_sitekit_options = new \Google\Site_Kit\Core\Storage\Options($srk_sitekit_context);
-            $srk_sitekit_user_options = new \Google\Site_Kit\Core\Storage\User_Options($srk_sitekit_context);
-            $srk_sitekit_authentication = new \Google\Site_Kit\Core\Authentication\Authentication(
-                $srk_sitekit_context,
-                $srk_sitekit_options,
-                $srk_sitekit_user_options
-            );
-            $srk_sitekit_modules = new \Google\Site_Kit\Core\Modules\Modules(
-                $srk_sitekit_context,
-                $srk_sitekit_options,
-                $srk_sitekit_user_options,
-                $srk_sitekit_authentication
-            );
-            $srk_sitekit_search_console = $srk_sitekit_modules->get_module('search-console');
-            
-            // Check if Search Console is connected
-            if (!$srk_sitekit_search_console || !$srk_sitekit_search_console->is_connected()) {
-                return false;
-            }
-            
-            // Fetch overall performance data
-            $srk_gsc_overall_data = $srk_sitekit_search_console->get_data(
-                'searchanalytics',
-                array(
-                    'dimensions' => array(),
-                    'startDate' => $start_date,
-                    'endDate' => $end_date,
-                    'rowLimit' => 10000,
-                )
-            );
-            
-            // Check for WP_Error
-            if (is_wp_error($srk_gsc_overall_data)) {
-                return false;
-            }
-            
-            $srk_total_clicks = 0;
-            $srk_total_impressions = 0;
-            $srk_total_ctr = 0;
-            $srk_total_position = 0;
-            $srk_data_count = 0;
-            
-            if (!empty($srk_gsc_overall_data) && is_array($srk_gsc_overall_data)) {
-                foreach ($srk_gsc_overall_data as $srk_row) {
-                    $srk_total_clicks += isset($srk_row['clicks']) ? (int) $srk_row['clicks'] : 0;
-                    $srk_total_impressions += isset($srk_row['impressions']) ? (int) $srk_row['impressions'] : 0;
-                    $srk_total_ctr += isset($srk_row['ctr']) ? (float) $srk_row['ctr'] : 0;
-                    $srk_total_position += isset($srk_row['position']) ? (float) $srk_row['position'] : 0;
-                    $srk_data_count++;
-                }
-            }
-            
-            $srk_average_ctr = $srk_data_count > 0 ? ($srk_total_ctr / $srk_data_count) : 0;
-            $srk_average_position = $srk_data_count > 0 ? ($srk_total_position / $srk_data_count) : 0;
-            
-            // Fetch top pages data
-            $srk_gsc_pages_data = $srk_sitekit_search_console->get_data(
-                'searchanalytics',
-                array(
-                    'dimensions' => array('page'),
-                    'startDate' => $start_date,
-                    'endDate' => $end_date,
-                    'rowLimit' => 10,
-                )
-            );
-            
-            // Check for WP_Error
-            if (is_wp_error($srk_gsc_pages_data)) {
-                $srk_gsc_pages_data = array();
-            }
-            
-            $srk_top_pages = array();
-            if (!empty($srk_gsc_pages_data) && is_array($srk_gsc_pages_data)) {
-                // Sort pages by clicks (descending), then by impressions if clicks are equal
-                usort($srk_gsc_pages_data, function($a, $b) {
-                    $a_clicks = isset($a['clicks']) ? $a['clicks'] : 0;
-                    $b_clicks = isset($b['clicks']) ? $b['clicks'] : 0;
-                    if ($a_clicks === $b_clicks) {
-                        $a_impressions = isset($a['impressions']) ? $a['impressions'] : 0;
-                        $b_impressions = isset($b['impressions']) ? $b['impressions'] : 0;
-                        return $b_impressions <=> $a_impressions;
-                    }
-                    return $b_clicks <=> $a_clicks;
-                });
-                
-                // Get top 3 pages after sorting
-                foreach (array_slice($srk_gsc_pages_data, 0, 3) as $srk_page) {
-                    $srk_top_pages[] = array(
-                        'url' => isset($srk_page['keys'][0]) ? $srk_page['keys'][0] : 'N/A',
-                        'clicks' => isset($srk_page['clicks']) ? (int) $srk_page['clicks'] : 0,
-                        'impressions' => isset($srk_page['impressions']) ? (int) $srk_page['impressions'] : 0,
-                        'position' => number_format(isset($srk_page['position']) ? $srk_page['position'] : 0, 2)
-                    );
-                }
-            }
-            
-            // Fetch top queries
-            $srk_gsc_queries_data = $srk_sitekit_search_console->get_data(
-                'searchanalytics',
-                array(
-                    'dimensions' => array('query'),
-                    'startDate' => $start_date,
-                    'endDate' => $end_date,
-                    'rowLimit' => 10,
-                )
-            );
-            
-            // Check for WP_Error
-            if (is_wp_error($srk_gsc_queries_data)) {
-                $srk_gsc_queries_data = array();
-            }
-            
-            $srk_top_queries = array();
-            if (!empty($srk_gsc_queries_data) && is_array($srk_gsc_queries_data)) {
-                // Sort queries by clicks (descending), then by impressions if clicks are equal
-                usort($srk_gsc_queries_data, function($a, $b) {
-                    $a_clicks = isset($a['clicks']) ? $a['clicks'] : 0;
-                    $b_clicks = isset($b['clicks']) ? $b['clicks'] : 0;
-                    if ($a_clicks === $b_clicks) {
-                        $a_impressions = isset($a['impressions']) ? $a['impressions'] : 0;
-                        $b_impressions = isset($b['impressions']) ? $b['impressions'] : 0;
-                        return $b_impressions <=> $a_impressions;
-                    }
-                    return $b_clicks <=> $a_clicks;
-                });
-                
-                // Get top 3 queries after sorting
-                foreach (array_slice($srk_gsc_queries_data, 0, 3) as $srk_query) {
-                    $srk_top_queries[] = array(
-                        'query' => isset($srk_query['keys'][0]) ? $srk_query['keys'][0] : 'N/A',
-                        'clicks' => isset($srk_query['clicks']) ? (int) $srk_query['clicks'] : 0,
-                        'impressions' => isset($srk_query['impressions']) ? (int) $srk_query['impressions'] : 0,
-                        'position' => number_format(isset($srk_query['position']) ? $srk_query['position'] : 0, 2)
-                    );
-                }
-            }
-            
-            return array(
-                'status' => 'success',
-                'message' => 'Data fetched for last 7 days',
-                'data' => array(
-                    'total_clicks' => $srk_total_clicks,
-                    'total_impressions' => $srk_total_impressions,
-                    'average_ctr' => number_format($srk_average_ctr * 100, 2),
-                    'average_position' => number_format($srk_average_position, 2),
-                    'top_pages' => $srk_top_pages,
-                    'top_queries' => $srk_top_queries,
-                    'period' => 'Last 7 Days',
-                    'keytrack_name' => 'Weekly Report',
-                    'last_updated' => date('Y-m-d H:i:s')
-                )
-            );
-            
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-    
-    /**
-     * Get stored GSC data from database (fallback method)
-     */
-    private function srk_get_stored_gsc_data() {
-        global $wpdb;
-        
-        $srk_gsc_table = $wpdb->prefix . 'srkit_gsc_data';
-        
-        // Check if table exists
-        $srk_table_exists = $wpdb->get_var($wpdb->prepare(
-            "SHOW TABLES LIKE %s", 
-            $srk_gsc_table
-        ));
-        
-        if ($srk_table_exists !== $srk_gsc_table) {
-            return array(
-                'status' => 'not_available',
-                'message' => 'KeyTrack data table not found',
-                'data' => array()
-            );
-        }
-        
-        // Get the most recent GSC data from database
-        $srk_recent_data = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT gsc_data, keytrack_name, created_at 
-                 FROM `%1s` 
-                 ORDER BY created_at DESC 
+	/**
+	 * Get broken links scanning data from stored scan results
+	 */
+	public function srk_get_broken_links_data() {
+		// Get stored scan snapshot data (accurate results from actual link scanning).
+		$link_snapshot = get_option( 'srk_last_links_snapshot', array() );
+
+		if ( ! is_array( $link_snapshot ) ) {
+			$link_snapshot = array();
+		}
+
+		// Get accurate data from stored scan results.
+		$srk_total_links    = isset( $link_snapshot['totalLinks'] ) ? (int) $link_snapshot['totalLinks'] : 0;
+		$srk_broken_links   = isset( $link_snapshot['brokenLinks'] ) ? (int) $link_snapshot['brokenLinks'] : 0;
+		$srk_working_links  = isset( $link_snapshot['workingLinks'] ) ? (int) $link_snapshot['workingLinks'] : max( 0, $srk_total_links - $srk_broken_links );
+		$srk_last_scan_ts   = isset( $link_snapshot['timestamp'] ) ? (int) $link_snapshot['timestamp'] : 0;
+
+		// Get total posts count for reference.
+		$srk_args = array(
+			'post_type'      => array( 'post', 'page' ),
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		);
+
+		$srk_posts       = get_posts( $srk_args );
+		$srk_total_posts = count( $srk_posts );
+
+		// Count posts with links (posts that were scanned).
+		$srk_posts_with_links = 0;
+		if ( ! empty( $link_snapshot['postTypes'] ) && is_array( $link_snapshot['postTypes'] ) ) {
+			$srk_posts_with_links = count( $link_snapshot['postTypes'] );
+		}
+
+		// Calculate broken percentage.
+		$srk_broken_percentage = $srk_total_links > 0 ? round( ( $srk_broken_links / $srk_total_links ) * 100, 1 ) : 0;
+
+		// Determine period label based on last scan.
+		$srk_period = __( 'All Time', 'seo-repair-kit' );
+		if ( $srk_last_scan_ts > 0 ) {
+			$srk_scan_date = date_i18n( 'M j, Y', $srk_last_scan_ts );
+			$srk_period    = sprintf( __( 'Last scan: %s', 'seo-repair-kit' ), $srk_scan_date );
+		}
+
+		return array(
+			'total_links'         => $srk_total_links,
+			'broken_links'        => $srk_broken_links,
+			'total_posts'         => $srk_total_posts,
+			'posts_with_links'    => $srk_posts_with_links,
+			'healthy_links'       => $srk_working_links,
+			'broken_percentage'   => $srk_broken_percentage,
+			'period'              => $srk_period,
+			'last_scan_timestamp' => $srk_last_scan_ts,
+		);
+	}
+
+	/**
+	 * Get KeyTrack data - Fetch fresh GSC data for last 7 days for weekly email
+	 */
+	public function srk_get_keytrack_data() {
+		// For weekly email, always use last 7 days period.
+		// Note: GSC data has 2-3 day delay, so we use yesterday as end date.
+		// Using -6 days from yesterday gives us exactly 7 days of data (including yesterday).
+		$srk_end_date   = date( 'Y-m-d', strtotime( '-1 day' ) );
+		$srk_start_date = date( 'Y-m-d', strtotime( '-6 days', strtotime( $srk_end_date ) ) );
+
+		// Try to fetch fresh GSC data for last 7 days.
+		$srk_fresh_data = $this->srk_fetch_fresh_gsc_data( $srk_start_date, $srk_end_date );
+
+		if ( $srk_fresh_data && 'success' === $srk_fresh_data['status'] ) {
+			// Use fresh data with "Last 7 Days" period.
+			$srk_fresh_data['data']['period'] = __( 'Last 7 Days', 'seo-repair-kit' );
+			return $srk_fresh_data;
+		}
+
+		// Fallback: Return empty data structure instead of misleading stored data.
+		// Stored data might be from different date range (90 days, 28 days, etc.).
+		return array(
+			'status'  => 'no_data',
+			'message' => __( 'Unable to fetch fresh GSC data for last 7 days. Please ensure Google Site Kit is connected.', 'seo-repair-kit' ),
+			'data'    => array(
+				'total_clicks'      => 0,
+				'total_impressions' => 0,
+				'average_ctr'       => '0.00',
+				'average_position'  => '0.00',
+				'top_pages'         => array(),
+				'top_queries'       => array(),
+				'period'            => __( 'Last 7 Days', 'seo-repair-kit' ),
+				'keytrack_name'     => __( 'Weekly Report', 'seo-repair-kit' ),
+				'last_updated'      => current_time( 'mysql' ),
+			),
+		);
+	}
+
+	/**
+	 * Fetch fresh GSC data from Google Search Console for specified date range
+	 */
+	private function srk_fetch_fresh_gsc_data( $start_date, $end_date ) {
+		// Check if Google Site Kit is available.
+		if ( ! class_exists( 'Google\Site_Kit\Plugin' ) ) {
+			return false;
+		}
+
+		// Set up user context for Site Kit authentication.
+		$srk_admin_email = sanitize_email( get_bloginfo( 'admin_email' ) );
+		$srk_admin_user  = false;
+
+		if ( is_email( $srk_admin_email ) ) {
+			$srk_admin_user = get_user_by( 'email', $srk_admin_email );
+		}
+
+		// Fallback: first administrator by role.
+		if ( ! $srk_admin_user ) {
+			$srk_admins = get_users( array( 'role' => 'administrator' ) );
+			if ( ! empty( $srk_admins ) ) {
+				$srk_admin_user = $srk_admins[0];
+			}
+		}
+
+		if ( ! $srk_admin_user ) {
+			return false;
+		}
+
+		wp_set_current_user( $srk_admin_user->ID );
+
+		// Build Site Kit objects.
+		try {
+			$srk_sitekit_instance       = \Google\Site_Kit\Plugin::instance();
+			$srk_sitekit_context        = $srk_sitekit_instance->context();
+			$srk_sitekit_options        = new \Google\Site_Kit\Core\Storage\Options( $srk_sitekit_context );
+			$srk_sitekit_user_options   = new \Google\Site_Kit\Core\Storage\User_Options( $srk_sitekit_context );
+			$srk_sitekit_authentication = new \Google\Site_Kit\Core\Authentication\Authentication(
+				$srk_sitekit_context,
+				$srk_sitekit_options,
+				$srk_sitekit_user_options
+			);
+			$srk_sitekit_modules        = new \Google\Site_Kit\Core\Modules\Modules(
+				$srk_sitekit_context,
+				$srk_sitekit_options,
+				$srk_sitekit_user_options,
+				$srk_sitekit_authentication
+			);
+			$srk_sitekit_search_console = $srk_sitekit_modules->get_module( 'search-console' );
+
+			// Check if Search Console is connected.
+			if ( ! $srk_sitekit_search_console || ! $srk_sitekit_search_console->is_connected() ) {
+				return false;
+			}
+
+			// Fetch overall performance data.
+			$srk_gsc_overall_data = $srk_sitekit_search_console->get_data(
+				'searchanalytics',
+				array(
+					'dimensions' => array(),
+					'startDate'  => $start_date,
+					'endDate'    => $end_date,
+					'rowLimit'   => 10000,
+				)
+			);
+
+			// Check for WP_Error.
+			if ( is_wp_error( $srk_gsc_overall_data ) ) {
+				return false;
+			}
+
+			$srk_total_clicks      = 0;
+			$srk_total_impressions = 0;
+			$srk_total_ctr         = 0;
+			$srk_total_position    = 0;
+			$srk_data_count        = 0;
+
+			if ( ! empty( $srk_gsc_overall_data ) && is_array( $srk_gsc_overall_data ) ) {
+				foreach ( $srk_gsc_overall_data as $srk_row ) {
+					$srk_total_clicks      += isset( $srk_row['clicks'] ) ? (int) $srk_row['clicks'] : 0;
+					$srk_total_impressions += isset( $srk_row['impressions'] ) ? (int) $srk_row['impressions'] : 0;
+					$srk_total_ctr         += isset( $srk_row['ctr'] ) ? (float) $srk_row['ctr'] : 0;
+					$srk_total_position    += isset( $srk_row['position'] ) ? (float) $srk_row['position'] : 0;
+					$srk_data_count++;
+				}
+			}
+
+			$srk_average_ctr      = $srk_data_count > 0 ? ( $srk_total_ctr / $srk_data_count ) : 0;
+			$srk_average_position = $srk_data_count > 0 ? ( $srk_total_position / $srk_data_count ) : 0;
+
+			// Fetch top pages data.
+			$srk_gsc_pages_data = $srk_sitekit_search_console->get_data(
+				'searchanalytics',
+				array(
+					'dimensions' => array( 'page' ),
+					'startDate'  => $start_date,
+					'endDate'    => $end_date,
+					'rowLimit'   => 10,
+				)
+			);
+
+			// Check for WP_Error.
+			if ( is_wp_error( $srk_gsc_pages_data ) ) {
+				$srk_gsc_pages_data = array();
+			}
+
+			$srk_top_pages = array();
+			if ( ! empty( $srk_gsc_pages_data ) && is_array( $srk_gsc_pages_data ) ) {
+				// Sort pages by clicks (descending), then by impressions if clicks are equal.
+				usort(
+					$srk_gsc_pages_data,
+					function ( $a, $b ) {
+						$a_clicks = isset( $a['clicks'] ) ? $a['clicks'] : 0;
+						$b_clicks = isset( $b['clicks'] ) ? $b['clicks'] : 0;
+						if ( $a_clicks === $b_clicks ) {
+							$a_impressions = isset( $a['impressions'] ) ? $a['impressions'] : 0;
+							$b_impressions = isset( $b['impressions'] ) ? $b['impressions'] : 0;
+							return $b_impressions <=> $a_impressions;
+						}
+						return $b_clicks <=> $a_clicks;
+					}
+				);
+
+				// Get top 3 pages after sorting.
+				foreach ( array_slice( $srk_gsc_pages_data, 0, 3 ) as $srk_page ) {
+					$srk_top_pages[] = array(
+						'url'         => isset( $srk_page['keys'][0] ) ? $srk_page['keys'][0] : __( 'N/A', 'seo-repair-kit' ),
+						'clicks'      => isset( $srk_page['clicks'] ) ? (int) $srk_page['clicks'] : 0,
+						'impressions' => isset( $srk_page['impressions'] ) ? (int) $srk_page['impressions'] : 0,
+						'position'    => number_format( isset( $srk_page['position'] ) ? $srk_page['position'] : 0, 2 ),
+					);
+				}
+			}
+
+			// Fetch top queries.
+			$srk_gsc_queries_data = $srk_sitekit_search_console->get_data(
+				'searchanalytics',
+				array(
+					'dimensions' => array( 'query' ),
+					'startDate'  => $start_date,
+					'endDate'    => $end_date,
+					'rowLimit'   => 10,
+				)
+			);
+
+			// Check for WP_Error.
+			if ( is_wp_error( $srk_gsc_queries_data ) ) {
+				$srk_gsc_queries_data = array();
+			}
+
+			$srk_top_queries = array();
+			if ( ! empty( $srk_gsc_queries_data ) && is_array( $srk_gsc_queries_data ) ) {
+				// Sort queries by clicks (descending), then by impressions if clicks are equal.
+				usort(
+					$srk_gsc_queries_data,
+					function ( $a, $b ) {
+						$a_clicks = isset( $a['clicks'] ) ? $a['clicks'] : 0;
+						$b_clicks = isset( $b['clicks'] ) ? $b['clicks'] : 0;
+						if ( $a_clicks === $b_clicks ) {
+							$a_impressions = isset( $a['impressions'] ) ? $a['impressions'] : 0;
+							$b_impressions = isset( $b['impressions'] ) ? $b['impressions'] : 0;
+							return $b_impressions <=> $a_impressions;
+						}
+						return $b_clicks <=> $a_clicks;
+					}
+				);
+
+				// Get top 3 queries after sorting.
+				foreach ( array_slice( $srk_gsc_queries_data, 0, 3 ) as $srk_query ) {
+					$srk_top_queries[] = array(
+						'query'       => isset( $srk_query['keys'][0] ) ? $srk_query['keys'][0] : __( 'N/A', 'seo-repair-kit' ),
+						'clicks'      => isset( $srk_query['clicks'] ) ? (int) $srk_query['clicks'] : 0,
+						'impressions' => isset( $srk_query['impressions'] ) ? (int) $srk_query['impressions'] : 0,
+						'position'    => number_format( isset( $srk_query['position'] ) ? $srk_query['position'] : 0, 2 ),
+					);
+				}
+			}
+
+			return array(
+				'status'  => 'success',
+				'message' => __( 'Data fetched for last 7 days', 'seo-repair-kit' ),
+				'data'    => array(
+					'total_clicks'      => $srk_total_clicks,
+					'total_impressions' => $srk_total_impressions,
+					'average_ctr'       => number_format( $srk_average_ctr * 100, 2 ),
+					'average_position'  => number_format( $srk_average_position, 2 ),
+					'top_pages'         => $srk_top_pages,
+					'top_queries'       => $srk_top_queries,
+					'period'            => __( 'Last 7 Days', 'seo-repair-kit' ),
+					'keytrack_name'     => __( 'Weekly Report', 'seo-repair-kit' ),
+					'last_updated'      => current_time( 'mysql' ),
+				),
+			);
+
+		} catch ( Exception $e ) {
+			return false;
+		}
+	}
+
+	/**
+	 * Get stored GSC data from database (fallback method)
+	 */
+	private function srk_get_stored_gsc_data() {
+		global $wpdb;
+
+		$srk_gsc_table = $wpdb->prefix . 'srkit_gsc_data';
+
+		// Check if table exists.
+		$srk_table_exists = $wpdb->get_var(
+			$wpdb->prepare(
+				'SHOW TABLES LIKE %s',
+				$srk_gsc_table
+			)
+		);
+
+		if ( $srk_table_exists !== $srk_gsc_table ) {
+			return array(
+				'status'  => 'not_available',
+				'message' => __( 'KeyTrack data table not found', 'seo-repair-kit' ),
+				'data'    => array(),
+			);
+		}
+
+		// Get the most recent GSC data from database.
+		$srk_recent_data = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT gsc_data, keytrack_name, created_at
+                 FROM `%1s`
+                 ORDER BY created_at DESC
                  LIMIT 1",
-                str_replace( '`', '', $srk_gsc_table )
-            ),
-            ARRAY_A
-        );
-        
-        if (!$srk_recent_data || empty($srk_recent_data['gsc_data'])) {
-            return array(
-                'status' => 'no_data',
-                'message' => 'No KeyTrack data available in database',
-                'data' => array()
-            );
-        }
-        
-        try {
-            $srk_gsc_data = json_decode($srk_recent_data['gsc_data'], true);
-            
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new Exception('Invalid JSON data in database');
-            }
-            
-            // Extract data from the stored structure
-            $srk_summary = $srk_gsc_data['summary'] ?? array();
-            $srk_keywords = $srk_gsc_data['keywords'] ?? array();
-            
-            // Note: Stored GSC data only contains keywords (queries), not page-level data
-            // Top pages section will be empty if no pages data exists in the structure
-            $srk_top_pages = array();
-            if (!empty($srk_gsc_data['pages']) && is_array($srk_gsc_data['pages'])) {
-                // If pages data exists in the stored structure, use it
-                foreach (array_slice($srk_gsc_data['pages'], 0, 3) as $srk_page) {
-                    $srk_top_pages[] = array(
-                        'url' => $srk_page['url'] ?? $srk_page['page'] ?? 'N/A',
-                        'clicks' => $srk_page['clicks'] ?? 0,
-                        'impressions' => $srk_page['impressions'] ?? 0,
-                        'position' => number_format($srk_page['position'] ?? 0, 2)
-                    );
-                }
-            }
-            
-            // Get top queries from keywords data
-            $srk_top_queries = array();
-            if (!empty($srk_keywords)) {
-                foreach (array_slice($srk_keywords, 0, 3) as $srk_keyword) {
-                    $srk_top_queries[] = array(
-                        'query' => $srk_keyword['keyword_name'] ?? 'N/A',
-                        'clicks' => $srk_keyword['clicks'] ?? 0,
-                        'impressions' => $srk_keyword['impressions'] ?? 0,
-                        'position' => number_format($srk_keyword['position'] ?? 0, 2)
-                    );
-                }
-            }
-            
-            return array(
-                'status' => 'success',
-                'message' => 'Data retrieved from database',
-                'data' => array(
-                    'total_clicks' => $srk_summary['total_clicks'] ?? 0,
-                    'total_impressions' => $srk_summary['total_impressions'] ?? 0,
-                    'average_ctr' => number_format(($srk_summary['average_ctr'] ?? 0) * 100, 2),
-                    'average_position' => number_format($srk_summary['average_position'] ?? 0, 2),
-                    'top_pages' => $srk_top_pages,
-                    'top_queries' => $srk_top_queries,
-                    'period' => 'Last 7 Days',
-                    'keytrack_name' => $srk_recent_data['keytrack_name'] ?? 'N/A',
-                    'last_updated' => $srk_recent_data['created_at'] ?? 'Unknown'
-                )
-            );
-            
-        } catch (Exception $e) {
-            return array(
-                'status' => 'error',
-                'message' => $e->getMessage(),
-                'data' => array()
-            );
-        }
-    }
+				str_replace( '`', '', $srk_gsc_table )
+			),
+			ARRAY_A
+		);
 
-    /**
-     * Helper: days remaining until a timestamp
-     */
-    private function srk_days_until( $srk_ts ) {
-        if ( ! $srk_ts ) return null;
-        $srk_now = current_time( 'timestamp' );
-        return (int) floor( ( $srk_ts - $srk_now ) / DAY_IN_SECONDS );
-    }
+		if ( ! $srk_recent_data || empty( $srk_recent_data['gsc_data'] ) ) {
+			return array(
+				'status'  => 'no_data',
+				'message' => __( 'No KeyTrack data available in database', 'seo-repair-kit' ),
+				'data'    => array(),
+			);
+		}
 
-    /**
-     * Build email template - Complete version with dynamic URLs
-     */
-    private function srk_build_email_template($srk_data) {
-        // Extract variables
-        $site_name = isset($srk_data['site_name']) ? $srk_data['site_name'] : get_bloginfo('name');
-        $alt_text_data = isset($srk_data['alt_text_data']) ? $srk_data['alt_text_data'] : array();
-        $redirections_data = isset($srk_data['redirections_data']) ? $srk_data['redirections_data'] : array();
-        $pro_plan_data = isset($srk_data['pro_plan_data']) ? $srk_data['pro_plan_data'] : array();
-        $broken_links_data = isset($srk_data['broken_links_data']) ? $srk_data['broken_links_data'] : array();
-        $keytrack_data = isset($srk_data['keytrack_data']) ? $srk_data['keytrack_data'] : array();
-        $urls = isset($srk_data['urls']) ? $srk_data['urls'] : array(
-            'upgrade_pro' => $this->srk_get_admin_page_url('seo-repair-kit-upgrade-pro'),
-            'dashboard' => $this->srk_get_admin_page_url('seo-repair-kit'),
-            'link_scanner' => $this->srk_get_admin_page_url('seo-repair-kit-link-scanner'),
-            'alt_image' => $this->srk_get_admin_page_url('alt-image-missing'),
-            'redirection' => $this->srk_get_admin_page_url('seo-repair-kit-redirection')
-        );
+		try {
+			$srk_gsc_data = json_decode( $srk_recent_data['gsc_data'], true );
 
-        $srk_is_pro = !empty($pro_plan_data['is_pro']);
-        $srk_plan_status = isset($pro_plan_data['status']) ? $pro_plan_data['status'] : 'inactive';
-        $srk_plan_id = isset($pro_plan_data['plan_id']) ? $pro_plan_data['plan_id'] : 'free';
-        $srk_plan_message = isset($pro_plan_data['message']) ? $pro_plan_data['message'] : 'Free version';
-        $srk_plan_expires_at = isset($pro_plan_data['expires_at']) ? $pro_plan_data['expires_at'] : null;
-        $srk_plan_days_left = isset($pro_plan_data['days_left']) ? $pro_plan_data['days_left'] : null;
-        $srk_plan_is_expired = !empty($pro_plan_data['is_expired']);
-        $srk_plan_has_chatbot = !empty($pro_plan_data['has_chatbot']);
-        
-        ob_start();
-        ?>
-        <div style="font-family: 'Segoe UI', Arial, sans-serif; color: #333; padding: 20px; max-width: 700px; margin: auto; background-color: #ffffff;">
-            <!-- Enhanced Header with Dark Blue Background -->
-            <div style="background: linear-gradient(135deg, #0b1d51 0%, #1a2b6d 100%); color: white; padding: 25px 0 20px 0; border-radius: 12px 12px 0 0; box-shadow: 0 4px 12px rgba(11, 29, 81, 0.2);">
-                <table width="100%" cellpadding="0" cellspacing="0" style="padding: 0 25px;">
-                    <tr>
-                        <td style="text-align: left; padding-left: 15px;">
-                            <h1 style="margin: 0; font-size: 28px; font-weight: 700; color: white; letter-spacing: -0.5px;">📊 SEO Report</h1>
-                            <p style="margin: 8px 0 0 0; font-size: 14px; color: rgba(255, 255, 255, 0.9);">
-                                <?php echo esc_html($site_name); ?> • <?php echo esc_html( date('F j, Y') ); ?>
-                            </p>
-                        </td>
-                        <td style="text-align: right; width: 120px; padding-right: 15px;">
-                            <div style="background: rgba(255, 255, 255, 0.15); padding: 10px 15px; border-radius: 8px; display: inline-block; border: 1px solid rgba(255, 255, 255, 0.2);">
-                                <span style="font-size: 12px; color: white; font-weight: 600; letter-spacing: 0.5px;">WEEKLY</span>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+			if ( JSON_ERROR_NONE !== json_last_error() ) {
+				throw new Exception( __( 'Invalid JSON data in database', 'seo-repair-kit' ) );
+			}
 
-            <!-- Body Container -->
-            <div style="background: #f8fafc; padding: 35px 30px; border-radius: 0 0 12px 12px;">
+			// Extract data from the stored structure.
+			$srk_summary  = $srk_gsc_data['summary'] ?? array();
+			$srk_keywords = $srk_gsc_data['keywords'] ?? array();
 
-                <!-- Welcome Message -->
-                <div style="background: white; padding: 25px; border-radius: 10px; margin-bottom: 25px; box-shadow: 0 3px 15px rgba(0,0,0,0.05); border-left: 4px solid #F28500;">
-                    <p style="font-size: 16px; line-height: 1.6; color: #555; margin: 0;">
-                        Hello! Here's your <strong style="color: #0b1d51;">weekly SEO performance report</strong> for 
-                        <strong style="color: #F28500;"><?php echo esc_html($site_name); ?></strong>. Below is a comprehensive overview of your site's search performance and technical health.
-                    </p>
-                </div>
+			// Note: Stored GSC data only contains keywords (queries), not page-level data.
+			// Top pages section will be empty if no pages data exists in the structure.
+			$srk_top_pages = array();
+			if ( ! empty( $srk_gsc_data['pages'] ) && is_array( $srk_gsc_data['pages'] ) ) {
+				// If pages data exists in the stored structure, use it.
+				foreach ( array_slice( $srk_gsc_data['pages'], 0, 3 ) as $srk_page ) {
+					$srk_top_pages[] = array(
+						'url'         => $srk_page['url'] ?? $srk_page['page'] ?? __( 'N/A', 'seo-repair-kit' ),
+						'clicks'      => $srk_page['clicks'] ?? 0,
+						'impressions' => $srk_page['impressions'] ?? 0,
+						'position'    => number_format( $srk_page['position'] ?? 0, 2 ),
+					);
+				}
+			}
 
-                <!-- Dynamic Plan Status Card -->
-                <?php if ( $srk_is_pro ) : ?>
-                    <div style="background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%); padding: 25px; border-radius: 10px; margin: 25px 0; text-align: center; border: 2px solid #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.12);">
-                        <p style="margin: 0 0 12px 0; font-size: 18px; color: #065f46; font-weight: 700;">
-                            ✅ Your website is currently on the <span style="color: #F28500;">Pro Plan</span>
-                        </p>
-                        <p style="margin: 0 0 8px 0; font-size: 14px; color: #4b5563;">
-                            Plan ID: <strong><?php echo esc_html( strtoupper( $srk_plan_id ) ); ?></strong>
-                        </p>
-                        <p style="margin: 0 0 8px 0; font-size: 14px; color: #4b5563;">
-                            Status: <strong><?php echo esc_html( ucfirst( $srk_plan_status ) ); ?></strong>
-                        </p>
-                        <?php if ( ! empty( $srk_plan_expires_at ) ) : ?>
-                            <p style="margin: 0 0 8px 0; font-size: 14px; color: #4b5563;">
-                                Expires At: <strong><?php echo esc_html( date( 'F j, Y', strtotime( $srk_plan_expires_at ) ) ); ?></strong>
-                            </p>
-                        <?php endif; ?>
-                        <?php if ( $srk_plan_days_left !== null ) : ?>
-                            <p style="margin: 0 0 8px 0; font-size: 14px; color: #4b5563;">
-                                Days Left: <strong><?php echo esc_html( max( 0, (int) $srk_plan_days_left ) ); ?></strong>
-                            </p>
-                        <?php endif; ?>
-                        <p style="margin: 0; font-size: 14px; color: #4b5563;">
-                            AI Chatbot Access:
-                            <strong><?php echo $srk_plan_has_chatbot ? 'Enabled' : 'Not Included'; ?></strong>
-                        </p>
-                    </div>
-                <?php else : ?>
-                    <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 25px; border-radius: 10px; margin: 25px 0; text-align: center; border: 2px solid #e9ecef; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
-                        <p style="margin: 0 0 15px 0; font-size: 17px; color: #0b1d51; font-weight: 600;">
-                            You're currently on the <span style="color: #F28500;">Free Plan</span>!<br>
-                            <span style="font-size: 15px; color: #666; font-weight: normal;">Unlock advanced features and get priority support by upgrading to Pro.</span>
-                        </p>
-                        <?php if ( ! empty( $srk_plan_message ) ) : ?>
-                            <p style="margin: 0 0 15px 0; font-size: 14px; color: #666;">
-                                <?php echo esc_html( $srk_plan_message ); ?>
-                            </p>
-                        <?php endif; ?>
-                        <?php if ( $srk_plan_is_expired ) : ?>
-                            <p style="margin: 0 0 15px 0; font-size: 14px; color: #dc2626; font-weight: 600;">
-                                Your previous Pro plan has expired. Renew now to continue premium features.
-                            </p>
-                        <?php endif; ?>
-                        <a href="<?php echo esc_url($urls['upgrade_pro']); ?>" style="display: inline-block; background: linear-gradient(135deg, #F28500 0%, #ff9a3c 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px; margin-top: 10px; box-shadow: 0 4px 12px rgba(242, 133, 0, 0.25); transition: all 0.3s ease; border: none;">
-                            🚀 Upgrade to Pro
-                        </a>
-                    </div>
-                <?php endif; ?>
-                
-                <!-- Divider -->
-                <hr style="border: none; height: 1px; background: linear-gradient(to right, transparent, #e0e0e0, transparent); margin: 30px 0;">
+			// Get top queries from keywords data.
+			$srk_top_queries = array();
+			if ( ! empty( $srk_keywords ) ) {
+				foreach ( array_slice( $srk_keywords, 0, 3 ) as $srk_keyword ) {
+					$srk_top_queries[] = array(
+						'query'       => $srk_keyword['keyword_name'] ?? __( 'N/A', 'seo-repair-kit' ),
+						'clicks'      => $srk_keyword['clicks'] ?? 0,
+						'impressions' => $srk_keyword['impressions'] ?? 0,
+						'position'    => number_format( $srk_keyword['position'] ?? 0, 2 ),
+					);
+				}
+			}
 
-                <!-- KeyTrack / Search Performance -->
-                <div style="margin-bottom: 35px;">
-                    <h2 style="margin: 0 0 25px 0; color: #0b1d51; font-size: 22px; font-weight: 700; border-bottom: 3px solid #F28500; padding-bottom: 10px; display: flex; align-items: center; gap: 10px;">
-                        Search Performance Keytrack
-                    </h2>
-                    
-                    <?php if(isset($keytrack_data['status']) && $keytrack_data['status'] === 'success' && !empty($keytrack_data['data'])): 
-                        $srk_kt = $keytrack_data['data'];
-                    ?>
-                    <!-- Main Metrics Grid -->
-                    <div style="background: white; border-radius: 12px; padding: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); margin-bottom: 30px; border: 1px solid #e5e7eb;">
-                        <!-- 4 Metrics Grid -->
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; width:100%;">
-                            <!-- Clicks -->
-                            <div style="text-align: center; padding: 25px; border-radius: 10px; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 2px solid #e5e7eb; box-shadow: 0 4px 8px rgba(0,0,0,0.04);">
-                                <div style="color: #666; font-size: 14px; margin-bottom: 12px; font-weight: 600; letter-spacing: 0.5px;">CLICKS</div>
-                                <div style="font-size: 34px; font-weight: 800; color: #0b1d51; line-height: 1;">
-                                    <?php echo number_format(isset($srk_kt['total_clicks']) ? $srk_kt['total_clicks'] : 0); ?>
-                                </div>
-                                <div style="color: #F28500; font-size: 12px; font-weight: 600; margin-top: 10px; background: rgba(242, 133, 0, 0.1); padding: 4px 8px; border-radius: 4px; display: inline-block;">
-                                    <?php echo esc_html( isset($srk_kt['period']) ? $srk_kt['period'] : 'N/A' ); ?>
-                                </div>
-                            </div>
+			return array(
+				'status'  => 'success',
+				'message' => __( 'Data retrieved from database', 'seo-repair-kit' ),
+				'data'    => array(
+					'total_clicks'      => $srk_summary['total_clicks'] ?? 0,
+					'total_impressions' => $srk_summary['total_impressions'] ?? 0,
+					'average_ctr'       => number_format( ( $srk_summary['average_ctr'] ?? 0 ) * 100, 2 ),
+					'average_position'  => number_format( $srk_summary['average_position'] ?? 0, 2 ),
+					'top_pages'         => $srk_top_pages,
+					'top_queries'       => $srk_top_queries,
+					'period'            => __( 'Last 7 Days', 'seo-repair-kit' ),
+					'keytrack_name'     => $srk_recent_data['keytrack_name'] ?? __( 'N/A', 'seo-repair-kit' ),
+					'last_updated'      => $srk_recent_data['created_at'] ?? __( 'Unknown', 'seo-repair-kit' ),
+				),
+			);
 
-                            <!-- Impressions -->
-                            <div style="text-align: center; padding: 25px; border-radius: 10px; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 2px solid #e5e7eb; box-shadow: 0 4px 8px rgba(0,0,0,0.04);">
-                                <div style="color: #666; font-size: 14px; margin-bottom: 12px; font-weight: 600; letter-spacing: 0.5px;">IMPRESSIONS</div>
-                                <div style="font-size: 34px; font-weight: 800; color: #0b1d51; line-height: 1;">
-                                    <?php echo number_format(isset($srk_kt['total_impressions']) ? $srk_kt['total_impressions'] : 0); ?>
-                                </div>
-                                <div style="color: #F28500; font-size: 12px; font-weight: 600; margin-top: 10px; background: rgba(242, 133, 0, 0.1); padding: 4px 8px; border-radius: 4px; display: inline-block;">
-                                    <?php echo esc_html( isset($srk_kt['period']) ? $srk_kt['period'] : 'N/A' ); ?>
-                                </div>
-                            </div>
+		} catch ( Exception $e ) {
+			return array(
+				'status'  => 'error',
+				'message' => $e->getMessage(),
+				'data'    => array(),
+			);
+		}
+	}
 
-                            <!-- Avg CTR -->
-                            <div style="text-align: center; padding: 25px; border-radius: 10px; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 2px solid #e5e7eb; box-shadow: 0 4px 8px rgba(0,0,0,0.04);">
-                                <div style="color: #666; font-size: 14px; margin-bottom: 12px; font-weight: 600; letter-spacing: 0.5px;">AVG CTR</div>
-                                <div style="font-size: 34px; font-weight: 800; color: #F28500; line-height: 1;">
-                                    <?php echo esc_html( isset($srk_kt['average_ctr']) ? $srk_kt['average_ctr'] : '0.00' ); ?>%
-                                </div>
-                                <div style="color: #666; font-size: 12px; margin-top: 10px;">Click-through Rate</div>
-                            </div>
+	/**
+	 * Helper: days remaining until a timestamp
+	 */
+	private function srk_days_until( $srk_ts ) {
+		if ( ! $srk_ts ) {
+			return null;
+		}
+		$srk_now = current_time( 'timestamp' );
+		return (int) floor( ( $srk_ts - $srk_now ) / DAY_IN_SECONDS );
+	}
 
-                            <!-- Avg Position -->
-                            <div style="text-align: center; padding: 25px; border-radius: 10px; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 2px solid #e5e7eb; box-shadow: 0 4px 8px rgba(0,0,0,0.04);">
-                                <div style="color: #666; font-size: 14px; margin-bottom: 12px; font-weight: 600; letter-spacing: 0.5px;">AVG POSITION</div>
-                                <div style="font-size: 34px; font-weight: 800; color: #0b1d51; line-height: 1;">
-                                    <?php echo esc_html( isset($srk_kt['average_position']) ? $srk_kt['average_position'] : '0.00' ); ?>
-                                </div>
-                                <div style="color: #666; font-size: 12px; margin-top: 10px;">Search Ranking</div>
-                            </div>
-                        </div>
-                    </div>
+	/**
+	 * Build email template - Complete version with dynamic URLs
+	 */
+	private function srk_build_email_template( $srk_data ) {
+		// Extract variables.
+		$site_name         = isset( $srk_data['site_name'] ) ? $srk_data['site_name'] : get_bloginfo( 'name' );
+		$alt_text_data     = isset( $srk_data['alt_text_data'] ) ? $srk_data['alt_text_data'] : array();
+		$redirections_data = isset( $srk_data['redirections_data'] ) ? $srk_data['redirections_data'] : array();
+		$pro_plan_data     = isset( $srk_data['pro_plan_data'] ) ? $srk_data['pro_plan_data'] : array();
+		$broken_links_data = isset( $srk_data['broken_links_data'] ) ? $srk_data['broken_links_data'] : array();
+		$keytrack_data     = isset( $srk_data['keytrack_data'] ) ? $srk_data['keytrack_data'] : array();
+		$urls              = isset( $srk_data['urls'] ) ? $srk_data['urls'] : array(
+			'upgrade_pro'  => $this->srk_get_admin_page_url( 'seo-repair-kit-upgrade-pro' ),
+			'dashboard'    => $this->srk_get_admin_page_url( 'seo-repair-kit' ),
+			'link_scanner' => $this->srk_get_admin_page_url( 'seo-repair-kit-link-scanner' ),
+			'alt_image'    => $this->srk_get_admin_page_url( 'alt-image-missing' ),
+			'redirection'  => $this->srk_get_admin_page_url( 'seo-repair-kit-redirection' ),
+		);
 
-                    <!-- Top Performing Pages -->
-                    <?php if(!empty($srk_kt['top_pages'])): ?>
-                    <div style="margin-bottom: 25px;">
-                        <h3 style="margin: 0 0 18px 0; color: #0b1d51; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-                            <span style="color: white; width: 30px; height: 30px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;"></span>
-                            Top Performing Pages
-                        </h3>
-                        <div style="background: white; padding: 0; border-radius: 10px; border: 2px solid #f0f0f0; overflow: hidden; box-shadow: 0 3px 12px rgba(0,0,0,0.05);">
-                            <?php foreach ($srk_kt['top_pages'] as $srk_index => $srk_page): ?>
-                            <div style="padding: 18px 20px; border-bottom: <?php echo ($srk_index < count($srk_kt['top_pages']) - 1) ? '1px solid #f0f0f0' : 'none'; ?>; background: <?php echo $srk_index % 2 === 0 ? '#ffffff' : '#fafafa'; ?>;">
-                                <div style="color: #0b1d51; font-size: 15px; font-weight: 600; margin-bottom: 5px;">
-                                    <?php echo esc_html(wp_trim_words($srk_page['url'], 8)); ?>
-                                </div>
-                                <div style="display: flex; gap: 20px; font-size: 13px; color: #666;">
-                                    <span>👁️ <strong><?php echo number_format($srk_page['impressions']); ?></strong> impressions</span>
-                                    <span>👆 <strong><?php echo number_format($srk_page['clicks']); ?></strong> clicks</span>
-                                    <span>📈 <strong><?php echo esc_html( $srk_page['position'] ); ?></strong> position</span>
-                                </div>
-                            </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                    <?php endif; ?>
+		$srk_is_pro            = ! empty( $pro_plan_data['is_pro'] );
+		$srk_plan_status       = isset( $pro_plan_data['status'] ) ? $pro_plan_data['status'] : 'inactive';
+		$srk_plan_id           = isset( $pro_plan_data['plan_id'] ) ? $pro_plan_data['plan_id'] : 'free';
+		$srk_plan_message      = isset( $pro_plan_data['message'] ) ? $pro_plan_data['message'] : __( 'Free version', 'seo-repair-kit' );
+		$srk_plan_expires_at   = isset( $pro_plan_data['expires_at'] ) ? $pro_plan_data['expires_at'] : null;
+		$srk_plan_days_left    = isset( $pro_plan_data['days_left'] ) ? $pro_plan_data['days_left'] : null;
+		$srk_plan_is_expired   = ! empty( $pro_plan_data['is_expired'] );
+		$srk_plan_has_chatbot  = ! empty( $pro_plan_data['has_chatbot'] );
 
-                    <!-- Top Search Queries -->
-                    <?php if(!empty($srk_kt['top_queries'])): ?>
-                    <div style="margin-bottom: 25px;">
-                        <h3 style="margin: 0 0 18px 0; color: #0b1d51; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-                            <span style="color: white; width: 30px; height: 30px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;"></span>
-                            Top Search Queries
-                        </h3>
-                        <div style="background: white; padding: 0; border-radius: 10px; border: 2px solid #f0f0f0; overflow: hidden; box-shadow: 0 3px 12px rgba(0,0,0,0.05);">
-                            <?php foreach ($srk_kt['top_queries'] as $srk_index => $srk_query): ?>
-                            <div style="padding: 18px 20px; border-bottom: <?php echo ($srk_index < count($srk_kt['top_queries']) - 1) ? '1px solid #f0f0f0' : 'none'; ?>; background: <?php echo $srk_index % 2 === 0 ? '#ffffff' : '#fafafa'; ?>;">
-                                <div style="color: #0b1d51; font-size: 15px; font-weight: 600; margin-bottom: 5px; font-style: italic;">
-                                    "<?php echo esc_html($srk_query['query']); ?>"
-                                </div>
-                                <div style="display: flex; gap: 20px; font-size: 13px; color: #666;">
-                                    <span>👁️ <strong><?php echo number_format($srk_query['impressions']); ?></strong> impressions</span>
-                                    <span>👆 <strong><?php echo number_format($srk_query['clicks']); ?></strong> clicks</span>
-                                    <span>📈 <strong><?php echo esc_html( $srk_query['position'] ); ?></strong> position</span>
-                                </div>
-                            </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                    <?php endif; ?>
+		ob_start();
+		?>
+		<div style="font-family: 'Segoe UI', Arial, sans-serif; color: #333; padding: 20px; max-width: 700px; margin: auto; background-color: #ffffff;">
+			<!-- Enhanced Header with Dark Blue Background -->
+			<div style="background: linear-gradient(135deg, #0b1d51 0%, #1a2b6d 100%); color: white; padding: 25px 0 20px 0; border-radius: 12px 12px 0 0; box-shadow: 0 4px 12px rgba(11, 29, 81, 0.2);">
+				<table width="100%" cellpadding="0" cellspacing="0" style="padding: 0 25px;">
+					<tr>
+						<td style="text-align: left; padding-left: 15px;">
+							<h1 style="margin: 0; font-size: 28px; font-weight: 700; color: white; letter-spacing: -0.5px;"><?php echo esc_html__( '📊 SEO Report', 'seo-repair-kit' ); ?></h1>
+							<p style="margin: 8px 0 0 0; font-size: 14px; color: rgba(255, 255, 255, 0.9);">
+								<?php echo esc_html( $site_name ); ?> • <?php echo esc_html( date_i18n( 'F j, Y' ) ); ?>
+							</p>
+						</td>
+						<td style="text-align: right; width: 120px; padding-right: 15px;">
+							<div style="background: rgba(255, 255, 255, 0.15); padding: 10px 15px; border-radius: 8px; display: inline-block; border: 1px solid rgba(255, 255, 255, 0.2);">
+								<span style="font-size: 12px; color: white; font-weight: 600; letter-spacing: 0.5px;"><?php echo esc_html__( 'WEEKLY', 'seo-repair-kit' ); ?></span>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
 
-                    <?php else: ?>
-                        <div style="background: #fffaf0; padding: 25px; border-radius: 10px; text-align: center; border: 2px solid #F28500; margin-bottom: 25px;">
-                            <p style="margin: 0; color: #0b1d51; font-size: 15px; font-weight: 600;">
-                                ⚠️ Search Console data is currently unavailable.
-                            </p>
-                            <p style="margin: 10px 0 0 0; color: #666; font-size: 14px;">
-                                Please ensure Google Site Kit is connected and configured properly.
-                            </p>
-                        </div>
-                    <?php endif; ?>
-                </div>
+			<!-- Body Container -->
+			<div style="background: #f8fafc; padding: 35px 30px; border-radius: 0 0 12px 12px;">
 
-                <!-- Technical Health Check Section - UPDATED DESIGN -->
-                <div style="margin-bottom: 60px;">
-                    <!-- Section 1: Broken Links -->
-                    <div style="margin-bottom: 40px; padding-bottom: 25px; border-bottom: 1px solid #eee;">
-                        <h3 style="margin: 0 0 20px 0; color: #0b1d51; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-                            Broken Links Analysis
-                        </h3>
-                        
-                        <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); border-top: 4px solid #dc3545;">
-                            <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                                <h4 style="margin: 0; color: #0b1d51; font-size: 16px; font-weight: 700;">
-                                    Broken Links Status
-                                </h4>
-                            </div>
-                            
-                            <div style="text-align: center; margin-bottom: 20px;">
-                                <div style="font-size: 36px; font-weight: 700; color: #0b1d51; line-height: 1; margin-bottom: 10px;">
-                                    <?php echo (int) ( isset($broken_links_data['broken_links']) ? $broken_links_data['broken_links'] : 0 ); ?> / <?php echo (int) ( isset($broken_links_data['total_links']) ? $broken_links_data['total_links'] : 0 ); ?>
-                                </div>
-                                <div style="font-size: 14px; color: #666;">
-                                    <?php echo (int) ( isset($broken_links_data['broken_links']) ? $broken_links_data['broken_links'] : 0 ); ?> broken links found out of <?php echo (int) ( isset($broken_links_data['total_links']) ? $broken_links_data['total_links'] : 0 ); ?> total links
-                                </div>
-                            </div>
-                            
-                            <?php 
-                            $broken_percentage = (isset($broken_links_data['total_links']) && $broken_links_data['total_links'] > 0) ? 
-                                round((isset($broken_links_data['broken_links']) ? $broken_links_data['broken_links'] : 0) / $broken_links_data['total_links'] * 100) : 0;
-                            $health_score = 100 - $broken_percentage;
-                            ?>
-                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <div style="font-size: 14px; color: #666;">
-                                        Health Score: <strong style="color: <?php echo $health_score >= 80 ? '#28a745' : ($health_score >= 60 ? '#ffc107' : '#dc3545'); ?>;"><?php echo (int) $health_score; ?>%</strong>
-                                    </div>
-                                    <div style="font-size: 12px; color: #999;">
-                                        <?php echo (int) $broken_percentage; ?>% broken rate
-                                    </div>
-                                </div>
-                                <div style="height: 8px; background: #e9ecef; border-radius: 4px; overflow: hidden;">
-                                    <div style="height: 100%; width: <?php echo (int) $health_score; ?>%; background: linear-gradient(90deg, <?php echo $health_score >= 80 ? '#28a745' : ($health_score >= 60 ? '#ffc107' : '#dc3545'); ?> 0%, <?php echo $health_score >= 80 ? '#34d058' : ($health_score >= 60 ? '#ffd54f' : '#ff6b6b'); ?> 100%);"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Section 2: Alt Text -->
-                    <div style="margin-bottom: 30px; padding-bottom: 25px; border-bottom: 1px solid #eee;">
-                        <h3 style="margin: 0 0 20px 0; color: #0b1d51; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-                            Image Alt Text Analysis
-                        </h3>
-                        
-                        <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); border-top: 4px solid #17a2b8;">
-                            <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                                <h4 style="margin: 0; color: #0b1d51; font-size: 16px; font-weight: 700;">
-                                    Alt Text Status
-                                </h4>
-                            </div>
-                            
-                            <?php 
-                            $total_images = isset($alt_text_data['total_images']) ? $alt_text_data['total_images'] : 0;
-                            $images_with_alt = $total_images - (isset($alt_text_data['missing_count']) ? $alt_text_data['missing_count'] : 0);
-                            $alt_percentage = $total_images > 0 ? round(($images_with_alt / $total_images) * 100) : 0;
-                            ?>
-                            
-                            <div style="text-align: center; margin-bottom: 20px;">
-                                <div style="font-size: 36px; font-weight: 700; color: #17a2b8; line-height: 1; margin-bottom: 10px;">
-                                    <?php echo (int) ( isset($alt_text_data['missing_count']) ? $alt_text_data['missing_count'] : 0 ); ?> / <?php echo (int) $total_images; ?>
-                                </div>
-                                <div style="font-size: 14px; color: #666;">
-                                    <span style="color: #28a745; font-weight: 500;"><?php echo (int) $images_with_alt; ?></span> images with alt text • 
-                                    <span style="color: #dc3545; font-weight: 500;"><?php echo (int) ( isset($alt_text_data['missing_count']) ? $alt_text_data['missing_count'] : 0 ); ?></span> missing alt text
-                                </div>
-                            </div>
-                            
-                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <div style="font-size: 14px; color: #666;">
-                                        Optimization: <strong style="color: <?php echo $alt_percentage >= 80 ? '#28a745' : ($alt_percentage >= 50 ? '#ffc107' : '#dc3545'); ?>;"><?php echo (int) $alt_percentage; ?>%</strong>
-                                    </div>
-                                    <div style="font-size: 12px; color: #999;">
-                                        <?php echo (int) ( 100 - $alt_percentage ); ?>% improvement needed
-                                    </div>
-                                </div>
-                                <div style="height: 8px; background: #e9ecef; border-radius: 4px; overflow: hidden;">
-                                    <div style="height: 100%; width: <?php echo (int) $alt_percentage; ?>%; background: linear-gradient(90deg, <?php echo $alt_percentage >= 80 ? '#28a745' : ($alt_percentage >= 50 ? '#ffc107' : '#dc3545'); ?> 0%, <?php echo $alt_percentage >= 80 ? '#34d058' : ($alt_percentage >= 50 ? '#ffd54f' : '#ff6b6b'); ?> 100%);"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Section 3: Redirections -->
-                    <div style="margin-bottom: 20px;">
-                        <h3 style="margin: 0 0 15px 0; color: #0b1d51; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-                        Advanced Redirections</h3>
-                        
-                        <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); border-top: 4px solid #F28500;">
-                            <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                                <h4 style="margin: 0; color: #0b1d51; font-size: 16px; font-weight: 700;">
-                                    Redirections Status
-                                </h4>
-                            </div>
-                            
-                            <div style="text-align: center; margin-bottom: 20px;">
-                                <div style="font-size: 36px; font-weight: 600; color: #F28500; line-height: 1; margin-bottom: 10px;">
-                                    <?php echo (int) ( isset($redirections_data['total_redirections']) ? $redirections_data['total_redirections'] : 0 ); ?>
-                                </div>
-                                <div style="font-size: 14px; color: #666;">
-                                    <span style="color: #28a745; font-weight: 500;"><?php echo (int) ( isset($redirections_data['active_redirections']) ? $redirections_data['active_redirections'] : 0 ); ?></span> active • 
-                                    <span style="color: #dc3545; font-weight: 500;"><?php echo (int) ( (isset($redirections_data['total_redirections']) ? $redirections_data['total_redirections'] : 0) - (isset($redirections_data['active_redirections']) ? $redirections_data['active_redirections'] : 0) ); ?></span> inactive •
-                                    <span style="color: #17a2b8; font-weight: 500;"><?php echo esc_html( number_format(isset($redirections_data['total_hits']) ? $redirections_data['total_hits'] : 0) ); ?></span> total hits
-                                </div>
-                            </div>
-                            
-                            <?php if(isset($redirections_data['most_hit_redirect']['hits']) && $redirections_data['most_hit_redirect']['hits'] > 0): ?>
-                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                                <div style="font-size: 14px; color: #666; margin-bottom: 10px; font-weight: 600;">
-                                    Most Active Redirect
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                                    <div style="font-size: 24px; font-weight: 800; color: #F28500;">
-                                        <?php echo number_format($redirections_data['most_hit_redirect']['hits']); ?>
-                                    </div>
-                                    <div style="font-size: 12px; color: #999;">
-                                        hits
-                                    </div>
-                                </div>
-                                <div style="font-size: 12px; color: #666;">
-                                    <div style="margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                        <strong>From:</strong> <?php echo esc_html(wp_trim_words($redirections_data['most_hit_redirect']['from'], 8)); ?>
-                                    </div>
-                                    <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                        <strong>To:</strong> <?php echo esc_html(wp_trim_words($redirections_data['most_hit_redirect']['to'], 8)); ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php else: ?>
-                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center;">
-                                <div style="font-size: 14px; color: #666;">
-                                    No redirects currently being tracked
-                                </div>
-                            </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
+				<!-- Welcome Message -->
+				<div style="background: white; padding: 25px; border-radius: 10px; margin-bottom: 25px; box-shadow: 0 3px 15px rgba(0,0,0,0.05); border-left: 4px solid #F28500;">
+					<p style="font-size: 16px; line-height: 1.6; color: #555; margin: 0;">
+						<?php
+						echo wp_kses_post(
+							sprintf(
+								__( 'Hello! Here\'s your <strong style="color: #0b1d51;">weekly SEO performance report</strong> for <strong style="color: #F28500;">%s</strong>. Below is a comprehensive overview of your site\'s search performance and technical health.', 'seo-repair-kit' ),
+								esc_html( $site_name )
+							)
+						);
+						?>
+					</p>
+				</div>
 
-                <!-- Dashboard CTA -->
-                <div style="text-align: center; margin: 40px 0 30px 0;">
-                    <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 25px; border-radius: 12px; border: 2px dashed #F28500;">
-                        <h3 style="margin: 0 0 15px 0; color: #0b1d51; font-size: 20px; font-weight: 700;">
-                            Ready to Improve Your SEO?
-                        </h3>
-                        <p style="margin: 0 0 20px 0; color: #666; font-size: 15px; max-width: 500px; margin-left: auto; margin-right: auto;">
-                            Access detailed analytics, advanced tools, and personalized recommendations in your dashboard.
-                        </p>
-                        <a href="<?php echo esc_url($urls['dashboard']); ?>" style="display: inline-block; background-color: #F28500; padding: 10px 16px; text-decoration: none; color:white ; border-radius: 8px solid #F28500; font-weight: bold; font-size: 16px; box-shadow: 0 6px 15px rgba(242, 133, 0, 0.3); transition: all 0.3s ease; border: none; letter-spacing: 0.5px;">
-                             Dashboard
-                        </a>
-                    </div>
-                </div>
+				<!-- Dynamic Plan Status Card -->
+				<?php if ( $srk_is_pro ) : ?>
+					<div style="background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%); padding: 25px; border-radius: 10px; margin: 25px 0; text-align: center; border: 2px solid #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.12);">
+						<p style="margin: 0 0 12px 0; font-size: 18px; color: #065f46; font-weight: 700;">
+							<?php echo wp_kses_post( __( '✅ Your website is currently on the <span style="color: #F28500;">Pro Plan</span>', 'seo-repair-kit' ) ); ?>
+						</p>
+						<p style="margin: 0 0 8px 0; font-size: 14px; color: #4b5563;">
+							<?php echo esc_html__( 'Plan ID:', 'seo-repair-kit' ); ?> <strong><?php echo esc_html( strtoupper( $srk_plan_id ) ); ?></strong>
+						</p>
+						<p style="margin: 0 0 8px 0; font-size: 14px; color: #4b5563;">
+							<?php echo esc_html__( 'Status:', 'seo-repair-kit' ); ?> <strong><?php echo esc_html( ucfirst( $srk_plan_status ) ); ?></strong>
+						</p>
+						<?php if ( ! empty( $srk_plan_expires_at ) ) : ?>
+							<p style="margin: 0 0 8px 0; font-size: 14px; color: #4b5563;">
+								<?php echo esc_html__( 'Expires At:', 'seo-repair-kit' ); ?> <strong><?php echo esc_html( date_i18n( 'F j, Y', strtotime( $srk_plan_expires_at ) ) ); ?></strong>
+							</p>
+						<?php endif; ?>
+						<?php if ( null !== $srk_plan_days_left ) : ?>
+							<p style="margin: 0 0 8px 0; font-size: 14px; color: #4b5563;">
+								<?php echo esc_html__( 'Days Left:', 'seo-repair-kit' ); ?> <strong><?php echo esc_html( max( 0, (int) $srk_plan_days_left ) ); ?></strong>
+							</p>
+						<?php endif; ?>
+						<p style="margin: 0; font-size: 14px; color: #4b5563;">
+							<?php echo esc_html__( 'AI Chatbot Access:', 'seo-repair-kit' ); ?>
+							<strong><?php echo esc_html( $srk_plan_has_chatbot ? __( 'Enabled', 'seo-repair-kit' ) : __( 'Not Included', 'seo-repair-kit' ) ); ?></strong>
+						</p>
+					</div>
+				<?php else : ?>
+					<div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 25px; border-radius: 10px; margin: 25px 0; text-align: center; border: 2px solid #e9ecef; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
+						<p style="margin: 0 0 15px 0; font-size: 17px; color: #0b1d51; font-weight: 600;">
+							<?php echo wp_kses_post( __( 'You\'re currently on the <span style="color: #F28500;">Free Plan</span>!<br><span style="font-size: 15px; color: #666; font-weight: normal;">Unlock advanced features and get priority support by upgrading to Pro.</span>', 'seo-repair-kit' ) ); ?>
+						</p>
+						<?php if ( ! empty( $srk_plan_message ) ) : ?>
+							<p style="margin: 0 0 15px 0; font-size: 14px; color: #666;">
+								<?php echo esc_html( $srk_plan_message ); ?>
+							</p>
+						<?php endif; ?>
+						<?php if ( $srk_plan_is_expired ) : ?>
+							<p style="margin: 0 0 15px 0; font-size: 14px; color: #dc2626; font-weight: 600;">
+								<?php echo esc_html__( 'Your previous Pro plan has expired. Renew now to continue premium features.', 'seo-repair-kit' ); ?>
+							</p>
+						<?php endif; ?>
+						<a href="<?php echo esc_url( $urls['upgrade_pro'] ); ?>" style="display: inline-block; background: linear-gradient(135deg, #F28500 0%, #ff9a3c 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px; margin-top: 10px; box-shadow: 0 4px 12px rgba(242, 133, 0, 0.25); transition: all 0.3s ease; border: none;">
+							<?php echo esc_html__( '🚀 Upgrade to Pro', 'seo-repair-kit' ); ?>
+						</a>
+					</div>
+				<?php endif; ?>
 
-                <!-- Footer -->
-                <div style="text-align: center; padding-top: 25px; border-top: 2px solid #e9ecef; margin-top: 30px;">
-                    <p style="margin: 0 0 15px 0; color: #6c757d; font-size: 13px; line-height: 1.5; max-width: 500px; margin-left: auto; margin-right: auto;">
-                        You are receiving this email because you have signed up for SEO Repair Kit.<br>
-                        This automated SEO report was generated by <strong style="color: #0b1d51;">SEO Repair Kit</strong>
-                    </p>
-                    <p style="margin: 0; color: #999; font-size: 12px;">
-                        © <?php echo esc_html( date('Y') ); ?> SEO Repair Kit. All rights reserved.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <?php
-        return ob_get_clean();
-    }
+				<!-- Divider -->
+				<hr style="border: none; height: 1px; background: linear-gradient(to right, transparent, #e0e0e0, transparent); margin: 30px 0;">
 
-    /**
-     * Debug cron status
-     */
-    public function srk_debug_cron_status() {
-        $next_cron = wp_next_scheduled('srk_weekly_seo_summary_cron');
-        $schedule = wp_get_schedule('srk_weekly_seo_summary_cron');
-        $weekly_report_enabled = get_option('srk_weekly_report_enabled', true);
-        
-        return array(
-            'weekly_report_enabled' => $weekly_report_enabled,
-            'next_scheduled' => $next_cron ? date('Y-m-d H:i:s', $next_cron) : 'Not scheduled',
-            'schedule' => $schedule ? $schedule : 'No schedule',
-            'timestamp' => $next_cron,
-            'time_now' => time(),
-            'human_readable' => $next_cron ? human_time_diff(time(), $next_cron) . ' from now' : 'N/A'
-        );
-    }
+				<!-- KeyTrack / Search Performance -->
+				<div style="margin-bottom: 35px;">
+					<h2 style="margin: 0 0 25px 0; color: #0b1d51; font-size: 22px; font-weight: 700; border-bottom: 3px solid #F28500; padding-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+						<?php echo esc_html__( 'Search Performance Keytrack', 'seo-repair-kit' ); ?>
+					</h2>
 
-    /**
-     * Force reschedule cron
-     */
-    public function srk_force_reschedule_cron() {
-        return $this->srk_schedule_weekly_cron();
-    }
+					<?php if ( isset( $keytrack_data['status'] ) && 'success' === $keytrack_data['status'] && ! empty( $keytrack_data['data'] ) ) : ?>
+						<?php $srk_kt = $keytrack_data['data']; ?>
+
+						<!-- Main Metrics Grid -->
+						<div style="background: white; border-radius: 12px; padding: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); margin-bottom: 30px; border: 1px solid #e5e7eb;">
+							<!-- 4 Metrics Grid -->
+							<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; width:100%;">
+								<!-- Clicks -->
+								<div style="text-align: center; padding: 25px; border-radius: 10px; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 2px solid #e5e7eb; box-shadow: 0 4px 8px rgba(0,0,0,0.04);">
+									<div style="color: #666; font-size: 14px; margin-bottom: 12px; font-weight: 600; letter-spacing: 0.5px;"><?php echo esc_html__( 'CLICKS', 'seo-repair-kit' ); ?></div>
+									<div style="font-size: 34px; font-weight: 800; color: #0b1d51; line-height: 1;">
+										<?php echo esc_html( number_format_i18n( isset( $srk_kt['total_clicks'] ) ? $srk_kt['total_clicks'] : 0 ) ); ?>
+									</div>
+									<div style="color: #F28500; font-size: 12px; font-weight: 600; margin-top: 10px; background: rgba(242, 133, 0, 0.1); padding: 4px 8px; border-radius: 4px; display: inline-block;">
+										<?php echo esc_html( isset( $srk_kt['period'] ) ? $srk_kt['period'] : __( 'N/A', 'seo-repair-kit' ) ); ?>
+									</div>
+								</div>
+
+								<!-- Impressions -->
+								<div style="text-align: center; padding: 25px; border-radius: 10px; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 2px solid #e5e7eb; box-shadow: 0 4px 8px rgba(0,0,0,0.04);">
+									<div style="color: #666; font-size: 14px; margin-bottom: 12px; font-weight: 600; letter-spacing: 0.5px;"><?php echo esc_html__( 'IMPRESSIONS', 'seo-repair-kit' ); ?></div>
+									<div style="font-size: 34px; font-weight: 800; color: #0b1d51; line-height: 1;">
+										<?php echo esc_html( number_format_i18n( isset( $srk_kt['total_impressions'] ) ? $srk_kt['total_impressions'] : 0 ) ); ?>
+									</div>
+									<div style="color: #F28500; font-size: 12px; font-weight: 600; margin-top: 10px; background: rgba(242, 133, 0, 0.1); padding: 4px 8px; border-radius: 4px; display: inline-block;">
+										<?php echo esc_html( isset( $srk_kt['period'] ) ? $srk_kt['period'] : __( 'N/A', 'seo-repair-kit' ) ); ?>
+									</div>
+								</div>
+
+								<!-- Avg CTR -->
+								<div style="text-align: center; padding: 25px; border-radius: 10px; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 2px solid #e5e7eb; box-shadow: 0 4px 8px rgba(0,0,0,0.04);">
+									<div style="color: #666; font-size: 14px; margin-bottom: 12px; font-weight: 600; letter-spacing: 0.5px;"><?php echo esc_html__( 'AVG CTR', 'seo-repair-kit' ); ?></div>
+									<div style="font-size: 34px; font-weight: 800; color: #F28500; line-height: 1;">
+										<?php echo esc_html( isset( $srk_kt['average_ctr'] ) ? $srk_kt['average_ctr'] : '0.00' ); ?>%
+									</div>
+									<div style="color: #666; font-size: 12px; margin-top: 10px;"><?php echo esc_html__( 'Click-through Rate', 'seo-repair-kit' ); ?></div>
+								</div>
+
+								<!-- Avg Position -->
+								<div style="text-align: center; padding: 25px; border-radius: 10px; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 2px solid #e5e7eb; box-shadow: 0 4px 8px rgba(0,0,0,0.04);">
+									<div style="color: #666; font-size: 14px; margin-bottom: 12px; font-weight: 600; letter-spacing: 0.5px;"><?php echo esc_html__( 'AVG POSITION', 'seo-repair-kit' ); ?></div>
+									<div style="font-size: 34px; font-weight: 800; color: #0b1d51; line-height: 1;">
+										<?php echo esc_html( isset( $srk_kt['average_position'] ) ? $srk_kt['average_position'] : '0.00' ); ?>
+									</div>
+									<div style="color: #666; font-size: 12px; margin-top: 10px;"><?php echo esc_html__( 'Search Ranking', 'seo-repair-kit' ); ?></div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Top Performing Pages -->
+						<?php if ( ! empty( $srk_kt['top_pages'] ) ) : ?>
+							<div style="margin-bottom: 25px;">
+								<h3 style="margin: 0 0 18px 0; color: #0b1d51; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+									<span style="color: white; width: 30px; height: 30px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;"></span>
+									<?php echo esc_html__( 'Top Performing Pages', 'seo-repair-kit' ); ?>
+								</h3>
+								<div style="background: white; padding: 0; border-radius: 10px; border: 2px solid #f0f0f0; overflow: hidden; box-shadow: 0 3px 12px rgba(0,0,0,0.05);">
+									<?php foreach ( $srk_kt['top_pages'] as $srk_index => $srk_page ) : ?>
+										<div style="padding: 18px 20px; border-bottom: <?php echo esc_attr( ( $srk_index < count( $srk_kt['top_pages'] ) - 1 ) ? '1px solid #f0f0f0' : 'none' ); ?>; background: <?php echo esc_attr( 0 === $srk_index % 2 ? '#ffffff' : '#fafafa' ); ?>;">
+											<div style="color: #0b1d51; font-size: 15px; font-weight: 600; margin-bottom: 5px;">
+												<?php echo esc_html( wp_trim_words( $srk_page['url'], 8 ) ); ?>
+											</div>
+											<div style="display: flex; gap: 20px; font-size: 13px; color: #666;">
+												<span><?php echo esc_html__( '👁️', 'seo-repair-kit' ); ?> <strong><?php echo esc_html( number_format_i18n( $srk_page['impressions'] ) ); ?></strong> <?php echo esc_html__( 'impressions', 'seo-repair-kit' ); ?></span>
+												<span><?php echo esc_html__( '👆', 'seo-repair-kit' ); ?> <strong><?php echo esc_html( number_format_i18n( $srk_page['clicks'] ) ); ?></strong> <?php echo esc_html__( 'clicks', 'seo-repair-kit' ); ?></span>
+												<span><?php echo esc_html__( '📈', 'seo-repair-kit' ); ?> <strong><?php echo esc_html( $srk_page['position'] ); ?></strong> <?php echo esc_html__( 'position', 'seo-repair-kit' ); ?></span>
+											</div>
+										</div>
+									<?php endforeach; ?>
+								</div>
+							</div>
+						<?php endif; ?>
+
+						<!-- Top Search Queries -->
+						<?php if ( ! empty( $srk_kt['top_queries'] ) ) : ?>
+							<div style="margin-bottom: 25px;">
+								<h3 style="margin: 0 0 18px 0; color: #0b1d51; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+									<span style="color: white; width: 30px; height: 30px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;"></span>
+									<?php echo esc_html__( 'Top Search Queries', 'seo-repair-kit' ); ?>
+								</h3>
+								<div style="background: white; padding: 0; border-radius: 10px; border: 2px solid #f0f0f0; overflow: hidden; box-shadow: 0 3px 12px rgba(0,0,0,0.05);">
+									<?php foreach ( $srk_kt['top_queries'] as $srk_index => $srk_query ) : ?>
+										<div style="padding: 18px 20px; border-bottom: <?php echo esc_attr( ( $srk_index < count( $srk_kt['top_queries'] ) - 1 ) ? '1px solid #f0f0f0' : 'none' ); ?>; background: <?php echo esc_attr( 0 === $srk_index % 2 ? '#ffffff' : '#fafafa' ); ?>;">
+											<div style="color: #0b1d51; font-size: 15px; font-weight: 600; margin-bottom: 5px; font-style: italic;">
+												"<?php echo esc_html( $srk_query['query'] ); ?>"
+											</div>
+											<div style="display: flex; gap: 20px; font-size: 13px; color: #666;">
+												<span><?php echo esc_html__( '👁️', 'seo-repair-kit' ); ?> <strong><?php echo esc_html( number_format_i18n( $srk_query['impressions'] ) ); ?></strong> <?php echo esc_html__( 'impressions', 'seo-repair-kit' ); ?></span>
+												<span><?php echo esc_html__( '👆', 'seo-repair-kit' ); ?> <strong><?php echo esc_html( number_format_i18n( $srk_query['clicks'] ) ); ?></strong> <?php echo esc_html__( 'clicks', 'seo-repair-kit' ); ?></span>
+												<span><?php echo esc_html__( '📈', 'seo-repair-kit' ); ?> <strong><?php echo esc_html( $srk_query['position'] ); ?></strong> <?php echo esc_html__( 'position', 'seo-repair-kit' ); ?></span>
+											</div>
+										</div>
+									<?php endforeach; ?>
+								</div>
+							</div>
+						<?php endif; ?>
+
+					<?php else : ?>
+						<div style="background: #fffaf0; padding: 25px; border-radius: 10px; text-align: center; border: 2px solid #F28500; margin-bottom: 25px;">
+							<p style="margin: 0; color: #0b1d51; font-size: 15px; font-weight: 600;">
+								<?php echo esc_html__( '⚠️ Search Console data is currently unavailable.', 'seo-repair-kit' ); ?>
+							</p>
+							<p style="margin: 10px 0 0 0; color: #666; font-size: 14px;">
+								<?php echo esc_html__( 'Please ensure Google Site Kit is connected and configured properly.', 'seo-repair-kit' ); ?>
+							</p>
+						</div>
+					<?php endif; ?>
+				</div>
+
+				<!-- Technical Health Check Section - UPDATED DESIGN -->
+				<div style="margin-bottom: 60px;">
+					<!-- Section 1: Broken Links -->
+					<div style="margin-bottom: 40px; padding-bottom: 25px; border-bottom: 1px solid #eee;">
+						<h3 style="margin: 0 0 20px 0; color: #0b1d51; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+							<?php echo esc_html__( 'Broken Links Analysis', 'seo-repair-kit' ); ?>
+						</h3>
+
+						<div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); border-top: 4px solid #dc3545;">
+							<div style="display: flex; align-items: center; margin-bottom: 20px;">
+								<h4 style="margin: 0; color: #0b1d51; font-size: 16px; font-weight: 700;">
+									<?php echo esc_html__( 'Broken Links Status', 'seo-repair-kit' ); ?>
+								</h4>
+							</div>
+
+							<div style="text-align: center; margin-bottom: 20px;">
+								<div style="font-size: 36px; font-weight: 700; color: #0b1d51; line-height: 1; margin-bottom: 10px;">
+									<?php echo (int) ( isset( $broken_links_data['broken_links'] ) ? $broken_links_data['broken_links'] : 0 ); ?> / <?php echo (int) ( isset( $broken_links_data['total_links'] ) ? $broken_links_data['total_links'] : 0 ); ?>
+								</div>
+								<div style="font-size: 14px; color: #666;">
+									<?php
+									printf(
+										esc_html__( '%1$d broken links found out of %2$d total links', 'seo-repair-kit' ),
+										(int) ( isset( $broken_links_data['broken_links'] ) ? $broken_links_data['broken_links'] : 0 ),
+										(int) ( isset( $broken_links_data['total_links'] ) ? $broken_links_data['total_links'] : 0 )
+									);
+									?>
+								</div>
+							</div>
+
+							<?php
+							$broken_percentage = ( isset( $broken_links_data['total_links'] ) && $broken_links_data['total_links'] > 0 ) ?
+								round( ( isset( $broken_links_data['broken_links'] ) ? $broken_links_data['broken_links'] : 0 ) / $broken_links_data['total_links'] * 100 ) : 0;
+							$health_score = 100 - $broken_percentage;
+							?>
+							<div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+								<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+									<div style="font-size: 14px; color: #666;">
+										<?php echo esc_html__( 'Health Score:', 'seo-repair-kit' ); ?> <strong style="color: <?php echo esc_attr( $health_score >= 80 ? '#28a745' : ( $health_score >= 60 ? '#ffc107' : '#dc3545' ) ); ?>;"><?php echo (int) $health_score; ?>%</strong>
+									</div>
+									<div style="font-size: 12px; color: #999;">
+										<?php
+										printf(
+											esc_html__( '%d%% broken rate', 'seo-repair-kit' ),
+											(int) $broken_percentage
+										);
+										?>
+									</div>
+								</div>
+								<div style="height: 8px; background: #e9ecef; border-radius: 4px; overflow: hidden;">
+									<div style="height: 100%; width: <?php echo (int) $health_score; ?>%; background: linear-gradient(90deg, <?php echo esc_attr( $health_score >= 80 ? '#28a745' : ( $health_score >= 60 ? '#ffc107' : '#dc3545' ) ); ?> 0%, <?php echo esc_attr( $health_score >= 80 ? '#34d058' : ( $health_score >= 60 ? '#ffd54f' : '#ff6b6b' ) ); ?> 100%);"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Section 2: Alt Text -->
+					<div style="margin-bottom: 30px; padding-bottom: 25px; border-bottom: 1px solid #eee;">
+						<h3 style="margin: 0 0 20px 0; color: #0b1d51; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+							<?php echo esc_html__( 'Image Alt Text Analysis', 'seo-repair-kit' ); ?>
+						</h3>
+
+						<div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); border-top: 4px solid #17a2b8;">
+							<div style="display: flex; align-items: center; margin-bottom: 20px;">
+								<h4 style="margin: 0; color: #0b1d51; font-size: 16px; font-weight: 700;">
+									<?php echo esc_html__( 'Alt Text Status', 'seo-repair-kit' ); ?>
+								</h4>
+							</div>
+
+							<?php
+							$total_images    = isset( $alt_text_data['total_images'] ) ? $alt_text_data['total_images'] : 0;
+							$images_with_alt = $total_images - ( isset( $alt_text_data['missing_count'] ) ? $alt_text_data['missing_count'] : 0 );
+							$alt_percentage  = $total_images > 0 ? round( ( $images_with_alt / $total_images ) * 100 ) : 0;
+							?>
+
+							<div style="text-align: center; margin-bottom: 20px;">
+								<div style="font-size: 36px; font-weight: 700; color: #17a2b8; line-height: 1; margin-bottom: 10px;">
+									<?php echo (int) ( isset( $alt_text_data['missing_count'] ) ? $alt_text_data['missing_count'] : 0 ); ?> / <?php echo (int) $total_images; ?>
+								</div>
+								<div style="font-size: 14px; color: #666;">
+									<span style="color: #28a745; font-weight: 500;"><?php echo (int) $images_with_alt; ?></span> <?php echo esc_html__( 'images with alt text', 'seo-repair-kit' ); ?> •
+									<span style="color: #dc3545; font-weight: 500;"><?php echo (int) ( isset( $alt_text_data['missing_count'] ) ? $alt_text_data['missing_count'] : 0 ); ?></span> <?php echo esc_html__( 'missing alt text', 'seo-repair-kit' ); ?>
+								</div>
+							</div>
+
+							<div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+								<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+									<div style="font-size: 14px; color: #666;">
+										<?php echo esc_html__( 'Optimization:', 'seo-repair-kit' ); ?> <strong style="color: <?php echo esc_attr( $alt_percentage >= 80 ? '#28a745' : ( $alt_percentage >= 50 ? '#ffc107' : '#dc3545' ) ); ?>;"><?php echo (int) $alt_percentage; ?>%</strong>
+									</div>
+									<div style="font-size: 12px; color: #999;">
+										<?php
+										printf(
+											esc_html__( '%d%% improvement needed', 'seo-repair-kit' ),
+											(int) ( 100 - $alt_percentage )
+										);
+										?>
+									</div>
+								</div>
+								<div style="height: 8px; background: #e9ecef; border-radius: 4px; overflow: hidden;">
+									<div style="height: 100%; width: <?php echo (int) $alt_percentage; ?>%; background: linear-gradient(90deg, <?php echo esc_attr( $alt_percentage >= 80 ? '#28a745' : ( $alt_percentage >= 50 ? '#ffc107' : '#dc3545' ) ); ?> 0%, <?php echo esc_attr( $alt_percentage >= 80 ? '#34d058' : ( $alt_percentage >= 50 ? '#ffd54f' : '#ff6b6b' ) ); ?> 100%);"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Section 3: Redirections -->
+					<div style="margin-bottom: 20px;">
+						<h3 style="margin: 0 0 15px 0; color: #0b1d51; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+							<?php echo esc_html__( 'Advanced Redirections', 'seo-repair-kit' ); ?>
+						</h3>
+
+						<div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); border-top: 4px solid #F28500;">
+							<div style="display: flex; align-items: center; margin-bottom: 20px;">
+								<h4 style="margin: 0; color: #0b1d51; font-size: 16px; font-weight: 700;">
+									<?php echo esc_html__( 'Redirections Status', 'seo-repair-kit' ); ?>
+								</h4>
+							</div>
+
+							<div style="text-align: center; margin-bottom: 20px;">
+								<div style="font-size: 36px; font-weight: 600; color: #F28500; line-height: 1; margin-bottom: 10px;">
+									<?php echo (int) ( isset( $redirections_data['total_redirections'] ) ? $redirections_data['total_redirections'] : 0 ); ?>
+								</div>
+								<div style="font-size: 14px; color: #666;">
+									<span style="color: #28a745; font-weight: 500;"><?php echo (int) ( isset( $redirections_data['active_redirections'] ) ? $redirections_data['active_redirections'] : 0 ); ?></span> <?php echo esc_html__( 'active', 'seo-repair-kit' ); ?> •
+									<span style="color: #dc3545; font-weight: 500;"><?php echo (int) ( ( isset( $redirections_data['total_redirections'] ) ? $redirections_data['total_redirections'] : 0 ) - ( isset( $redirections_data['active_redirections'] ) ? $redirections_data['active_redirections'] : 0 ) ); ?></span> <?php echo esc_html__( 'inactive', 'seo-repair-kit' ); ?> •
+									<span style="color: #17a2b8; font-weight: 500;"><?php echo esc_html( number_format_i18n( isset( $redirections_data['total_hits'] ) ? $redirections_data['total_hits'] : 0 ) ); ?></span> <?php echo esc_html__( 'total hits', 'seo-repair-kit' ); ?>
+								</div>
+							</div>
+
+							<?php if ( isset( $redirections_data['most_hit_redirect']['hits'] ) && $redirections_data['most_hit_redirect']['hits'] > 0 ) : ?>
+								<div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+									<div style="font-size: 14px; color: #666; margin-bottom: 10px; font-weight: 600;">
+										<?php echo esc_html__( 'Most Active Redirect', 'seo-repair-kit' ); ?>
+									</div>
+									<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+										<div style="font-size: 24px; font-weight: 800; color: #F28500;">
+											<?php echo esc_html( number_format_i18n( $redirections_data['most_hit_redirect']['hits'] ) ); ?>
+										</div>
+										<div style="font-size: 12px; color: #999;">
+											<?php echo esc_html__( 'hits', 'seo-repair-kit' ); ?>
+										</div>
+									</div>
+									<div style="font-size: 12px; color: #666;">
+										<div style="margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+											<strong><?php echo esc_html__( 'From:', 'seo-repair-kit' ); ?></strong> <?php echo esc_html( wp_trim_words( $redirections_data['most_hit_redirect']['from'], 8 ) ); ?>
+										</div>
+										<div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+											<strong><?php echo esc_html__( 'To:', 'seo-repair-kit' ); ?></strong> <?php echo esc_html( wp_trim_words( $redirections_data['most_hit_redirect']['to'], 8 ) ); ?>
+										</div>
+									</div>
+								</div>
+							<?php else : ?>
+								<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center;">
+									<div style="font-size: 14px; color: #666;">
+										<?php echo esc_html__( 'No redirects currently being tracked', 'seo-repair-kit' ); ?>
+									</div>
+								</div>
+							<?php endif; ?>
+						</div>
+					</div>
+				</div>
+
+				<!-- Dashboard CTA -->
+				<div style="text-align: center; margin: 40px 0 30px 0;">
+					<div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 25px; border-radius: 12px; border: 2px dashed #F28500;">
+						<h3 style="margin: 0 0 15px 0; color: #0b1d51; font-size: 20px; font-weight: 700;">
+							<?php echo esc_html__( 'Ready to Improve Your SEO?', 'seo-repair-kit' ); ?>
+						</h3>
+						<p style="margin: 0 0 20px 0; color: #666; font-size: 15px; max-width: 500px; margin-left: auto; margin-right: auto;">
+							<?php echo esc_html__( 'Access detailed analytics, advanced tools, and personalized recommendations in your dashboard.', 'seo-repair-kit' ); ?>
+						</p>
+						<a href="<?php echo esc_url( $urls['dashboard'] ); ?>" style="display: inline-block; background-color: #F28500; padding: 10px 16px; text-decoration: none; color:white ; border-radius: 8px solid #F28500; font-weight: bold; font-size: 16px; box-shadow: 0 6px 15px rgba(242, 133, 0, 0.3); transition: all 0.3s ease; border: none; letter-spacing: 0.5px;">
+							<?php echo esc_html__( 'Dashboard', 'seo-repair-kit' ); ?>
+						</a>
+					</div>
+				</div>
+
+				<!-- Footer -->
+				<div style="text-align: center; padding-top: 25px; border-top: 2px solid #e9ecef; margin-top: 30px;">
+					<p style="margin: 0 0 15px 0; color: #6c757d; font-size: 13px; line-height: 1.5; max-width: 500px; margin-left: auto; margin-right: auto;">
+						<?php echo esc_html__( 'You are receiving this email because you have signed up for SEO Repair Kit.', 'seo-repair-kit' ); ?><br>
+						<?php echo wp_kses_post( __( 'This automated SEO report was generated by <strong style="color: #0b1d51;">SEO Repair Kit</strong>', 'seo-repair-kit' ) ); ?>
+					</p>
+					<p style="margin: 0; color: #999; font-size: 12px;">
+						© <?php echo esc_html( date_i18n( 'Y' ) ); ?> SEO Repair Kit. <?php echo esc_html__( 'All rights reserved.', 'seo-repair-kit' ); ?>
+					</p>
+				</div>
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Debug cron status
+	 */
+	public function srk_debug_cron_status() {
+		$next_cron             = wp_next_scheduled( 'srk_weekly_seo_summary_cron' );
+		$schedule              = wp_get_schedule( 'srk_weekly_seo_summary_cron' );
+		$weekly_report_enabled = get_option( 'srk_weekly_report_enabled', true );
+
+		return array(
+			'weekly_report_enabled' => $weekly_report_enabled,
+			'next_scheduled'        => $next_cron ? date_i18n( 'Y-m-d H:i:s', $next_cron ) : __( 'Not scheduled', 'seo-repair-kit' ),
+			'schedule'              => $schedule ? $schedule : __( 'No schedule', 'seo-repair-kit' ),
+			'timestamp'             => $next_cron,
+			'time_now'              => time(),
+			'human_readable'        => $next_cron ? human_time_diff( time(), $next_cron ) . ' ' . __( 'from now', 'seo-repair-kit' ) : __( 'N/A', 'seo-repair-kit' ),
+		);
+	}
+
+	/**
+	 * Force reschedule cron
+	 */
+	public function srk_force_reschedule_cron() {
+		return $this->srk_schedule_weekly_cron();
+	}
 }
 
-// Initialize the class
+// Initialize the class.
 SeoRepairKit_WeeklySummaryService::get_instance();

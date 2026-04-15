@@ -35,7 +35,7 @@
             siteUrl: $wrap.data('site-url') || 'https://example.com',
             tagline: $wrap.data('tagline') || '',
             currentDate: $wrap.data('current-date') || new Date().toLocaleDateString(),
-            currentDay: $wrap.data('current-day') || new Date().getDate(),
+            currentDay: $wrap.data('current-day') || new Date().toLocaleString('en-US', { weekday: 'long' }),
             currentMonth: $wrap.data('current-month') || new Date().toLocaleString('default', { month: 'long' }),
             currentYear: $wrap.data('current-year') || new Date().getFullYear()
         };
@@ -93,9 +93,10 @@
             { tag: '%permalink%', value: termData.link },
             { tag: '%tagline%', value: termData.tagline },
             { tag: '%sitedesc%', value: termData.tagline },
-            { tag: '%date%', value: termData.currentDate },
+            { tag: '%current_day%', value: termData.currentDay },
+            { tag: '%current_date%', value: termData.currentDate },
             { tag: '%year%', value: termData.currentYear || new Date().getFullYear() },
-            { tag: '%month%', value: termData.currentYear || new Date().getFullYear(), },
+            { tag: '%month%', value: termData.currentMonth },
             { tag: '%term%', value: termData.name },
             { tag: '%sep%', value: termData.separator },
             { tag: '%custom_field%', value: '' },
@@ -251,10 +252,7 @@
         // Initialize toggle handler
         initTermToggleHandler($wrap);
     }
-    /**
-     * Initialize Toggle Handler for Term Edit Page
-     * FIXED: Only handles toggle UI, does NOT touch preview (preview handled separately)
-     */
+
     /**
      * Initialize Toggle Handler for Term Edit Page
      * FIXED: Properly handles default ON state for fresh installs
@@ -438,8 +436,6 @@
                 taxonomyTabs: $('.srk-taxonomy-tab'),
                 taxonomyContents: $('.srk-taxonomy-content'),
 
-                // REMOVED: visibilityToggles
-
                 // Title Inputs
                 titleInputs: $('.srk-taxonomy-title-input'),
 
@@ -492,8 +488,6 @@
             // Initialize advanced sections
             this.initAdvancedSections();
 
-            // REMOVED: initVisibilityToggles
-
             // 🔥 INITIAL SYNC (page load)
             this.elements.taxonomyContents.each((i, el) => {
                 this.syncSnippetAndImageLimits($(el));
@@ -515,12 +509,10 @@
             const self = this;
 
             // ✅ FIX: Track last focused field and cursor position before clicking buttons
-            // Naya code:
             $(document).on('focus', '.srk-taxonomy-title-input, .srk-taxonomy-desc-input', function () {
                 self.lastFocusedField = $(this).attr('id');
             });
 
-            // Naya code:
             $(document).on('keyup click', '.srk-taxonomy-title-input, .srk-taxonomy-desc-input', function () {
                 self.lastFocusedField = $(this).attr('id');
                 self.lastCursorPosition = this.selectionStart;
@@ -624,7 +616,7 @@
 
             // If we have a stored position for this field, use it
             if (this.lastFocusedField === fieldId && startPos !== null) {
-                // Use stored position
+            // Use stored position
             } else {
                 // Default to end of content if no position stored or different field
                 startPos = field.value.length;
@@ -706,7 +698,6 @@
         },
 
         // Filter tags in modal
-        // Filter tags in modal
         filterTags: function ($modal, searchTerm) {
             $modal.find('.srk-modal-tag-item').each(function () {
                 const $item = $(this);
@@ -786,10 +777,6 @@
             this.updatePreview($tabContent);
         },
 
-        // REMOVED: toggleAdvancedSection function
-
-        // REMOVED: updateToggleLabel function
-
         // Switch inner tabs
         switchInnerTab: function ($btn) {
             const tab = $btn.data('tab');
@@ -846,8 +833,6 @@
 
                 self.updatePreview(tabContent);
             });
-
-
 
             // Index/Noindex mutual exclusivity
             $('.srk-index-checkbox, .srk-noindex-checkbox').on('change', function () {
@@ -909,8 +894,6 @@
 
             if (!$previewBox.length) return;
 
-            // REMOVED: visibilityEnabled check
-
             // Get values
             const titleTemplate = $tabContent.find('.srk-taxonomy-title-input').val() || this.getDefaultTitle(taxonomy);
             const descTemplate = $tabContent.find('.srk-taxonomy-desc-input').val() || this.getDefaultDescription(taxonomy);
@@ -932,7 +915,7 @@
                 current_date: new Date().toLocaleDateString(),
                 year: new Date().getFullYear(),
                 month: new Date().toLocaleString('default', { month: 'long' }),
-                day: new Date().getDate(),
+                day: new Date().toLocaleString('en-US', { weekday: 'long' }),
                 tagline: 'Your site tagline here',
                 permalink: this.data.previewData.site_url + '/' + taxonomy + '/sample-term/',
                 parent_categories: 'Parent ' + taxonomy.charAt(0).toUpperCase() + taxonomy.slice(1),
@@ -994,7 +977,6 @@
 
         // Validate robots checkboxes
         validateRobots: function () {
-            // REMOVED: visibility check
 
             // Show warning if both index and noindex are checked (shouldn't happen with our logic)
             this.elements.taxonomyContents.each((index, content) => {
@@ -1009,6 +991,7 @@
                 }
             });
         },
+
         /**
          * - noimageindex → hide max image preview
          * - nosnippet → hide max snippet
@@ -1057,8 +1040,6 @@
         // Reset taxonomy settings
         resetTaxonomySettings: function (taxonomy) {
             const $content = this.elements.taxonomyContents.filter('[data-taxonomy="' + taxonomy + '"]');
-
-            // REMOVED: visibility toggle reset
 
             // Reset to defaults
             $content.find('.srk-taxonomy-title-input').val(this.getDefaultTitle(taxonomy));
@@ -1143,8 +1124,9 @@
         SRK_Taxonomy_Manager.init();
 
     });
+
     /* ============================================
-   GLOBAL RESET TAXONOMIES (LIKE GLOBAL TAB)
+        GLOBAL RESET TAXONOMIES (LIKE GLOBAL TAB)
      ============================================ */
 
     $('.srk-taxonomy-meta-manager').on('click', '.srk-reset-taxonomies', function (e) {
@@ -1159,8 +1141,6 @@
 
             const $box = $(this);
             const taxonomy = $box.data('taxonomy');
-
-            // REMOVED: visibility toggle reset
 
             //  2. Reset title template
             if (taxonomy === 'post_tag') {

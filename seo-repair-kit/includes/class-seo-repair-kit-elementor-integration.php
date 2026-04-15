@@ -23,7 +23,6 @@ class SRK_Elementor_Integration {
     private $post_type;
 
     public function __construct() {
-        error_log( 'SRK Elementor Integration Loaded (SYNCED VERSION)' );
 
         // Add meta panel to Elementor document settings
         add_action( 'elementor/documents/register_controls', [ $this, 'add_seo_meta_panel' ], 20 );
@@ -50,13 +49,10 @@ class SRK_Elementor_Integration {
         $post_id = $document->get_main_id();
         $settings = $data['settings'] ?? [];
         
-        error_log( "SRK Elementor: Saving meta for post {$post_id}" );
-        
         // Save basic meta fields - THESE ARE THE CORRECT META KEYS
         if ( isset( $settings['srk_meta_title'] ) ) {
             $title = sanitize_text_field( $settings['srk_meta_title'] );
             update_post_meta( $post_id, '_srk_meta_title', $title );
-            error_log( "SRK Elementor: Saved title: {$title}" );
         }
         
         if ( isset( $settings['srk_meta_description'] ) ) {
@@ -105,7 +101,6 @@ class SRK_Elementor_Integration {
         // Update sync timestamp
         update_post_meta( $post_id, '_srk_last_sync', current_time('timestamp') );
         
-        error_log( "SRK Elementor: Saved all meta for post {$post_id}" );
     }
 
     public function add_seo_meta_panel( $document ) {
@@ -125,8 +120,6 @@ class SRK_Elementor_Integration {
         $meta_keywords = get_post_meta( $this->post_id, '_srk_meta_keywords', true );
         $focus_keyword = get_post_meta( $this->post_id, '_srk_focus_keyword', true );
         $last_sync = get_post_meta( $this->post_id, '_srk_last_sync', true );
-
-        error_log( "SRK Elementor: Loading meta for post {$this->post_id} - Title: {$meta_title}" );
 
         // Get content type settings
         $content_type_settings = $this->get_content_type_settings();
@@ -912,15 +905,35 @@ class SRK_Elementor_Integration {
                 'description' => 'The primary category of the post.',
                 'current_value' => $current_values['category_title']
             ),
+            'Current Date' => array(
+                'tag' => '%current_date%',
+                'description' => 'Today\'s date in full format.',
+                'current_value' => $current_values['current_date'],
+            ),
+            'Current Day' => array(
+                'tag' => '%current_day%',
+                'description' => 'The current weekday name.',
+                'current_value' => $current_values['current_day'],
+            ),
+            'Current Month' => array(
+                'tag' => '%month%',
+                'description' => 'The current month name.',
+                'current_value' => $current_values['current_month'],
+            ),
             'Current Year' => array(
                 'tag' => '%year%',
                 'description' => 'The current year.',
-                'current_value' => $current_values['current_year']
+                'current_value' => $current_values['current_year'],
             ),
             'Post Date' => array(
                 'tag' => '%post_date%',
                 'description' => 'The publication date of the post.',
-                'current_value' => $current_values['post_date']
+                'current_value' => $current_values['post_date'],
+            ),
+            'Post Day' => array(
+                'tag' => '%post_day%',
+                'description' => 'The weekday when the post was published.',
+                'current_value' => $current_values['post_day'],
             ),
             'Post Content' => array(
                 'tag' => '%content%',
@@ -964,9 +977,12 @@ class SRK_Elementor_Integration {
             'author_last_name' => get_the_author_meta( 'last_name', $author_id ) ?: '',
             'category_title' => $primary_category,
             'categories' => $all_categories,
-            'current_date' => date_i18n( get_option( 'date_format' ) ),
-            'current_year' => date_i18n( 'Y' ),
-            'post_date' => get_the_date( '', $post_id ) ?: date_i18n( get_option( 'date_format' ) ),
+            'current_date'  => date_i18n( get_option( 'date_format' ) ),
+            'current_day'   => date_i18n( 'l' ),
+            'current_month' => date_i18n( 'F' ),
+            'current_year'  => date_i18n( 'Y' ),
+            'post_date'     => get_the_date( 'F j, Y', $post_id ) ?: date_i18n( get_option( 'date_format' ) ),
+            'post_day'      => get_the_date( 'l', $post_id ) ?: '',
             'post_content' => wp_trim_words( $post_content, 20 ),
             'permalink' => get_permalink( $post_id ) ?: site_url()
         );
@@ -994,7 +1010,6 @@ class SRK_Elementor_Integration {
         ];
         
         if ( in_array( $meta_key, $srk_meta_keys ) ) {
-            error_log( "SRK Elementor: Meta updated from Gutenberg - {$meta_key} for post {$post_id}" );
         }
     }
 
@@ -1099,6 +1114,7 @@ class SRK_Elementor_Integration {
             'post_excerpt' => $post_excerpt,
             'post_content' => $post_content,
             'post_date' => $post_date,
+            'post_day'  => get_the_date( 'l', $post->ID ),
             'permalink' => get_permalink( $post->ID ),
             
             // Author data
@@ -1112,6 +1128,8 @@ class SRK_Elementor_Integration {
             
             // Date data
             'current_date' => date_i18n( get_option( 'date_format' ) ),
+            'current_day'   => date_i18n( 'l' ),
+            'current_month' => date_i18n( 'F' ),
             'current_year' => date_i18n( 'Y' ),
             
             // Settings
@@ -1180,6 +1198,7 @@ class SRK_Elementor_Integration {
 
         wp_add_inline_script( 'srk-elementor-editor', 'window.srkAuthors = ' . wp_json_encode( $authors ) . ';', 'before' );
     }
+    
     /**
      * AJAX handler to reset Elementor meta to content type defaults
      * Deletes post meta so content type templates take over
@@ -1230,6 +1249,5 @@ class SRK_Elementor_Integration {
 add_action( 'elementor/loaded', function() {
     if ( class_exists( 'Elementor\Plugin' ) ) {
         new SRK_Elementor_Integration();
-        error_log( 'SRK Elementor Integration: Plugin initialized successfully' );
     }
 } );

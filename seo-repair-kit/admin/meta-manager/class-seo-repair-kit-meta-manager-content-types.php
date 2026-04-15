@@ -59,8 +59,12 @@ class SRK_Meta_Manager_Content_Types {
 			'description' => 'The primary category of the post.',
 		),
 		'Current Date'       => array(
-			'tag'         => '%date%',
+			'tag'         => '%current_date%',
 			'description' => 'Today\'s date in full format.',
+		),
+		'Current Day'        => array(
+			'tag'         => '%current_day%',
+			'description' => 'The current weekday name.',
 		),
 		'Current Month'      => array(
 			'tag'         => '%month%',
@@ -437,13 +441,14 @@ class SRK_Meta_Manager_Content_Types {
 		}
 
 		$current_date = date_i18n( 'F j, Y' );
+		$current_day   = date_i18n( 'l' );
 		$current_month = date_i18n( 'F' );
 		$current_year  = date_i18n( 'Y' );
 		$custom_field  = 'Custom Field Value';
 		$permalink     = $site_url . '/sample-' . $post_type . '/';
 		$post_content  = 'Sample ' . $post_type . ' content text...';
 		$post_date     = date_i18n( 'F j, Y', strtotime( '-7 days' ) );
-		$post_day      = date_i18n( 'd', strtotime( '-7 days' ) );
+		$post_day      = date_i18n( 'l', strtotime( '-7 days' ) );
 
 		$replacements = array(
 			'%sep%'                => $separator,
@@ -455,7 +460,8 @@ class SRK_Meta_Manager_Content_Types {
 			'%author_last_name%'   => $author_last_name,
 			'%author_name%'        => $author_name,
 			'%term_title%'           => $category_title,
-			'%date%'               => $current_date,
+			'%current_date%'               => $current_date,
+			'%current_day%'                => $current_day,
 			'%month%'              => $current_month,
 			'%year%'               => $current_year,
 			'%custom_field%'       => $custom_field,

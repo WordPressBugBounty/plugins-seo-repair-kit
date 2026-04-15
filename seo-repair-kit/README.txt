@@ -5,8 +5,8 @@ Tags: meta manager, schema markup, 404 monitor, broken link checker, 301 redirec
 Requires at least: 5.0.0
 Tested up to: 6.9.4
 Requires PHP: 7.4.3
-Stable tag: 2.1.5
-Release Date: 31-03-2026
+Stable tag: 2.1.6
+Release Date: 15-04-2026
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,167 +14,91 @@ The ultimate WordPress plugin for SEO automation - from link fixing to AI-powere
 
 == Description ==
 
-**SEO Repair Kit v2.1.5** by [TorontoDigits](https://www.torontodigits.com) is an advanced WordPress SEO plugin designed to automate and simplify technical SEO.
+**SEO Repair Kit v2.1.6** by [TorontoDigits](https://www.torontodigits.com) helps WordPress site owners find and fix practical SEO issues from one dashboard.
 
-It combines **AI-powered assistance, smart meta management, schema generation, keyword tracking, sitemap control, and site monitoring tools** to help you identify issues, fix SEO problems, and improve your website’s search engine visibility and indexing quality.
+It combines technical SEO checks, metadata controls, crawling controls, monitoring tools, and Search Console insights, so you can improve visibility without relying on multiple plugins.
 
-= Key Features =
+= Core Features =
 
-**🧠 AI Chatbot (Pro Feature)**
-A built-in AI assistant trained to help users improve SEO performance, fix content issues, and receive real-time suggestions — all directly within the WordPress dashboard.
-* Context-aware SEO optimization guidance
-* Automated troubleshooting support
-* Real-time Q&A for schema, redirection, and keyword tracking
+**Meta Manager**
+* Manage SEO titles and descriptions globally and per content type
+* Configure robots directives (including max preview directives)
+* Override metadata on individual posts/pages
+* Supports Gutenberg and Elementor workflows
+* Supports dynamic template tags like `%title%`, `%excerpt%`, and `%site_title%`
 
-**🧩 Schema Manager (Pro Feature)**
-A complete schema management that enables users to automatically generate, validate, and manage schema markups for their content. Supports 15+ schema types including Article, Blog Posting, News Article, FAQ, How To, Video Object, Product, Job Posting, Event, Course, Review, Recipe, Local Business, Organization, Corporation, Reservation, Medical Condition, Medical Web Page, Aggregate Rating, and Website.
+**Schema Manager (Pro)**
+* Build and manage JSON-LD schema with visual controls
+* Supports common schema types such as Article, FAQ, Product, Event, Course, JobPosting, Review, and more
+* Validate and preview mappings before output
 
-The Schema Manager allows users to visually configure, preview, and deploy JSON-LD markups across any post type, ensuring SEO compliance and rich results visibility on search engines.
+**Link Health Tools**
+* Scan internal and external links for HTTP status issues
+* Export findings to CSV
+* Create redirects from problem URLs
 
-**🔗 Broken Link Scanner**
-Advanced link scanning functionality that detects broken internal and external links across your website. Features include:
-* Scans all post types for broken links
-* Real-time HTTP status code checking
-* CSV export for broken links
-* Direct edit and redirection options
-* Scheduled automatic scanning (weekly/monthly)
-* Progress tracking during scans
+**Redirection + 404 Monitoring**
+* Create and manage 301/302 redirects
+* Track redirect hits and logs
+* Monitor 404 errors with actionable details
+* Convert recurring 404 URLs into redirects quickly
 
-**📊 KeyTrack - Keyword Performance Tracking**
-Comprehensive keyword tracking system integrated with Google Search Console via Google Site Kit plugin:
-* Track keyword positions, impressions, CTR, and clicks
-* Visual performance insights with interactive charts
-* Overview, Pages, Queries, and Settings tabs
-* Customizable date ranges for performance analysis
-* Threshold settings for custom performance monitoring
-* Email reports based on user preferences
-* Advanced insights for all pages and queries
+**KeyTrack (Search Console Insights)**
+* Works with Google Site Kit/Search Console
+* View clicks, impressions, CTR, and average position
+* Analyze page/query trends in one place
+* Configure threshold-based reporting workflows
 
-**🖼️ Alt Text Manager**
-Efficient management of image alt text for improved SEO and accessibility:
-* Scans all media images for missing alt text
-* Bulk update functionality for multiple images
-* Dedicated page for alt text repair
-* Add or update alt text for individual images
-* Automatic detection of images without alt attributes
+**Sitemap Manager**
+* Include/exclude post types and taxonomies from WordPress core sitemap
+* Keep `wp-sitemap.xml` focused on important content
+* Note: this controls only core WordPress sitemap output
 
-**🔄 Redirection Manager**
-Professional URL redirection management system:
-* Create 301 and 302 redirects
-* Track redirect hits and performance
-* Active/inactive redirect status management
-* Most hit redirect analytics
-* Regex pattern support for advanced redirects
-* Position-based redirect ordering
+**Bot Manager**
+* Edit and validate `robots.txt`
+* Generate and manage `llms.txt`
+* Allow/block selected AI crawlers
 
-**🚫 404 Error Monitor**
-Automatic tracking and logging of 404 errors:
-* Real-time 404 error detection
-* Detailed logging with referrer, user agent, and IP address
-* 404 error analytics and reporting
-* Easy redirect creation from 404 logs
-* Domain-based error tracking
+**Alt Text Manager**
+* Identify images missing alt text
+* Update alt text records efficiently
 
-**📄 Meta Manager**
-Powerful on-page SEO meta controls for every major content surface in WordPress:
-* Global Settings for title separator, homepage meta, templates, and organization data
-* Content Types controls for post type-level title, description, robots, and advanced options
-* Taxonomies controls for category/tag/custom taxonomy SEO templates and robots directives
-* Archives controls for author/date/search archive metadata and robots behavior
-* Advanced robots controls with preview for noindex/nofollow/noarchive, max-snippet, max-image-preview, and max-video-preview directives
-* Dynamic SEO variables support including `%title%`, `%excerpt%`, `%site_title%`, `%sep%`, `%date%`, `%day%`, `%month%`, and `%year%`
-* Per-post SEO meta fields (title, description, robots, canonical) with safe fallback behavior
-* Built-in search result preview for SEO titles and descriptions
-* Fully integrated with Gutenberg Block Editor, and Elementor page builder for easy metadata management while editing content
-
-**🗺️ Sitemap Control**
-Take control of your WordPress core XML sitemap directly from your dashboard.
-
-* Include or exclude post types (Posts, Pages, CPTs, etc.)
-* Include or exclude taxonomies (Categories, Tags, custom taxonomies)
-* Automatically detects all public post types and taxonomies on your website
-* Helps remove unnecessary URLs like templates, internal content, and plugin-generated items
-* Improves crawl efficiency and keeps your sitemap clean
-
-⚠️ Note: This feature controls only the WordPress core sitemap (/wp-sitemap.xml).  
-Sitemaps generated by other SEO plugins like Rank Math, Yoast SEO, or All in One SEO are not affected.
-
-**🤖 Bot Manager**
-Comprehensive control over search engine and AI crawler access:
-* Manage robots.txt file with visual editor
-* Generate and manage llms.txt file for AI model discovery
-* Control which AI bots can access your content
-* Block or allow specific AI crawlers (ChatGPT, Claude, Google Bard, etc.)
-* Server-level bot access control with 403 responses
-* Automatic robots.txt rules for blocked bots
-* LLMs.txt generator with post type and taxonomy selection
-* Real-time validation and preview
-* Enhanced robots.txt with security and SEO best practices
-
-**📧 Weekly SEO Summary Email**
-Automated weekly email reports with comprehensive SEO insights:
-* Search performance metrics (KeyTrack data)
-* Broken links analysis and health scores
-* Image alt text optimization status
-* Redirection statistics and analytics
-* Pro plan status and upgrade reminders
-* Beautiful HTML email templates
-
-**⚙️ Settings & Configuration**
-Comprehensive settings management:
-* Post type selection for scanning
-* 404 monitoring enable/disable toggle
-* Weekly report email preferences
-* Last report status tracking
-* Customizable plugin behavior
-
-**📱 Interactive Dashboard**
-Centralized dashboard for all SEO operations:
-* Site SEO analysis with issue detection
-* Quick access to all plugin features
-* Real-time status widgets
-* SEO health score calculations
-* Issue severity categorization (critical, warning, suggestion)
-
-**🎯 Onboarding Flow**
-User-friendly guided setup wizard:
-* Multi-step configuration process
-* Post type selection
-* Feature enablement (KeyTrack, Schema, Notifications)
-* Link scanning schedule setup
-* Email notification preferences
-* One-time setup completion
-
-= Additional Features =
-
-* License management system for Pro features
-* Google Search Console integration via Site Kit
-* Database migration system for version updates
-* Comprehensive error logging and debugging
-* Admin notices and status tracking
-* REST API endpoints for subscription management
-* Responsive and modern UI design
-* Full WordPress coding standards compliance
+**Weekly SEO Summary**
+* Receive scheduled email summaries with key SEO status metrics
+* Includes Search performance, link health, image alt coverage, and redirect insights
 
 == Screenshots ==
 
-1. SEO Repair Kit dashboard overview
-2. SEO Repair Kit link scanning in progress
-3. SEO Repair Kit after completing scanning with results
-4. SEO Repair Kit alt text missing scanning interface
-5. SEO Repair Kit redirection management page
-6. SEO Repair Kit settings configuration
-7. KeyTrack overview dashboard
-8. KeyTrack pages performance view
-9. KeyTrack queries analysis
-10. KeyTrack threshold settings
-11. KeyTrack threshold email report
-12. Schema Manager interface
-13. AI Chatbot interface
-14. 404 Error Monitor dashboard
-15. Bot Manager - robots.txt and llms.txt management
+1. SEO Repair Kit Dashboard Overview
+2. SEO Repair Kit Links Scanner
+3. SEO Repair Kit 404 Monitor
+4. SEO Repair Kit Advanced Redirections
+5. SEO Repair Kit Import and Export Redirections
+6. SEO Repair Kit Image Alt Text Manager
+7. SEO Repair Kit Schema Manager
+8. SEO Repair Kit KeyTrack Overview Dashboard
+9. SEO Repair Kit Meta Manager Global Meta Overview
+10. SEO Repair Kit Meta Manager Content Types Overview
+11. SEO Repair Kit Meta Manager Taxonomies Overview
+12. SEO Repair Kit Meta Manager Archives Overview
+13. SEO Repair Kit Meta Manager Advance Settings
+14. SEO Repair Kit Sitemap Manager
+15. Bot Manager - llms.txt Management
+16. Bot Manager - robots.txt Management
+17. SEO Repair Kit AI Chatbot Interface
+18. SEO Repair Kit Settings
+19. SEO Repair Kit Upgrade to Pro
+20. SEO Repair Kit Weekly Email Report
+21. SEO Repair Kit KeyTrack Threshold Email Report
 
 == Changelog ==
+
+= 2.1.6 =
+* Fix: Corrected text domain inconsistencies to use `seo-repair-kit`.
+* Fix: Added missing text domain to weekly cron schedule label.
+* Fix: Converted additional hardcoded admin notice strings to translation functions.
+* Fix: Registered JavaScript translation loading with `wp_set_script_translations` for editor scripts.
+* Improvement: Refined and shortened plugin description copy for WordPress.org compliance.
 
 = 2.1.5 =
 * New: Sitemap Control feature to manage WordPress core sitemap (wp-sitemap.xml)
@@ -195,7 +119,7 @@ User-friendly guided setup wizard:
 * Added Taxonomies SEO templates for categories, tags, and custom taxonomies
 * Added Archive SEO controls for author archives, date archives, and search pages
 * Implemented advanced robots meta directives including noindex, nofollow, noarchive, max-snippet, and preview settings
-* Added dynamic SEO variables support such as `%title%`, `%excerpt%`, `%sit_title%`, `%sep%`, `%date%`, `%day%`, `%month%`, and `%year%`
+* Added dynamic SEO variables support such as `%title%`, `%excerpt%`, `%sit_title%`, `%sep%`, `%current_date%`, `%current_day%`, `%month%`, and `%year%`
 * Added per-post SEO meta box for custom title, description, robots directives, and canonical URL
 * Added full compatibility with Gutenberg Block Editor
 * Added support for Elementor editor for easy SEO metadata management while building pages
@@ -256,6 +180,9 @@ User-friendly guided setup wizard:
 * Improved error handling and user feedback
 
 == Upgrade Notice ==
+
+= 2.1.6 =
+**Maintenance Release:** This update improves internationalization (i18n) support across the plugin. JavaScript translations are now properly loaded in the editor, text domains are standardized, and admin notices are fully translatable. Updating is recommended for multilingual sites.
 
 = 2.1.5 =
 **New Feature:** Sitemap Control – Manage your WordPress core sitemap (wp-sitemap.xml) by including or excluding specific post types and taxonomies. This helps remove unnecessary URLs and improve crawl efficiency. Updating is recommended for better sitemap management and SEO performance.
@@ -611,7 +538,7 @@ Yes. Meta Manager adds an SEO meta box inside the editor where you can customize
 Meta Manager is fully integrated with the WordPress Classic Editor, Gutenberg Block Editor, and Elementor page builder. The SEO Repair Kit Meta Manager box appears directly inside these editors so you can manage metadata while editing your content.
 
 = Does Meta Manager support dynamic SEO variables? =
-Yes. Meta Manager supports dynamic variables such as `%title%`, `%excerpt%`, `%site_title%`, `%sep%`, `%date%`, `%day%`, `%month%`, and `%year%`. These variables allow metadata to be automatically generated based on the content and site settings.
+Yes. Meta Manager supports dynamic variables such as `%title%`, `%excerpt%`, `%site_title%`, `%sep%`, `%current_date%`, `%current_day%`, `%month%`, and `%year%`. These variables allow metadata to be automatically generated based on the content and site settings.
 
 = Does the Schema Manager support JSON-LD? =
 Yes, it automatically generates valid JSON-LD code compatible with Google's Structured Data guidelines. All schema markups are output as JSON-LD format in the page head.

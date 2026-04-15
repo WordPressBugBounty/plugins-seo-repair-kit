@@ -70,27 +70,27 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
 
             $schedules['two_minutes'] = [
                 'interval' => 2 * MINUTE_IN_SECONDS, // 2 minutes in seconds
-                'display'  => __( 'Every 2 Minutes', 'seorepairkit' ),
+                'display'  => __( 'Every 2 Minutes', 'seo-repair-kit' ),
             ];
 
             $schedules['seven_days'] = [
                 'interval' => 7 * DAY_IN_SECONDS, // 7 days in seconds
-                'display'  => __( 'Every 7 Days', 'seorepairkit' ),
+                'display'  => __( 'Every 7 Days', 'seo-repair-kit' ),
             ];
 
             $schedules['fourteen_days'] = [
                 'interval' => 14 * DAY_IN_SECONDS, // 14 days in seconds
-                'display'  => __( 'Every 14 Days', 'seorepairkit' ),
+                'display'  => __( 'Every 14 Days', 'seo-repair-kit' ),
             ];
 
             $schedules['twenty_eight_days'] = [
                 'interval' => 28 * DAY_IN_SECONDS, // 28 days in seconds
-                'display'  => __( 'Every 28 Days', 'seorepairkit' ),
+                'display'  => __( 'Every 28 Days', 'seo-repair-kit' ),
             ];
 
             $schedules['ninety_days'] = [
                 'interval' => 90 * DAY_IN_SECONDS, // 90 days in seconds
-                'display'  => __( 'Every 90 Days', 'seorepairkit' ),
+                'display'  => __( 'Every 90 Days', 'seo-repair-kit' ),
             ];
 
             return $schedules;
@@ -567,14 +567,14 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
                 add_settings_error(
                     'srkit_keytrack_settings',
                     'cron_cleared',
-                    esc_html__( 'Scheduled cron job has been cleared successfully.', 'seorepairkit' ),
+                    esc_html__( 'Scheduled cron job has been cleared successfully.', 'seo-repair-kit' ),
                     'updated'
                 );
             } else {
                 add_settings_error(
                     'srkit_keytrack_settings',
                     'cron_clear_failed',
-                    esc_html__( 'No scheduled cron job found to clear.', 'seorepairkit' ),
+                    esc_html__( 'No scheduled cron job found to clear.', 'seo-repair-kit' ),
                     'error'
                 );
             }
@@ -585,7 +585,7 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
          */
         public function srkit_keytrack_settings_page() {
             if ( ! class_exists( 'Google\Site_Kit\Plugin' ) ) {
-                echo '<p>' . esc_html__( 'Google Site Kit plugin is required for this plugin to work. Please install and activate it.', 'seorepairkit' ) . '</p>';
+                echo '<p>' . esc_html__( 'Google Site Kit plugin is required for this plugin to work. Please install and activate it.', 'seo-repair-kit' ) . '</p>';
                 return;
             }
 
@@ -621,7 +621,7 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
                 || ! isset( $_POST['_wpnonce'] )
                 || ! wp_verify_nonce( $_POST['_wpnonce'], 'srkit_keytrack_settings' )
             ) {
-                wp_die( esc_html__( 'Invalid request or missing nonce verification.', 'seorepairkit' ) );
+                wp_die( esc_html__( 'Invalid request or missing nonce verification.', 'seo-repair-kit' ) );
             }
 
             $srkit_keytrack_name        = isset( $_POST['keytrack_name'] ) ? sanitize_text_field( $_POST['keytrack_name'] ) : '';
@@ -635,7 +635,7 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
                 add_settings_error(
                     'srkit_keytrack_settings',
                     'empty_keytrack_name',
-                    esc_html__( 'Threshold Reference name is required.', 'seorepairkit' )
+                    esc_html__( 'Threshold Reference name is required.', 'seo-repair-kit' )
                 );
                 return;
             }
@@ -644,7 +644,7 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
                 add_settings_error(
                     'srkit_keytrack_settings',
                     'empty_keywords',
-                    esc_html__( 'Please select at least one keyword to track.', 'seorepairkit' )
+                    esc_html__( 'Please select at least one keyword to track.', 'seo-repair-kit' )
                 );
                 return;
             }
@@ -696,7 +696,7 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
                 add_settings_error(
                     'srkit_keytrack_settings',
                     'db_insert_failed',
-                    esc_html__( 'Failed to save settings. Database error: ', 'seorepairkit' ) . $wpdb->last_error
+                    esc_html__( 'Failed to save settings. Database error: ', 'seo-repair-kit' ) . $wpdb->last_error
                 );
                 return;
             }
@@ -707,7 +707,7 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
             add_settings_error(
                 'srkit_keytrack_settings',
                 'settings_saved',
-                esc_html__( 'Settings saved and cron job scheduled successfully!', 'seorepairkit' ),
+                esc_html__( 'Settings saved and cron job scheduled successfully!', 'seo-repair-kit' ),
                 'updated'
             );
             
@@ -778,14 +778,14 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
 
             ?>
             <div class="srkit-left">
-                <h2 class="srk-form-heading-style"><?php esc_html_e( 'Threshold Settings', 'seorepairkit' ); ?></h2>
+                <h2 class="srk-form-heading-style"><?php esc_html_e( 'Threshold Settings', 'seo-repair-kit' ); ?></h2>
                 <form method="post" action="" id="keytrack-form" class="wrap" onsubmit="return showSubmissionAlert()">
                     <?php wp_nonce_field( 'srkit_keytrack_settings' ); ?>
 
-                    <label for="keytrack_name"><?php esc_html_e( 'Threshold Reference:', 'seorepairkit' ); ?></label>
+                    <label for="keytrack_name"><?php esc_html_e( 'Threshold Reference:', 'seo-repair-kit' ); ?></label>
                     <input type="text" name="keytrack_name" id="keytrack_name" value="<?php echo esc_attr( $srkit_keytrack_name ); ?>" required>
 
-                    <label for="selected_keywords"><?php esc_html_e( 'Target Your Keywords:', 'seorepairkit' ); ?></label>
+                    <label for="selected_keywords"><?php esc_html_e( 'Target Your Keywords:', 'seo-repair-kit' ); ?></label>
                     <select name="selected_keywords[]" id="selected_keywords" class="wp-select" multiple="multiple" required>
                         <?php
                         if ( ! empty( $srkit_th_top_keywords ) && is_array( $srkit_th_top_keywords ) ) {
@@ -802,27 +802,27 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
                                 <?php
                             }
                         } else {
-                            echo '<option>' . esc_html__( 'No keywords found.', 'seorepairkit' ) . '</option>';
+                            echo '<option>' . esc_html__( 'No keywords found.', 'seo-repair-kit' ) . '</option>';
                         }
                         ?>
                     </select>
 
-                    <label for="date_range"><?php esc_html_e( 'Performance Tracking Period:', 'seorepairkit' ); ?></label>
+                    <label for="date_range"><?php esc_html_e( 'Performance Tracking Period:', 'seo-repair-kit' ); ?></label>
                     <select name="date_range" id="date_range" required>
                         <option value="Demo For Next 2 Minutes" <?php selected( $srkit_th_form_date_range, 'Demo For Next 2 Minutes' ); ?>>
-                            <?php esc_html_e( 'Demo For Next 2 Minutes', 'seorepairkit' ); ?>
+                            <?php esc_html_e( 'Demo For Next 2 Minutes', 'seo-repair-kit' ); ?>
                         </option>
                         <option value="7 days" <?php selected( $srkit_th_form_date_range, '7 days' ); ?>>
-                            <?php esc_html_e( 'Next 7 Days', 'seorepairkit' ); ?>
+                            <?php esc_html_e( 'Next 7 Days', 'seo-repair-kit' ); ?>
                         </option>
                         <option value="14 days" <?php selected( $srkit_th_form_date_range, '14 days' ); ?>>
-                            <?php esc_html_e( 'Next 14 Days', 'seorepairkit' ); ?>
+                            <?php esc_html_e( 'Next 14 Days', 'seo-repair-kit' ); ?>
                         </option>
                         <option value="28 days" <?php selected( $srkit_th_form_date_range, '28 days' ); ?>>
-                            <?php esc_html_e( 'Next 28 Days', 'seorepairkit' ); ?>
+                            <?php esc_html_e( 'Next 28 Days', 'seo-repair-kit' ); ?>
                         </option>
                         <option value="90 days" <?php selected( $srkit_th_form_date_range, '90 days' ); ?>>
-                            <?php esc_html_e( 'Next 3 Months', 'seorepairkit' ); ?>
+                            <?php esc_html_e( 'Next 3 Months', 'seo-repair-kit' ); ?>
                         </option>
                     </select>
 
@@ -830,18 +830,18 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
                         type="submit"
                         id="submit-keytrack-settings"
                         class="srk-keytrack-settings-form-button"
-                        value="<?php esc_attr_e( 'Submit', 'seorepairkit' ); ?>"
+                        value="<?php esc_attr_e( 'Submit', 'seo-repair-kit' ); ?>"
                         <?php disabled( $srkit_kt_disable_submit ); ?>
                     >
                 </form>
 
                 <?php if ( $srkit_kt_disable_submit ) : ?>
                     <p class="srkit-th-disable-button" style="font-size: 16px; color: #0B1D51; margin: 1em 0.5em;">
-                        <?php esc_html_e( 'Settings form is temporarily disabled until the next scheduled run at:', 'seorepairkit' ); ?>
+                        <?php esc_html_e( 'Settings form is temporarily disabled until the next scheduled run at:', 'seo-repair-kit' ); ?>
                         <strong style="font-weight: bold; color: #0B1D51;"><?php echo esc_html( $next_run_at_formatted ); ?></strong>
                     </p>
                     <p class="srkit-th-email-message" style="font-size: 16px; font-weight: bold; color: #0B1D51; margin: 1em 0.5em;">
-                        ✨ <?php esc_html_e( 'Make sure your admin email is set up to receive reports!', 'seorepairkit' ); ?> 📧
+                        ✨ <?php esc_html_e( 'Make sure your admin email is set up to receive reports!', 'seo-repair-kit' ); ?> 📧
                     </p>
                 <?php endif; ?>
 
@@ -854,14 +854,14 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
                     <div style="margin-top: 20px; padding: 15px; background-color: #fff3cd; border: 1px solid #ffc107; border-radius: 5px;">
                         <?php if ( $has_scheduled_cron ) : ?>
                             <p style="margin: 0 0 10px 0; font-size: 14px; color: #856404;">
-                                <strong><?php esc_html_e( 'Scheduled Cron Job:', 'seorepairkit' ); ?></strong>
-                                <?php esc_html_e( 'Next run scheduled for:', 'seorepairkit' ); ?>
+                                <strong><?php esc_html_e( 'Scheduled Cron Job:', 'seo-repair-kit' ); ?></strong>
+                                <?php esc_html_e( 'Next run scheduled for:', 'seo-repair-kit' ); ?>
                                 <strong><?php echo esc_html( $next_run_formatted ); ?></strong>
                             </p>
                         <?php else : ?>
                             <p style="margin: 0 0 10px 0; font-size: 14px; color: #856404;">
-                                <strong><?php esc_html_e( 'Scheduled Cron Job:', 'seorepairkit' ); ?></strong>
-                                <?php esc_html_e( 'No cron job currently scheduled.', 'seorepairkit' ); ?>
+                                <strong><?php esc_html_e( 'Scheduled Cron Job:', 'seo-repair-kit' ); ?></strong>
+                                <?php esc_html_e( 'No cron job currently scheduled.', 'seo-repair-kit' ); ?>
                             </p>
                         <?php endif; ?>
                         <form method="post" action="" style="margin: 0;">
@@ -870,9 +870,9 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
                             <button 
                                 type="submit" 
                                 class="srk-keytrack-clear-cron-button"
-                                onclick="return confirm('<?php echo esc_js( __( 'Are you sure you want to clear the scheduled cron job?', 'seorepairkit' ) ); ?>');"
+                                onclick="return confirm('<?php echo esc_js( __( 'Are you sure you want to clear the scheduled cron job?', 'seo-repair-kit' ) ); ?>');"
                                 style="background-color: #dc3545; color: #fff; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">
-                                <?php esc_html_e( 'Clear Scheduled Cron Job', 'seorepairkit' ); ?>
+                                <?php esc_html_e( 'Clear Scheduled Cron Job', 'seo-repair-kit' ); ?>
                             </button>
                         </form>
                     </div>
@@ -906,22 +906,22 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
 
                 // Display overall data
                 echo '<div class="srkit-gsc-stats-container">';
-                echo '<div class="srkit-gsc-stat-box"><h3>' . esc_html__( 'Total Clicks', 'seorepairkit' ) . '</h3><p>' . esc_html( $srkit_th_gsc_data['summary']['total_clicks'] ?? 0 ) . '</p></div>';
-                echo '<div class="srkit-gsc-stat-box"><h3>' . esc_html__( 'Total Impressions', 'seorepairkit' ) . '</h3><p>' . esc_html( $srkit_th_gsc_data['summary']['total_impressions'] ?? 0 ) . '</p></div>';
+                echo '<div class="srkit-gsc-stat-box"><h3>' . esc_html__( 'Total Clicks', 'seo-repair-kit' ) . '</h3><p>' . esc_html( $srkit_th_gsc_data['summary']['total_clicks'] ?? 0 ) . '</p></div>';
+                echo '<div class="srkit-gsc-stat-box"><h3>' . esc_html__( 'Total Impressions', 'seo-repair-kit' ) . '</h3><p>' . esc_html( $srkit_th_gsc_data['summary']['total_impressions'] ?? 0 ) . '</p></div>';
                 $avg_ctr = isset( $srkit_th_gsc_data['summary']['average_ctr'] ) ? number_format( $srkit_th_gsc_data['summary']['average_ctr'] * 100, 2 ) : '0.00';
-                echo '<div class="srkit-gsc-stat-box"><h3>' . esc_html__( 'Average CTR', 'seorepairkit' ) . '</h3><p>' . esc_html( $avg_ctr ) . '%</p></div>';
+                echo '<div class="srkit-gsc-stat-box"><h3>' . esc_html__( 'Average CTR', 'seo-repair-kit' ) . '</h3><p>' . esc_html( $avg_ctr ) . '%</p></div>';
                 $avg_pos = isset( $srkit_th_gsc_data['summary']['average_position'] ) ? number_format( $srkit_th_gsc_data['summary']['average_position'], 2 ) : '0.00';
-                echo '<div class="srkit-gsc-stat-box"><h3>' . esc_html__( 'Average Position', 'seorepairkit' ) . '</h3><p>' . esc_html( $avg_pos ) . '</p></div>';
+                echo '<div class="srkit-gsc-stat-box"><h3>' . esc_html__( 'Average Position', 'seo-repair-kit' ) . '</h3><p>' . esc_html( $avg_pos ) . '</p></div>';
                 echo '</div>';
 
                 // Display keyword-specific data in a WordPress table
                 echo '<table class="srkit-general-custom-table">';
                 echo '<thead>
                         <tr>
-                            <th class="center-align">' . esc_html__( 'Keyword', 'seorepairkit' ) . '</th>
-                            <th>' . esc_html__( 'Clicks', 'seorepairkit' ) . '</th>
-                            <th>' . esc_html__( 'Impressions', 'seorepairkit' ) . '</th>
-                            <th>' . esc_html__( 'Position', 'seorepairkit' ) . '</th>
+                            <th class="center-align">' . esc_html__( 'Keyword', 'seo-repair-kit' ) . '</th>
+                            <th>' . esc_html__( 'Clicks', 'seo-repair-kit' ) . '</th>
+                            <th>' . esc_html__( 'Impressions', 'seo-repair-kit' ) . '</th>
+                            <th>' . esc_html__( 'Position', 'seo-repair-kit' ) . '</th>
                         </tr>
                     </thead>
                     <tbody>';
@@ -965,7 +965,7 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
                 echo '</div>'; // .srkit-right
             } else {
                 echo '<p class="srk-general-message-style">' .
-                    esc_html__( '🚀 Set Up Your Thresholds to Track Website Content Performance Like a Pro! 📈 ✨ Get reports straight to your inbox! 📧', 'seorepairkit' ) .
+                    esc_html__( '🚀 Set Up Your Thresholds to Track Website Content Performance Like a Pro! 📈 ✨ Get reports straight to your inbox! 📧', 'seo-repair-kit' ) .
                 '</p>';
             }
         }

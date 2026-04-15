@@ -23,7 +23,7 @@ class SeoRepairKit_FaqManager {
 	/**
 	 * Constants
 	 *
-	 * @since2.1.0
+	 * @since 2.1.0
 	 */
 	const META_KEY_SCHEMA_TYPE = 'srk_selected_schema_type';
 	const META_KEY_FAQ_ITEMS   = 'srk_faq_items';
@@ -38,16 +38,6 @@ class SeoRepairKit_FaqManager {
 		add_action( 'save_post', array( $this, 'save_faq_meta' ) );
 		add_action( 'wp_head', array( $this, 'output_faq_schema' ) );
 
-		// AJAX.
-		// NOTE: The generic "srk_get_posts_by_type" AJAX endpoint is now handled centrally
-		// by SeoRepairKit_AjaxHandlers::srk_get_posts_by_type(), which supports both:
-		// - legacy format (ID => title map) for dropdowns
-		// - array format for posts listing.
-		//
-		// To avoid duplicate handlers, we no longer register this class on
-		// the same action. If needed in the future, a FAQ-specific endpoint
-		// can be reintroduced with a
-		// different action name.
 	}
 
 	/**
@@ -69,7 +59,7 @@ class SeoRepairKit_FaqManager {
 
 		add_meta_box(
 			'srk_faq_repeater',
-			__( 'FAQ Questions & Answers', 'textdomain' ),
+			__( 'FAQ Questions & Answers', 'seo-repair-kit' ),
 			array( $this, 'render_faq_meta_box' ),
 			null,
 			'normal',
@@ -155,7 +145,7 @@ class SeoRepairKit_FaqManager {
 	 * @since 2.1.0
 	 */
 	public function output_faq_schema() {
-		// ✅ Check if license plan is expired - block schema output if expired
+		// ✅ Check if license plan is expired - block schema output if expired.
 		if ( class_exists( 'SRK_License_Helper' ) && SRK_License_Helper::is_license_expired() ) {
 			return;
 		}
@@ -192,8 +182,8 @@ class SeoRepairKit_FaqManager {
 
 		foreach ( $faq_items as $item ) {
 			$faq_schema['mainEntity'][] = array(
-				'@type' => 'Question',
-				'name'  => wp_strip_all_tags( $item['question'] ),
+				'@type'          => 'Question',
+				'name'           => wp_strip_all_tags( $item['question'] ),
 				'acceptedAnswer' => array(
 					'@type' => 'Answer',
 					'text'  => wpautop( wp_kses_post( $item['answer'] ) ),
@@ -201,24 +191,24 @@ class SeoRepairKit_FaqManager {
 			);
 		}
 
-		// ✅ NEW: Validate required fields before output
+		// ✅ NEW: Validate required fields before output.
 		if ( ! class_exists( 'SeoRepairKit_SchemaValidator' ) ) {
 			require_once plugin_dir_path( dirname( dirname( __FILE__ ) ) ) . 'includes/class-seo-repair-kit-schema-validator.php';
 		}
 
-		// Check if schema has all required fields (FAQ requires 'mainEntity')
+		// Check if schema has all required fields (FAQ requires 'mainEntity').
 		if ( ! SeoRepairKit_SchemaValidator::should_output_schema( $faq_schema, 'faq' ) ) {
-			// Schema is missing required fields - do not output
+			// Schema is missing required fields - do not output.
 			return;
 		}
 
-		// ✅ NEW: Check for conflicts before output
+		// ✅ NEW: Check for conflicts before output.
 		if ( ! class_exists( 'SeoRepairKit_SchemaConflictDetector' ) ) {
 			require_once plugin_dir_path( dirname( dirname( __FILE__ ) ) ) . 'includes/class-seo-repair-kit-schema-conflict-detector.php';
 		}
 
 		if ( ! SeoRepairKit_SchemaConflictDetector::can_output_schema( $faq_schema, 'faq', 'faq-manager' ) ) {
-			// Schema conflicts with another schema - do not output
+			// Schema conflicts with another schema - do not output.
 			return;
 		}
 

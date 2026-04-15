@@ -111,3 +111,13 @@ $wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE meta_key IN (
 
 // Delete any other possible srk postmeta patterns
 $wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE '_srk_%'" );
+// ============================================================================
+// 5. DELETE ALL TERMMETA DATA
+// ============================================================================
+
+// Delete taxonomy term SEO settings saved by plugin
+$wpdb->query( "DELETE FROM {$wpdb->termmeta} WHERE meta_key = '_srk_term_settings'" );
+
+// Delete any other possible SRK termmeta keys (safe fallback)
+$wpdb->query( "DELETE FROM {$wpdb->termmeta} WHERE meta_key LIKE 'srk_%'" );
+$wpdb->query( "DELETE FROM {$wpdb->termmeta} WHERE meta_key LIKE '_srk_%'" );

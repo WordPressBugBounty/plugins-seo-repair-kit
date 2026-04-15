@@ -28,7 +28,7 @@ class SeoRepairKit_Robots_Public {
      * @since    2.1.1
      */
     public function __construct() {
-        $this->version = defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '2.1.5';
+        $this->version = defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '2.1.6';
 
         // Override WordPress default robots.txt
         add_filter( 'robots_txt', array( $this, 'custom_robots_txt' ), 10, 2 );

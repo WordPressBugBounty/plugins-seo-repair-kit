@@ -4,7 +4,6 @@
  * Version: 2.1.3
  *  @author     TorontoDigits <support@torontodigits.com>
  */
-
 jQuery(function ($) {
     var sep = srkMetaData.separator || '-';
     var currentTarget = 'title';
@@ -13,7 +12,6 @@ jQuery(function ($) {
     var tagStartPos = -1;
     var tagEndPos = -1;
 
-    // Reset function me refreshDisplayForInput hata dein:
     $('.srk-content-meta-manager').on('click', '.srk-reset-content-types-button', function (e) {
         e.preventDefault();
 
@@ -136,7 +134,6 @@ jQuery(function ($) {
         });
     }
 
-
     /* Close Modal */
     function closeModal() {
         $('#srk-tag-modal').removeClass('active');
@@ -220,7 +217,6 @@ jQuery(function ($) {
         closeModal();
     });
 
-    // YE FUNCTION UPDATE KAR DEIN - plain input me value insert kare:
     $('.srk-content-meta-manager').on('click', '.srk-tag', function () {
         var tag = $(this).data('tag');
         var postWrapper = $(this).closest('.srk-post-type-wrapper');
@@ -239,7 +235,6 @@ jQuery(function ($) {
         input.trigger('input');
     });
 
-    // Modal se tag select karne wala function update karein:
     $('#srk-tag-modal').on('click', '.srk-tag-item', function () {
         var tag = $(this).data('tag');
         if (currentPostWrapper) {
@@ -289,7 +284,7 @@ jQuery(function ($) {
         var categories = srkMetaData.categories || 'Technology, SEO';
         var categoryTitle = srkMetaData.categoryTitle || 'Technology';
         var currentDate = srkMetaData.currentDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-        var currentDay = srkMetaData.currentDay || new Date().getDate();
+        var currentDay = srkMetaData.currentDay || new Date().toLocaleString('en-US', { weekday: 'long' });
         var currentMonth = srkMetaData.currentMonth || new Date().toLocaleDateString('en-US', { month: 'long' });
         var currentYear = srkMetaData.currentYear || new Date().getFullYear();
         var customField = srkMetaData.customField || 'Custom Field Value';
@@ -316,8 +311,8 @@ jQuery(function ($) {
             .replace(/%author_name%/g, authorName)
             .replace(/%categories%/g, categories)
             .replace(/%term_title%/g, categoryTitle)
-            .replace(/%date%/g, currentDate)
-            .replace(/%day%/g, currentDay)
+            .replace(/%current_date%/g, currentDate)
+            .replace(/%current_day%/g, currentDay)
             .replace(/%month%/g, currentMonth)
             .replace(/%year%/g, currentYear)
             .replace(/%custom_field%/g, customField)
@@ -344,8 +339,8 @@ jQuery(function ($) {
             .replace(/%author_name%/g, authorName)
             .replace(/%categories%/g, categories)
             .replace(/%term_title%/g, categoryTitle)
-            .replace(/%date%/g, currentDate)
-            .replace(/%day%/g, currentDay)
+            .replace(/%current_date%/g, currentDate)
+            .replace(/%current_day%/g, currentDay)
             .replace(/%month%/g, currentMonth)
             .replace(/%year%/g, currentYear)
             .replace(/%custom_field%/g, customField)
@@ -548,6 +543,7 @@ jQuery(function ($) {
             toggleAdvancedFields(postTypeKey);
         }
     });
+    
     /* Force correct toggle state on page load */
     $('.srk-post-type-wrapper').each(function () {
 

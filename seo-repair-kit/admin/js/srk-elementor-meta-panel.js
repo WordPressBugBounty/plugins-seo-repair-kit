@@ -1,16 +1,75 @@
 /**
  * SEO Repair Kit - Elementor Integration JavaScript
- * 
+ *
  * @package SEO_Repair_Kit
  * @since 2.1.3 - Added proper comments, optimized code structure
  * @version 2.1.3
  */
 
+
 (function ($) {
     "use strict";
 
+
     let srkData = window.srkElementorData || {};
     let modalBound = false;
+
+        function getEffectiveMetaTitle() {
+        const model = elementor.settings.page.model;
+        const modelValue = model ? model.get('srk_meta_title') : '';
+
+        if (typeof modelValue === 'string' && modelValue !== '') {
+            return modelValue;
+        }
+
+        if (typeof srkData.meta_title === 'string' && srkData.meta_title !== '') {
+            return srkData.meta_title;
+        }
+
+        return srkData.default_title || '';
+    }
+
+    function getEffectiveMetaDescription() {
+        const model = elementor.settings.page.model;
+        const modelValue = model ? model.get('srk_meta_description') : '';
+
+        if (typeof modelValue === 'string' && modelValue !== '') {
+            return modelValue;
+        }
+
+        if (typeof srkData.meta_description === 'string' && srkData.meta_description !== '') {
+            return srkData.meta_description;
+        }
+
+        return srkData.default_desc || '';
+    }
+
+    function seedElementorModelFromSavedMeta() {
+        const model = elementor.settings.page.model;
+
+        if (!model) {
+            return;
+        }
+
+        const modelTitle = model.get('srk_meta_title');
+        const modelDesc  = model.get('srk_meta_description');
+
+        if (
+            (typeof modelTitle === 'undefined' || modelTitle === null || modelTitle === '') &&
+            typeof srkData.meta_title === 'string' &&
+            srkData.meta_title !== ''
+        ) {
+            model.set('srk_meta_title', srkData.meta_title, { silent: true });
+        }
+
+        if (
+            (typeof modelDesc === 'undefined' || modelDesc === null || modelDesc === '') &&
+            typeof srkData.meta_description === 'string' &&
+            srkData.meta_description !== ''
+        ) {
+            model.set('srk_meta_description', srkData.meta_description, { silent: true });
+        }
+    }
 
     // store previous values for cancel
     let srkPrev = {
@@ -22,6 +81,7 @@
         elementor.on("panel:init", function () {
             const panel = elementor.panel.$el;
             if (!panel) return;
+              seedElementorModelFromSavedMeta();
 
             if (!modalBound) {
                 modalBound = true;
@@ -81,7 +141,6 @@
                 }
             };
         }
-
     }
 
     /**
@@ -211,7 +270,6 @@
 
         directives.push('max-image-preview:' + maxImage);
 
-
         $('.srk-robots-preview').text(directives.join(', '));
     }
 
@@ -250,10 +308,11 @@
     /**
      * Initialize SERP preview with current values
      */
-    function initializeSERPreview() {
-        const model = elementor.settings.page.model;
-        const title = model.get('srk_meta_title') || srkData.default_title || '';
-        const desc = model.get('srk_meta_description') || srkData.default_desc || '';
+        function initializeSERPreview() {
+        seedElementorModelFromSavedMeta();
+
+        const title = getEffectiveMetaTitle();
+        const desc = getEffectiveMetaDescription();
 
         const processedTitle = processTags(title, 'title');
         const processedDesc = processTags(desc, 'desc');
@@ -277,14 +336,17 @@
             '%sitedesc%': srkData.site_desc || '',
             '%excerpt%': srkData.post_excerpt || '',
             '%content%': srkData.post_content || '',
-            '%author_name%': srkData.author_name || srkData.site_name || '',
+            '%author_name%': srkData.author_name || '',
             '%author_first_name%': srkData.author_first_name || '',
             '%author_last_name%': srkData.author_last_name || '',
-            '%categories%': srkData.categories || 'Uncategorized',
-            '%term_title%': srkData.primary_category || 'Uncategorized',
-            '%date%': srkData.current_date || new Date().toLocaleDateString(),
-            '%year%': srkData.current_year || new Date().getFullYear().toString(),
-            '%post_date%': srkData.post_date || new Date().toLocaleDateString(),
+            '%categories%': srkData.categories || '',
+            '%term_title%': srkData.primary_category || '',
+            '%current_date%': srkData.current_date || '',
+            '%current_day%': srkData.current_day || '',
+            '%month%': srkData.current_month || '',
+            '%year%': srkData.current_year || '',
+            '%post_date%': srkData.post_date || '',
+            '%post_day%': srkData.post_day || '',
             '%permalink%': srkData.permalink || window.location.href
         };
 
@@ -299,30 +361,25 @@
     /**
      * Open snippet editor modal - FIXED with parsed counts
      */
-    function openSnippetModal() {
+        function openSnippetModal() {
         if (!$("#srk-snippet-modal").length) {
-            console.error("❌ Modal not found in DOM.");
             return;
         }
 
-        const model = elementor.settings.page.model;
+        seedElementorModelFromSavedMeta();
 
-        // Save previous state for cancel
-        srkPrev.title = model.get("srk_meta_title") || "";
-        srkPrev.desc = model.get("srk_meta_description") || "";
+        // Save current effective state for cancel
+        srkPrev.title = getEffectiveMetaTitle();
+        srkPrev.desc = getEffectiveMetaDescription();
 
-        const titleVal = srkPrev.title || srkData.default_title || "";
-        const descVal = srkPrev.desc || srkData.default_desc || "";
-
-        $("#srk-modal-title").val(titleVal);
-        $("#srk-modal-desc").val(descVal);
+        $("#srk-modal-title").val(srkPrev.title);
+        $("#srk-modal-desc").val(srkPrev.desc);
 
         $("#srk-snippet-modal").css("display", "flex");
 
         bindModalEvents();
         updateModalPreview();
 
-        // Update character counts with PARSED values
         updateCharCount($("#srk-modal-title"), 60);
         updateCharCount($("#srk-modal-desc"), 160);
     }
@@ -344,7 +401,6 @@
             });
 
         // Reset All
-        // Reset All - UPDATED
         $("#srk-snippet-modal .srk-modal-reset")
             .off("click")
             .on("click", function () {
@@ -362,7 +418,6 @@
             .on("click", function () {
                 const title = $("#srk-modal-title").val();
                 const desc = $("#srk-modal-desc").val();
-
                 const model = elementor.settings.page.model;
 
                 // Update actual controls
@@ -382,6 +437,7 @@
                 srkToast("✅ Snippet saved successfully!", "success");
             });
 
+
         // Reset section buttons - UPDATED
         $(".srk-reset-section-btn").off("click").on("click", function () {
             const section = $(this).data("section");
@@ -400,10 +456,10 @@
         .on("input", function () {
         const $this = $(this);
         const max = $this.is("#srk-modal-title") ? 60 : 160;
-        
+       
         // Update character count with PARSED value
         updateCharCount($this, max);
-        
+       
         // Update preview
         updateModalPreview();
     });
@@ -418,9 +474,17 @@
     /**
      * Update modal preview
      */
-    function updateModalPreview() {
-        let title = $("#srk-modal-title").val() || srkData.default_title || "";
-        let desc = $("#srk-modal-desc").val() || srkData.default_desc || "";
+        function updateModalPreview() {
+        let title = $("#srk-modal-title").val();
+        let desc = $("#srk-modal-desc").val();
+
+        if (!title) {
+            title = getEffectiveMetaTitle();
+        }
+
+        if (!desc) {
+            desc = getEffectiveMetaDescription();
+        }
 
         title = processTags(title, 'title');
         desc = processTags(desc, 'desc');
@@ -439,9 +503,17 @@
     /**
      * Sync panel preview from modal
      */
-    function syncPanelPreview() {
-        let title = $('input[name="srk_meta_title"]').val() || srkData.default_title || "";
-        let desc = $('textarea[name="srk_meta_description"]').val() || srkData.default_desc || "";
+        function syncPanelPreview() {
+        let title = $('input[name="srk_meta_title"]').val();
+        let desc = $('textarea[name="srk_meta_description"]').val();
+
+        if (!title) {
+            title = getEffectiveMetaTitle();
+        }
+
+        if (!desc) {
+            desc = getEffectiveMetaDescription();
+        }
 
         title = processTags(title, 'title');
         desc = processTags(desc, 'desc');
@@ -458,11 +530,11 @@
      */
     function updateCharCount($input, max) {
         const rawValue = $input.val() || '';
-        
+       
         // PARSE tags before counting for accurate length
         const parsedValue = processTags(rawValue, $input.is("#srk-modal-title") ? 'title' : 'desc');
         const count = parsedValue.length;
-        
+       
         const $counter = $input.closest(".srk-title-section, .srk-desc-section").find(".srk-char-count");
         $counter.text(count + "/" + max);
 
@@ -473,7 +545,7 @@
                     count > max * 0.9 ? "#dba617" :
                         "#1d2327"
         );
-        
+       
         // Add visual indicator for over-limit
         const $status = $input.closest(".srk-title-section, .srk-desc-section").find(".srk-limit-status");
         if ($status.length) {
@@ -494,12 +566,11 @@
         if (!$field.length) return;
         const rawValue = $field.val() || '';
         const fieldName = $field.attr('name') || '';
-        
+       
         // PARSE tags before counting for accurate length
         const type = fieldName.includes('title') ? 'title' : 'desc';
         const parsedValue = processTags(rawValue, type);
         const charCount = parsedValue.length;
-
         const $counter = $(`.srk-counter[data-target="${fieldName}"] .srk-char-count`);
         if ($counter.length) {
             $counter.text(charCount);
@@ -515,7 +586,7 @@
             const rawValue = $field.val() || '';
             const type = $field.attr('name')?.includes('title') ? 'title' : 'desc';
             const max = type === 'title' ? 60 : 160;
-            
+           
             // Use the common updateCharCount function with parsing
             updateCharCount($field, max);
         });
@@ -526,7 +597,7 @@
             const rawValue = $field.val() || '';
             const type = $field.attr('name')?.includes('title') ? 'title' : 'desc';
             const max = type === 'title' ? 60 : 160;
-            
+           
             updateCharCount($field, max);
         });
     }
@@ -622,11 +693,9 @@
                 if (response.success) {
                     srkToast("🔄 Reset to content type defaults!", "warning");
                 } else {
-                    console.error('❌ Meta reset failed:', response.data);
                 }
             },
             error: function (xhr, status, error) {
-                console.error('❌ AJAX error:', error);
             }
         });
     }

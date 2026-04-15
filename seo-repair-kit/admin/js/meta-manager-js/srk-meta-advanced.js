@@ -3,7 +3,6 @@
  * Version: 2.1.3
  *  @author     TorontoDigits <support@torontodigits.com>
  */
-
 (function ($) {
     'use strict';
     const srkData = window.srkAdvancedData || {};
@@ -244,7 +243,6 @@
                 const noindexChecked = $('#srk_robots_noindex').is(':checked');
                 const followChecked = $('#srk_robots_follow').is(':checked');
                 const nofollowChecked = $('#srk_robots_nofollow').is(':checked');
-
 
                 // Update preview before submission
                 updateRobotsMetaPreview();

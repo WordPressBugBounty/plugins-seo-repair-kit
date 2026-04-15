@@ -36,7 +36,6 @@ jQuery(document).ready(function ($) {
   /**
    * Function to update the progress bar based on the processed links.
    */
-
   function updateProgress() {
     var percentage = Math.floor((processedLinks / totalLinks) * 100);
     blueBar.css("width", percentage + "%");
@@ -54,7 +53,7 @@ jQuery(document).ready(function ($) {
       spinIcon.removeClass("srk-spin dashicons-update").addClass("dashicons-yes-alt");
       statusText.text("Scan complete!");
       progressContainer.addClass("srk-scan-complete");
-      
+
       if (brokenCount !== 0) {
         $("#download-links-csv").show();
       } else {
@@ -69,7 +68,6 @@ jQuery(document).ready(function ($) {
    * Function to scan a single link asynchronously.
    * @param {number} index - Index of the link in the links array.
    */
-
   function scanLink(index) {
     if (index >= links.length) {
       finalizeScan();
@@ -92,7 +90,7 @@ jQuery(document).ready(function ($) {
         row.find(".scan-http-status").text(response);
 
         // Update the displayed HTTP status for the link
-        var statusCode = parseInt(response);
+        var statusCode = parseInt(response, 10);
         if (statusCode < 400 || statusCode > 600) {
           row.remove();
           updateRowCount();
@@ -117,25 +115,33 @@ jQuery(document).ready(function ($) {
   /**
    * Function to update the total link count on the page.
    */
-
   function updateRowCount() {
     var rowCount = $("#scan-table tbody tr").length;
-    var totalLinksString = "<?php esc_html_e('Remaining Links: ', 'seo-repair-kit'); ?>";
-    var congratsMessage = "<?php esc_html_e('Congrats Broken Links Not Found !', 'seo-repair-kit'); ?>";
+    var totalLinksString =
+      typeof srkScanLinksI18n !== "undefined" && srkScanLinksI18n.remainingLinks
+        ? srkScanLinksI18n.remainingLinks
+        : "Remaining Links: ";
+
+    var congratsMessage =
+      typeof srkScanLinksI18n !== "undefined" && srkScanLinksI18n.noBrokenLinks
+        ? srkScanLinksI18n.noBrokenLinks
+        : "Congrats Broken Links Not Found !";
+
     $("#scan-row-counter").text(totalLinksString + rowCount);
 
     // Handle display based on the presence of broken links
     if (rowCount === 0) {
       $("#scan-table").hide();
       $("#scan-row-counter + .srk-no-links-message").remove();
-      var noLinksMessage = '<p class="srk-no-links-message">' + congratsMessage + '</p>';
-        $("#scan-row-counter").after(noLinksMessage);
+      var noLinksMessage = '<p class="srk-no-links-message">' + congratsMessage + "</p>";
+      $("#scan-row-counter").after(noLinksMessage);
       // Clear the row counter text if there are no links
       $("#scan-row-counter").text("");
     } else {
       $("#scan-table").show();
       $("#scan-row-counter + .srk-no-links-message").remove();
     }
+
     return rowCount;
   }
 
@@ -143,6 +149,7 @@ jQuery(document).ready(function ($) {
     if (summarySubmitted) {
       return;
     }
+
     if (typeof ajaxUrlsrkscan === "undefined" || typeof scanSummaryNonce === "undefined") {
       setTimeout(finalizeScan, 200);
       return;
@@ -162,8 +169,8 @@ jQuery(document).ready(function ($) {
         total_links: totalLinks,
         broken_links: brokenRemaining,
         working_links: workingLinks < 0 ? 0 : workingLinks,
-        post_type: typeof srkScanPostType !== "undefined" ? srkScanPostType : ""
-      }
+        post_type: typeof srkScanPostType !== "undefined" ? srkScanPostType : "",
+      },
     });
   }
 
@@ -178,7 +185,6 @@ jQuery(document).ready(function ($) {
   /**
    * Function to download the scanned links in CSV format.
    */
-
   function downloadLinksCSV() {
     var csvContent = "data:text/csv;charset=utf-8,";
     var headers = [];
