@@ -186,7 +186,8 @@ class SeoRepairKit_FaqManager {
 				'name'           => wp_strip_all_tags( $item['question'] ),
 				'acceptedAnswer' => array(
 					'@type' => 'Answer',
-					'text'  => wpautop( wp_kses_post( $item['answer'] ) ),
+					// Schema validators (and Google) expect plain text here; avoid wpautop() adding <p> wrappers.
+					'text'  => trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( wp_kses_post( (string) ( $item['answer'] ?? '' ) ) ) ) ),
 				),
 			);
 		}

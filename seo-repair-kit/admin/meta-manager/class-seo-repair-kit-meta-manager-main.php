@@ -666,7 +666,7 @@ class SRK_Meta_Manager_Main {
 	 */
 	public function srk_cleanup_knowledge_graph_data() {
 		$current_version = get_option( 'srk_plugin_version', '2.1.3' );
-		$new_version     = '2.1.6';
+		$new_version     = '2.1.7';
 
 		if ( version_compare( $current_version, $new_version, '<' ) ) {
 			$srk_meta = get_option( 'srk_meta', array() );
@@ -1447,12 +1447,23 @@ function srk_parse_template( $template, $post_id = null ) {
 	$post      = get_post( $post_id );
 	$author_id = $post ? $post->post_author : 0;
 
+	$fallback_excerpt = '';
+	if ( $post_id ) {
+		$content_raw  = (string) get_post_field( 'post_content', $post_id );
+		$content_html = (string) apply_filters( 'the_content', $content_raw );
+		if ( preg_match( '/<p\b[^>]*>(.*?)<\/p>/is', $content_html, $m ) ) {
+			$fallback_excerpt = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( (string) $m[1] ) ) );
+		} else {
+			$fallback_excerpt = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( $content_html ) ) );
+		}
+	}
+
 	$replacements = array(
 		'%site_title%'        => get_bloginfo( 'name' ),
 		'%sitedesc%'          => get_bloginfo( 'description' ),
 		'%title%'             => get_the_title( $post_id ),
 		'%excerpt%'           => wp_strip_all_tags(
-			get_the_excerpt( $post_id ) ?: wp_trim_words( get_post_field( 'post_content', $post_id ), 30 )
+			get_the_excerpt( $post_id ) ?: $fallback_excerpt
 		),
 		'%sep%'               => $separator,
 		'%author_first_name%' => $author_id ? get_the_author_meta( 'first_name', $author_id ) : '',

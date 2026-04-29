@@ -1233,7 +1233,7 @@
   margin: 24px 0;
 }
 
-/* Hero Section – matches Link Scanner hero style */
+/* Hero Section – matches Links Manager hero style */
 .srk-hero {
   background: linear-gradient(135deg, var(--srk-card) 0%, rgba(107, 78, 255, 0.03) 100%);
   border: 1px solid var(--srk-border);
@@ -1344,7 +1344,7 @@
   line-height: 1;
 }
 
-/* Hero section – matches Link Scanner hero style (legacy schema-hero styles) */
+/* Hero section – matches Links Manager hero style (legacy schema-hero styles) */
 .srk-schema-hero {
   border: 1px solid var(--srk-border);
   border-radius: 16px;

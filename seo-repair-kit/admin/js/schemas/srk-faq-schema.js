@@ -153,6 +153,7 @@
                 const postType = e.target.value;
                 if (!postType) {
                     $('#faq-item-wrapper').hide();
+                    $('#faq-items').empty();
                     return;
                 }
  
@@ -169,6 +170,8 @@
                         });
                         $('#faq-item-wrapper').show();
                         $('#faq-item-select').html(options.join(''));
+                        // Reset FAQ items when switching post type.
+                        $('#faq-items').empty();
                         this.generatePreview();
                     }
                 });
@@ -176,7 +179,35 @@
             
             // Update preview when post selection changes
             $(document).on('change', '#faq-item-select', () => {
-                this.generatePreview();
+                const postId = $('#faq-item-select').val();
+                if (!postId) {
+                    // If nothing selected, clear repeater to avoid showing other item's FAQs.
+                    $('#faq-items').empty();
+                    this.generatePreview();
+                    return;
+                }
+
+                // Load only the selected post's FAQs (or clear if none).
+                $.post(srk_ajax_object.ajax_url, {
+                    action: 'srk_get_faq_items_for_post',
+                    post_id: postId
+                }, (response) => {
+                    if (response && response.success && response.data) {
+                        const items = Array.isArray(response.data.faq_items) ? response.data.faq_items : [];
+                        if (items.length > 0) {
+                            this.loadFaqItems(items);
+                        } else {
+                            $('#faq-items').empty();
+                            this.generatePreview();
+                        }
+                    } else {
+                        $('#faq-items').empty();
+                        this.generatePreview();
+                    }
+                }).fail(() => {
+                    $('#faq-items').empty();
+                    this.generatePreview();
+                });
             });
 
             // Add new FAQ item

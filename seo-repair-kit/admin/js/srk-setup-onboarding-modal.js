@@ -119,7 +119,7 @@
     var postStats = stats.postTypes || {};
     var storedSchedule = (onboardingData.saved && onboardingData.saved.setup && onboardingData.saved.setup.links_schedule) || stats.linksSchedule || 'manual';
     var schedule = state.setupData.links_schedule || storedSchedule || 'manual';
-    var cadenceDescription = 'Pick how often Link Scanner should run.';
+    var cadenceDescription = 'Pick how often Links Manager should run.';
     var cadenceBlock = ''+
       '<div class="srk-cadence-form">'+
         '<div class="srk-cadence-head">'+
@@ -154,9 +154,9 @@
     return ''+
       '<div class="srk-setup-step srk-link-step">'+
         '<div class="srk-step-header">'+
-          '<span class="srk-step-eyebrow">Link Scanner</span>'+ 
+          '<span class="srk-step-eyebrow">Links Manager</span>'+ 
           '<h2 class="srk-step-title">Choose where to monitor for broken links</h2>'+
-          '<p class="srk-step-desc">Select the post types you want to include when the Link Scanner runs.</p>'+
+          '<p class="srk-step-desc">Select the post types you want to include when the Links Manager runs.</p>'+
         '</div>'+
         '<div class="srk-step-body">'+
           '<section class="srk-step-column">'+
@@ -479,7 +479,7 @@
   function makeSteps(){
     state.steps = [
       { title: 'Welcome', type: 'welcome', render: renderWelcome },
-      { title: 'Link Scanner', type: 'setup', render: renderLinkScanner },
+      { title: 'Links Manager', type: 'setup', render: renderLinkScanner },
       { title: 'KeyTrack', type: 'setup', render: renderKeyTrack },
       { title: 'Schema', type: 'setup', render: renderSchema },
       { title: 'Notifications', type: 'setup', render: renderNotifications },
@@ -703,7 +703,7 @@
     var current = state.steps[state.index];
     if (!current) return;
 
-    // Sync Link Scanner step (step 2: index 1)
+    // Sync Links Manager step (step 2: index 1)
     if (current.type === 'setup' && state.index === 1) {
       // Sync post type checkboxes
       var postTypes = [];
@@ -832,7 +832,7 @@
       state.setupData.notifications.keytrackAlerts = true;
       state.setupData.notifications.brokenLinks = true;
       state.setupData.site_info_consent = true;
-      // Link Scanner: weekly cadence, and focus on Posts & Pages initially.
+      // Links Manager: weekly cadence, and focus on Posts & Pages initially.
       state.setupData.links_schedule = 'weekly';
       state.setupData.postTypes = ['post', 'page'];
     }

@@ -604,10 +604,14 @@ private function replace_archive_variables( $template, $archive_type, $context =
 				$excerpt = get_the_excerpt( $post_id );
 
 				if ( empty( $excerpt ) ) {
-					$excerpt = wp_trim_words(
-						wp_strip_all_tags( get_post_field( 'post_content', $post_id ) ),
-						30
-					);
+					$content_raw  = (string) get_post_field( 'post_content', $post_id );
+					$content_html = (string) apply_filters( 'the_content', $content_raw );
+					if ( preg_match( '/<p\b[^>]*>(.*?)<\/p>/is', $content_html, $m ) ) {
+						$excerpt = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( (string) $m[1] ) ) );
+					} else {
+						$text_only = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( $content_html ) ) );
+						$excerpt   = $text_only;
+					}
 				}
 
 				$content_snippet = wp_trim_words(

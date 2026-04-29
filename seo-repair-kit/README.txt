@@ -5,8 +5,8 @@ Tags: meta manager, schema markup, 404 monitor, broken link checker, 301 redirec
 Requires at least: 5.0.0
 Tested up to: 6.9.4
 Requires PHP: 7.4.3
-Stable tag: 2.1.6
-Release Date: 15-04-2026
+Stable tag: 2.1.7
+Release Date: 29-04-2026
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,9 +14,20 @@ The ultimate WordPress plugin for SEO automation - from link fixing to AI-powere
 
 == Description ==
 
-**SEO Repair Kit v2.1.6** by [TorontoDigits](https://www.torontodigits.com) helps WordPress site owners find and fix practical SEO issues from one dashboard.
+**SEO Repair Kit v2.1.7** by [TorontoDigits](https://www.torontodigits.com) helps WordPress site owners find, monitor, and fix practical SEO issues from one dashboard.
 
-It combines technical SEO checks, metadata controls, crawling controls, monitoring tools, and Search Console insights, so you can improve visibility without relying on multiple plugins.
+It combines technical SEO checks, metadata controls, crawling controls, Links Manager, automatic link scanning, 404 monitoring, smart redirects, notification emails, and Search Console insights, so you can improve visibility without relying on multiple plugins.
+
+= Why SEO Repair Kit? =
+
+Unlike single-purpose SEO plugins, SEO Repair Kit focuses on **practical SEO fixes and monitoring** in one place — including broken links, 404 errors, redirects, missing alt text, metadata, schema, and search performance.
+
+This makes it ideal for:
+* SEO agencies managing multiple clients
+* Content-heavy websites
+* Businesses looking for actionable SEO improvements
+* Site owners who want automated link health monitoring
+* Developers and marketers who need redirect and 404 visibility
 
 = Core Features =
 
@@ -32,10 +43,33 @@ It combines technical SEO checks, metadata controls, crawling controls, monitori
 * Supports common schema types such as Article, FAQ, Product, Event, Course, JobPosting, Review, and more
 * Validate and preview mappings before output
 
-**Link Health Tools**
+**Links Manager**
 * Scan internal and external links for HTTP status issues
+* Review broken, healthy, redirected, and problematic links
 * Export findings to CSV
 * Create redirects from problem URLs
+* Access link scanning, 404 monitoring, automation scan, notifications, and smart redirects from one Links Manager area
+
+**Auto Scan**
+* Schedule automatic link scans
+* Choose scan intervals such as daily, every 3 days, weekly, biweekly, or monthly
+* Configure scan scope, post types, batch size, links per post, and request timeout
+* Store scan history and latest scan snapshots
+* Re-check link health automatically without manual scanning
+
+**Notifications**
+* Send email reports after automated scans
+* Receive broken-link alerts when issues are detected
+* Receive clean scan reports when no broken links are found
+* Configure recipients and email notification preferences
+* Review alert history from the Links Manager
+
+**Smart Redirects**
+* Automatically create 301 redirects for broken internal singular pages
+* Redirect deleted or broken post URLs to their post-type archive page
+* Enable Smart Redirects per post type
+* Reset all Smart Redirect records or reset records by selected post type
+* Manage generated redirects from the Redirection Manager
 
 **Redirection + 404 Monitoring**
 * Create and manage 301/302 redirects
@@ -70,28 +104,44 @@ It combines technical SEO checks, metadata controls, crawling controls, monitori
 == Screenshots ==
 
 1. SEO Repair Kit Dashboard Overview
-2. SEO Repair Kit Links Scanner
+2. SEO Repair Kit Links Manager
 3. SEO Repair Kit 404 Monitor
-4. SEO Repair Kit Advanced Redirections
-5. SEO Repair Kit Import and Export Redirections
-6. SEO Repair Kit Image Alt Text Manager
-7. SEO Repair Kit Schema Manager
-8. SEO Repair Kit KeyTrack Overview Dashboard
-9. SEO Repair Kit Meta Manager Global Meta Overview
-10. SEO Repair Kit Meta Manager Content Types Overview
-11. SEO Repair Kit Meta Manager Taxonomies Overview
-12. SEO Repair Kit Meta Manager Archives Overview
-13. SEO Repair Kit Meta Manager Advance Settings
-14. SEO Repair Kit Sitemap Manager
-15. Bot Manager - llms.txt Management
-16. Bot Manager - robots.txt Management
-17. SEO Repair Kit AI Chatbot Interface
-18. SEO Repair Kit Settings
-19. SEO Repair Kit Upgrade to Pro
-20. SEO Repair Kit Weekly Email Report
-21. SEO Repair Kit KeyTrack Threshold Email Report
+4. SEO Repair Kit Auto Scan
+5. SEO Repair Kit Notifications
+6. SEO Repair Kit Smart Redirect
+7. SEO Repair Kit Advanced Redirections
+8. SEO Repair Kit Import and Export Redirections
+9. SEO Repair Kit Image Alt Text Manager
+10. SEO Repair Kit Schema Manager
+11. SEO Repair Kit KeyTrack Overview Dashboard
+12. SEO Repair Kit Meta Manager Global Meta Overview
+13. SEO Repair Kit Meta Manager Content Types Overview
+14. SEO Repair Kit Meta Manager Taxonomies Overview
+15. SEO Repair Kit Meta Manager Archives Overview
+16. SEO Repair Kit Meta Manager Advance Settings
+17. SEO Repair Kit Sitemap Manager
+18. Bot Manager - llms.txt Management
+19. Bot Manager - robots.txt Management
+20. SEO Repair Kit AI Chatbot Interface
+21. SEO Repair Kit Settings
+22. SEO Repair Kit Upgrade to Pro
+23. SEO Repair Kit Weekly Email Report
+24. SEO Repair Kit KeyTrack Threshold Email Report
+25. SEO Repair Kit Broken Links Detected Email Report
+26. SEO Repair Kit No Broken Links Detected Email Report
 
 == Changelog ==
+
+= 2.1.7 =
+* New: Renamed Link Scanner/Link Scan to **Links Manager**.
+* New: Added Auto Scan with configurable schedules, scan scope, post types, batch limits, timeout, and email alerts.
+* New: Added automated scan notification emails for broken links and clean scans.
+* New: Added Notifications history for automation scan reports.
+* New: Added Smart Redirects to automatically redirect broken internal singular URLs to post-type archive pages.
+* New: Added Smart Redirect controls, records table, filters, status toggle, delete, and reset actions.
+* Improvement: Updated Links Manager with tabs for Link Scan, 404 Monitor, Auto Scan, Notifications, and Smart Redirects.
+* Improvement: Refined Links Manager UI, reports, redirect workflow, and latest scan snapshot handling.
+* Fix: Improved Smart Redirect safety checks, cache clearing, and handling for post types without archive pages.
 
 = 2.1.6 =
 * Fix: Corrected text domain inconsistencies to use `seo-repair-kit`.
@@ -119,7 +169,7 @@ It combines technical SEO checks, metadata controls, crawling controls, monitori
 * Added Taxonomies SEO templates for categories, tags, and custom taxonomies
 * Added Archive SEO controls for author archives, date archives, and search pages
 * Implemented advanced robots meta directives including noindex, nofollow, noarchive, max-snippet, and preview settings
-* Added dynamic SEO variables support such as `%title%`, `%excerpt%`, `%sit_title%`, `%sep%`, `%current_date%`, `%current_day%`, `%month%`, and `%year%`
+* Added dynamic SEO variables support such as `%title%`, `%excerpt%`, `%site_title%`, `%sep%`, `%current_date%`, `%current_day%`, `%month%`, and `%year%`
 * Added per-post SEO meta box for custom title, description, robots directives, and canonical URL
 * Added full compatibility with Gutenberg Block Editor
 * Added support for Elementor editor for easy SEO metadata management while building pages
@@ -181,6 +231,9 @@ It combines technical SEO checks, metadata controls, crawling controls, monitori
 
 == Upgrade Notice ==
 
+= 2.1.7 =
+**Feature Update:** Link Scanner has been renamed to **Links Manager**. This update adds Auto Scan, Notifications, and Smart Redirects. You can now schedule automatic scans, receive email reports, and automatically create 301 redirects for broken internal singular URLs to their post-type archive pages.
+
 = 2.1.6 =
 **Maintenance Release:** This update improves internationalization (i18n) support across the plugin. JavaScript translations are now properly loaded in the editor, text domains are standardized, and admin notices are fully translatable. Updating is recommended for multilingual sites.
 
@@ -233,20 +286,36 @@ The upgraded KeyTrack feature now seamlessly integrates with Google Search Conso
    * Direct links to fix identified issues
 3. Use the "Re-check Status" button to refresh the analysis.
 
-= Broken Link Scanner =
+= Links Manager =
 
-1. Go to "SEO Repair Kit" > "Link Scanner" in the admin menu.
-2. Select a post type from the dropdown (configured in Settings).
-3. Click "Scan Links" to start the scanning process.
-4. Monitor the progress bar and real-time statistics during scanning.
-5. Review the results table showing:
-   * Post ID, title, and type
-   * Link URL and HTTP status code
-   * Link text context
-   * Direct edit and redirect options
-6. Export broken links to CSV for external analysis.
-7. Create redirects directly from the scan results.
-8. Schedule automatic scans in Settings (weekly or monthly).
+Go to "SEO Repair Kit" > "Links Manager" to manage link health from one place. It includes Link Scan, 404 Monitor, Auto Scan, Notifications, and Smart Redirects.
+
+= Link Scan =
+
+Use the Link Scan tab to manually scan selected post types, review link URLs, HTTP status codes, link context, and quickly export broken links or create redirects from scan results.
+
+= Auto Scan =
+
+Use the Auto Scan tab to schedule automatic link scans. Enable Automation, choose the scan interval, set link scope, scan coverage, batch limits, request timeout, email alerts, and save settings.
+
+Important: Automation must be enabled before scheduled scans can run.
+
+= Notifications =
+
+Use the Notifications tab to review automated scan email history, including scan time, trigger type, checked links, broken links, email status, subject, and recipients. Reports are sent for broken-link scans and clean scans when alerts are enabled.
+
+= Smart Redirects =
+
+Use the Smart Redirects tab to automatically create 301 redirects for broken internal singular URLs to their post-type archive pages.
+
+Examples:
+* `/case-studies/broken-slug/` redirects to `/case-studies/`
+* `/blog/deleted-post/` redirects to `/blog/`
+* `/products/old-item/` redirects to `/products/`
+
+You can enable Smart Redirects per post type, view generated records, toggle status, delete records with linked redirects, reset all records, reset by selected post type, and manage all redirects in the Redirection Manager.
+
+Note: Post types without archive pages cannot be enabled for archive redirects.
 
 = Alt Text Manager =
 
@@ -281,7 +350,7 @@ The upgraded KeyTrack feature now seamlessly integrates with Google Search Conso
 
 = 404 Error Monitor =
 
-1. Navigate to "SEO Repair Kit" > "404 Manager" (or access via Link Scanner).
+1. Navigate to "SEO Repair Kit" > "404 Manager" (or access via Links Manager).
 2. Enable 404 monitoring in Settings if not already enabled.
 3. View all 404 errors with details:
    * Requested URL
@@ -510,8 +579,14 @@ Alternatively, you can manually upload the plugin:
 
 == Frequently Asked Questions ==
 
-= What does Sitemap Control do? =
-It allows you to include or exclude specific post types and taxonomies from the default WordPress sitemap (wp-sitemap.xml).
+= What is Links Manager? =
+Links Manager is the central area for managing link health inside SEO Repair Kit. It helps you scan links, monitor 404 errors, schedule automatic scans, receive notification reports, and manage Smart Redirects.
+
+= What is Auto Scan? =
+Auto Scan allows SEO Repair Kit to scan your website links automatically on a schedule. You can configure scan interval, post types, link scope, batch size, request timeout, and email alerts.
+
+= What is Smart Redirects? =
+Smart Redirects automatically creates 301 redirects for broken internal singular URLs and sends them to their post-type archive page. For example, a broken blog post URL can redirect to the main blog archive.
 
 = What does Sitemap Control do? =
 It allows you to include or exclude specific post types and taxonomies from the default WordPress sitemap (wp-sitemap.xml).

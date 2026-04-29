@@ -88,6 +88,34 @@ class SeoRepairKit_Redirection
     }
 
     /**
+     * If a redirection record is deleted and it was linked to Smart Redirect,
+     * remove the Smart Redirect row too (bidirectional sync).
+     *
+     * @param int[] $redirection_ids
+     * @return void
+     */
+    private function delete_linked_smart_redirects_by_redirection_ids($redirection_ids)
+    {
+        $redirection_ids = array_values(array_filter(array_map('intval', (array) $redirection_ids), function ($id) {
+            return $id > 0;
+        }));
+
+        if (empty($redirection_ids)) {
+            return;
+        }
+
+        $smart_table = $this->db_srkitredirection->prefix . 'srkit_smart_redirects';
+        $smart_exists = ( $this->db_srkitredirection->get_var( $this->db_srkitredirection->prepare( "SHOW TABLES LIKE %s", $smart_table ) ) === $smart_table );
+        if ( ! $smart_exists ) {
+            return;
+        }
+
+        $this->db_srkitredirection->query(
+            "DELETE FROM {$smart_table} WHERE redirection_id IN (" . implode(',', $redirection_ids) . ")"
+        );
+    }
+
+    /**
      * Build and persist Apache rewrite rules for file-based redirects
      *
      * @param bool $force
@@ -558,9 +586,15 @@ class SeoRepairKit_Redirection
                     <div class="srk-redirection-hero-text">
                         <h1><?php esc_html_e( 'Advanced Redirections', 'seo-repair-kit' ); ?></h1>
                         <p><?php esc_html_e( 'Create and manage redirects to recover SEO value from 404 errors. Track redirect performance with detailed analytics and preserve your search rankings.', 'seo-repair-kit' ); ?></p>
-                        <div class="srk-redirection-hero-badge">
-                            <span class="dashicons dashicons-chart-line"></span>
-                            <?php esc_html_e( 'SEO OPTIMIZED', 'seo-repair-kit' ); ?>
+                        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px;">
+                            <div class="srk-redirection-hero-badge">
+                                <span class="dashicons dashicons-chart-line"></span>
+                                <?php esc_html_e( 'SEO OPTIMIZED', 'seo-repair-kit' ); ?>
+                            </div>
+                            <a class="srk-redirection-hero-badge" href="<?php echo esc_url( admin_url( 'admin.php?page=seo-repair-kit-link-scanner&tab=smart-redirects' ) ); ?>">
+                                <span class="dashicons dashicons-randomize"></span>
+                                <?php esc_html_e( 'SMART REDIRECTS', 'seo-repair-kit' ); ?>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -1832,13 +1866,43 @@ class SeoRepairKit_Redirection
             text-align: center;
         }
         
-        /* Hits column */
+        /* Source column */
         .srk-redirections-table th:nth-child(6),
         .srk-redirections-table td:nth-child(6) {
+            width: 90px;
+            min-width: 90px;
+            max-width: 90px;
+            text-align: center;
+        }
+
+        /* Hits column */
+        .srk-redirections-table th:nth-child(7),
+        .srk-redirections-table td:nth-child(7) {
             width: 60px;
             min-width: 60px;
             max-width: 60px;
             text-align: center;
+        }
+
+        .srk-source-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .srk-source-manual {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        .srk-source-smart {
+            background: #ecfdf5;
+            color: #047857;
         }
         </style>
         </div>
@@ -1882,6 +1946,8 @@ class SeoRepairKit_Redirection
     private function render_redirections_table()
     {
         $redirections_table = $this->db_srkitredirection->prefix . 'srkit_redirection_table';
+        $smart_table        = $this->db_srkitredirection->prefix . 'srkit_smart_redirects';
+        $smart_table_exists = ( $this->db_srkitredirection->get_var( $this->db_srkitredirection->prepare( "SHOW TABLES LIKE %s", $smart_table ) ) === $smart_table );
         
         // Pagination settings
         $per_page_raw = isset($_GET['srk_per_page']) ? $_GET['srk_per_page'] : 20;
@@ -1910,18 +1976,41 @@ class SeoRepairKit_Redirection
         // Get paginated results
         if ($show_all) {
             // Get all records without LIMIT
-            $redirections = $this->db_srkitredirection->get_results(
-                "SELECT * FROM $redirections_table ORDER BY created_at DESC"
-            );
+            if ( $smart_table_exists ) {
+                $redirections = $this->db_srkitredirection->get_results(
+                    "SELECT r.*, CASE WHEN s.redirection_id IS NULL THEN 'manual' ELSE 'smart' END AS source_type
+                    FROM $redirections_table r
+                    LEFT JOIN (SELECT DISTINCT redirection_id FROM $smart_table) s ON s.redirection_id = r.id
+                    ORDER BY r.created_at DESC"
+                );
+            } else {
+                $redirections = $this->db_srkitredirection->get_results(
+                    "SELECT r.*, 'manual' AS source_type FROM $redirections_table r ORDER BY r.created_at DESC"
+                );
+            }
         } else {
             // Get paginated results
-            $redirections = $this->db_srkitredirection->get_results(
-                $this->db_srkitredirection->prepare(
-                    "SELECT * FROM $redirections_table ORDER BY created_at DESC LIMIT %d OFFSET %d",
-                    $per_page,
-                    $offset
-                )
-            );
+            if ( $smart_table_exists ) {
+                $redirections = $this->db_srkitredirection->get_results(
+                    $this->db_srkitredirection->prepare(
+                        "SELECT r.*, CASE WHEN s.redirection_id IS NULL THEN 'manual' ELSE 'smart' END AS source_type
+                        FROM $redirections_table r
+                        LEFT JOIN (SELECT DISTINCT redirection_id FROM $smart_table) s ON s.redirection_id = r.id
+                        ORDER BY r.created_at DESC
+                        LIMIT %d OFFSET %d",
+                        $per_page,
+                        $offset
+                    )
+                );
+            } else {
+                $redirections = $this->db_srkitredirection->get_results(
+                    $this->db_srkitredirection->prepare(
+                        "SELECT r.*, 'manual' AS source_type FROM $redirections_table r ORDER BY r.created_at DESC LIMIT %d OFFSET %d",
+                        $per_page,
+                        $offset
+                    )
+                );
+            }
         }
         
         if($redirections || $total_items > 0): ?>
@@ -1933,6 +2022,7 @@ class SeoRepairKit_Redirection
                         <th><?php esc_html_e('Target URL', 'seo-repair-kit'); ?></th>
                         <th><?php esc_html_e('Type', 'seo-repair-kit'); ?></th>
                         <th><?php esc_html_e('Status', 'seo-repair-kit'); ?></th>
+                        <th><?php esc_html_e('Source', 'seo-repair-kit'); ?></th>
                         <th><?php esc_html_e('Hits', 'seo-repair-kit'); ?></th>
                         <th><?php esc_html_e('Actions', 'seo-repair-kit'); ?></th>
                     </tr>
@@ -1982,6 +2072,12 @@ class SeoRepairKit_Redirection
                             <td>
                                 <span class="srk-status srk-status-<?php echo esc_attr( $redirection->status ); ?>">
                                     <?php echo esc_html( ucfirst($redirection->status) ); ?>
+                                </span>
+                            </td>
+                            <td>
+                                <?php $source_type = ( isset( $redirection->source_type ) && 'smart' === $redirection->source_type ) ? 'smart' : 'manual'; ?>
+                                <span class="srk-source-badge srk-source-<?php echo esc_attr( $source_type ); ?>">
+                                    <?php echo esc_html( ucfirst( $source_type ) ); ?>
                                 </span>
                             </td>
                             <td><?php echo (int) $redirection->hits; ?></td>
@@ -2613,6 +2709,12 @@ class SeoRepairKit_Redirection
         );
 
         if ($result) {
+            // If this redirection was created/linked by Smart Redirect, remove the Smart row too.
+            $this->delete_linked_smart_redirects_by_redirection_ids(array($redirection_id));
+
+            // Clear link-scanner URL status cache so Smart Redirect regeneration isn't blocked by stale 200s.
+            delete_option('srk_link_scanner_url_status_cache');
+
             // Clear cached statistics after data modification
             self::clear_hit_statistics_cache();
             
@@ -2686,6 +2788,11 @@ class SeoRepairKit_Redirection
                 $result = $this->db_srkitredirection->query(
                     "DELETE FROM $redirections_table WHERE id IN (" . implode(',', $redirection_ids) . ")"
                 );
+                if ($result !== false) {
+                    $this->delete_linked_smart_redirects_by_redirection_ids($redirection_ids);
+                    // Clear link-scanner URL status cache so Smart Redirect regeneration isn't blocked by stale 200s.
+                    delete_option('srk_link_scanner_url_status_cache');
+                }
                 break;
             case 'reset_hits':
                 $result = $this->db_srkitredirection->query(

@@ -248,19 +248,64 @@ class SeoRepairKit_AuthorSchema {
                         break;
                        
                     case 'author':
-                        // Handle author field specially
-                        $author_id = $post->post_author;
-                        $author_name = $value;
-                       
-                        // If author mapping returns user ID, get display name
+                        // Handle author field specially.
+                        // If mapping is "Post Default: Author ID", $value may be numeric (user ID).
+                        $mapped_author = isset( $meta_map['author'] ) ? (string) $meta_map['author'] : '';
+                        $author_id     = (int) $post->post_author;
+                        $author_name   = $value;
+
                         if ( is_numeric( $author_name ) ) {
-                            $author_name = get_the_author_meta( 'display_name', $author_name );
+                            $author_id   = (int) $author_name;
+                            $author_name = '';
                         }
-                       
-                        $schema['author'] = array(
-                            '@type' => 'Person',
-                            'name'  => $author_name,
-                        );
+
+                        // Build a richer Person object when we have an author user ID.
+                        if ( $author_id > 0 ) {
+                            if ( empty( $author_name ) ) {
+                                $author_name = get_user_meta( $author_id, 'author_full_name', true );
+                            }
+                            if ( empty( $author_name ) ) {
+                                $author_name = get_the_author_meta( 'display_name', $author_id );
+                            }
+
+                            $author_url = get_user_meta( $author_id, 'author_profile_url', true );
+                            if ( empty( $author_url ) ) {
+                                $author_url = get_author_posts_url( $author_id );
+                            }
+
+                            $same_as      = get_user_meta( $author_id, 'author_social_profiles', true );
+                            $same_as_arr  = $same_as ? array_values( array_filter( array_map( 'trim', explode( "\n", (string) $same_as ) ) ) ) : array();
+                            $author_bio   = trim( (string) get_the_author_meta( 'description', $author_id ) );
+                            $avatar_url   = function_exists( 'get_avatar_url' ) ? (string) get_avatar_url( $author_id, array( 'size' => 256 ) ) : '';
+
+                            $schema['author'] = array(
+                                '@type' => 'Person',
+                                'name'  => (string) $author_name,
+                                'url'   => (string) $author_url,
+                            );
+
+                            if ( ! empty( $author_bio ) ) {
+                                $schema['author']['description'] = $author_bio;
+                            }
+                            if ( ! empty( $avatar_url ) ) {
+                                $schema['author']['image'] = array(
+                                    '@type' => 'ImageObject',
+                                    'url'   => $avatar_url,
+                                );
+                            }
+                            if ( ! empty( $same_as_arr ) ) {
+                                $schema['author']['sameAs'] = $same_as_arr;
+                            }
+                        } else {
+                            // Fallback to name-only.
+                            if ( is_numeric( $author_name ) ) {
+                                $author_name = get_the_author_meta( 'display_name', (int) $author_name );
+                            }
+                            $schema['author'] = array(
+                                '@type' => 'Person',
+                                'name'  => (string) $author_name,
+                            );
+                        }
                         break;
                 }
             }
@@ -272,6 +317,11 @@ class SeoRepairKit_AuthorSchema {
            
             // Detailed author only for Article.
             $author_name = get_post_meta( $post->ID, 'schema_field_author', true );
+            if ( is_numeric( $author_name ) && (int) $author_name > 0 ) {
+                // If the mapping was "Author ID", the saved meta will be numeric. Treat it as user id.
+                $author_id   = (int) $author_name;
+                $author_name = '';
+            }
             if ( empty( $author_name ) ) {
                 $author_name = get_user_meta( $author_id, 'author_full_name', true );
             }
@@ -301,6 +351,19 @@ class SeoRepairKit_AuthorSchema {
  
             if ( ! empty( $same_as_array ) ) {
                 $schema['author']['sameAs'] = $same_as_array;
+            }
+
+            // Include optional author details when available.
+            $author_bio = trim( (string) get_the_author_meta( 'description', $author_id ) );
+            if ( ! empty( $author_bio ) ) {
+                $schema['author']['description'] = $author_bio;
+            }
+            $avatar_url = function_exists( 'get_avatar_url' ) ? (string) get_avatar_url( $author_id, array( 'size' => 256 ) ) : '';
+            if ( ! empty( $avatar_url ) ) {
+                $schema['author']['image'] = array(
+                    '@type' => 'ImageObject',
+                    'url'   => $avatar_url,
+                );
             }
         } else if ( ! isset( $schema['author'] ) ) {
             // Simple author for BlogPosting & NewsArticle if not already set
@@ -393,6 +456,8 @@ class SeoRepairKit_AuthorSchema {
 				return get_the_post_thumbnail_url( $post, 'full' );
 			case 'post_author':
 				return get_the_author_meta( 'display_name', $post->post_author );
+			case 'post_author_id':
+				return (int) $post->post_author;
 			default:
 				return get_post_meta( $post->ID, $mapping_key, true );
 		}

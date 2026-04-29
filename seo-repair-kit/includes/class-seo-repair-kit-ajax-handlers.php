@@ -28,6 +28,7 @@ class SeoRepairKit_AjaxHandlers {
 			'srk_get_schema_configuration',
 			'srk_get_schema_assignment',
 			'srk_get_faq_configuration',
+			'srk_get_faq_items_for_post',
 			'srk_save_schema_assignment_faq',
 			'srk_get_preview_data',
 			'srk_get_posts_by_type',
@@ -736,8 +737,17 @@ class SeoRepairKit_AjaxHandlers {
 
 				case 'post_excerpt':
 					if ( ! $post ) return '';
-					$excerpt = get_the_excerpt( $post );
-					return $excerpt ?: wp_trim_words( get_the_content( null, false, $post ), 55 );
+					$raw_excerpt = (string) get_post_field( 'post_excerpt', $post->ID );
+					if ( '' !== trim( $raw_excerpt ) ) {
+						return trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( $raw_excerpt ) ) );
+					}
+
+					$content_raw  = (string) get_post_field( 'post_content', $post->ID );
+					$content_html = (string) apply_filters( 'the_content', $content_raw );
+					if ( preg_match( '/<p\b[^>]*>(.*?)<\/p>/is', $content_html, $m ) ) {
+						return trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( (string) $m[1] ) ) );
+					}
+					return trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( $content_html ) ) );
 
 				case 'post_date':
 					return $post ? get_the_date( DATE_W3C, $post ) : '';
@@ -827,6 +837,33 @@ class SeoRepairKit_AjaxHandlers {
 			array(
 				'configured' => true,
 				'post_type'  => $post_type,
+				'post_id'    => $post_id,
+				'faq_items'  => is_array( $faq_items ) ? $faq_items : array(),
+			)
+		);
+	}
+
+	/**
+	 * Get FAQ items for a specific post/page/CPT.
+	 *
+	 * This is used by the Schema Manager FAQ UI to prefill only the selected item's FAQs.
+	 */
+	public static function srk_get_faq_items_for_post() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'Unauthorized' ) );
+		}
+
+		$post_id = isset( $_POST['post_id'] ) ? absint( wp_unslash( $_POST['post_id'] ) ) : 0; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		if ( ! $post_id ) {
+			wp_send_json_error( array( 'message' => 'Invalid post_id' ) );
+		}
+
+		$schema_type = get_post_meta( $post_id, 'srk_selected_schema_type', true );
+		$faq_items   = get_post_meta( $post_id, 'srk_faq_items', true );
+
+		wp_send_json_success(
+			array(
+				'configured' => ( 'faq' === $schema_type ) && is_array( $faq_items ) && ! empty( $faq_items ),
 				'post_id'    => $post_id,
 				'faq_items'  => is_array( $faq_items ) ? $faq_items : array(),
 			)

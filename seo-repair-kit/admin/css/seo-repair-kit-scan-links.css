@@ -1,5 +1,5 @@
 /**
- * CSS for SEO Repair Kit Link Scanner - Premium UI
+ * CSS for SEO Repair Kit Links Manager - Premium UI
  * Continuation of seo-repair-kit-dashboard.css theme and approach
  */
 
@@ -472,6 +472,7 @@
   background: var(--srk-primary-hover);
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(107, 78, 255, 0.3);
+  color: #FFFFFF;
 }
 
 .srk-dashboard-button:active {

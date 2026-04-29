@@ -1,6 +1,6 @@
 /**
  * SEO Repair Kit - Upgrade to Pro Page Styles
- * Following Dashboard & Link Scanner UI patterns
+ * Following Dashboard & Links Manager UI patterns
  */
 
 /* ============================================
@@ -18,7 +18,7 @@
 }
 
 /* ============================================
-   HERO SECTION (Link Scanner Style)
+   HERO SECTION (Links Manager Style)
    ============================================ */
 .srk-upgrade-hero {
     background: linear-gradient(135deg, var(--srk-card) 0%, rgba(107, 78, 255, 0.03) 100%);

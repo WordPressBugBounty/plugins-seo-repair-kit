@@ -1,5 +1,5 @@
 /**
- * Handles the Link Scanner AJAX flow inside the SEO Repair Kit admin.
+ * Handles the Links Manager AJAX flow inside the SEO Repair Kit admin.
  *
  * Captures clicks on the Start button, sends the selected post type to the server,
  * and renders the scan results without a full page reload.

@@ -86,7 +86,7 @@ class SeoRepairKit_Upgrade {
             <h1 class="srk-title"><strong><?php esc_html_e( 'Upgrade to Pro', 'seo-repair-kit' ); ?></strong></h1>
             <p class="srk-subtitle"><?php esc_html_e( 'Unlock powerful features like Schema Manager and the AI SEO Chatbot to supercharge your workflow.', 'seo-repair-kit' ); ?></p>
 
-            <!-- Hero Section (Link Scanner Style) -->
+            <!-- Hero Section (Links Manager Style) -->
             <div class="srk-upgrade-hero">
                 <div class="srk-upgrade-hero-content">
                     <div class="srk-upgrade-hero-icon">

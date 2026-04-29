@@ -66,84 +66,70 @@ class SeoRepairKit_Activator {
      */
     public static function update() {
 
-        // Ensure get_plugin_data() exists
-        if (!function_exists('get_plugin_data')) {
-            require_once ABSPATH . 'wp-admin/includes/plugin.php';
-        }
+	// Ensure get_plugin_data() exists.
+	if ( ! function_exists( 'get_plugin_data' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
 
-        // Path to main plugin file
-        $plugin_file = WP_PLUGIN_DIR . '/seo-repair-kit/seo-repair-kit.php';
+	$plugin_file = WP_PLUGIN_DIR . '/seo-repair-kit/seo-repair-kit.php';
 
-        if (!file_exists($plugin_file)) {
-            return;
-        }
+	if ( ! file_exists( $plugin_file ) ) {
+		return;
+	}
 
-        wp_clean_plugins_cache(true);
+	wp_clean_plugins_cache( true );
 
-        $plugin_data = get_plugin_data($plugin_file);
-        $file_version = trim($plugin_data['Version']);
+	$plugin_data  = get_plugin_data( $plugin_file );
+	$file_version = trim( $plugin_data['Version'] );
 
-        if (empty($file_version)) {
-            return;
-        }
+	if ( empty( $file_version ) ) {
+		return;
+	}
 
-        // Stored version in WordPress options
-        $stored_version = get_option('seo_repair_kit_version');
+	// Always ensure current DB/tables are aligned for existing installs.
+	self::run_updates();
 
-        // Plugin ID from CRM
-        $plugin_id = get_option('srk_plugin_id');
+	$stored_version = get_option( 'seo_repair_kit_version' );
+	$plugin_id      = get_option( 'srk_plugin_id' );
 
-        if (!$plugin_id) {
-            self::srk_send_data_to_api();
-            $plugin_id = get_option('srk_plugin_id');
-            if (!$plugin_id) {
-                return;
-            }
-        }
+	if ( ! $plugin_id ) {
+		self::srk_send_data_to_api();
+		$plugin_id = get_option( 'srk_plugin_id' );
 
-        // First time or missing stored version
-        if (!$stored_version) {
-            update_option('seo_repair_kit_version', $file_version);
-            return;
-        }
+		if ( ! $plugin_id ) {
+			return;
+		}
+	}
 
-        // No version change
-        if (version_compare($stored_version, $file_version, '==')) {
-            return;
-        }
+	if ( ! $stored_version ) {
+		update_option( 'seo_repair_kit_version', $file_version );
+		return;
+	}
 
-        // Determine event type
-        $event = version_compare($file_version, $stored_version, '>') ? 'update' : 'downgrade';
+	if ( version_compare( $stored_version, $file_version, '==' ) ) {
+		return;
+	}
 
-        // Send status info to CRM
-        self::send_status_to_crm($event);
+	$event = version_compare( $file_version, $stored_version, '>' ) ? 'update' : 'downgrade';
 
-        // Send version update
-        self::send_version_to_crm($stored_version, $file_version);
+	self::send_status_to_crm( $event );
+	self::send_version_to_crm( $stored_version, $file_version );
 
-        // Update local version
-        update_option('seo_repair_kit_version', $file_version);
+	update_option( 'seo_repair_kit_version', $file_version );
 
-        // Trigger onboarding modal on plugin update (not downgrade)
-        // ONLY if onboarding has never been completed before
-        if ($event === 'update') {
-            // First check if onboarding has already been completed - if so, never run again
-            $srk_setup = get_option( 'srk_setup', array() );
-            if ( ! empty( $srk_setup['completed'] ) && ! empty( $srk_setup['completed_at'] ) ) {
-                // Onboarding already completed - do not trigger again
-                return;
-            }
-            
-            // Check if user has previously explicitly denied consent before setting flag
-            $consent_option = get_option( 'srk_site_info_consent' );
-            // Only trigger onboarding if consent was not explicitly denied (0)
-            // Allow onboarding if: consent is null (first time), consent is 1 (granted), or not explicitly set to 0
-            if ( $consent_option !== 0 ) {
-                // Set flag to run onboarding modal on next admin page load
-                update_option('srk_should_run_modal_onboarding', 'yes');
-            }
-        }
-    }
+	if ( 'update' === $event ) {
+		$srk_setup = get_option( 'srk_setup', array() );
+
+		if ( ! empty( $srk_setup['completed'] ) && ! empty( $srk_setup['completed_at'] ) ) {
+			return;
+		}
+
+		$consent_option = get_option( 'srk_site_info_consent' );
+		if ( 0 !== $consent_option ) {
+			update_option( 'srk_should_run_modal_onboarding', 'yes' );
+		}
+	}
+}
 
     private static function send_version_to_crm($old_version, $new_version) {
 
@@ -173,21 +159,98 @@ class SeoRepairKit_Activator {
      * @return void
      */
     private static function run_updates() {
-        // Check current version and run appropriate migrations
         $current_version = get_option( 'seo_repair_kit_version', '1.0.0' );
-        
-        // Migrate from v2.0.0 to v2.1.0
+
         if ( version_compare( $current_version, '2.1.0', '<' ) ) {
             self::migrate_to_v2_1_0();
         }
-        
-        // Always ensure tables exist (safe for fresh installs)
+
         self::srkit_create_log_table();
         self::srkit_create_keytrack_table();
         self::create_gsc_data_table();
         self::create_redirection_logs_table();
         self::create_404_logs_table();
+        self::create_smart_redirects_table();
         self::create_plugin_settings_table();
+        self::create_link_scanner_history_tables();
+    }
+
+    /**
+     * Create / upgrade Links Manager Auto Scan history tables.
+     *
+     * @since 2.1.7
+     * @access private
+     * @return void
+     */
+    private static function create_link_scanner_history_tables() {
+        global $wpdb;
+
+        $runs_table   = $wpdb->prefix . 'srk_link_scan_runs';
+        $alerts_table = $wpdb->prefix . 'srk_link_scan_alerts';
+        $charset      = $wpdb->get_charset_collate();
+
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
+        $sql_runs = "CREATE TABLE {$runs_table} (
+            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            trigger_type VARCHAR(20) NOT NULL DEFAULT 'scheduled',
+            link_scope VARCHAR(20) NOT NULL DEFAULT 'both',
+            scan_coverage VARCHAR(20) NOT NULL DEFAULT 'selected',
+            post_types LONGTEXT NULL,
+            post_type_breakdown LONGTEXT NULL,
+            scanned_posts_count INT UNSIGNED NOT NULL DEFAULT 0,
+            total_links_count INT UNSIGNED NOT NULL DEFAULT 0,
+            broken_links_count INT UNSIGNED NOT NULL DEFAULT 0,
+            working_links_count INT UNSIGNED NOT NULL DEFAULT 0,
+            records_json LONGTEXT NULL,
+            status VARCHAR(20) NOT NULL DEFAULT 'success',
+            email_sent TINYINT(1) NOT NULL DEFAULT 0,
+            started_at DATETIME NOT NULL,
+            ended_at DATETIME NOT NULL,
+            PRIMARY KEY  (id),
+            KEY idx_ended_at (ended_at),
+            KEY idx_trigger (trigger_type),
+            KEY idx_link_scope (link_scope)
+        ) {$charset};";
+
+        $sql_alerts = "CREATE TABLE {$alerts_table} (
+            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            scan_run_id BIGINT UNSIGNED NOT NULL,
+            sent_at DATETIME NOT NULL,
+            recipients TEXT NULL,
+            subject TEXT NULL,
+            broken_links_count INT UNSIGNED NOT NULL DEFAULT 0,
+            post_type_breakdown LONGTEXT NULL,
+            payload_snapshot LONGTEXT NULL,
+            PRIMARY KEY  (id),
+            KEY idx_scan_run_id (scan_run_id),
+            KEY idx_sent_at (sent_at)
+        ) {$charset};";
+
+        dbDelta( $sql_runs );
+        dbDelta( $sql_alerts );
+
+        // Explicitly align older installs in case dbDelta did not add columns.
+        $columns = (array) $wpdb->get_results( "SHOW COLUMNS FROM {$runs_table}", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+        $names   = array();
+
+        foreach ( $columns as $column ) {
+            if ( ! empty( $column['Field'] ) ) {
+                $names[] = $column['Field'];
+            }
+        }
+
+        if ( ! in_array( 'link_scope', $names, true ) ) {
+            $wpdb->query( "ALTER TABLE {$runs_table} ADD COLUMN link_scope VARCHAR(20) NOT NULL DEFAULT 'both' AFTER trigger_type" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+        }
+
+        if ( ! in_array( 'scan_coverage', $names, true ) ) {
+            $wpdb->query( "ALTER TABLE {$runs_table} ADD COLUMN scan_coverage VARCHAR(20) NOT NULL DEFAULT 'selected' AFTER link_scope" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+        }
+
+        delete_transient( 'srk_required_tables_check' );
+        delete_transient( 'srk_table_creation_check' );
+        delete_transient( 'srk_link_scanner_storage_checked' );
     }
 
     /**
@@ -1037,6 +1100,43 @@ class SeoRepairKit_Activator {
         delete_transient( 'srk_required_tables_check' );
         delete_transient( 'srk_404_table_exists' );
         delete_transient( 'srk_404_statistics' );
+        delete_transient( 'srk_table_creation_check' );
+    }
+
+    /**
+     * Create smart redirects tracking table.
+     *
+     * @since 2.1.7
+     * @access private
+     * @return void
+     */
+    private static function create_smart_redirects_table() {
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . 'srkit_smart_redirects';
+        $charset_collate = $wpdb->get_charset_collate();
+
+        $table_query = "CREATE TABLE IF NOT EXISTS $table_name (
+            id BIGINT NOT NULL AUTO_INCREMENT,
+            redirection_id BIGINT NULL,
+            post_type VARCHAR(100) NOT NULL,
+            source_url VARCHAR(512) NOT NULL,
+            target_url VARCHAR(512) NOT NULL,
+            status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+            last_detected_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            UNIQUE KEY uniq_source_post_type (source_url, post_type),
+            KEY idx_redirection_id (redirection_id),
+            KEY idx_post_type (post_type),
+            KEY idx_status (status)
+        ) $charset_collate;";
+
+        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+        dbDelta( $table_query );
+
+        delete_transient( 'srk_required_tables_check' );
         delete_transient( 'srk_table_creation_check' );
     }
 

@@ -1,0 +1,1367 @@
+/* =========================================================
+   Auto Scan, Notifications, and Smart Redirects Tabs
+   Continuation of seo-repair-kit-scan-links.css theme and approach
+   File: seo-repair-kit-automation-scan-alerts-tabs.css
+   ========================================================= */
+
+   :root {
+    --srk-primary: #0B1D51;
+    --srk-primary-hover: #241180;
+    --srk-success: #10B981;
+    --srk-success-light: rgba(16, 185, 129, 0.1);
+    --srk-warning: #F59E0B;
+    --srk-warning-light: rgba(245, 158, 11, 0.1);
+    --srk-error: #EF4444;
+    --srk-error-light: rgba(239, 68, 68, 0.1);
+    --srk-card: #FFFFFF;
+    --srk-card-hover: #F9FAFB;
+    --srk-border: #E5E7EB;
+    --srk-muted: #6B7280;
+    --srk-text: #111827;
+    --srk-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --srk-shadow-card: 0 1px 2px rgba(16, 24, 40, 0.03);
+    --srk-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* =========================================================
+     Shared Card / Base Elements
+     ========================================================= */
+  
+  .srk-card {
+    background: var(--srk-card);
+    border: 1px solid var(--srk-border);
+    border-radius: 14px;
+    box-shadow: var(--srk-shadow-card);
+    padding: 24px;
+  }
+  
+  .srk-card * {
+    box-sizing: border-box;
+  }
+  
+  .srk-card code {
+    font-family: Monaco, Menlo, Ubuntu Mono, monospace;
+  }
+  
+  .srk-text-muted {
+    color: var(--srk-muted);
+  }
+  
+  /* =========================================================
+     Auto Scan Tab
+     ========================================================= */
+  
+  .srk-automation-header {
+    display: block;
+    margin: 0 0 22px;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, var(--srk-card) 0%, rgba(107, 78, 255, 0.03) 100%);
+    border: 1px solid var(--srk-border);
+    border-radius: 14px;
+    box-shadow: var(--srk-shadow-card);
+  }
+  
+  .srk-automation-header h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    line-height: 1.3;
+    font-weight: 600;
+    color: var(--srk-text);
+    letter-spacing: -0.02em;
+  }
+  
+  .srk-automation-header h3 .dashicons {
+    vertical-align: middle;
+    margin-right: 6px;
+    color: var(--srk-primary) !important;
+  }
+  
+  .srk-automation-header p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--srk-muted);
+  }
+  
+  /* ---------- Form table reset ---------- */
+  .srk-form-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0;
+    background: transparent;
+  }
+  
+  .srk-form-table > tbody > tr {
+    position: relative;
+  }
+  
+  .srk-form-table > tbody > tr > th,
+  .srk-form-table > tbody > tr > td {
+    border-top: 1px solid var(--srk-border);
+  }
+  
+  .srk-form-table > tbody > tr:first-child > th,
+  .srk-form-table > tbody > tr:first-child > td {
+    border-top: 0;
+  }
+  
+  .srk-form-table th {
+    width: 280px;
+    padding: 18px 18px 18px 0;
+    vertical-align: top;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--srk-text);
+  }
+  
+  .srk-form-table td {
+    padding: 18px 0 18px 8px;
+    vertical-align: top;
+  }
+  
+  .srk-form-table .description {
+    margin: 8px 0 0;
+    font-size: 12px;
+    line-height: 1.65;
+    color: var(--srk-muted);
+  }
+  
+  /* ---------- Inputs ---------- */
+  .srk-form-table input[type="text"],
+  .srk-form-table input[type="email"],
+  .srk-form-table input[type="number"],
+  .srk-form-table select,
+  .srk-select,
+  .srk-smart-filter-select,
+  #srk_smart_per_page_select {
+    width: 100%;
+    max-width: 420px;
+    min-height: 42px;
+    padding: 8px 14px;
+    border: 1px solid var(--srk-border);
+    border-radius: 8px;
+    background: var(--srk-card);
+    color: var(--srk-text);
+    font-size: 14px;
+    line-height: 1.4;
+    box-shadow: none;
+    transition: all 0.2s ease;
+  }
+  
+  .srk-form-table input[type="text"]:focus,
+  .srk-form-table input[type="email"]:focus,
+  .srk-form-table input[type="number"]:focus,
+  .srk-form-table select:focus,
+  .srk-select:focus,
+  .srk-smart-filter-select:focus,
+  #srk_smart_per_page_select:focus {
+    outline: none;
+    border-color: var(--srk-primary);
+    background: var(--srk-card);
+    box-shadow: 0 0 0 3px rgba(107, 78, 255, 0.1);
+  }
+  
+  .srk-form-table input.small-text {
+    width: 100%;
+    max-width: 160px;
+    text-align: left;
+  }
+  
+  .srk-form-table input.regular-text {
+    width: 100%;
+    max-width: 560px;
+  }
+  
+  .srk-select {
+    min-width: 260px;
+  }
+  
+  /* ---------- Toggle rows ---------- */
+  .srk-toggle-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 600;
+    color: var(--srk-text);
+  }
+  
+  .srk-toggle-label input[type="checkbox"] {
+    margin: 0;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--srk-primary);
+  }
+  
+  /* ---------- Checkbox pills ---------- */
+  .srk-checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0;
+  }
+  
+  .srk-checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 8px 14px;
+    border: 1px solid var(--srk-border);
+    border-radius: 8px;
+    background: var(--srk-card);
+    font-size: 13px;
+    font-weight: 600;
+    color: #344054;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .srk-checkbox-label:hover {
+    border-color: var(--srk-primary);
+    background: var(--srk-card-hover);
+    box-shadow: 0 2px 4px rgba(107, 78, 255, 0.1);
+    transform: translateY(-1px);
+  }
+  
+  .srk-checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--srk-primary);
+  }
+  
+  .srk-form-table > tbody > tr:first-child,
+  .srk-form-table > tbody > tr:nth-child(7) {
+    background: var(--srk-card);
+  }
+  
+  .srk-form-table > tbody > tr:first-child > th,
+  .srk-form-table > tbody > tr:first-child > td,
+  .srk-form-table > tbody > tr:nth-child(7) > th,
+  .srk-form-table > tbody > tr:nth-child(7) > td {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  
+  #srk-automation-settings-form {
+    margin: 0;
+  }
+  
+  /* ---------- Next scheduled run box ---------- */
+  .srk-automation-next-run {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 24px 0 0;
+    padding: 16px 18px;
+    border: 1px solid rgba(107, 78, 255, 0.22);
+    border-radius: 8px;
+    background: rgba(107, 78, 255, 0.05);
+    color: var(--srk-primary);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  .srk-automation-next-run .dashicons {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+    line-height: 1;
+    color: var(--srk-primary);
+    flex-shrink: 0;
+  }
+  
+  .srk-automation-next-run strong {
+    color: var(--srk-primary);
+    font-weight: 700;
+  }
+  
+  /* ---------- Actions footer ---------- */
+  .srk-automation-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+    padding-top: 22px;
+    border-top: 1px solid var(--srk-border);
+  }
+  
+  .button,
+  .srk-history-action-btn,
+  .srk-reset-table-btn.button,
+  .srk-reset-table-btn.button-link-delete,
+  .srk-export-row-btn,
+  .srk-smart-actions .button.button-small {
+    min-height: 40px;
+    padding: 0 16px !important;
+    border-radius: 8px !important;
+    border: 1px solid var(--srk-border) !important;
+    background: var(--srk-card) !important;
+    color: var(--srk-text) !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    line-height: 38px !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: none !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .srk-automation-actions .button:hover:not(:disabled),
+  .srk-history-action-btn:hover:not(:disabled),
+  .srk-reset-table-btn.button:hover:not(:disabled),
+  .srk-reset-table-btn.button-link-delete:hover:not(:disabled),
+  .srk-export-row-btn:hover:not(:disabled),
+  .srk-smart-actions .button.button-small:hover:not(:disabled) {
+    background: var(--srk-card-hover) !important;
+    border-color: var(--srk-primary) !important;
+    color: var(--srk-primary) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(107, 78, 255, 0.1) !important;
+  }
+  
+  .srk-automation-actions .button:focus,
+  .srk-history-action-btn:focus,
+  .srk-reset-table-btn.button:focus,
+  .srk-reset-table-btn.button-link-delete:focus,
+  .srk-export-row-btn:focus,
+  .srk-smart-actions .button.button-small:focus {
+    outline: none !important;
+    border-color: var(--srk-primary) !important;
+    box-shadow: 0 0 0 3px rgba(107, 78, 255, 0.1) !important;
+  }
+  
+  .srk-automation-actions .button:disabled,
+  .srk-history-action-btn:disabled,
+  .srk-reset-table-btn.button:disabled,
+  .srk-reset-table-btn.button-link-delete:disabled,
+  .srk-export-row-btn:disabled,
+  .srk-smart-actions .button.button-small:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  .srk-automation-actions .button .dashicons,
+  .srk-history-action-btn .dashicons,
+  .srk-reset-table-btn.button .dashicons,
+  .srk-reset-table-btn.button-link-delete .dashicons,
+  .srk-export-row-btn .dashicons,
+  .srk-smart-actions .button.button-small .dashicons {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    line-height: 1;
+  }
+  
+  /* Primary action buttons */
+  .srk-btn-save-settings,
+  .srk-btn-run-scan,
+  .srk-filter-btn {
+    background: var(--srk-primary) !important;
+    border-color: var(--srk-primary) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 2px 4px rgba(107, 78, 255, 0.2) !important;
+  }
+  
+  .srk-btn-save-settings:hover:not(:disabled),
+  .srk-btn-run-scan:hover:not(:disabled),
+  .srk-filter-btn:hover:not(:disabled) {
+    background: var(--srk-primary-hover) !important;
+    border-color: var(--srk-primary-hover) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 8px rgba(107, 78, 255, 0.3) !important;
+  }
+  
+  .srk-btn-run-scan:disabled {
+    opacity: 0.72;
+    cursor: not-allowed;
+  }
+  
+  /* Secondary / reset buttons */
+  .srk-btn-reset-settings {
+    background: var(--srk-card) !important;
+    border-color: var(--srk-border) !important;
+    color: var(--srk-text) !important;
+  }
+  
+  .srk-btn-reset-settings:hover:not(:disabled) {
+    background: var(--srk-card-hover) !important;
+    border-color: var(--srk-primary) !important;
+    color: var(--srk-primary) !important;
+  }
+  
+  .srk-btn-reset-scan {
+    background: var(--srk-error) !important;
+    border-color: var(--srk-error) !important;
+    color: #FFFFFF !important;
+  }
+  
+  .srk-btn-reset-scan:hover:not(:disabled) {
+    background: #DC2626 !important;
+    border-color: #DC2626 !important;
+    color: #FFFFFF !important;
+  }
+  
+  /* ---------- AJAX messages ---------- */
+  #srk-run-scan-result,
+  #srk-alerts-action-result {
+    margin-top: 16px !important;
+  }
+  
+  #srk-run-scan-result .notice,
+  #srk-alerts-action-result .notice {
+    margin: 0;
+    border-left-width: 4px;
+    border-radius: 8px;
+    padding: 12px 14px;
+    box-shadow: none;
+  }
+  
+  #srk-run-scan-result .notice p,
+  #srk-alerts-action-result .notice p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  
+  /* =========================================================
+     Notifications Tab
+     ========================================================= */
+  
+  .srk-history-card {
+    padding: 24px 28px;
+    border-radius: 14px;
+    background: var(--srk-card);
+    border: 1px solid var(--srk-border);
+    box-shadow: var(--srk-shadow-card);
+  }
+  
+  .srk-alerts-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  
+  .srk-alerts-card-title {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  
+  .srk-alerts-card-title > .dashicons {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(107, 78, 255, 0.1);
+    color: var(--srk-primary);
+    font-size: 22px;
+    line-height: 44px;
+    margin-top: 0;
+  }
+  
+  .srk-history-card:nth-of-type(2) .srk-alerts-card-title > .dashicons,
+  .srk-alerts-card-title > .dashicons.dashicons-bell {
+    background: rgba(245, 158, 11, 0.12);
+    color: var(--srk-warning);
+  }
+  
+  .srk-alerts-card-title h3 {
+    margin: 0 0 4px;
+    font-size: 18px;
+    line-height: 1.35;
+    font-weight: 600;
+    color: var(--srk-text);
+    letter-spacing: -0.02em;
+  }
+  
+  .srk-alerts-card-title p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--srk-muted);
+  }
+  
+  .srk-alerts-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  
+  /* ---------- Table shell / shared history table ---------- */
+  .srk-table-shell {
+    border: 1px solid var(--srk-border);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--srk-card);
+    box-shadow: var(--srk-shadow-card);
+  }
+  
+  .srk-table-scroll {
+    margin-top: 0 !important;
+    overflow-x: auto;
+  }
+  
+  .srk-history-table {
+    width: 100%;
+    margin: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    font-size: 13px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background: var(--srk-card);
+  }
+  
+  .srk-history-table thead th {
+    background: var(--srk-card-hover);
+    color: var(--srk-muted);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--srk-border);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    text-align: left;
+  }
+  
+  .srk-history-table tbody td {
+    padding: 16px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--srk-border);
+    color: var(--srk-text);
+    background: var(--srk-card);
+    font-size: 14px;
+  }
+  
+  .srk-history-table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+  
+  .srk-history-table tbody tr:hover td {
+    background: rgba(107, 78, 255, 0.03);
+  }
+  
+  .srk-col-time {
+    white-space: nowrap;
+  }
+  
+  .srk-col-time .dashicons {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    line-height: 1;
+    color: var(--srk-muted);
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  
+  .srk-history-time {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--srk-text);
+    vertical-align: middle;
+  }
+  
+  /* ---------- Badges ---------- */
+  .srk-trigger-badge,
+  .srk-neutral-badge,
+  .srk-broken-badge,
+  .srk-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 28px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  
+  .srk-trigger-badge {
+    text-transform: capitalize;
+    letter-spacing: 0;
+  }
+  
+  .srk-trigger-manual {
+    background: rgba(107, 78, 255, 0.1);
+    color: var(--srk-primary);
+    border: 1px solid rgba(107, 78, 255, 0.2);
+  }
+  
+  .srk-trigger-scheduled {
+    background: rgba(124, 58, 237, 0.1);
+    color: #7C3AED;
+    border: 1px solid rgba(124, 58, 237, 0.2);
+  }
+  
+  .srk-neutral-badge {
+    background: var(--srk-card-hover);
+    color: var(--srk-muted);
+    border: 1px solid var(--srk-border);
+  }
+  
+  .srk-broken-badge.has-broken {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--srk-error);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+  }
+  
+  .srk-broken-badge.no-broken {
+    background: var(--srk-success-light);
+    color: var(--srk-success);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+  }
+  
+  .srk-status-active {
+    background: var(--srk-success-light);
+    color: var(--srk-success);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+  }
+  
+  .srk-status-inactive {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--srk-error);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+  }
+  
+  /* ---------- Email sent ---------- */
+  .srk-status-yes,
+  .srk-status-no {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  
+  .srk-status-yes {
+    color: var(--srk-success);
+  }
+  
+  .srk-status-no {
+    color: var(--srk-muted);
+    opacity: 0.75;
+  }
+  
+  .srk-status-yes .dashicons,
+  .srk-status-no .dashicons {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+    line-height: 1;
+  }
+  
+  /* ---------- Alert table specific cells ---------- */
+  .srk-alert-subject-cell {
+    min-width: 280px;
+  }
+  
+  .srk-alert-subject-cell .dashicons {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    line-height: 1;
+    color: var(--srk-warning);
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  
+  .srk-alert-subject-text {
+    vertical-align: middle;
+    font-size: 14px;
+    color: var(--srk-text);
+  }
+  
+  .srk-recipients-cell {
+    max-width: 260px;
+    word-break: break-word;
+    color: var(--srk-primary);
+    font-size: 13px;
+  }
+  
+  .srk-breakdown-cell {
+    min-width: 250px;
+  }
+  
+  .srk-breakdown-row {
+    margin-bottom: 4px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #344054;
+  }
+  
+  .srk-breakdown-row:last-child {
+    margin-bottom: 0;
+  }
+  
+  .srk-breakdown-row strong {
+    color: var(--srk-text);
+    font-weight: 700;
+  }
+  
+  .srk-breakdown-broken {
+    color: var(--srk-error);
+  }
+  
+  .srk-breakdown-divider {
+    color: var(--srk-muted);
+    padding: 0 4px;
+  }
+  
+  .srk-breakdown-checked {
+    color: #475467;
+  }
+  
+  .srk-empty-row {
+    text-align: center;
+    color: var(--srk-muted);
+    padding: 24px !important;
+    font-size: 13px;
+  }
+  
+  .srk-empty-row .dashicons {
+    vertical-align: middle;
+    margin-right: 6px;
+    color: var(--srk-muted);
+  }
+  
+  /* Compact export buttons in rows */
+  .srk-export-row-btn {
+    min-height: 32px !important;
+    padding: 0 10px !important;
+    font-size: 12px !important;
+    line-height: 30px !important;
+    white-space: nowrap;
+  }
+  
+  .srk-export-row-btn .dashicons {
+    width: 14px;
+    height: 14px;
+    font-size: 14px;
+  }
+  
+  /* =========================================================
+     Smart Redirects Tab
+     ========================================================= */
+  
+  .srk-smart-redirect-example {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: rgba(107, 78, 255, 0.04);
+    border: 1px solid rgba(107, 78, 255, 0.15);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 24px;
+  }
+  
+  .srk-smart-redirect-example > .dashicons {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: var(--srk-primary);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  
+  .srk-smart-redirect-example strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: var(--srk-text);
+  }
+  
+  .srk-smart-redirect-example p {
+    margin: 0 0 10px;
+    font-size: 13px;
+    color: var(--srk-muted);
+    line-height: 1.6;
+  }
+  
+  .srk-smart-redirect-list {
+    margin: 0;
+    padding: 0 0 0 16px;
+    list-style: disc;
+  }
+  
+  .srk-smart-redirect-list li {
+    font-size: 12px;
+    color: #374151;
+    margin-bottom: 4px;
+    font-family: Monaco, Menlo, Ubuntu Mono, monospace;
+  }
+  
+  .srk-smart-redirect-list code {
+    background: rgba(107, 78, 255, 0.08);
+    border: 1px solid rgba(107, 78, 255, 0.12);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+  
+  .srk-redirect-pt-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+  }
+  
+  .srk-redirect-pt-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 16px;
+    border: 1px solid var(--srk-border);
+    border-radius: 8px;
+    background: var(--srk-card);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+  
+  .srk-redirect-pt-card:hover:not(.srk-redirect-pt-no-archive) {
+    border-color: var(--srk-primary);
+    background: var(--srk-card-hover);
+    box-shadow: 0 2px 4px rgba(107, 78, 255, 0.1);
+    transform: translateY(-1px);
+  }
+  
+  .srk-redirect-pt-card.srk-redirect-pt-active {
+    border-color: var(--srk-primary);
+    background: rgba(107, 78, 255, 0.04);
+    box-shadow: 0 0 0 3px rgba(107, 78, 255, 0.08);
+  }
+  
+  .srk-redirect-pt-no-archive {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .srk-redirect-pt-card-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .srk-redirect-pt-checkbox {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--srk-primary);
+    cursor: pointer;
+  }
+  
+  .srk-redirect-pt-no-archive .srk-redirect-pt-checkbox {
+    cursor: not-allowed;
+  }
+  
+  .srk-redirect-pt-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--srk-text);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .srk-redirect-pt-slug {
+    font-size: 10px;
+    font-family: Monaco, Menlo, Ubuntu Mono, monospace;
+    color: var(--srk-muted);
+    background: var(--srk-card-hover);
+    border: 1px solid var(--srk-border);
+    padding: 1px 5px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  
+  .srk-redirect-pt-card-bottom {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 22px;
+  }
+  
+  .srk-redirect-pt-arrow .dashicons {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    color: var(--srk-primary);
+    line-height: 1;
+  }
+  
+  .srk-redirect-pt-archive {
+    font-size: 11px;
+    color: #374151;
+    background: rgba(107, 78, 255, 0.07);
+    border: 1px solid rgba(107, 78, 255, 0.12);
+    padding: 2px 6px;
+    border-radius: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+  
+  .srk-redirect-pt-no-archive-msg {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--srk-muted);
+  }
+  
+  .srk-redirect-pt-no-archive-msg .dashicons {
+    font-size: 13px;
+    width: 13px;
+    height: 13px;
+    line-height: 1;
+  }
+  
+  .srk-redirect-existing {
+    border-top: 1px solid var(--srk-border);
+    padding-top: 20px;
+  }
+  
+  /* ---------- Smart Redirect Records Card ---------- */
+  .srk-smart-records-card {
+    margin-top: 28px;
+    padding: 24px 28px;
+    border: 1px solid var(--srk-border);
+    border-radius: 14px;
+    background: var(--srk-card);
+    box-shadow: var(--srk-shadow-card);
+  }
+  
+  .srk-smart-records-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  
+  .srk-smart-filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 0 12px;
+    padding: 14px;
+    border: 1px solid var(--srk-border);
+    border-radius: 14px;
+    background: var(--srk-card-hover);
+  }
+  
+  .srk-smart-filter-select {
+    width: auto;
+    min-width: 190px;
+    max-width: 240px;
+    background-color: var(--srk-card);
+  }
+  
+  .srk-smart-bulk-actions {
+    margin: 0 0 14px !important;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .srk-manage-redirects-btn {
+    white-space: nowrap;
+  }
+  
+  .srk-danger-soft-btn,
+  .srk-smart-delete-record {
+    border-color: rgba(239, 68, 68, 0.25) !important;
+    background: rgba(239, 68, 68, 0.06) !important;
+    color: var(--srk-error) !important;
+  }
+  
+  .srk-danger-soft-btn:hover,
+  .srk-smart-delete-record:hover {
+    border-color: var(--srk-error) !important;
+    background: rgba(239, 68, 68, 0.1) !important;
+    color: var(--srk-error) !important;
+  }
+  
+  .srk-danger-soft-btn .dashicons,
+  .srk-smart-delete-record .dashicons {
+    color: var(--srk-error) !important;
+  }
+  
+  .srk-warning-soft-btn {
+    border-color: rgba(245, 158, 11, 0.25) !important;
+    background: rgba(245, 158, 11, 0.08) !important;
+    color: var(--srk-warning) !important;
+  }
+  
+  .srk-warning-soft-btn:hover {
+    border-color: var(--srk-warning) !important;
+    background: rgba(245, 158, 11, 0.12) !important;
+    color: var(--srk-warning) !important;
+  }
+  
+  .srk-warning-soft-btn .dashicons {
+    color: var(--srk-warning) !important;
+  }
+  
+  .srk-smart-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  .srk-smart-actions .button.button-small {
+    min-height: 34px !important;
+    padding: 0 10px !important;
+    font-size: 12px !important;
+    line-height: 32px !important;
+  }
+  
+  .srk-smart-actions .button.button-small .dashicons {
+    width: 15px;
+    height: 15px;
+    font-size: 15px;
+  }
+  
+  .srk-smart-toggle-status {
+    border-color: var(--srk-border) !important;
+    background: var(--srk-card) !important;
+    color: var(--srk-text) !important;
+  }
+  
+  .srk-smart-toggle-status:hover {
+    background: var(--srk-card-hover) !important;
+    border-color: var(--srk-primary) !important;
+    color: var(--srk-primary) !important;
+  }
+  
+  /* Smart Redirect Records table - align with Links Manager / 404 Monitor table UX */
+  .srk-source-url-link,
+  .srk-target-url-link {
+    color: var(--srk-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 600;
+    word-break: break-all;
+  }
+  
+  .srk-source-url-link:hover,
+  .srk-target-url-link:hover {
+    color: var(--srk-primary-hover);
+  }
+  
+  /* Pagination already used by Links Manager; keep compatible here */
+  .srk-pagination-wrapper {
+    background: var(--srk-card);
+    border: 1px solid var(--srk-border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-top: 24px;
+    box-shadow: var(--srk-shadow-card);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  
+  .srk-pagination-info {
+    font-size: 14px;
+    color: var(--srk-muted);
+    font-weight: 500;
+  }
+  
+  .srk-pagination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .srk-pagination-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: 1px solid var(--srk-border);
+    border-radius: 8px;
+    background: var(--srk-card);
+    color: var(--srk-text);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .srk-pagination-link:hover {
+    background: var(--srk-card-hover);
+    border-color: var(--srk-primary);
+    color: var(--srk-primary);
+  }
+  
+  .srk-pagination-page {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 8px;
+    border: 1px solid var(--srk-border);
+    border-radius: 8px;
+    background: var(--srk-card);
+    color: var(--srk-text);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .srk-pagination-page:hover {
+    background: var(--srk-card-hover);
+    border-color: var(--srk-primary);
+    color: var(--srk-primary);
+  }
+  
+  .srk-pagination-page.srk-pagination-current {
+    background: var(--srk-primary);
+    border-color: var(--srk-primary);
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+  
+  .srk-pagination-per-page {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .srk-pagination-per-page label {
+    font-size: 14px;
+    color: var(--srk-muted);
+    font-weight: 500;
+  }
+  
+  #srk_smart_per_page_select {
+    width: auto;
+    min-width: 90px;
+    max-width: 110px;
+    min-height: 38px;
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+  
+  /* =========================================================
+     Responsive Rules
+     ========================================================= */
+  
+  @media (max-width: 1024px) {
+    .srk-form-table th {
+      width: 230px;
+    }
+  
+    .srk-select {
+      min-width: 220px;
+    }
+  
+    .srk-history-card {
+      padding: 20px;
+    }
+  
+    .srk-breakdown-cell {
+      min-width: 220px;
+    }
+  }
+  
+  @media (max-width: 782px) {
+    .srk-card {
+      padding: 18px;
+      border-radius: 14px;
+    }
+  
+    .srk-automation-header {
+      margin-bottom: 18px;
+      padding: 18px 16px;
+    }
+  
+    .srk-automation-header h3 {
+      font-size: 17px;
+    }
+  
+    .srk-form-table,
+    .srk-form-table tbody,
+    .srk-form-table tr,
+    .srk-form-table th,
+    .srk-form-table td {
+      display: block;
+      width: 100%;
+    }
+  
+    .srk-form-table > tbody > tr {
+      padding: 14px 0;
+      border-top: 1px solid var(--srk-border);
+    }
+  
+    .srk-form-table > tbody > tr:first-child {
+      border-top: 0;
+    }
+  
+    .srk-form-table > tbody > tr > th,
+    .srk-form-table > tbody > tr > td {
+      border-top: 0;
+    }
+  
+    .srk-form-table th {
+      width: 100%;
+      padding: 0 0 8px;
+      margin: 0;
+    }
+  
+    .srk-form-table td {
+      padding: 0;
+    }
+  
+    .srk-select,
+    .srk-form-table input[type="text"],
+    .srk-form-table input[type="email"],
+    .srk-form-table input[type="number"],
+    .srk-form-table select,
+    .srk-form-table input.regular-text,
+    .srk-form-table input.small-text {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+    }
+  
+    .srk-checkbox-group {
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    .srk-checkbox-label {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  
+    .srk-automation-next-run {
+      align-items: flex-start;
+    }
+  
+    .srk-automation-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .srk-automation-actions .button {
+      width: 100%;
+      justify-content: center;
+    }
+  
+    .srk-card .srk-card {
+      padding: 16px;
+    }
+  
+    .srk-history-card {
+      padding: 18px;
+      border-radius: 14px;
+    }
+  
+    .srk-alerts-card-header,
+    .srk-smart-records-header,
+    .srk-smart-filter-form,
+    .srk-smart-bulk-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .srk-alerts-card-actions {
+      width: 100%;
+    }
+  
+    .srk-history-action-btn,
+    .srk-smart-filter-select,
+    .srk-smart-filter-form .button,
+    .srk-smart-bulk-actions .button,
+    .srk-manage-redirects-btn {
+      width: 100%;
+      max-width: 100%;
+      justify-content: center;
+    }
+  
+    .srk-table-scroll {
+      overflow-x: auto;
+    }
+  
+    .srk-history-table {
+      min-width: 1100px;
+    }
+  
+    .srk-smart-records-card {
+      padding: 18px;
+      border-radius: 14px;
+    }
+  
+    .srk-pagination-wrapper {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .srk-pagination {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  
+    .srk-pagination-per-page {
+      justify-content: center;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .srk-card {
+      padding: 16px;
+    }
+  
+    .srk-automation-header h3 {
+      font-size: 16px;
+    }
+  
+    .srk-automation-header p,
+    .srk-form-table th,
+    .srk-form-table td,
+    .srk-toggle-label,
+    .srk-automation-next-run {
+      font-size: 13px;
+    }
+  
+    .srk-card .srk-card p {
+      font-size: 12px;
+    }
+  }
+  

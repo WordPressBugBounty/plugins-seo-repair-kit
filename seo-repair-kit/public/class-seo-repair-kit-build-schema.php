@@ -300,7 +300,17 @@ if ( ! class_exists( 'Seo_Repair_Kit_Build_Schema' ) ) {
 			}
 		}
 
-		return $validated_schema;
+		/**
+		 * Filter the final validated singular schema array returned by the builder.
+		 *
+		 * Note: returning null/false will prevent schema output upstream.
+		 *
+		 * @param array|null $validated_schema Final validated schema.
+		 * @param string     $schema_key       Assignment key used by SRK.
+		 * @param WP_Post    $post             Current post object.
+		 * @param array      $settings         Settings loaded from the option.
+		 */
+		return apply_filters( 'srk_schema_builder_validated_schema', $validated_schema, $schema_key, $post, $settings );
 		}
 
 	/**
@@ -844,7 +854,16 @@ if ( ! class_exists( 'Seo_Repair_Kit_Build_Schema' ) ) {
 			}
 		}
 
-		return $cleaned_schema;
+		/**
+		 * Filter the final global schema array returned by the builder.
+		 *
+		 * Note: returning null/false will prevent schema output upstream.
+		 *
+		 * @param array|null $cleaned_schema Final built schema (may be null).
+		 * @param string     $schema_key     Assignment key used by SRK.
+		 * @param array      $settings       Settings loaded from the option.
+		 */
+		return apply_filters( 'srk_schema_builder_validated_global_schema', $cleaned_schema, $schema_key, $settings );
 		}
 
 		/**
@@ -882,7 +901,24 @@ if ( ! class_exists( 'Seo_Repair_Kit_Build_Schema' ) ) {
 				'job_posting'      => 'JobPosting',
 			);
 
-			return $map[ $key ] ?? 'Thing';
+			/**
+			 * Filter the assignment-key => schema.org @type map used by SRK.
+			 *
+			 * @param array  $map Key => @type map.
+			 * @param string $key Current assignment key being resolved.
+			 */
+			$map = apply_filters( 'srk_schema_type_map', $map, $key );
+			$map = is_array( $map ) ? $map : array();
+
+			$type = $map[ $key ] ?? 'Thing';
+
+			/**
+			 * Filter the resolved schema.org @type for a given assignment key.
+			 *
+			 * @param string $type Resolved @type.
+			 * @param string $key  Assignment key.
+			 */
+			return apply_filters( 'srk_schema_resolved_type', $type, $key );
 		}
 
 		/**

@@ -496,34 +496,8 @@
 							// After posts are loaded, select the post with FAQ schema.
 							setTimeout( () => {
 								$( '#faq-item-select' ).val( config.post_id );
-
-								// Load the FAQ items.
-								if ( config.faq_items && config.faq_items.length > 0 ) {
-									$( '#faq-items' ).empty();
-									config.faq_items.forEach( ( item, index ) => {
-										$( '#faq-items' ).append( `
-											<div class="faq-item">
-												<div class="faq-row">
-													<label>Question:</label><br>
-													<input type="text" class="faq-question srk-group-values"
-														placeholder="Enter Question" data-field="question_${ index }"
-														value="${ item.question }" style="width:100%;">
-												</div>
-												<div class="faq-row">
-													<label>Answer:</label><br>
-													<textarea class="faq-answer srk-group-values"
-														placeholder="Enter Answer" data-field="answer_${ index }"
-														style="width:100%; height:80px;">${ item.answer }</textarea>
-												</div>
-												<button type="button" class="remove-faq button">Remove</button>
-												<hr>
-											</div>
-										` );
-									} );
-
-									// Update the preview.
-									this.updateJsonPreview();
-								}
+								// Trigger change so the FAQ schema module loads ONLY this post's FAQs.
+								$( '#faq-item-select' ).trigger( 'change' );
 							}, 500 );
 						}, 300 );
 					} else {

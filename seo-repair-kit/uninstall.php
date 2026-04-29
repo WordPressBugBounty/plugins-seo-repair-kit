@@ -2,122 +2,235 @@
 /**
  * Fired when the plugin is uninstalled.
  *
- * This file removes all plugin data including:
- * - All custom database tables
- * - All options from wp_options table
- * - All transients
- * - All postmeta data
- * - All scheduled cron events
+ * Removes all SEO Repair Kit data including:
+ * - Custom database tables
+ * - Options from wp_options
+ * - Transients
+ * - Post meta
+ * - Term meta
+ * - Scheduled cron events
  *
  * @link       https://seorepairkit.com
  * @since      1.0.1
- * @version    2.1.0
+ * @version    2.1.7
  * @package    Seo_Repair_Kit
  */
 
-// If uninstall not called from WordPress, then exit.
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-    exit;
+	exit;
 }
 
 global $wpdb;
 
-// ============================================================================
-// 1. DROP ALL CUSTOM DATABASE TABLES
-// ============================================================================
+/**
+ * Safely drop a custom table.
+ *
+ * @param string $table_name Full table name.
+ * @return void
+ */
+function srk_uninstall_drop_table( $table_name ) {
+	global $wpdb;
 
-// Drop the Keytrack settings table
-$srkit_keytrack_table = $wpdb->prefix . 'srkit_keytrack_settings';
-// Escape table name by removing backticks and wrapping in backticks
-$wpdb->query( "DROP TABLE IF EXISTS `" . esc_sql( str_replace( '`', '', $srkit_keytrack_table ) ) . "`" );
+	$table_name = str_replace( '`', '', (string) $table_name );
 
-// Drop the Google Search Console data table
-$gsc_data_table = $wpdb->prefix . 'srkit_gsc_data';
-$wpdb->query( "DROP TABLE IF EXISTS `" . esc_sql( str_replace( '`', '', $gsc_data_table ) ) . "`" );
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	$wpdb->query( "DROP TABLE IF EXISTS `{$table_name}`" );
+}
 
-// Drop the Redirection table
-$srkit_redirection_table = $wpdb->prefix . 'srkit_redirection_table';
-$wpdb->query( "DROP TABLE IF EXISTS `" . esc_sql( str_replace( '`', '', $srkit_redirection_table ) ) . "`" );
+/**
+ * Safely delete options by exact name.
+ *
+ * @param array $option_names Option names.
+ * @return void
+ */
+function srk_uninstall_delete_options( $option_names ) {
+	foreach ( (array) $option_names as $option_name ) {
+		delete_option( $option_name );
+		delete_site_option( $option_name );
+	}
+}
 
-// Drop the Redirection logs table
-$srkit_redirection_logs_table = $wpdb->prefix . 'srkit_redirection_logs';
-$wpdb->query( "DROP TABLE IF EXISTS `" . esc_sql( str_replace( '`', '', $srkit_redirection_logs_table ) ) . "`" );
+/**
+ * Safely clear cron hooks.
+ *
+ * @param array $hooks Cron hooks.
+ * @return void
+ */
+function srk_uninstall_clear_cron_hooks( $hooks ) {
+	foreach ( (array) $hooks as $hook ) {
+		wp_clear_scheduled_hook( $hook );
+	}
+}
 
-// Drop the 404 logs table
-$srkit_404_logs_table = $wpdb->prefix . 'srkit_404_logs';
-$wpdb->query( "DROP TABLE IF EXISTS `" . esc_sql( str_replace( '`', '', $srkit_404_logs_table ) ) . "`" );
+/**
+ * Delete options using LIKE patterns.
+ *
+ * @param array $patterns LIKE patterns.
+ * @return void
+ */
+function srk_uninstall_delete_option_patterns( $patterns ) {
+	global $wpdb;
 
-// Drop the plugin settings table (consent & settings)
-$srkit_plugin_settings_table = $wpdb->prefix . 'srkit_plugin_settings';
-$wpdb->query( "DROP TABLE IF EXISTS `" . esc_sql( str_replace( '`', '', $srkit_plugin_settings_table ) ) . "`" );
+	foreach ( (array) $patterns as $pattern ) {
+		if ( false === strpos( $pattern, '%' ) && false === strpos( $pattern, '_' ) ) {
+			$like = esc_sql( $pattern );
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name = '{$like}'" );
 
-// ============================================================================
-// 2. DELETE ALL OPTIONS FROM wp_options TABLE
-// ============================================================================
+			if ( isset( $wpdb->sitemeta ) ) {
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$wpdb->query( "DELETE FROM {$wpdb->sitemeta} WHERE meta_key = '{$like}'" );
+			}
+		} else {
+			$like = esc_sql( $pattern );
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '{$like}'" );
 
-// Delete Sitemap Manager settings explicitly
-delete_option( 'srk_sitemap_manager_settings' );
+			if ( isset( $wpdb->sitemeta ) ) {
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$wpdb->query( "DELETE FROM {$wpdb->sitemeta} WHERE meta_key LIKE '{$like}'" );
+			}
+		}
+	}
+}
 
-// Delete all options with 'srk_' prefix
-$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'srk_%'" );
+/**
+ * Delete transients by prefix.
+ *
+ * @param string $prefix Prefix without transient wrapper.
+ * @return void
+ */
+function srk_uninstall_delete_transients_by_prefix( $prefix ) {
+	global $wpdb;
 
-// Delete all options with 'td_blc_' prefix (legacy options)
-$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'td_blc_%'" );
+	$prefix = esc_sql( $wpdb->esc_like( $prefix ) );
 
-// Delete plugin version option
-$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name = 'seo_repair_kit_version'" );
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_{$prefix}%'" );
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_timeout_{$prefix}%'" );
 
-// ============================================================================
-// 3. DELETE ALL TRANSIENTS (temporary cached data)
-// ============================================================================
+	if ( isset( $wpdb->sitemeta ) ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->query( "DELETE FROM {$wpdb->sitemeta} WHERE meta_key LIKE '_site_transient_{$prefix}%'" );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->query( "DELETE FROM {$wpdb->sitemeta} WHERE meta_key LIKE '_site_transient_timeout_{$prefix}%'" );
+	}
+}
 
-// Delete all transients with 'srk_' prefix
-$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_srk_%'" );
-$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_timeout_srk_%'" );
+/*
+|--------------------------------------------------------------------------
+| 1. CLEAR SCHEDULED CRON EVENTS
+|--------------------------------------------------------------------------
+*/
+srk_uninstall_clear_cron_hooks(
+	array(
+		'srk_link_scanner_cron_scan',
+		'srk_weekly_summary_email_event',
+		'srk_keytrack_weekly_summary_event',
+	)
+);
 
-// ============================================================================
-// 4. DELETE ALL POSTMETA DATA
-// ============================================================================
+/*
+|--------------------------------------------------------------------------
+| 2. DROP ALL CUSTOM DATABASE TABLES
+|--------------------------------------------------------------------------
+*/
+$tables_to_drop = array(
+	$wpdb->prefix . 'srkit_keytrack_settings',
+	$wpdb->prefix . 'srkit_gsc_data',
+	$wpdb->prefix . 'srkit_redirection_table',
+	$wpdb->prefix . 'srkit_redirection_logs',
+	$wpdb->prefix . 'srkit_404_logs',
+	$wpdb->prefix . 'srkit_plugin_settings',
+	$wpdb->prefix . 'srk_link_scan_runs',
+	$wpdb->prefix . 'srk_link_scan_alerts',
+	$wpdb->prefix . 'srkit_smart_redirects',
+);
 
-// Delete schema-related postmeta
+foreach ( $tables_to_drop as $table_name ) {
+	srk_uninstall_drop_table( $table_name );
+}
+
+/*
+|--------------------------------------------------------------------------
+| 3. DELETE EXACT OPTIONS
+|--------------------------------------------------------------------------
+*/
+srk_uninstall_delete_options(
+	array(
+		'seo_repair_kit_version',
+		'seo_repair_kit_db_version',
+		'srk_sitemap_manager_settings',
+		'srk_sitemap_control_settings',
+		'srk_last_links_snapshot',
+		'srk_links_schedule',
+		'srk_link_scanner_schedule_settings',
+		'srk_link_scanner_cursor',
+		'srk_link_scanner_last_alert_hash',
+		'srk_link_scanner_url_status_cache',
+		'srk_link_scanner_dashboard_alert',
+		'srk_link_scanner_unread_alerts',
+		'srk_link_scanner_storage_checked',
+		'srk_smart_redirect_post_types',
+		'srk_meta_migration_done',
+		'srk_settings_migrated',
+	)
+);
+
+/*
+|--------------------------------------------------------------------------
+| 4. DELETE OPTION PATTERNS
+|--------------------------------------------------------------------------
+*/
+srk_uninstall_delete_option_patterns(
+	array(
+		'srk_%',
+		'td_blc_%',
+		'srk_meta%',
+		'%_migrated',
+		'srk_%_migration_%',
+	)
+);
+
+/*
+|--------------------------------------------------------------------------
+| 5. DELETE TRANSIENTS
+|--------------------------------------------------------------------------
+*/
+srk_uninstall_delete_transients_by_prefix( 'srk_' );
+
+/*
+|--------------------------------------------------------------------------
+| 6. DELETE POST META
+|--------------------------------------------------------------------------
+*/
+$meta_keys_exact = array(
+	'_srk_meta_title',
+	'_srk_meta_description',
+	'_srk_focus_keyword',
+	'_srk_meta_keywords',
+	'_srk_canonical_url',
+	'_srk_advanced_settings',
+);
+
+$meta_keys_exact_sql = "'" . implode( "','", array_map( 'esc_sql', $meta_keys_exact ) ) . "'";
+
+// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 $wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE 'srk_%'" );
-
-// Delete ALL srk_meta related options
-$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'srk_meta%'" );
-
-// Delete ALL migration flags
-$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '%_migrated'" );
-$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'srk_%_migration_%'" );
-$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name = 'srk_meta_migration_done'" );
-$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name = 'srk_settings_migrated'" );
-
-// Delete all individual settings (just to be safe)
-$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'srk_%'" );
-
-
-// ============================================================================
-// 4. DELETE ANY ADDITIONAL POSTMETA (ENHANCE EXISTING SECTION)
-// ============================================================================
-
-// Also add specific meta keys to be safe:
-$wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE meta_key IN (
-    '_srk_meta_title',
-    '_srk_meta_description',
-    '_srk_focus_keyword',
-    '_srk_meta_keywords',
-    '_srk_canonical_url',
-    '_srk_advanced_settings'
-)" );
-
-// Delete any other possible srk postmeta patterns
+// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 $wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE '_srk_%'" );
-// ============================================================================
-// 5. DELETE ALL TERMMETA DATA
-// ============================================================================
+// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+$wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE meta_key IN ({$meta_keys_exact_sql})" );
 
-// Delete taxonomy term SEO settings saved by plugin
+/*
+|--------------------------------------------------------------------------
+| 7. DELETE TERM META
+|--------------------------------------------------------------------------
+*/
+// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 $wpdb->query( "DELETE FROM {$wpdb->termmeta} WHERE meta_key = '_srk_term_settings'" );
-
-// Delete any other possible SRK termmeta keys (safe fallback)
+// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 $wpdb->query( "DELETE FROM {$wpdb->termmeta} WHERE meta_key LIKE 'srk_%'" );
+// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 $wpdb->query( "DELETE FROM {$wpdb->termmeta} WHERE meta_key LIKE '_srk_%'" );

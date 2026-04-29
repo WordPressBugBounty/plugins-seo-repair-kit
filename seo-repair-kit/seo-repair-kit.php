@@ -16,7 +16,7 @@
  * Plugin Name:       SEO Repair Kit
  * Plugin URI:        https://seorepairkit.com
  * Description:       SEO-friendly AI assistant with meta management, schema management, link repair, keyword tracking, and sitemap control.
- * Version:           2.1.6
+ * Version:           2.1.7
  * Author:            TorontoDigits
  * Author URI:        https://torontodigits.com/
  * License:           GPL-2.0+
@@ -34,7 +34,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Currently plugin version.
  * Start at version 1.0.1 and use SemVer - https://semver.org
  */
-define( 'SEO_REPAIR_KIT_VERSION', '2.1.6' );
+define( 'SEO_REPAIR_KIT_VERSION', '2.1.7' );
 
 /**
  * Secret Key
@@ -81,6 +81,11 @@ add_action('admin_init', function() {
     $create_404 = new ReflectionMethod('SeoRepairKit_Activator', 'create_404_logs_table');
     $create_404->setAccessible(true);
     $create_404->invoke(null);
+
+    // Ensure smart redirects table exists
+    $create_smart_redirects = new ReflectionMethod('SeoRepairKit_Activator', 'create_smart_redirects_table');
+    $create_smart_redirects->setAccessible(true);
+    $create_smart_redirects->invoke(null);
     
     // Mark as checked for 24 hours
     set_transient('srk_table_creation_check', time(), DAY_IN_SECONDS);
@@ -238,6 +243,12 @@ add_action('plugins_loaded', function() {
 
     delete_option('srk_update_pending');
 }, 50);
+
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-seo-repair-kit-smart-redirect-helper.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-seo-repair-kit-smart-redirect-generator.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-seo-repair-kit-smart-redirect-runtime.php';
+
+new SeoRepairKit_SmartRedirect_Runtime();
 
 /**
  * Extra safety: run deferred update again at admin_init

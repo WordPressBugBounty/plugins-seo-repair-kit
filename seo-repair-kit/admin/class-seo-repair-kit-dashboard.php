@@ -371,13 +371,13 @@ class SeoRepairKit_Dashboard {
                     <div class="srk-sidebar-card">
                         <h4 class="srk-sidebar-title"><?php esc_html_e( 'Key Tools', 'seo-repair-kit' ); ?></h4>
                         <div class="srk-plugin-grid">
-                            <!-- Link Scanner -->
+                            <!-- Links Manager -->
                             <a href="<?php echo esc_url( $link_scanner_url ); ?>" class="srk-plugin-item srk-tool-link-scanner">
                                 <div class="srk-plugin-icon">
                                     <span class="dashicons dashicons-admin-links"></span>
                                 </div>
                                 <div class="srk-plugin-info">
-                                    <h5><?php esc_html_e( 'Link Scanner', 'seo-repair-kit' ); ?></h5>
+                                    <h5><?php esc_html_e( 'Links Manager', 'seo-repair-kit' ); ?></h5>
                                     <p><?php esc_html_e( 'Scan your site for broken links and fix them fast.', 'seo-repair-kit' ); ?></p>
                                 </div>
                             </a>
@@ -643,7 +643,7 @@ class SeoRepairKit_Dashboard {
         $upgrade_url      = admin_url( 'admin.php?page=seo-repair-kit-upgrade-pro' );
         
         // ──────────────────────────────────────────────────────────────
-        // Link Scanner & broken links
+        // Links Manager & broken links
         // ──────────────────────────────────────────────────────────────
         // Critical: Broken links found
         if ( $broken_links > 0 ) {

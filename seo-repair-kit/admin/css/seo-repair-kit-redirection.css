@@ -143,7 +143,7 @@
 }
 
 /* ============================================
-   STATS CARDS (Link Scanner Style)
+   STATS CARDS (Links Manager Style)
    ============================================ */
 .srk-redirection-stats {
   background: var(--srk-card);
@@ -229,7 +229,7 @@
   background: linear-gradient(135deg, transparent 0%, rgba(107, 78, 255, 0.25) 100%);
 }
 
-/* Stat card color variants - matching Link Scanner and Image Alt Missing style */
+/* Stat card color variants - matching Links Manager and Image Alt Missing style */
 .srk-redirection-stat-card.srk-stat-hits::after {
   background: linear-gradient(135deg, transparent 0%, rgba(59, 130, 246, 0.25) 100%);
 }

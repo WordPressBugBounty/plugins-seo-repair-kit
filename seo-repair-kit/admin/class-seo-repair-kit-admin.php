@@ -370,6 +370,7 @@ class SeoRepairKit_Admin {
 
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-seo-repair-kit-dashboard.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-seo-repair-kit-link-scanner.php';
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-seo-repair-kit-links-alerts.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-seo-repair-kit-scan-links.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-seo-repair-kit-keytrack.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-seo-repair-kit-alt-text.php';
@@ -410,7 +411,7 @@ class SeoRepairKit_Admin {
        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-gutenberg-integration.php';
        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-elementor-integration.php';
        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php';
-       
+
        // Initialize integrations
        new SRK_Post_Meta_Handler();
        new SRK_Gutenberg_Integration();
@@ -807,64 +808,168 @@ class SeoRepairKit_Admin {
         exit;
     }
 
-	/**
+    /**
      * Register the stylesheets for the admin area.
      *
      * @since    1.0.1
      */
     public function enqueue_styles() {
 
-		// Register Admin CSS File
-		wp_register_style( 'srk-admin-style', plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-admin.css', array(), $this->version, 'all' );
-		
-		// Register Dashboard CSS File
-        wp_register_style( 'srk-dashboard-style', plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-dashboard.css', array(), $this->version, 'all' );
-		
-		// Register Scan Links CSS File
-        wp_register_style( 'srk-scan-links-style', plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-scan-links.css', array(), $this->version, 'all' );
-
-		// Register keytrack CSS File
-        wp_register_style( 'srkit-keytrack-style', plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-keytrack.css', array(), $this->version, 'all' );
-
-		// Register Alt Text CSS File
-        wp_register_style( 'srk-alt-text-style', plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-alt-text.css', array(), $this->version, 'all' );
-
-		// Register Redirection CSS File
-        wp_register_style( 'srk-redirection-style', plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-redirection.css', array(), $this->version, 'all' );
-        wp_register_style( 'srk-404-manager-style', plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-404-manager.css', array(), $this->version, 'all' );
-        wp_register_script( 'srk-404-manager-script', plugin_dir_url( __FILE__ ) . 'js/seo-repair-kit-404-manager.js', array( 'jquery' ), $this->version, true );
-
-		// Register Settings CSS File
-        wp_register_style( 'srk-settings-style', plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-settings.css', array(), $this->version, 'all' );
-
-		// Register Chatbot CSS File
-        wp_register_style( 'srk-chatbot-style', plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-chatbot.css', array(), $this->version, 'all' );
-
-		// Register Schema Manager CSS File
-        wp_register_style( 'srk-schema-manager-style', plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-schema-manager.css', array(), $this->version, 'all' );
-		
-		// Register Page Loader CSS File
-        wp_register_style( 'srk-page-loader-style', plugin_dir_url( __FILE__ ) . 'css/srk-page-loader.css', array(), $this->version, 'all' );
-		
-        // Register Meta Manager CSS File
-        wp_register_style('srk-meta-manager-css', plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-meta-manager.css', array(), $this->version, 'all' );
-
-        // Register Sitemap Manager CSS File
-        wp_register_style( 'srk-sitemap-manager-style', plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-sitemap-manager.css', array(), $this->version, 'all' );
-
-		// Enqueue Admin CSS File
-		wp_enqueue_style( 'srk-admin-style' );
-		
-		// Enqueue Page Loader CSS on SRK pages
-		if ( $this->is_srk_admin_page() ) {
-			wp_enqueue_style( 'srk-page-loader-style' );
-		}
-
-        // Enqueue Sitemap Manager CSS only on Sitemap Manager page
         $page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+        $tab  = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
 
+        // Register Admin CSS File.
+        wp_register_style(
+            'srk-admin-style',
+            plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-admin.css',
+            array(),
+            $this->version,
+            'all'
+        );
+
+        // Register Dashboard CSS File.
+        wp_register_style(
+            'srk-dashboard-style',
+            plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-dashboard.css',
+            array(),
+            $this->version,
+            'all'
+        );
+
+        // Register Scan Links CSS File (main scan links + 404 monitor styles only).
+        wp_register_style(
+            'srk-scan-links-style',
+            plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-scan-links.css',
+            array(),
+            $this->version,
+            'all'
+        );
+
+        // Register dedicated CSS file for Auto Scan / Alerts / Smart Redirects tabs.
+        wp_register_style(
+            'srk-automation-scan-alerts-tabs-style',
+            plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-automation-scan-alerts-tabs.css',
+            array(),
+            $this->version,
+            'all'
+        );
+
+        // Register KeyTrack CSS File.
+        wp_register_style(
+            'srkit-keytrack-style',
+            plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-keytrack.css',
+            array(),
+            $this->version,
+            'all'
+        );
+
+        // Register Alt Text CSS File.
+        wp_register_style(
+            'srk-alt-text-style',
+            plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-alt-text.css',
+            array(),
+            $this->version,
+            'all'
+        );
+
+        // Register Redirection CSS File.
+        wp_register_style(
+            'srk-redirection-style',
+            plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-redirection.css',
+            array(),
+            $this->version,
+            'all'
+        );
+
+        wp_register_style(
+            'srk-404-manager-style',
+            plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-404-manager.css',
+            array(),
+            $this->version,
+            'all'
+        );
+
+        wp_register_script(
+            'srk-404-manager-script',
+            plugin_dir_url( __FILE__ ) . 'js/seo-repair-kit-404-manager.js',
+            array( 'jquery' ),
+            $this->version,
+            true
+        );
+
+        // Register Settings CSS File.
+        wp_register_style(
+            'srk-settings-style',
+            plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-settings.css',
+            array(),
+            $this->version,
+            'all'
+        );
+
+        // Register Chatbot CSS File.
+        wp_register_style(
+            'srk-chatbot-style',
+            plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-chatbot.css',
+            array(),
+            $this->version,
+            'all'
+        );
+
+        // Register Schema Manager CSS File.
+        wp_register_style(
+            'srk-schema-manager-style',
+            plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-schema-manager.css',
+            array(),
+            $this->version,
+            'all'
+        );
+
+        // Register Page Loader CSS File.
+        wp_register_style(
+            'srk-page-loader-style',
+            plugin_dir_url( __FILE__ ) . 'css/srk-page-loader.css',
+            array(),
+            $this->version,
+            'all'
+        );
+
+        // Register Meta Manager CSS File.
+        wp_register_style(
+            'srk-meta-manager-css',
+            plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-meta-manager.css',
+            array(),
+            $this->version,
+            'all'
+        );
+
+        // Register Sitemap Manager CSS File.
+        wp_register_style(
+            'srk-sitemap-manager-style',
+            plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-sitemap-manager.css',
+            array(),
+            $this->version,
+            'all'
+        );
+
+        // Always enqueue base admin CSS.
+        wp_enqueue_style( 'srk-admin-style' );
+
+        // Enqueue page loader CSS only on SRK admin pages.
+        if ( $this->is_srk_admin_page() ) {
+            wp_enqueue_style( 'srk-page-loader-style' );
+        }
+
+        // Sitemap Manager page.
         if ( 'seo-repair-kit-sitemap-manager' === $page ) {
             wp_enqueue_style( 'srk-sitemap-manager-style' );
+        }
+
+        // Links Manager page: load CSS by active tab only.
+        if ( 'seo-repair-kit-link-scanner' === $page ) {
+            // Load both tab styles on the Links Manager page to avoid
+            // a flash of unstyled content when switching tabs.
+            wp_enqueue_style( 'srk-scan-links-style' );
+            wp_enqueue_style( 'srk-automation-scan-alerts-tabs-style' );
         }
     }
 
@@ -1081,70 +1186,69 @@ class SeoRepairKit_Admin {
 	 * @since    2.0.0
 	 */
 	public function display_seo_repair_kit_navbar() {
-    // get screen safely
-    $screen = function_exists('get_current_screen') ? get_current_screen() : null;
-    if ( ! $screen ) {
-        return;
-    }
+        // get screen safely
+        $screen = function_exists('get_current_screen') ? get_current_screen() : null;
+        if ( ! $screen ) {
+            return;
+        }
 
-    $id     = isset($screen->id) ? $screen->id : '';
-    $base   = isset($screen->base) ? $screen->base : '';
-    $parent = isset($screen->parent_base) ? $screen->parent_base : '';
-    $page   = isset($_GET['page']) ? sanitize_key($_GET['page']) : '';
+        $id     = isset($screen->id) ? $screen->id : '';
+        $base   = isset($screen->base) ? $screen->base : '';
+        $parent = isset($screen->parent_base) ? $screen->parent_base : '';
+        $page   = isset($_GET['page']) ? sanitize_key($_GET['page']) : '';
 
-    /**
-     * Robust detection of *all* SRK plugin pages.
-     * We positively match using any of:
-     *  - Top-level dashboard screen id
-     *  - Any screen id/base that contains "seo-repair-kit-dashboard"
-     *  - Known SRK submenu page slugs in ?page=
-     */
-    $srk_page_slugs = array(
-        'seo-repair-kit-dashboard',
-        'seo-repair-kit-link-scanner',
-        'seo-repair-kit-keytrack',
-        'srk-schema-manager',
-        'srk-ai-chatbot',
-        'alt-image-missing',
-        'seo-repair-kit-redirection',
-        'seo-repair-kit-robots-llms',
-        'seo-repair-kit-sitemap-manager',
-        'seo-repair-kit-settings',
-        'seo-repair-kit-upgrade-pro',
-        'seo-repair-kit-meta-manager',
-    );
+        /**
+         * Robust detection of *all* SRK plugin pages.
+         * We positively match using any of:
+         *  - Top-level dashboard screen id
+         *  - Any screen id/base that contains "seo-repair-kit-dashboard"
+         *  - Known SRK submenu page slugs in ?page=
+         */
+        $srk_page_slugs = array(
+            'seo-repair-kit-dashboard',
+            'seo-repair-kit-link-scanner',
+            'seo-repair-kit-keytrack',
+            'srk-schema-manager',
+            'srk-ai-chatbot',
+            'alt-image-missing',
+            'seo-repair-kit-redirection',
+            'seo-repair-kit-robots-llms',
+            'seo-repair-kit-sitemap-manager',
+            'seo-repair-kit-settings',
+            'seo-repair-kit-upgrade-pro',
+            'seo-repair-kit-meta-manager',
+        );
 
-    $is_srk_by_screen =
-        ( $id === 'toplevel_page_seo-repair-kit-dashboard' ) ||
-        ( strpos( $id,  'seo-repair-kit-dashboard' ) !== false ) ||
-        ( strpos( $base,'seo-repair-kit-dashboard' ) !== false ) ||
-        ( $parent === 'seo-repair-kit-dashboard' );
+        $is_srk_by_screen =
+            ( $id === 'toplevel_page_seo-repair-kit-dashboard' ) ||
+            ( strpos( $id,  'seo-repair-kit-dashboard' ) !== false ) ||
+            ( strpos( $base,'seo-repair-kit-dashboard' ) !== false ) ||
+            ( $parent === 'seo-repair-kit-dashboard' );
 
-    $is_srk_by_page = ( $page && in_array( $page, $srk_page_slugs, true ) );
+        $is_srk_by_page = ( $page && in_array( $page, $srk_page_slugs, true ) );
 
-    if ( ! ( $is_srk_by_screen || $is_srk_by_page ) ) {
-        return; // Not our pages — do nothing
-    }
+        if ( ! ( $is_srk_by_screen || $is_srk_by_page ) ) {
+            return; // Not our pages — do nothing
+        }
 
-    // Navbar markup
-    $current_user = wp_get_current_user();
-    $admin_name   = esc_html( $current_user->display_name );
-    $admin_avatar = esc_url( get_avatar_url( $current_user->ID ) );
-    ?>
-    <!-- SRK Admin Navbar -->
-    <div class="srkit-gsc-navbar">
-        <div class="srkit-gsc-brand">SEO Repair Kit</div>
-        <div class="srkit-gsc-user-info">
-            <div class="srkit-gsc-help-icon">?</div>
-            <div class="srkit-gsc-user-icons">
-                <img src="<?php echo esc_url( $admin_avatar ); ?>" alt="Admin Avatar" class="admin-avatar">
+        // Navbar markup
+        $current_user = wp_get_current_user();
+        $admin_name   = esc_html( $current_user->display_name );
+        $admin_avatar = esc_url( get_avatar_url( $current_user->ID ) );
+        ?>
+        <!-- SRK Admin Navbar -->
+        <div class="srkit-gsc-navbar">
+            <div class="srkit-gsc-brand">SEO Repair Kit</div>
+            <div class="srkit-gsc-user-info">
+                <div class="srkit-gsc-help-icon">?</div>
+                <div class="srkit-gsc-user-icons">
+                    <img src="<?php echo esc_url( $admin_avatar ); ?>" alt="Admin Avatar" class="admin-avatar">
+                </div>
+                <span class="srkit-gsc-user-text"><?php echo esc_html( $admin_name ); ?></span>
             </div>
-            <span class="srkit-gsc-user-text"><?php echo esc_html( $admin_name ); ?></span>
         </div>
-    </div>
-    <?php
-}
-
+        <?php
+    }
 
 	/**
 	 * seo repair kit menu page.
@@ -1169,8 +1273,8 @@ class SeoRepairKit_Admin {
 
 		add_submenu_page(
 			'seo-repair-kit-dashboard',
-			esc_html__( 'Link Scanner', 'seo-repair-kit' ),
-			esc_html__( 'Link Scanner', 'seo-repair-kit' ),
+			esc_html__( 'Links Manager', 'seo-repair-kit' ),
+			esc_html__( 'Links Manager', 'seo-repair-kit' ),
 			'manage_options',
 			'seo-repair-kit-link-scanner',
 			array( $this, 'seorepairkit_link_scanner_page' )
