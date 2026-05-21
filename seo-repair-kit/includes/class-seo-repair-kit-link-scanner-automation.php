@@ -124,10 +124,6 @@ class SeoRepairKit_LinkScanner_Automation {
 	 */
 	public function register_custom_intervals( $schedules ) {
 		$custom_intervals = array(
-			'daily'           => array(
-				'interval' => DAY_IN_SECONDS,
-				'display'  => __( 'Every 24 Hours', 'seo-repair-kit' ),
-			),
 			'srk_every_3_days'    => array(
 				'interval' => 3 * DAY_IN_SECONDS,
 				'display'  => __( 'Every 3 Days', 'seo-repair-kit' ),

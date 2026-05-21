@@ -2,22 +2,22 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: SEO Repair Kit 2.1.7\n"
+"Project-Id-Version: SEO Repair Kit 2.1.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/seo-repair-kit\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-04-29T14:10:35+00:00\n"
+"POT-Creation-Date: 2026-04-15T08:04:05+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: seo-repair-kit\n"
 
 #. Plugin Name of the plugin
 #: seo-repair-kit.php
-#: admin/class-seo-repair-kit-admin.php:1275
-#: admin/class-seo-repair-kit-admin.php:1276
+#: admin/class-seo-repair-kit-admin.php:1161
+#: admin/class-seo-repair-kit-admin.php:1162
 #: admin/class-seo-repair-kit-keytrack.php:88
 #: admin/class-seo-repair-kit-keytrack.php:90
 #: admin/class-seo-repair-kit-keytrack.php:235
@@ -51,48 +51,48 @@ msgid "https://torontodigits.com/"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:56
-#: admin/class-seo-repair-kit-link-scanner.php:143
+#: admin/class-seo-repair-kit-link-scanner.php:74
 msgid "Are you sure you want to delete this 404 log?"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:57
-#: admin/class-seo-repair-kit-link-scanner.php:144
+#: admin/class-seo-repair-kit-link-scanner.php:75
 msgid "Are you sure you want to clear all 404 logs? This cannot be undone."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:58
-#: admin/class-seo-repair-kit-link-scanner.php:145
+#: admin/class-seo-repair-kit-link-scanner.php:76
 msgid "Are you sure you want to delete selected 404 logs?"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:59
-#: admin/class-seo-repair-kit-link-scanner.php:146
+#: admin/class-seo-repair-kit-link-scanner.php:77
 msgid "Error: Unable to delete 404 log."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:60
-#: admin/class-seo-repair-kit-link-scanner.php:147
+#: admin/class-seo-repair-kit-link-scanner.php:78
 msgid "404 logs cleared successfully."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:61
-#: admin/class-seo-repair-kit-link-scanner.php:148
+#: admin/class-seo-repair-kit-link-scanner.php:79
 msgid "Redirect created successfully from 404."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:62
-#: admin/class-seo-repair-kit-link-scanner.php:149
+#: admin/class-seo-repair-kit-link-scanner.php:80
 msgid "Error: Unable to create redirect."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:63
-#: admin/class-seo-repair-kit-link-scanner.php:150
-#: admin/class-seo-repair-kit-redirection.php:573
+#: admin/class-seo-repair-kit-link-scanner.php:81
+#: admin/class-seo-repair-kit-redirection.php:545
 msgid "Export generated successfully."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:91
-#: admin/class-seo-repair-kit-link-scanner.php:557
+#: admin/class-seo-repair-kit-link-scanner.php:361
 msgid "Error: 404 Monitor class file not found. Please deactivate and reactivate the plugin."
 msgstr ""
 
@@ -101,7 +101,7 @@ msgid "404 Error Monitor"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:212
-#: admin/class-seo-repair-kit-link-scanner.php:648
+#: admin/class-seo-repair-kit-link-scanner.php:471
 msgid "Total 404 Errors"
 msgstr ""
 
@@ -110,7 +110,7 @@ msgid "Total occurrences"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:217
-#: admin/class-seo-repair-kit-link-scanner.php:653
+#: admin/class-seo-repair-kit-link-scanner.php:476
 msgid "Unique URLs"
 msgstr ""
 
@@ -127,7 +127,7 @@ msgid "Logged entries"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:227
-#: admin/class-seo-repair-kit-link-scanner.php:663
+#: admin/class-seo-repair-kit-link-scanner.php:486
 msgid "Most Hit 404"
 msgstr ""
 
@@ -140,7 +140,7 @@ msgid "Filter by URL:"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:249
-#: admin/class-seo-repair-kit-link-scanner.php:694
+#: admin/class-seo-repair-kit-link-scanner.php:518
 msgid "Search URL..."
 msgstr ""
 
@@ -149,7 +149,7 @@ msgid "Filter by IP:"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:254
-#: admin/class-seo-repair-kit-link-scanner.php:702
+#: admin/class-seo-repair-kit-link-scanner.php:526
 msgid "Search IP..."
 msgstr ""
 
@@ -159,7 +159,7 @@ msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:260
 #: admin/class-seo-repair-kit-404-manager.php:305
-#: admin/class-seo-repair-kit-link-scanner.php:712
+#: admin/class-seo-repair-kit-link-scanner.php:536
 msgid "Last Accessed"
 msgstr ""
 
@@ -169,14 +169,14 @@ msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:262
 #: admin/class-seo-repair-kit-404-manager.php:299
-#: admin/class-seo-repair-kit-link-scanner.php:771
+#: admin/class-seo-repair-kit-link-scanner.php:596
 #: includes/class-seo-repair-kit-schema-validator.php:571
 msgid "URL"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:263
 #: admin/class-seo-repair-kit-404-manager.php:304
-#: admin/class-seo-repair-kit-link-scanner.php:713
+#: admin/class-seo-repair-kit-link-scanner.php:537
 msgid "First Accessed"
 msgstr ""
 
@@ -189,27 +189,24 @@ msgid "Ascending"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:272
-#: admin/class-seo-repair-kit-smart-redirects.php:795
 msgid "Filter"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:273
-#: admin/class-seo-repair-kit-link-scanner.php:724
-#: admin/class-seo-repair-kit-smart-redirects.php:800
+#: admin/class-seo-repair-kit-link-scanner.php:548
 msgid "Reset"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:282
-#: admin/class-seo-repair-kit-link-scanner.php:733
-#: admin/class-seo-repair-kit-redirection.php:705
+#: admin/class-seo-repair-kit-link-scanner.php:558
+#: admin/class-seo-repair-kit-redirection.php:671
 msgid "Bulk Actions"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:283
-#: admin/class-seo-repair-kit-redirection.php:708
-#: admin/class-seo-repair-kit-redirection.php:2089
+#: admin/class-seo-repair-kit-redirection.php:674
+#: admin/class-seo-repair-kit-redirection.php:1993
 #: admin/class-seo-repair-kit-schema-ui.php:368
-#: admin/class-seo-repair-kit-smart-redirects.php:867
 msgid "Delete"
 msgstr ""
 
@@ -218,23 +215,23 @@ msgid "Ignore"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:286
-#: admin/class-seo-repair-kit-link-scanner.php:737
-#: admin/class-seo-repair-kit-redirection.php:711
+#: admin/class-seo-repair-kit-link-scanner.php:562
+#: admin/class-seo-repair-kit-redirection.php:677
 msgid "Apply"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:287
-#: admin/class-seo-repair-kit-link-scanner.php:742
+#: admin/class-seo-repair-kit-link-scanner.php:567
 msgid "Clear All Logs"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:288
-#: admin/class-seo-repair-kit-link-scanner.php:746
+#: admin/class-seo-repair-kit-link-scanner.php:571
 msgid "Export CSV"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:289
-#: admin/class-seo-repair-kit-link-scanner.php:750
+#: admin/class-seo-repair-kit-link-scanner.php:575
 msgid "Refresh Stats"
 msgstr ""
 
@@ -243,32 +240,31 @@ msgid "Count"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:301
-#: admin/class-seo-repair-kit-redirection.php:737
+#: admin/class-seo-repair-kit-redirection.php:703
 msgid "Referrer"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:302
-#: admin/class-seo-repair-kit-link-scanner.php:773
-#: admin/class-seo-repair-kit-redirection.php:735
+#: admin/class-seo-repair-kit-link-scanner.php:598
+#: admin/class-seo-repair-kit-redirection.php:701
 msgid "IP Address"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:303
-#: admin/class-seo-repair-kit-link-scanner.php:774
-#: admin/class-seo-repair-kit-redirection.php:736
+#: admin/class-seo-repair-kit-link-scanner.php:599
+#: admin/class-seo-repair-kit-redirection.php:702
 msgid "User Agent"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:306
-#: admin/class-seo-repair-kit-link-scanner.php:777
-#: admin/class-seo-repair-kit-redirection.php:2027
-#: admin/class-seo-repair-kit-smart-redirects.php:832
+#: admin/class-seo-repair-kit-link-scanner.php:602
+#: admin/class-seo-repair-kit-redirection.php:1937
 msgid "Actions"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:345
 #: admin/class-seo-repair-kit-404-manager.php:467
-#: admin/class-seo-repair-kit-link-scanner.php:822
+#: admin/class-seo-repair-kit-link-scanner.php:647
 #: admin/class-seo-repair-kit-scan-links.php:153
 msgid "Create Redirect"
 msgstr ""
@@ -292,30 +288,28 @@ msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:404
 #: admin/class-seo-repair-kit-alt-text.php:345
-#: admin/class-seo-repair-kit-link-scanner.php:954
-#: admin/class-seo-repair-kit-redirection.php:965
-#: admin/class-seo-repair-kit-redirection.php:2204
-#: admin/class-seo-repair-kit-smart-redirects.php:896
+#: admin/class-seo-repair-kit-link-scanner.php:785
+#: admin/class-seo-repair-kit-redirection.php:931
+#: admin/class-seo-repair-kit-redirection.php:2108
 msgid "Per page:"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:410
 #: admin/class-seo-repair-kit-alt-text.php:161
 #: admin/class-seo-repair-kit-alt-text.php:351
-#: admin/class-seo-repair-kit-link-scanner.php:962
-#: admin/class-seo-repair-kit-redirection.php:971
-#: admin/class-seo-repair-kit-redirection.php:2210
-#: admin/class-seo-repair-kit-smart-redirects.php:902
+#: admin/class-seo-repair-kit-link-scanner.php:793
+#: admin/class-seo-repair-kit-redirection.php:937
+#: admin/class-seo-repair-kit-redirection.php:2114
 msgid "All"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:418
-#: admin/class-seo-repair-kit-link-scanner.php:970
+#: admin/class-seo-repair-kit-link-scanner.php:800
 msgid "No 404 Errors Yet"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:419
-#: admin/class-seo-repair-kit-link-scanner.php:971
+#: admin/class-seo-repair-kit-link-scanner.php:801
 msgid "404 error monitoring is active. Any 404 errors will be logged here automatically."
 msgstr ""
 
@@ -332,7 +326,7 @@ msgid "This is the URL that resulted in a 404 error."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:440
-#: admin/class-seo-repair-kit-redirection.php:666
+#: admin/class-seo-repair-kit-redirection.php:632
 msgid "Target URL:"
 msgstr ""
 
@@ -341,7 +335,7 @@ msgid "Enter the URL to redirect to. Use relative path (e.g., /new-page/) or ful
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:446
-#: admin/class-seo-repair-kit-redirection.php:674
+#: admin/class-seo-repair-kit-redirection.php:640
 msgid "Redirect Type:"
 msgstr ""
 
@@ -363,20 +357,14 @@ msgstr ""
 #: admin/class-seo-repair-kit-404-manager.php:628
 #: admin/class-seo-repair-kit-404-manager.php:720
 #: admin/class-seo-repair-kit-404-manager.php:794
-#: admin/class-seo-repair-kit-admin.php:570
+#: admin/class-seo-repair-kit-admin.php:559
 #: admin/class-seo-repair-kit-dashboard.php:514
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:332
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:383
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:407
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:486
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:548
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:628
-#: admin/class-seo-repair-kit-link-scanner.php:989
-#: admin/class-seo-repair-kit-link-scanner.php:1041
-#: admin/class-seo-repair-kit-link-scanner.php:1123
-#: admin/class-seo-repair-kit-link-scanner.php:1204
-#: admin/class-seo-repair-kit-link-scanner.php:1305
-#: admin/class-seo-repair-kit-link-scanner.php:1390
+#: admin/class-seo-repair-kit-link-scanner.php:821
+#: admin/class-seo-repair-kit-link-scanner.php:880
+#: admin/class-seo-repair-kit-link-scanner.php:983
+#: admin/class-seo-repair-kit-link-scanner.php:1070
+#: admin/class-seo-repair-kit-link-scanner.php:1178
+#: admin/class-seo-repair-kit-link-scanner.php:1268
 #: admin/class-seo-repair-kit-robots-llms.php:746
 #: admin/class-seo-repair-kit-robots-llms.php:785
 #: admin/class-seo-repair-kit-robots-llms.php:814
@@ -387,14 +375,7 @@ msgstr ""
 #: admin/class-seo-repair-kit-robots-llms.php:1014
 #: admin/class-seo-repair-kit-robots-llms.php:1046
 #: admin/class-seo-repair-kit-robots-llms.php:1073
-#: admin/class-seo-repair-kit-smart-redirects.php:134
-#: admin/class-seo-repair-kit-smart-redirects.php:170
-#: admin/class-seo-repair-kit-smart-redirects.php:207
-#: admin/class-seo-repair-kit-smart-redirects.php:266
-#: admin/class-seo-repair-kit-smart-redirects.php:333
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-main.php:72
-#: includes/class-seo-repair-kit-link-scanner-automation.php:340
-#: includes/class-seo-repair-kit-link-scanner-automation.php:386
 #: includes/class-seo-repair-kit-meta-ajaxs.php:187
 #: includes/class-seo-repair-kit-meta-ajaxs.php:273
 #: includes/class-seo-repair-kit-meta-ajaxs.php:332
@@ -402,37 +383,37 @@ msgid "Permission denied."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:487
-#: admin/class-seo-repair-kit-link-scanner.php:1003
+#: admin/class-seo-repair-kit-link-scanner.php:837
 msgid "Invalid 404 log ID."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:497
 #: admin/class-seo-repair-kit-404-manager.php:537
 #: admin/class-seo-repair-kit-404-manager.php:732
-#: admin/class-seo-repair-kit-link-scanner.php:1010
-#: admin/class-seo-repair-kit-link-scanner.php:1064
-#: admin/class-seo-repair-kit-link-scanner.php:1141
-#: admin/class-seo-repair-kit-link-scanner.php:1322
+#: admin/class-seo-repair-kit-link-scanner.php:847
+#: admin/class-seo-repair-kit-link-scanner.php:908
+#: admin/class-seo-repair-kit-link-scanner.php:1006
+#: admin/class-seo-repair-kit-link-scanner.php:1199
 msgid "404 logs table does not exist."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:507
-#: admin/class-seo-repair-kit-link-scanner.php:1024
+#: admin/class-seo-repair-kit-link-scanner.php:862
 msgid "404 log deleted successfully."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:509
-#: admin/class-seo-repair-kit-link-scanner.php:1027
+#: admin/class-seo-repair-kit-link-scanner.php:864
 msgid "Failed to delete 404 log."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:527
-#: admin/class-seo-repair-kit-link-scanner.php:1057
+#: admin/class-seo-repair-kit-link-scanner.php:898
 msgid "Invalid action or IDs."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:552
-#: admin/class-seo-repair-kit-link-scanner.php:1090
+#: admin/class-seo-repair-kit-link-scanner.php:937
 #, php-format
 msgid "%d 404 log deleted."
 msgid_plural "%d 404 logs deleted."
@@ -440,11 +421,12 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: admin/class-seo-repair-kit-404-manager.php:556
+#: admin/class-seo-repair-kit-link-scanner.php:943
 msgid "Failed to delete 404 logs."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:569
-#: admin/class-seo-repair-kit-link-scanner.php:1091
+#: admin/class-seo-repair-kit-link-scanner.php:957
 #, php-format
 msgid "%d 404 log ignored."
 msgid_plural "%d 404 logs ignored."
@@ -452,16 +434,17 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: admin/class-seo-repair-kit-404-manager.php:573
+#: admin/class-seo-repair-kit-link-scanner.php:963
 msgid "Failed to ignore 404 logs."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:576
-#: admin/class-seo-repair-kit-link-scanner.php:1109
+#: admin/class-seo-repair-kit-link-scanner.php:967
 msgid "Invalid action."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:618
-#: admin/class-seo-repair-kit-link-scanner.php:1187
+#: admin/class-seo-repair-kit-link-scanner.php:1053
 #, php-format
 msgid "%d log entry cleared."
 msgid_plural "%d log entries cleared."
@@ -469,27 +452,27 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: admin/class-seo-repair-kit-404-manager.php:640
-#: admin/class-seo-repair-kit-link-scanner.php:1223
+#: admin/class-seo-repair-kit-link-scanner.php:1091
 msgid "Source URL and Target URL are required."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:661
-#: admin/class-seo-repair-kit-link-scanner.php:1241
+#: admin/class-seo-repair-kit-link-scanner.php:1112
 msgid "A redirect for this URL already exists."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:706
-#: admin/class-seo-repair-kit-link-scanner.php:1284
+#: admin/class-seo-repair-kit-link-scanner.php:1157
 msgid "Redirect created successfully."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:711
-#: admin/class-seo-repair-kit-link-scanner.php:1291
+#: admin/class-seo-repair-kit-link-scanner.php:1162
 msgid "Failed to create redirect."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:741
-#: admin/class-seo-repair-kit-link-scanner.php:1331
+#: admin/class-seo-repair-kit-link-scanner.php:1208
 msgid "No 404 logs to export."
 msgstr ""
 
@@ -506,128 +489,128 @@ msgid "Exit Guided Setup"
 msgstr ""
 
 #: admin/class-seo-repair-kit-admin.php:288
-#: admin/class-seo-repair-kit-admin.php:1561
+#: admin/class-seo-repair-kit-admin.php:1447
 #: admin/class-seo-repair-kit-scan-links.php:160
 msgid "Loading..."
 msgstr ""
 
 #: admin/class-seo-repair-kit-admin.php:306
 #: admin/class-seo-repair-kit-admin.php:326
-#: admin/class-seo-repair-kit-admin.php:800
+#: admin/class-seo-repair-kit-admin.php:789
 msgid "You do not have permission to access this endpoint."
 msgstr ""
 
 #: admin/class-seo-repair-kit-admin.php:340
-#: admin/class-seo-repair-kit-admin.php:814
+#: admin/class-seo-repair-kit-admin.php:803
 msgid "Invalid redirect destination."
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:699
+#: admin/class-seo-repair-kit-admin.php:688
 msgid "Once Monthly"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:715
+#: admin/class-seo-repair-kit-admin.php:704
 msgid "License synced successfully. Schema Manager is now active!"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1026
+#: admin/class-seo-repair-kit-admin.php:911
 msgid "SEO Repair Kit database update required"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1027
+#: admin/class-seo-repair-kit-admin.php:912
 msgid "To keep your website SEO in top shape, we need to update your settings to the latest version. This process runs in the background and may take a few moments."
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1029
+#: admin/class-seo-repair-kit-admin.php:914
 msgid "Update Settings"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1045
+#: admin/class-seo-repair-kit-admin.php:930
 #: includes/class-seo-repair-kit-meta-ajaxs.php:102
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
 #. translators: %s: TorontoDigits website link and logo
-#: admin/class-seo-repair-kit-admin.php:1182
+#: admin/class-seo-repair-kit-admin.php:1067
 #, php-format
 msgid "Powered By: %s"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1183
+#: admin/class-seo-repair-kit-admin.php:1068
 msgid "Powered By: TorontoDigits"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1286
-#: admin/class-seo-repair-kit-admin.php:1287
+#: admin/class-seo-repair-kit-admin.php:1172
+#: admin/class-seo-repair-kit-admin.php:1173
 #: admin/class-seo-repair-kit-dashboard.php:380
-msgid "Links Manager"
+#: admin/class-seo-repair-kit-link-scanner.php:187
+msgid "Link Scanner"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1301
-#: admin/class-seo-repair-kit-admin.php:1302
+#: admin/class-seo-repair-kit-admin.php:1187
+#: admin/class-seo-repair-kit-admin.php:1188
 msgid "Redirection"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1316
-#: admin/class-seo-repair-kit-admin.php:1317
+#: admin/class-seo-repair-kit-admin.php:1202
+#: admin/class-seo-repair-kit-admin.php:1203
 #: admin/class-seo-repair-kit-dashboard.php:466
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-image-seo.php:33
 msgid "Image Alt Missing"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1330
-#: admin/class-seo-repair-kit-admin.php:1331
+#: admin/class-seo-repair-kit-admin.php:1216
+#: admin/class-seo-repair-kit-admin.php:1217
 #: admin/class-seo-repair-kit-dashboard.php:403
 #: admin/class-seo-repair-kit-schema-manager.php:187
 #: admin/class-seo-repair-kit-upgrade-pro.php:212
 msgid "Schema Manager"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1345
-#: admin/class-seo-repair-kit-admin.php:1346
+#: admin/class-seo-repair-kit-admin.php:1231
+#: admin/class-seo-repair-kit-admin.php:1232
 #: admin/class-seo-repair-kit-dashboard.php:390
 msgid "KeyTrack"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1360
-#: admin/class-seo-repair-kit-admin.php:1361
+#: admin/class-seo-repair-kit-admin.php:1246
+#: admin/class-seo-repair-kit-admin.php:1247
 #: admin/class-seo-repair-kit-dashboard.php:436
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-main.php:783
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-main.php:784
 msgid "Meta Manager"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1374
-#: admin/class-seo-repair-kit-admin.php:1375
+#: admin/class-seo-repair-kit-admin.php:1260
+#: admin/class-seo-repair-kit-admin.php:1261
 #: admin/class-seo-repair-kit-dashboard.php:476
 #: includes/class-seo-repair-kit-sitemap-manager.php:462
 msgid "Sitemap Manager"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1392
-#: admin/class-seo-repair-kit-admin.php:1393
+#: admin/class-seo-repair-kit-admin.php:1278
+#: admin/class-seo-repair-kit-admin.php:1279
 #: admin/class-seo-repair-kit-dashboard.php:456
 #: admin/class-seo-repair-kit-robots-llms.php:169
 msgid "Bot Manager"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1407
-#: admin/class-seo-repair-kit-admin.php:1408
+#: admin/class-seo-repair-kit-admin.php:1293
+#: admin/class-seo-repair-kit-admin.php:1294
 #: admin/class-seo-repair-kit-dashboard.php:416
 msgid "AI Chatbot"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1422
-#: admin/class-seo-repair-kit-admin.php:1423
+#: admin/class-seo-repair-kit-admin.php:1308
+#: admin/class-seo-repair-kit-admin.php:1309
 #: admin/class-seo-repair-kit-dashboard.php:486
-#: admin/class-seo-repair-kit-link-scanner.php:363
-#: admin/class-seo-repair-kit-redirection.php:608
+#: admin/class-seo-repair-kit-redirection.php:574
 #: admin/class-seo-repair-kit-settings.php:61
 msgid "Settings"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1437
-#: admin/class-seo-repair-kit-admin.php:1438
+#: admin/class-seo-repair-kit-admin.php:1323
+#: admin/class-seo-repair-kit-admin.php:1324
 #: admin/class-seo-repair-kit-dashboard.php:298
 #: admin/class-seo-repair-kit-upgrade-pro.php:86
 #: admin/class-seo-repair-kit-upgrade-pro.php:96
@@ -723,25 +706,23 @@ msgstr ""
 
 #: admin/class-seo-repair-kit-alt-text.php:278
 #: admin/class-seo-repair-kit-alt-text.php:283
-#: admin/class-seo-repair-kit-link-scanner.php:890
-#: admin/class-seo-repair-kit-link-scanner.php:895
-#: admin/class-seo-repair-kit-redirection.php:897
-#: admin/class-seo-repair-kit-redirection.php:902
-#: admin/class-seo-repair-kit-redirection.php:2135
-#: admin/class-seo-repair-kit-redirection.php:2140
-#: admin/class-seo-repair-kit-smart-redirects.php:920
+#: admin/class-seo-repair-kit-link-scanner.php:717
+#: admin/class-seo-repair-kit-link-scanner.php:722
+#: admin/class-seo-repair-kit-redirection.php:863
+#: admin/class-seo-repair-kit-redirection.php:868
+#: admin/class-seo-repair-kit-redirection.php:2039
+#: admin/class-seo-repair-kit-redirection.php:2044
 msgid "Previous"
 msgstr ""
 
 #: admin/class-seo-repair-kit-alt-text.php:332
 #: admin/class-seo-repair-kit-alt-text.php:337
-#: admin/class-seo-repair-kit-link-scanner.php:941
-#: admin/class-seo-repair-kit-link-scanner.php:946
-#: admin/class-seo-repair-kit-redirection.php:952
-#: admin/class-seo-repair-kit-redirection.php:957
-#: admin/class-seo-repair-kit-redirection.php:2191
-#: admin/class-seo-repair-kit-redirection.php:2196
-#: admin/class-seo-repair-kit-smart-redirects.php:924
+#: admin/class-seo-repair-kit-link-scanner.php:772
+#: admin/class-seo-repair-kit-link-scanner.php:777
+#: admin/class-seo-repair-kit-redirection.php:918
+#: admin/class-seo-repair-kit-redirection.php:923
+#: admin/class-seo-repair-kit-redirection.php:2095
+#: admin/class-seo-repair-kit-redirection.php:2100
 msgid "Next"
 msgstr ""
 
@@ -916,7 +897,7 @@ msgid "Last scan %s ago"
 msgstr ""
 
 #: admin/class-seo-repair-kit-dashboard.php:77
-#: admin/class-seo-repair-kit-link-scanner.php:215
+#: admin/class-seo-repair-kit-link-scanner.php:117
 msgid "No scans yet"
 msgstr ""
 
@@ -949,7 +930,7 @@ msgid "Issue"
 msgstr ""
 
 #: admin/class-seo-repair-kit-dashboard.php:232
-#: admin/class-seo-repair-kit-redirection.php:732
+#: admin/class-seo-repair-kit-redirection.php:698
 msgid "Action"
 msgstr ""
 
@@ -1051,7 +1032,7 @@ msgid "Get real-time SEO assistance and answers."
 msgstr ""
 
 #: admin/class-seo-repair-kit-dashboard.php:426
-#: admin/class-seo-repair-kit-link-scanner.php:291
+#: admin/class-seo-repair-kit-link-scanner.php:191
 msgid "404 Monitor"
 msgstr ""
 
@@ -1064,7 +1045,7 @@ msgid "Manage meta tags and descriptions for your site."
 msgstr ""
 
 #: admin/class-seo-repair-kit-dashboard.php:446
-#: admin/class-seo-repair-kit-redirection.php:605
+#: admin/class-seo-repair-kit-redirection.php:571
 msgid "Redirections"
 msgstr ""
 
@@ -1473,533 +1454,267 @@ msgstr ""
 msgid "Security check failed."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:32
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:413
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:492
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:554
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:634
-msgid "Automation service is not available."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:42
-msgid "Auto Scan Settings"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:43
-msgid "Configure scheduled link scanning for internal links, external links, or both. Scan selected content types or the whole website, store history, and send email alerts when broken links are found."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:52
-msgid "Enable Automation"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:56
-msgid "Automatically scan links on a schedule"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:62
-msgid "Scan Interval"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:65
-msgid "Every 24 hours"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:66
-msgid "Every 3 days"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:67
-#: admin/class-seo-repair-kit-link-scanner.php:225
-msgid "Weekly"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:68
-msgid "Bi-weekly"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:69
-#: admin/class-seo-repair-kit-link-scanner.php:227
-#: includes/class-seo-repair-kit-link-scanner-automation.php:137
-msgid "Monthly"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:75
-msgid "Link Scope"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:78
-msgid "Both Internal and External Links"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:79
-msgid "Internal Links Only"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:80
-msgid "External Links Only"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:82
-msgid "Choose whether to scan only internal links, only external links, or both."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:87
-msgid "Scan Coverage"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:90
-msgid "Selected Post Types"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:91
-msgid "Whole Website (all public post types)"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:93
-msgid "Use Whole Website to automatically include posts, pages, and public custom post types."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:98
-msgid "Post Types to Scan"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:108
-msgid "Used only when Scan Coverage is set to Selected Post Types."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:114
-msgid "Batch Size"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:115
-msgid "Number of posts fetched per database batch. All matching content is still scanned."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:122
-msgid "Max Links per Post"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:123
-msgid "Set to 0 to scan all links found in each item."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:129
-msgid "HTTP Timeout (seconds)"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:134
-msgid "Email Alerts"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:138
-msgid "Send email alerts when broken links are found"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:140
-msgid "Recipients (comma-separated emails):"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:141
-msgid "admin@example.com, other@example.com"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:155
-msgid "Next scheduled run:"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:156
-#: admin/class-seo-repair-kit-weekly-summary.php:1193
-msgid "Not scheduled"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:162
-#: admin/class-seo-repair-kit-redirection.php:1206
-#: admin/class-seo-repair-kit-robots-llms.php:363
-#: admin/class-seo-repair-kit-smart-redirects.php:533
-msgid "Save Settings"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:167
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:263
-msgid "Run Scan"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:172
-msgid "Reset Settings"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:177
-msgid "Reset Scan"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:209
-msgid "Please turn ON Enable Automation option before saving auto scan settings."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:213
-msgid "Save auto scan settings? This will reschedule the cron job and clear previous scan state."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:219
-msgid "Reset all automation settings to defaults and clear all scan records? This cannot be undone."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:225
-msgid "Run a full link scan now? This may take a few minutes depending on your site size."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:236
-msgid "Scanning..."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:250
-msgid "Scan failed."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:254
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:294
-msgid "Request failed. Please try again."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:269
-msgid "Reset all scan records and alert history? Settings will be kept. This cannot be undone."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:290
-msgid "Reset failed."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:317
-#: admin/class-seo-repair-kit-link-scanner.php:519
-msgid "Alerts module is not available."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:342
-msgid "Please enable automation first. Settings were not saved."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:369
-msgid "Auto scan settings saved successfully."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:393
-msgid "Links Manager settings and alert history were reset successfully."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:559
-msgid "Invalid run ID."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:567
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:647
-#: admin/class-seo-repair-kit-smart-redirects.php:222
-msgid "Record not found."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-automation-admin.php:639
-msgid "Invalid alert ID."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-internal-linking.php:20
-#: admin/class-seo-repair-kit-link-scanner.php:534
-msgid "Internal Linking (Planned v2.1.8)"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner-internal-linking.php:21
-#: admin/class-seo-repair-kit-link-scanner.php:535
-msgid "This section will include internal link opportunities, orphan content detection, and contextual link recommendations."
-msgstr ""
-
 #. translators: %s: human time diff
-#: admin/class-seo-repair-kit-link-scanner.php:214
+#: admin/class-seo-repair-kit-link-scanner.php:117
 #: admin/class-seo-repair-kit-settings.php:207
 #, php-format
 msgid "%s ago"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:222
-#: admin/class-seo-repair-kit-link-scanner.php:230
+#: admin/class-seo-repair-kit-link-scanner.php:124
+#: admin/class-seo-repair-kit-link-scanner.php:129
 msgid "Manual"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:223
-msgid "Every 24 Hours"
+#: admin/class-seo-repair-kit-link-scanner.php:125
+msgid "Daily"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:224
-#: includes/class-seo-repair-kit-link-scanner-automation.php:129
-msgid "Every 3 Days"
+#: admin/class-seo-repair-kit-link-scanner.php:126
+msgid "Weekly"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:226
-#: includes/class-seo-repair-kit-link-scanner-automation.php:133
-msgid "Bi-Weekly"
+#: admin/class-seo-repair-kit-link-scanner.php:127
+msgid "Monthly"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:233
+#: admin/class-seo-repair-kit-link-scanner.php:132
 #, php-format
 msgid "Runs automatically (%s cadence)."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:234
+#: admin/class-seo-repair-kit-link-scanner.php:133
 msgid "Launch scans manually whenever you need a health check."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:237
+#: admin/class-seo-repair-kit-link-scanner.php:136
 #, php-format
 msgid "%s URLs have been checked so far."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:238
+#: admin/class-seo-repair-kit-link-scanner.php:137
 msgid "Run your first scan to capture a baseline."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:242
+#: admin/class-seo-repair-kit-link-scanner.php:141
 #, php-format
 msgid "%1$s%% of the scanned links need fixes."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:245
+#: admin/class-seo-repair-kit-link-scanner.php:144
 msgid "Clean slate! No broken links were found."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:257
-msgid "Links Manager Dashboard"
+#: admin/class-seo-repair-kit-link-scanner.php:156
+msgid "Link Scanner & 404 Monitor"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:258
-msgid "Manage everything related to links in one place: link scanning, 404 monitoring, automation schedules, and alert history."
+#: admin/class-seo-repair-kit-link-scanner.php:157
+msgid "Keep your site healthy by finding broken links before they hurt your SEO. Monitor 404 errors in real-time and convert them into redirects to preserve search rankings."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:262
+#: admin/class-seo-repair-kit-link-scanner.php:161
 msgid "AUTOMATED SCANNING"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:266
+#: admin/class-seo-repair-kit-link-scanner.php:165
 msgid "404 TRACKING"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:270
-#: admin/class-seo-repair-kit-redirection.php:596
+#: admin/class-seo-repair-kit-link-scanner.php:169
 msgid "SMART REDIRECTS"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:287
-msgid "Links Scan"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner.php:295
-msgid "Auto Scan"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner.php:299
-msgid "Notifications"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner.php:303
-msgid "Smart Redirects"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner.php:307
-msgid "Internal Linking (v2.1.8)"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner.php:315
+#: admin/class-seo-repair-kit-link-scanner.php:200
 msgid "Total links checked"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:320
-msgid "404 broken links detected"
+#: admin/class-seo-repair-kit-link-scanner.php:205
+msgid "Broken links detected"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:323
-#: admin/class-seo-repair-kit-link-scanner.php:331
+#: admin/class-seo-repair-kit-link-scanner.php:208
+#: admin/class-seo-repair-kit-link-scanner.php:216
 #, php-format
 msgid "%s%%"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:328
+#: admin/class-seo-repair-kit-link-scanner.php:213
 msgid "Healthy links"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:333
+#: admin/class-seo-repair-kit-link-scanner.php:218
 msgid "Working links confirmed in your last scan."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:336
-#: admin/class-seo-repair-kit-link-scanner.php:373
+#: admin/class-seo-repair-kit-link-scanner.php:221
+#: admin/class-seo-repair-kit-link-scanner.php:254
 msgid "Automation"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:349
+#: admin/class-seo-repair-kit-link-scanner.php:234
 msgid "Select Post Type:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:360
+#: admin/class-seo-repair-kit-link-scanner.php:246
 msgid "Start Scan"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:369
+#: admin/class-seo-repair-kit-link-scanner.php:250
 msgid "Last scan"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:384
+#: admin/class-seo-repair-kit-link-scanner.php:265
 #: admin/class-seo-repair-kit-scan-links.php:72
 msgid "Scanning links..."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:395
+#: admin/class-seo-repair-kit-link-scanner.php:276
 msgid "No scan yet!"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:396
+#: admin/class-seo-repair-kit-link-scanner.php:277
 msgid "Pick a post type and click \"Start Scan\" to begin."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:504
-msgid "Auto Scan admin module is not available."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner.php:650
+#: admin/class-seo-repair-kit-link-scanner.php:473
 msgid "Total occurrences tracked"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:655
+#: admin/class-seo-repair-kit-link-scanner.php:478
 msgid "Distinct 404 pages found"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:658
+#: admin/class-seo-repair-kit-link-scanner.php:481
 msgid "Log Entries"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:660
+#: admin/class-seo-repair-kit-link-scanner.php:483
 msgid "Total logged entries"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:667
-#: admin/class-seo-repair-kit-link-scanner.php:772
-#: admin/class-seo-repair-kit-redirection.php:2026
+#: admin/class-seo-repair-kit-link-scanner.php:490
+#: admin/class-seo-repair-kit-link-scanner.php:597
+#: admin/class-seo-repair-kit-redirection.php:1936
 msgid "Hits"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:676
+#: admin/class-seo-repair-kit-link-scanner.php:499
 msgid "No data yet"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:692
+#: admin/class-seo-repair-kit-link-scanner.php:516
 msgid "Filter by URL"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:700
+#: admin/class-seo-repair-kit-link-scanner.php:524
 msgid "Filter by IP"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:708
+#: admin/class-seo-repair-kit-link-scanner.php:532
 msgid "Sort by"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:716
+#: admin/class-seo-repair-kit-link-scanner.php:540
 msgid "Desc"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:717
+#: admin/class-seo-repair-kit-link-scanner.php:541
 msgid "Asc"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:723
+#: admin/class-seo-repair-kit-link-scanner.php:547
 msgid "Apply Filters"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:734
+#: admin/class-seo-repair-kit-link-scanner.php:559
 msgid "Delete Selected"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:735
+#: admin/class-seo-repair-kit-link-scanner.php:560
 msgid "Ignore Selected"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:761
+#: admin/class-seo-repair-kit-link-scanner.php:587
 msgid "404 Error Logs"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:763
+#: admin/class-seo-repair-kit-link-scanner.php:589
 #, php-format
 msgid "%s entry"
 msgid_plural "%s entries"
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:775
+#: admin/class-seo-repair-kit-link-scanner.php:600
 msgid "First Seen"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:776
+#: admin/class-seo-repair-kit-link-scanner.php:601
 msgid "Last Seen"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:790
+#: admin/class-seo-repair-kit-link-scanner.php:615
 #: admin/class-seo-repair-kit-scan-links.php:148
 msgid "Open URL"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:834
+#: admin/class-seo-repair-kit-link-scanner.php:659
 msgid "No 404 errors found"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:835
+#: admin/class-seo-repair-kit-link-scanner.php:660
 msgid "Try adjusting your filters or check back later."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:850
-#: admin/class-seo-repair-kit-redirection.php:866
+#: admin/class-seo-repair-kit-link-scanner.php:676
+#: admin/class-seo-repair-kit-redirection.php:832
 #, php-format
 msgid "Showing all %1$d log entries"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:857
-#: admin/class-seo-repair-kit-redirection.php:873
+#: admin/class-seo-repair-kit-link-scanner.php:683
+#: admin/class-seo-repair-kit-redirection.php:839
 #, php-format
 msgid "Showing %1$d to %2$d of %3$d log entries"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:888
-#: admin/class-seo-repair-kit-redirection.php:895
-#: admin/class-seo-repair-kit-redirection.php:2133
+#: admin/class-seo-repair-kit-link-scanner.php:715
+#: admin/class-seo-repair-kit-redirection.php:861
+#: admin/class-seo-repair-kit-redirection.php:2037
 msgid "Previous page"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:940
-#: admin/class-seo-repair-kit-redirection.php:951
-#: admin/class-seo-repair-kit-redirection.php:2190
+#: admin/class-seo-repair-kit-link-scanner.php:771
+#: admin/class-seo-repair-kit-redirection.php:917
+#: admin/class-seo-repair-kit-redirection.php:2094
 msgid "Next page"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:985
-#: admin/class-seo-repair-kit-link-scanner.php:1037
-#: admin/class-seo-repair-kit-link-scanner.php:1119
-#: admin/class-seo-repair-kit-link-scanner.php:1200
-#: admin/class-seo-repair-kit-link-scanner.php:1301
-#: admin/class-seo-repair-kit-link-scanner.php:1386
-#: admin/class-seo-repair-kit-smart-redirects.php:342
+#: admin/class-seo-repair-kit-link-scanner.php:817
+#: admin/class-seo-repair-kit-link-scanner.php:876
+#: admin/class-seo-repair-kit-link-scanner.php:979
+#: admin/class-seo-repair-kit-link-scanner.php:1066
+#: admin/class-seo-repair-kit-link-scanner.php:1174
+#: admin/class-seo-repair-kit-link-scanner.php:1264
 msgid "Invalid request."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:994
-#: admin/class-seo-repair-kit-link-scanner.php:1046
-#: admin/class-seo-repair-kit-link-scanner.php:1128
-#: admin/class-seo-repair-kit-link-scanner.php:1209
-#: admin/class-seo-repair-kit-link-scanner.php:1310
-#: admin/class-seo-repair-kit-link-scanner.php:1395
+#: admin/class-seo-repair-kit-link-scanner.php:827
+#: admin/class-seo-repair-kit-link-scanner.php:886
+#: admin/class-seo-repair-kit-link-scanner.php:989
+#: admin/class-seo-repair-kit-link-scanner.php:1076
+#: admin/class-seo-repair-kit-link-scanner.php:1184
+#: admin/class-seo-repair-kit-link-scanner.php:1274
 msgid "Security token missing. Please refresh the page and try again."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:998
-#: admin/class-seo-repair-kit-link-scanner.php:1050
-#: admin/class-seo-repair-kit-link-scanner.php:1132
-#: admin/class-seo-repair-kit-link-scanner.php:1213
-#: admin/class-seo-repair-kit-link-scanner.php:1314
-#: admin/class-seo-repair-kit-link-scanner.php:1399
+#: admin/class-seo-repair-kit-link-scanner.php:832
+#: admin/class-seo-repair-kit-link-scanner.php:891
+#: admin/class-seo-repair-kit-link-scanner.php:994
+#: admin/class-seo-repair-kit-link-scanner.php:1081
+#: admin/class-seo-repair-kit-link-scanner.php:1189
+#: admin/class-seo-repair-kit-link-scanner.php:1279
 #: admin/class-seo-repair-kit-robots-llms.php:741
 #: admin/class-seo-repair-kit-robots-llms.php:780
 #: admin/class-seo-repair-kit-robots-llms.php:809
@@ -2014,134 +1729,13 @@ msgstr ""
 msgid "Security check failed. Please refresh the page and try again."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:1070
+#: admin/class-seo-repair-kit-link-scanner.php:916
 msgid "Invalid log IDs."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:1104
-msgid "Failed to process 404 logs."
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner.php:1161
-#: admin/class-seo-repair-kit-link-scanner.php:1175
+#: admin/class-seo-repair-kit-link-scanner.php:1026
+#: admin/class-seo-repair-kit-link-scanner.php:1042
 msgid "Failed to clear 404 logs."
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:48
-msgid "Scan Run History"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:49
-msgid "Last 7 manual and scheduled scan runs. Older records are pruned automatically."
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:57
-#: admin/class-seo-repair-kit-links-alerts.php:157
-msgid "Reset Records"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:66
-msgid "Run Time"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:67
-msgid "Trigger"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:68
-msgid "Scope"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:69
-msgid "Coverage"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:70
-msgid "Scanned Posts"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:71
-msgid "Total Links"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:72
-#: admin/class-seo-repair-kit-links-alerts.php:169
-msgid "Broken Links"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:73
-msgid "Email Sent"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:74
-#: admin/class-seo-repair-kit-links-alerts.php:170
-msgid "Post Type Breakdown"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:75
-#: admin/class-seo-repair-kit-links-alerts.php:171
-msgid "Export"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:98
-#: includes/class-seo-repair-kit-elementor-integration.php:263
-msgid "Yes"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:100
-#: includes/class-seo-repair-kit-elementor-integration.php:264
-msgid "No"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:121
-msgid "Export this run as CSV"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:123
-#: admin/class-seo-repair-kit-links-alerts.php:207
-msgid "CSV"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:134
-msgid "No scan history yet. Run a scan from the Auto Scan tab."
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:148
-msgid "Notification History"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:149
-msgid "Previously sent email notifications for broken link alerts."
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:166
-msgid "Sent At"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:167
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:385
-msgid "Subject"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:168
-msgid "Recipients"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:205
-msgid "Export this alert as CSV"
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:218
-msgid "No alert history yet. Alerts are sent when broken links are found and email alerts are enabled."
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:232
-msgid "Reset all scan run records and alert history? This cannot be undone."
-msgstr ""
-
-#: admin/class-seo-repair-kit-links-alerts.php:246
-#: admin/class-seo-repair-kit-links-alerts.php:247
-msgid "Records cleared."
 msgstr ""
 
 #: admin/class-seo-repair-kit-redirection-settings.php:129
@@ -2282,32 +1876,32 @@ msgid "Track visitor countries for geographic redirect analysis. Requires IP col
 msgstr ""
 
 #: admin/class-seo-repair-kit-redirection-settings.php:239
-#: admin/class-seo-repair-kit-redirection.php:1183
+#: admin/class-seo-repair-kit-redirection.php:1149
 msgid ".htaccess Sync"
 msgstr ""
 
 #: admin/class-seo-repair-kit-redirection-settings.php:243
-#: admin/class-seo-repair-kit-redirection.php:1187
+#: admin/class-seo-repair-kit-redirection.php:1153
 msgid "Enable automatic .htaccess rule generation"
 msgstr ""
 
 #: admin/class-seo-repair-kit-redirection-settings.php:245
-#: admin/class-seo-repair-kit-redirection.php:1189
+#: admin/class-seo-repair-kit-redirection.php:1155
 msgid "When enabled, automatically writes redirect rules to .htaccess file for Apache/LiteSpeed servers. Disable if you prefer PHP-only redirects or use Nginx."
 msgstr ""
 
 #: admin/class-seo-repair-kit-redirection-settings.php:250
-#: admin/class-seo-repair-kit-redirection.php:1194
+#: admin/class-seo-repair-kit-redirection.php:1160
 msgid "Write All Redirects to .htaccess"
 msgstr ""
 
 #: admin/class-seo-repair-kit-redirection-settings.php:254
-#: admin/class-seo-repair-kit-redirection.php:1198
+#: admin/class-seo-repair-kit-redirection.php:1164
 msgid "Write all redirects to .htaccess (not just regex and media files)"
 msgstr ""
 
 #: admin/class-seo-repair-kit-redirection-settings.php:256
-#: admin/class-seo-repair-kit-redirection.php:1200
+#: admin/class-seo-repair-kit-redirection.php:1166
 msgid "By default, only regex patterns and media file redirects are written to .htaccess. Enable this to write all redirects to .htaccess for better performance."
 msgstr ""
 
@@ -2347,421 +1941,419 @@ msgstr ""
 msgid "Consider shorter log retention for privacy"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:529
+#: admin/class-seo-repair-kit-redirection.php:501
 msgid "Migration details:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:533
+#: admin/class-seo-repair-kit-redirection.php:505
 msgid "SEO Repair Kit v2.1.0:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:534
+#: admin/class-seo-repair-kit-redirection.php:506
 msgid "Your existing data has been successfully migrated to the new enhanced system!"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:537
+#: admin/class-seo-repair-kit-redirection.php:509
 msgid "New Features Available:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:539
+#: admin/class-seo-repair-kit-redirection.php:511
 msgid "Enhanced redirection management with hit tracking"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:540
+#: admin/class-seo-repair-kit-redirection.php:512
 msgid "Advanced redirect logs and analytics"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:541
+#: admin/class-seo-repair-kit-redirection.php:513
 msgid "Import/Export functionality"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:542
+#: admin/class-seo-repair-kit-redirection.php:514
 msgid "Regex support for complex redirects"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:569
+#: admin/class-seo-repair-kit-redirection.php:541
 msgid "Please fill in all required fields."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:570
+#: admin/class-seo-repair-kit-redirection.php:542
 msgid "Error: Unable to save the redirection."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:571
+#: admin/class-seo-repair-kit-redirection.php:543
 msgid "Are you sure you want to delete this redirection?"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:572
+#: admin/class-seo-repair-kit-redirection.php:544
 msgid "Error: Unable to delete the record."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:574
+#: admin/class-seo-repair-kit-redirection.php:546
 msgid "Import completed successfully."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:587
+#: admin/class-seo-repair-kit-redirection.php:559
 #: admin/class-seo-repair-kit-weekly-summary.php:1098
 msgid "Advanced Redirections"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:588
+#: admin/class-seo-repair-kit-redirection.php:560
 msgid "Create and manage redirects to recover SEO value from 404 errors. Track redirect performance with detailed analytics and preserve your search rankings."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:592
+#: admin/class-seo-repair-kit-redirection.php:563
 msgid "SEO OPTIMIZED"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:606
-#: admin/class-seo-repair-kit-redirection.php:725
+#: admin/class-seo-repair-kit-redirection.php:572
+#: admin/class-seo-repair-kit-redirection.php:691
 msgid "Redirect Logs"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:607
+#: admin/class-seo-repair-kit-redirection.php:573
 msgid "Import/Export"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:616
+#: admin/class-seo-repair-kit-redirection.php:582
 msgid "Redirect Analytics"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:619
+#: admin/class-seo-repair-kit-redirection.php:585
 msgid "Refresh"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:625
+#: admin/class-seo-repair-kit-redirection.php:591
 msgid "Total Hits"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:629
+#: admin/class-seo-repair-kit-redirection.php:595
 msgid "Total Redirections"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:633
+#: admin/class-seo-repair-kit-redirection.php:599
 msgid "Active Redirections"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:637
+#: admin/class-seo-repair-kit-redirection.php:603
 msgid "Most Hit Redirect"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:655
+#: admin/class-seo-repair-kit-redirection.php:621
 msgid "Add New Redirection"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:661
+#: admin/class-seo-repair-kit-redirection.php:627
 msgid "Source URL:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:663
+#: admin/class-seo-repair-kit-redirection.php:629
 msgid "Enter the URL to redirect from"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:668
+#: admin/class-seo-repair-kit-redirection.php:634
 msgid "Enter the URL to redirect to"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:686
+#: admin/class-seo-repair-kit-redirection.php:652
 msgid "Use Regular Expression"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:693
+#: admin/class-seo-repair-kit-redirection.php:659
 msgid "Add Redirection"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:702
+#: admin/class-seo-repair-kit-redirection.php:668
 msgid "Existing Redirections"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:706
+#: admin/class-seo-repair-kit-redirection.php:672
 msgid "Activate"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:707
+#: admin/class-seo-repair-kit-redirection.php:673
 msgid "Deactivate"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:709
-#: admin/class-seo-repair-kit-redirection.php:2092
+#: admin/class-seo-repair-kit-redirection.php:675
+#: admin/class-seo-repair-kit-redirection.php:1996
 msgid "Reset Hits"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:713
+#: admin/class-seo-repair-kit-redirection.php:679
 msgid "Reset All Hits"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:726
+#: admin/class-seo-repair-kit-redirection.php:692
 msgid "Clear Logs"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:731
+#: admin/class-seo-repair-kit-redirection.php:697
 msgid "Date"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:733
-#: admin/class-seo-repair-kit-redirection.php:2021
-#: admin/class-seo-repair-kit-smart-redirects.php:829
+#: admin/class-seo-repair-kit-redirection.php:699
+#: admin/class-seo-repair-kit-redirection.php:1932
 msgid "Source URL"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:734
-#: admin/class-seo-repair-kit-redirection.php:2022
+#: admin/class-seo-repair-kit-redirection.php:700
+#: admin/class-seo-repair-kit-redirection.php:1933
 msgid "Target URL"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:854
+#: admin/class-seo-repair-kit-redirection.php:820
 msgid "No redirect logs yet"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:993
-#: admin/class-seo-repair-kit-redirection.php:1055
+#: admin/class-seo-repair-kit-redirection.php:959
+#: admin/class-seo-repair-kit-redirection.php:1021
 msgid "Export Redirections"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:994
+#: admin/class-seo-repair-kit-redirection.php:960
 msgid "Download your redirections in CSV, JSON, Nginx, or Apache .htaccess format for backup, migration, or server configuration."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1001
+#: admin/class-seo-repair-kit-redirection.php:967
 msgid "Export Format"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1002
+#: admin/class-seo-repair-kit-redirection.php:968
 msgid "Choose the file format for your export"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1011
+#: admin/class-seo-repair-kit-redirection.php:977
 msgid "Simple text format"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1021
+#: admin/class-seo-repair-kit-redirection.php:987
 msgid "Developer friendly"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1031
+#: admin/class-seo-repair-kit-redirection.php:997
 msgid "Nginx config file"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1040
+#: admin/class-seo-repair-kit-redirection.php:1006
 msgid "Apache .htaccess"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1041
+#: admin/class-seo-repair-kit-redirection.php:1007
 msgid "Drop-in rewrite rules"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1063
+#: admin/class-seo-repair-kit-redirection.php:1029
 msgid "OR"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1075
-#: admin/class-seo-repair-kit-redirection.php:1125
+#: admin/class-seo-repair-kit-redirection.php:1041
+#: admin/class-seo-repair-kit-redirection.php:1091
 msgid "Import Redirections"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1076
+#: admin/class-seo-repair-kit-redirection.php:1042
 msgid "Upload a CSV, JSON, or Apache .htaccess file to import redirections. Existing redirections can be updated or skipped."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1091
+#: admin/class-seo-repair-kit-redirection.php:1057
 msgid "Choose Files to Upload"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1092
+#: admin/class-seo-repair-kit-redirection.php:1058
 msgid "Drag and drop your files here, or click to browse. You can select multiple files."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1113
+#: admin/class-seo-repair-kit-redirection.php:1079
 msgid "Update Existing Redirections"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1114
+#: admin/class-seo-repair-kit-redirection.php:1080
 msgid "If checked, existing redirections with matching IDs will be updated. Otherwise, they will be skipped."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1139
+#: admin/class-seo-repair-kit-redirection.php:1105
 msgid "Need Help?"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1143
+#: admin/class-seo-repair-kit-redirection.php:1109
 msgid "Supported Formats:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1144
+#: admin/class-seo-repair-kit-redirection.php:1110
 msgid "CSV (.csv), JSON (.json), and Apache .htaccess (.htaccess, .conf, .txt) files are supported. CSV files should have columns: source_url, target_url, redirect_type, status, is_regex."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1147
+#: admin/class-seo-repair-kit-redirection.php:1113
 msgid "JSON Format:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1148
+#: admin/class-seo-repair-kit-redirection.php:1114
 msgid "JSON files should contain an array of redirection objects with the same field names."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1151
+#: admin/class-seo-repair-kit-redirection.php:1117
 msgid ".htaccess Format:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1152
+#: admin/class-seo-repair-kit-redirection.php:1118
 msgid "You can import standard Apache rules such as Redirect, RedirectMatch, and RewriteRule statements. Each rule will be converted into an SRK redirection entry."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1155
+#: admin/class-seo-repair-kit-redirection.php:1121
 msgid "File Size Limit:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1156
+#: admin/class-seo-repair-kit-redirection.php:1122
 msgid "Maximum file size is 10MB. For larger files, consider splitting into multiple imports."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1165
+#: admin/class-seo-repair-kit-redirection.php:1131
 msgid "Redirection Settings"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1172
+#: admin/class-seo-repair-kit-redirection.php:1138
 msgid "Detailed Logging"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1176
+#: admin/class-seo-repair-kit-redirection.php:1142
 msgid "Log every redirect hit with visitor details"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1178
+#: admin/class-seo-repair-kit-redirection.php:1144
 msgid "When enabled, logs every redirect with IP, User Agent, and Referrer. Admin changes (create, update, delete, import) are always logged regardless of this setting."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1212
+#: admin/class-seo-repair-kit-redirection.php:1172
+#: admin/class-seo-repair-kit-robots-llms.php:363
+msgid "Save Settings"
+msgstr ""
+
+#: admin/class-seo-repair-kit-redirection.php:1178
 msgid "Current Logging Status"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1214
+#: admin/class-seo-repair-kit-redirection.php:1180
 msgid "Detailed Logging:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1215
+#: admin/class-seo-repair-kit-redirection.php:1181
 #: admin/class-seo-repair-kit-upgrade-pro.php:281
 #: admin/class-seo-repair-kit-weekly-summary.php:847
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-archives.php:496
 msgid "Enabled"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1215
+#: admin/class-seo-repair-kit-redirection.php:1181
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-archives.php:496
 msgid "Disabled"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1219
+#: admin/class-seo-repair-kit-redirection.php:1185
 msgid "All redirect hits are being logged with visitor details."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1221
+#: admin/class-seo-repair-kit-redirection.php:1187
 msgid "Redirect hit logging is disabled. Admin changes are logged separately."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1229
+#: admin/class-seo-repair-kit-redirection.php:1195
 msgid "Database Migration"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1230
+#: admin/class-seo-repair-kit-redirection.php:1196
 msgid "If you have redirection records from a previous version of the plugin, you can migrate them to the new Advanced Redirection system."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1251
+#: admin/class-seo-repair-kit-redirection.php:1217
 #, php-format
 msgid "Found %d records from old version that need migration."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1264
+#: admin/class-seo-repair-kit-redirection.php:1230
 #, php-format
 msgid "Found %d unmigrated records."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1266
+#: admin/class-seo-repair-kit-redirection.php:1232
 msgid "All records have been migrated successfully."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1269
+#: admin/class-seo-repair-kit-redirection.php:1235
 msgid "No migration needed - database is up to date."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1273
+#: admin/class-seo-repair-kit-redirection.php:1239
 msgid "No redirection table found - no migration needed."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1278
+#: admin/class-seo-repair-kit-redirection.php:1244
 #: admin/class-seo-repair-kit-weekly-summary.php:833
 msgid "Status:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1283
+#: admin/class-seo-repair-kit-redirection.php:1249
 msgid "Run Migration Now"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:1938
-#: admin/class-seo-repair-kit-smart-redirects.php:407
+#: admin/class-seo-repair-kit-redirection.php:1874
 msgid "Click to open in new window"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:2023
+#: admin/class-seo-repair-kit-redirection.php:1934
 #: admin/class-seo-repair-kit-scan-links.php:113
 msgid "Type"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:2024
+#: admin/class-seo-repair-kit-redirection.php:1935
 #: admin/class-seo-repair-kit-scan-links.php:114
-#: admin/class-seo-repair-kit-smart-redirects.php:831
 #: admin/class-seo-repair-kit-upgrade-pro.php:274
 msgid "Status"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:2025
-msgid "Source"
-msgstr ""
-
-#: admin/class-seo-repair-kit-redirection.php:2045
+#: admin/class-seo-repair-kit-redirection.php:1955
 msgid "Regex"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:2055
+#: admin/class-seo-repair-kit-redirection.php:1965
 msgid "N/A (410 Gone)"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:2086
+#: admin/class-seo-repair-kit-redirection.php:1990
 #: admin/class-seo-repair-kit-scan-links.php:118
 #: admin/class-seo-repair-kit-schema-ui.php:360
 msgid "Edit"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:2106
+#: admin/class-seo-repair-kit-redirection.php:2010
 #, php-format
 msgid "Showing all %1$d redirections"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:2113
+#: admin/class-seo-repair-kit-redirection.php:2017
 #, php-format
 msgid "Showing %1$d to %2$d of %3$d redirections"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:2216
+#: admin/class-seo-repair-kit-redirection.php:2120
 msgid "No redirections found. Create your first redirection above."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:3793
+#: admin/class-seo-repair-kit-redirection.php:3686
 msgid "First errors:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:4176
+#: admin/class-seo-repair-kit-redirection.php:4069
 #, php-format
 msgid "Migration completed successfully! %d records migrated."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:4182
+#: admin/class-seo-repair-kit-redirection.php:4075
 #, php-format
 msgid "%d records failed to migrate."
 msgstr ""
 
-#: admin/class-seo-repair-kit-redirection.php:4194
+#: admin/class-seo-repair-kit-redirection.php:4087
 msgid "Migration failed: "
 msgstr ""
 
@@ -3500,7 +3092,6 @@ msgid "When enabled, all 404 errors will be logged automatically for review in t
 msgstr ""
 
 #: admin/class-seo-repair-kit-settings.php:146
-#: admin/class-seo-repair-kit-smart-redirects.php:454
 msgid "How it works:"
 msgstr ""
 
@@ -3548,172 +3139,6 @@ msgstr ""
 
 #: admin/class-seo-repair-kit-settings.php:239
 msgid "Save Weekly Report Settings"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:148
-#: admin/class-seo-repair-kit-smart-redirects.php:191
-msgid "Smart Redirect settings saved successfully."
-msgstr ""
-
-#. translators: %d = created smart redirect count
-#: admin/class-seo-repair-kit-smart-redirects.php:152
-#: admin/class-seo-repair-kit-smart-redirects.php:188
-#, php-format
-msgid "Smart Redirect settings saved successfully. %d redirect record(s) were created from recent scan history."
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:214
-msgid "Invalid record ID."
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:254
-msgid "Smart redirect status updated."
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:317
-msgid "Smart redirect records reset successfully."
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:354
-msgid "Smart redirect record not found."
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:382
-msgid "Smart redirect and linked redirect deleted."
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:427
-msgid "Auto-Redirect Broken Internal Links"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:429
-msgid "Automatically create 301 redirects for broken internal singular pages to their post-type archive (listing) page. This gives visitors a useful landing page instead of a 404 error."
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:435
-msgid "Last Smart Redirect generation:"
-msgstr ""
-
-#. translators: %d = created count
-#: admin/class-seo-repair-kit-smart-redirects.php:443
-#, php-format
-msgid "%d record(s) created."
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:455
-msgid "Select which post types should have their broken singular pages auto-redirected to the archive listing. Each post type is independent — enable only the ones you want."
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:472
-msgid "Enable Smart Redirect automation"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:518
-msgid "No archive page"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:527
-msgid "Redirects are created in the Redirection Manager as 301 (permanent) redirects and only apply to broken internal links found during a scan. Post types without an archive page cannot be enabled."
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:574
-msgid "Are you sure you want to reset smart redirect records?"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:590
-msgid "Please select a Post Type from the filter dropdown first."
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:593
-msgid "Reset Smart Redirect records for the selected post type?"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:608
-msgid "Delete smart record and linked redirect?"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:763
-msgid "Smart Redirect Records"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:764
-msgid "Review, filter, reset, enable/disable, or delete generated Smart Redirect records."
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:770
-msgid "Manage All Redirects"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:779
-msgid "All Post Types"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:788
-msgid "All Statuses"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:789
-#: admin/class-seo-repair-kit-upgrade-pro.php:152
-msgid "Active"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:790
-#: admin/class-seo-repair-kit-upgrade-pro.php:155
-msgid "Inactive"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:809
-msgid "Delete all Smart Redirect records (and linked Redirection records). The next scan can rebuild them."
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:812
-msgid "Reset All Smart Records"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:818
-msgid "Delete Smart Redirect records (and linked Redirection records) only for the currently selected Post Type filter."
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:821
-msgid "Reset This Post Type"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:828
-msgid "Post Type"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:830
-msgid "Redirects To"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:833
-msgid "Created"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:854
-msgid "Turn this Smart Redirect on/off. When disabled, this redirect will not run on the front-end."
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:857
-msgid "Enable / Disable"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:864
-msgid "Delete this Smart Redirect record and its linked Redirection record. This will stop redirecting immediately."
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:876
-msgid "No smart redirect records found for this filter."
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:887
-#, php-format
-msgid "Showing all %d smart redirect records"
-msgstr ""
-
-#: admin/class-seo-repair-kit-smart-redirects.php:891
-#, php-format
-msgid "Showing %1$d to %2$d of %3$d smart redirect records"
 msgstr ""
 
 #: admin/class-seo-repair-kit-upgrade-pro.php:87
@@ -3765,6 +3190,14 @@ msgstr ""
 #: admin/class-seo-repair-kit-upgrade-pro.php:152
 #, php-format
 msgid "Active · %d day(s) left"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:152
+msgid "Active"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:155
+msgid "Inactive"
 msgstr ""
 
 #: admin/class-seo-repair-kit-upgrade-pro.php:160
@@ -4211,6 +3644,10 @@ msgstr ""
 
 #: admin/class-seo-repair-kit-weekly-summary.php:1174
 msgid "All rights reserved."
+msgstr ""
+
+#: admin/class-seo-repair-kit-weekly-summary.php:1193
+msgid "Not scheduled"
 msgstr ""
 
 #: admin/class-seo-repair-kit-weekly-summary.php:1194
@@ -5262,23 +4699,23 @@ msgstr ""
 msgid "Ticket"
 msgstr ""
 
-#: includes/class-seo-repair-kit-activator.php:391
+#: includes/class-seo-repair-kit-activator.php:328
 msgid "SEO Repair Kit Installation Notification"
 msgstr ""
 
-#: includes/class-seo-repair-kit-activator.php:394
+#: includes/class-seo-repair-kit-activator.php:331
 msgid "Hello TorontoDigits, a new website has activated your plugin. Please find the details below:"
 msgstr ""
 
-#: includes/class-seo-repair-kit-activator.php:395
+#: includes/class-seo-repair-kit-activator.php:332
 msgid "Website Title:"
 msgstr ""
 
-#: includes/class-seo-repair-kit-activator.php:396
+#: includes/class-seo-repair-kit-activator.php:333
 msgid "Website URL:"
 msgstr ""
 
-#: includes/class-seo-repair-kit-activator.php:397
+#: includes/class-seo-repair-kit-activator.php:334
 msgid "Admin Email:"
 msgstr ""
 
@@ -5296,6 +4733,14 @@ msgstr ""
 
 #: includes/class-seo-repair-kit-elementor-integration.php:250
 msgid "Override default canonical URL"
+msgstr ""
+
+#: includes/class-seo-repair-kit-elementor-integration.php:263
+msgid "Yes"
+msgstr ""
+
+#: includes/class-seo-repair-kit-elementor-integration.php:264
+msgid "No"
 msgstr ""
 
 #: includes/class-seo-repair-kit-elementor-integration.php:275
@@ -5394,146 +4839,6 @@ msgstr ""
 #: includes/class-seo-repair-kit-gutenberg-integration.php:413
 #: includes/class-seo-repair-kit-meta-ajaxs.php:599
 msgid "Leave empty to use permalink"
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-automation.php:296
-msgid "A scan is already running. Please wait for it to finish."
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-automation.php:355
-#, php-format
-msgid "Scan complete. Broken links found: %d."
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-automation.php:365
-msgid "A scan is already running."
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-automation.php:373
-msgid "Unable to run scan."
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-automation.php:393
-msgid "Scan records reset successfully."
-msgstr ""
-
-#. translators: 1: site name, 2: broken links count
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:53
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:149
-#, php-format
-msgid "Action Needed: %2$d broken links found in %1$s"
-msgstr ""
-
-#. translators: %s: site name
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:59
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:288
-#, php-format
-msgid "All Clear: no broken links found in %s"
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:132
-msgid "Broken Links Detected"
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:135
-msgid "SEO Repair Kit Alert"
-msgstr ""
-
-#. translators: %d: broken links count
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:163
-#, php-format
-msgid "%d Broken Links Found"
-msgstr ""
-
-#. translators: %d: total links checked
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:174
-#, php-format
-msgid "We checked %d links and found some issues that need attention."
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:183
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:313
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:405
-msgid "Internal"
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:187
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:317
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:405
-msgid "External"
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:192
-msgid "Broken Links Found:"
-msgstr ""
-
-#. translators: 1: visible sample count, 2: total broken links count
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:204
-#, php-format
-msgid "Showing %1$d of %2$d broken links."
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:214
-msgid "View complete details and fix these issues."
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:217
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:357
-msgid "Open Dashboard"
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:223
-msgid "You are receiving this because broken links were detected on your website."
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:271
-msgid "All Clear - No Broken Links"
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:274
-msgid "SEO Repair Kit Report"
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:297
-msgid "All Links Working Perfectly!"
-msgstr ""
-
-#. translators: %d: total links checked
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:304
-#, php-format
-msgid "We checked %d links and everything is running smoothly."
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:329
-msgid "Your site is healthy"
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:332
-msgid "We will continue monitoring your links and notify you if any issues are detected."
-msgstr ""
-
-#. translators: %s: next scheduled scan date/time
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:340
-#, php-format
-msgid "Next scheduled scan: %s"
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:354
-msgid "View detailed scan history in your dashboard."
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:363
-msgid "You are receiving this because your site passed the scheduled link scan."
-msgstr ""
-
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:402
-msgid "(Untitled)"
-msgstr ""
-
-#. translators: %s: plugin version
-#: includes/class-seo-repair-kit-link-scanner-email-report.php:487
-#, php-format
-msgid "This is an automated message from SEO Repair Kit v%s"
 msgstr ""
 
 #: includes/class-seo-repair-kit-meta-ajaxs.php:121
@@ -5664,7 +4969,7 @@ msgstr ""
 msgid "Page Not Found"
 msgstr ""
 
-#: includes/class-seo-repair-kit-meta-output.php:740
+#: includes/class-seo-repair-kit-meta-output.php:736
 #, php-format
 msgid "Page %d"
 msgstr ""

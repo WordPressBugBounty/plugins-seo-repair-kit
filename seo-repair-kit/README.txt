@@ -3,10 +3,10 @@ Contributors: torontodigits
 Donate link: https://seorepairkit.com/
 Tags: meta manager, schema markup, 404 monitor, broken link checker, 301 redirection
 Requires at least: 5.0.0
-Tested up to: 6.9.4
+Tested up to: 7.0
 Requires PHP: 7.4.3
-Stable tag: 2.1.7
-Release Date: 29-04-2026
+Stable tag: 2.1.8
+Release Date: 21-05-2026
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,7 @@ The ultimate WordPress plugin for SEO automation - from link fixing to AI-powere
 
 == Description ==
 
-**SEO Repair Kit v2.1.7** by [TorontoDigits](https://www.torontodigits.com) helps WordPress site owners find, monitor, and fix practical SEO issues from one dashboard.
+**SEO Repair Kit v2.1.8** by [TorontoDigits](https://www.torontodigits.com) helps WordPress site owners find, monitor, and fix practical SEO issues from one dashboard.
 
 It combines technical SEO checks, metadata controls, crawling controls, Links Manager, automatic link scanning, 404 monitoring, smart redirects, notification emails, and Search Console insights, so you can improve visibility without relying on multiple plugins.
 
@@ -132,6 +132,10 @@ This makes it ideal for:
 
 == Changelog ==
 
+= 2.1.8 =
+* Tested up to WordPress 7.0
+* Fix: Pagination issue of the 404 Monitor screen in Links Manager.
+
 = 2.1.7 =
 * New: Renamed Link Scanner/Link Scan to **Links Manager**.
 * New: Added Auto Scan with configurable schedules, scan scope, post types, batch limits, timeout, and email alerts.
@@ -230,6 +234,10 @@ This makes it ideal for:
 * Improved error handling and user feedback
 
 == Upgrade Notice ==
+
+= 2.1.8 =
+** Tested up to WordPress 7.0**
+* Fix: Pagination issue of the 404 Monitor screen in Links Manager.
 
 = 2.1.7 =
 **Feature Update:** Link Scanner has been renamed to **Links Manager**. This update adds Auto Scan, Notifications, and Smart Redirects. You can now schedule automatic scans, receive email reports, and automatically create 301 redirects for broken internal singular URLs to their post-type archive pages.
@@ -578,6 +586,9 @@ Alternatively, you can manually upload the plugin:
 3. Activate the plugin through the 'Plugins' menu in WordPress.
 
 == Frequently Asked Questions ==
+
+= Is SEO Repair Kit compatible with WordPress 7.0? =
+Yes. SEO Repair Kit has been tested and optimized for WordPress 7.0 compatibility, including the latest editor, admin UI improvements, and modern WordPress APIs.
 
 = What is Links Manager? =
 Links Manager is the central area for managing link health inside SEO Repair Kit. It helps you scan links, monitor 404 errors, schedule automatic scans, receive notification reports, and manage Smart Redirects.

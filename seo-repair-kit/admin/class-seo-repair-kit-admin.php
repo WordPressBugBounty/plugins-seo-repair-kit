@@ -411,6 +411,16 @@ class SeoRepairKit_Admin {
        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-gutenberg-integration.php';
        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-elementor-integration.php';
        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php';
+       
+    //    require_once plugin_dir_path( __FILE__ ) . 'includes/class-seo-repair-kit-smart-redirect-helper.php';
+    //     require_once plugin_dir_path( __FILE__ ) . 'includes/class-seo-repair-kit-smart-redirect-generator.php';
+    //     require_once plugin_dir_path( __FILE__ ) . 'includes/class-seo-repair-kit-smart-redirect-runtime.php';
+
+    //     new SeoRepairKit_SmartRedirect_Runtime();
+
+        // require_once plugin_dir_path( __FILE__ ) . 'includes/class-seo-repair-kit-smart-redirect-runtime.php';
+
+        // new SeoRepairKit_SmartRedirect_Runtime();
 
        // Initialize integrations
        new SRK_Post_Meta_Handler();

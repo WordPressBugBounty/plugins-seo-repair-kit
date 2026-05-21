@@ -73,7 +73,7 @@ if ( ! class_exists( 'Seo_Repair_Kit_Schema_Integration' ) ) {
 			return;
 		}
 
-		echo '<script type="application/ld+json">' . $encoded . '</script>';
+		echo '<script type="application/ld+json">' . wp_kses( $encoded, array() ) . '</script>';
 
 		/**
 		 * Action fired immediately after SRK prints a JSON-LD script tag.

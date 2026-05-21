@@ -441,7 +441,7 @@ class SeoRepairKit_SmartRedirects {
 						printf(
 							/* translators: %d = created count */
 							esc_html__( '%d record(s) created.', 'seo-repair-kit' ),
-							$created
+							esc_html( (string) $created )
 						);
 						?>
 					</p>

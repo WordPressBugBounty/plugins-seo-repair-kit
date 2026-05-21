@@ -34,11 +34,7 @@
         if (currentTab === '404-monitor' || window.location.hash === '#404-monitor') {
             // Check if filter parameters exist
             const hasFilterParams = urlParams.has('srk_filter_url') || 
-                                   urlParams.has('srk_filter_ip') || 
-                                   urlParams.has('srk_orderby') || 
-                                   urlParams.has('srk_order') ||
-                                   urlParams.has('srk_404_paged') ||
-                                   urlParams.has('srk_404_per_page');
+                                   urlParams.has('srk_filter_ip');
             
             // Check if form was submitted (has srk_filter_submitted parameter)
             const formSubmitted = urlParams.has('srk_filter_submitted');

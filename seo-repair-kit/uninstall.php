@@ -12,7 +12,7 @@
  *
  * @link       https://seorepairkit.com
  * @since      1.0.1
- * @version    2.1.7
+ * @version    2.1.8
  * @package    Seo_Repair_Kit
  */
 
@@ -145,7 +145,6 @@ $tables_to_drop = array(
 	$wpdb->prefix . 'srkit_plugin_settings',
 	$wpdb->prefix . 'srk_link_scan_runs',
 	$wpdb->prefix . 'srk_link_scan_alerts',
-	$wpdb->prefix . 'srkit_smart_redirects',
 );
 
 foreach ( $tables_to_drop as $table_name ) {

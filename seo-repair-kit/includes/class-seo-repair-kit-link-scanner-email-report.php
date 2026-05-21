@@ -143,7 +143,7 @@ class SeoRepairKit_LinkScanner_Email_Report {
 							<tr>
 								<td style="padding:34px 32px 30px;">
 									<?php
-									echo self::render_subject_block(
+									self::render_subject_block(
 										sprintf(
 											/* translators: 1: site name, 2: broken links count */
 											__( 'Action Needed: %2$d broken links found in %1$s', 'seo-repair-kit' ),
@@ -220,7 +220,7 @@ class SeoRepairKit_LinkScanner_Email_Report {
 								</td>
 							</tr>
 
-							<?php echo self::render_footer( __( 'You are receiving this because broken links were detected on your website.', 'seo-repair-kit' ) ); ?>
+							<?php self::render_footer( __( 'You are receiving this because broken links were detected on your website.', 'seo-repair-kit' ) ); ?>
 						</table>
 					</td>
 				</tr>
@@ -282,7 +282,7 @@ class SeoRepairKit_LinkScanner_Email_Report {
 							<tr>
 								<td style="padding:34px 32px 30px;">
 									<?php
-									echo self::render_subject_block(
+									self::render_subject_block(
 										sprintf(
 											/* translators: %s: site name */
 											__( 'All Clear: no broken links found in %s', 'seo-repair-kit' ),
@@ -360,7 +360,7 @@ class SeoRepairKit_LinkScanner_Email_Report {
 								</td>
 							</tr>
 
-							<?php echo self::render_footer( __( 'You are receiving this because your site passed the scheduled link scan.', 'seo-repair-kit' ) ); ?>
+							<?php self::render_footer( __( 'You are receiving this because your site passed the scheduled link scan.', 'seo-repair-kit' ) ); ?>
 						</table>
 					</td>
 				</tr>
@@ -376,10 +376,9 @@ class SeoRepairKit_LinkScanner_Email_Report {
 	 * Render subject block.
 	 *
 	 * @param string $subject Subject.
-	 * @return string
+	 * @return void
 	 */
 	private static function render_subject_block( $subject ) {
-		ob_start();
 		?>
 		<div style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#64748b;margin:0 0 12px;">
 			<?php esc_html_e( 'Subject', 'seo-repair-kit' ); ?>
@@ -389,7 +388,6 @@ class SeoRepairKit_LinkScanner_Email_Report {
 		</div>
 		<div style="height:1px;background:#e5e7eb;margin:0 0 28px;"></div>
 		<?php
-		return ob_get_clean();
 	}
 
 	/**
@@ -472,10 +470,9 @@ class SeoRepairKit_LinkScanner_Email_Report {
 	 * Render email footer.
 	 *
 	 * @param string $reason Footer reason.
-	 * @return string
+	 * @return void
 	 */
 	private static function render_footer( $reason ) {
-		ob_start();
 		?>
 		<tr>
 			<td style="background:#f8fafc;border-top:1px solid #e5e7eb;padding:26px 24px;text-align:center;">
@@ -496,7 +493,6 @@ class SeoRepairKit_LinkScanner_Email_Report {
 			</td>
 		</tr>
 		<?php
-		return ob_get_clean();
 	}
 
 	/**

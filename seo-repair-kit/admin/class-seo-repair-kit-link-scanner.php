@@ -304,7 +304,7 @@ class SeoRepairKit_LinkScanner {
 					</button>
 					<button type="button" class="srk-tab-button <?php echo ( 'internal-linking' === $current_tab ) ? 'active' : ''; ?>" data-tab="internal-linking">
 						<span class="dashicons dashicons-networking"></span>
-						<?php esc_html_e( 'Internal Linking (v2.1.8)', 'seo-repair-kit' ); ?>
+						<?php esc_html_e( 'Internal Linking (v2.1.9)', 'seo-repair-kit' ); ?>
 					</button>
 				</nav>
 			</div>
@@ -531,7 +531,7 @@ class SeoRepairKit_LinkScanner {
 	 */
 	private function render_internal_linking_tab() {
 		echo '<div class="srk-card">';
-		echo '<h3>' . esc_html__( 'Internal Linking (Planned v2.1.8)', 'seo-repair-kit' ) . '</h3>';
+		echo '<h3>' . esc_html__( 'Internal Linking (Planned v2.1.9)', 'seo-repair-kit' ) . '</h3>';
 		echo '<p>' . esc_html__( 'This section will include internal link opportunities, orphan content detection, and contextual link recommendations.', 'seo-repair-kit' ) . '</p>';
 		echo '</div>';
 	}

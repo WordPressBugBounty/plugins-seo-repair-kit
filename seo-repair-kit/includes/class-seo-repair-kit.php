@@ -95,6 +95,16 @@ class Seo_Repair_Kit {
 	 */
 	private function srkitload_dependencies() {
 
+		// require_once plugin_dir_path( __FILE__ ) . 'includes/class-seo-repair-kit-smart-redirect-helper.php';
+		// require_once plugin_dir_path( __FILE__ ) . 'includes/class-seo-repair-kit-smart-redirect-generator.php';
+		// require_once plugin_dir_path( __FILE__ ) . 'includes/class-seo-repair-kit-smart-redirect-runtime.php';
+
+		// new SeoRepairKit_SmartRedirect_Runtime();
+
+		// require_once plugin_dir_path( __FILE__ ) . 'includes/class-seo-repair-kit-smart-redirect-runtime.php';
+
+		// new SeoRepairKit_SmartRedirect_Runtime();
+
 		/**
 		 * The class responsible for defining Sitemap Manager functionality
 		 */

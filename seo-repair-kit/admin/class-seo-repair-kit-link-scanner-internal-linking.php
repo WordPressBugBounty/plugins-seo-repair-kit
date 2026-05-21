@@ -17,7 +17,7 @@ class SeoRepairKit_LinkScanner_InternalLinking {
 	 */
 	public function render_tab() {
 		echo '<div class="srk-card">';
-		echo '<h3>' . esc_html__( 'Internal Linking (Planned v2.1.8)', 'seo-repair-kit' ) . '</h3>';
+		echo '<h3>' . esc_html__( 'Internal Linking (Planned v2.1.9)', 'seo-repair-kit' ) . '</h3>';
 		echo '<p>' . esc_html__( 'This section will include internal link opportunities, orphan content detection, and contextual link recommendations.', 'seo-repair-kit' ) . '</p>';
 		echo '</div>';
 	}

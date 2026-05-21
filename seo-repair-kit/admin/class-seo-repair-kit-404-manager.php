@@ -132,7 +132,6 @@ class SeoRepairKit_404_Manager {
             $per_page = intval( $per_page_raw );
             $per_page = max( 10, min( 200, $per_page ) );
             $current_page = isset( $_GET['srk_404_paged'] ) ? max( 1, intval( $_GET['srk_404_paged'] ) ) : 1;
-            $offset = ( $current_page - 1 ) * $per_page;
         }
 
         // Filters
@@ -161,6 +160,8 @@ class SeoRepairKit_404_Manager {
             // Get total count
             $total_items = (int) $this->db_404->get_var( "SELECT COUNT(*) FROM $table_name $where_sql" );
             $total_pages = $show_all ? 1 : ( $per_page > 0 ? ceil( $total_items / $per_page ) : 1 );
+            $current_page = $show_all ? 1 : min( $current_page, max( 1, $total_pages ) );
+            $offset = $show_all ? 0 : ( $current_page - 1 ) * $per_page;
 
             // Validate orderby
             $allowed_orderby = array( 'url', 'count', 'last_accessed', 'first_accessed', 'ip_address' );
@@ -374,28 +375,36 @@ class SeoRepairKit_404_Manager {
                             </div>
                             <div class="srk-pagination-links">
                                 <?php
-                                $pagination_url = admin_url( 'admin.php?page=srk-404-monitor' );
-                                $pagination_url .= ! empty( $filter_url ) ? '&srk_filter_url=' . urlencode( $filter_url ) : '';
-                                $pagination_url .= ! empty( $filter_ip ) ? '&srk_filter_ip=' . urlencode( $filter_ip ) : '';
-                                $pagination_url .= '&srk_orderby=' . urlencode( $orderby );
-                                $pagination_url .= '&srk_order=' . urlencode( $order );
-                                $pagination_url .= '&srk_404_per_page=' . urlencode( $per_page_raw );
+                                $pagination_url = add_query_arg(
+                                    array(
+                                        'page'             => 'srk-404-monitor',
+                                        'srk_filter_url'   => ! empty( $filter_url ) ? $filter_url : null,
+                                        'srk_filter_ip'    => ! empty( $filter_ip ) ? $filter_ip : null,
+                                        'srk_orderby'      => $orderby,
+                                        'srk_order'        => $order,
+                                        'srk_404_per_page' => $per_page_raw,
+                                    ),
+                                    admin_url( 'admin.php' )
+                                );
 
                                 if ( $current_page > 1 ) {
-                                    echo '<a href="' . esc_url( $pagination_url . '&srk_404_paged=' . ( $current_page - 1 ) ) . '" class="button">' . esc_html__( '&laquo; Previous', 'seo-repair-kit' ) . '</a>';
+                                    $prev_url = add_query_arg( 'srk_404_paged', $current_page - 1, $pagination_url );
+                                    echo '<a href="' . esc_url( $prev_url ) . '" class="button">' . esc_html__( '&laquo; Previous', 'seo-repair-kit' ) . '</a>';
                                 }
 
                                 for ( $i = 1; $i <= $total_pages; $i++ ) {
                                     if ( $i === 1 || $i === $total_pages || ( $i >= $current_page - 2 && $i <= $current_page + 2 ) ) {
                                         $class = $i === $current_page ? 'button button-primary' : 'button';
-                                        echo '<a href="' . esc_url( $pagination_url . '&srk_404_paged=' . $i ) . '" class="' . esc_attr( $class ) . '">' . esc_html( $i ) . '</a>';
+                                        $page_url = add_query_arg( 'srk_404_paged', $i, $pagination_url );
+                                        echo '<a href="' . esc_url( $page_url ) . '" class="' . esc_attr( $class ) . '">' . esc_html( $i ) . '</a>';
                                     } elseif ( $i === $current_page - 3 || $i === $current_page + 3 ) {
                                         echo '<span class="dots">...</span>';
                                     }
                                 }
 
                                 if ( $current_page < $total_pages ) {
-                                    echo '<a href="' . esc_url( $pagination_url . '&srk_404_paged=' . ( $current_page + 1 ) ) . '" class="button">' . esc_html__( 'Next &raquo;', 'seo-repair-kit' ) . '</a>';
+                                    $next_url = add_query_arg( 'srk_404_paged', $current_page + 1, $pagination_url );
+                                    echo '<a href="' . esc_url( $next_url ) . '" class="button">' . esc_html__( 'Next &raquo;', 'seo-repair-kit' ) . '</a>';
                                 }
                                 ?>
                             </div>
@@ -407,7 +416,7 @@ class SeoRepairKit_404_Manager {
                                         <option value="50" <?php selected( $per_page_raw, '50' ); ?>>50</option>
                                         <option value="100" <?php selected( $per_page_raw, '100' ); ?>>100</option>
                                         <option value="200" <?php selected( $per_page_raw, '200' ); ?>>200</option>
-                                        <option value="all" <?php selected( $show_all, true ); ?>><?php esc_html_e( 'All', 'seo-repair-kit' ); ?></option>
+                                        <option value="all" <?php selected( $per_page_raw, 'all' ); ?>><?php esc_html_e( 'All', 'seo-repair-kit' ); ?></option>
                                     </select>
                                 </label>
                             </div>
