@@ -20,8 +20,12 @@ class SeoRepairKit_Deactivator {
 	public static function deactivate() {
 
 		// Send status to CRM
-		self::send_status_to_crm( 'deactivated' );	
+		self::send_status_to_crm( 'deactivated' );
 
+		wp_clear_scheduled_hook( 'srk_spam_monitor_scheduled_scan' );
+		wp_clear_scheduled_hook( 'srk_spam_monitor_scheduled_serp_scan' );
+		delete_option( 'srk_spam_monitor_schedule_lock' );
+		delete_option( 'srk_spam_monitor_scan_lock' );
 	}
 
 	/**

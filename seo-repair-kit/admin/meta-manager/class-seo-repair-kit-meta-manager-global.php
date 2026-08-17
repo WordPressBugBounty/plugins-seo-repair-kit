@@ -448,10 +448,10 @@ class SRK_Meta_Manager_Global {
                 </div>
 
 				<div class="srk-submit-section">
-					<button type="button" class="button srk-reset-global-button" style="margin-right: 10px;">
+					<?php submit_button( __( 'Save Changes', 'seo-repair-kit' ), 'primary large', 'submit', false ); ?>
+					<button type="button" class="button srk-reset-global-button">
 						<?php esc_html_e( 'Reset to Defaults', 'seo-repair-kit' ); ?>
 					</button>
-					<?php submit_button( __( 'Save Changes', 'seo-repair-kit' ), 'primary large', 'submit', false ); ?>
 					<div id="srk-status-message" class="srk-status-message"></div>
 				</div>
 			</form>

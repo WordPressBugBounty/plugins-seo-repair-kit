@@ -33,14 +33,27 @@ class SeoRepairKit_ScanLinks {
 
         // Ajax action for getting HTTP status code
         add_action( 'wp_ajax_get_scan_http_status', array( $this, 'srkit_get_scan_http_status_callback' ) );
-        add_action( 'wp_ajax_nopriv_get_scan_http_status', array( $this, 'srkit_get_scan_http_status_callback' ) );
 
     }
 
     // Method to get HTTP status code for a given link
     public function srkit_get_http_status_code( $srkit_link ) {
 
-        $srkit_response = wp_remote_get( $srkit_link, array( 'timeout' => 30 ) );
+        $srkit_link = esc_url_raw( $srkit_link );
+
+        if ( ! $srkit_link || ! wp_http_validate_url( $srkit_link ) ) {
+            return esc_html__( 'Invalid URL', 'seo-repair-kit' );
+        }
+
+        $srkit_response = wp_remote_get(
+            $srkit_link,
+            array(
+                'timeout'     => 30,
+                'redirection' => 5,
+                'sslverify'   => true,
+                'user-agent'  => 'SEO Repair Kit Links Manager/' . ( defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '2.1.9' ) . '; ' . home_url(),
+            )
+        );
         
         if ( is_wp_error( $srkit_response ) ) {
             return esc_html__( 'Error: ', 'seo-repair-kit' ) . $srkit_response->get_error_message();
@@ -53,6 +66,25 @@ class SeoRepairKit_ScanLinks {
 
         // Enqueue Style
         wp_enqueue_style( 'srk-scan-links-style' );
+
+        $scanner_unlimited  = class_exists( 'SRK_License_Helper' ) ? SRK_License_Helper::is_link_scanner_unlimited() : false;
+        $scanner_free_limit = class_exists( 'SRK_License_Helper' ) ? SRK_License_Helper::get_link_scanner_limit() : 100;
+        $allowed_post_types = class_exists( 'SRK_License_Helper' )
+            ? SRK_License_Helper::get_allowed_link_scanner_post_types()
+            : array_values( array_filter( array( 'page' ), 'post_type_exists' ) );
+
+        if ( empty( $allowed_post_types ) ) {
+            echo '<div class="notice notice-error inline"><p>' . esc_html__( 'No scannable post types are available on this site.', 'seo-repair-kit' ) . '</p></div>';
+            return;
+        }
+
+        $requested_post_type = sanitize_key( $this->srkSelectedPostType );
+        if ( ! in_array( $requested_post_type, $allowed_post_types, true ) ) {
+            $requested_post_type = $allowed_post_types[0];
+            $this->srkSelectedPostType = $requested_post_type;
+
+            echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'That post type is not included in the current Link Scanner plan. Scanning the first allowed post type instead.', 'seo-repair-kit' ) . '</p></div>';
+        }
 
         ?>
         <!-- Enqueue JavaScript -->
@@ -123,6 +155,7 @@ class SeoRepairKit_ScanLinks {
         <?php
 
         $srkit_indexed = 0;
+        $srkit_limit_reached = false;
         while ( $srkit_scanposts->have_posts() ) {
             $srkit_scanposts->the_post();
             $srkit_postid = get_the_ID();
@@ -135,6 +168,10 @@ class SeoRepairKit_ScanLinks {
                     $srkit_editlink = get_edit_post_link( $srkit_postid );
                     $srkit_isinternal = $this->is_internal_link( home_url(), $srkit_link );
                     if ( ! empty( $srkit_link ) ) {
+                        if ( ! $scanner_unlimited && $srkit_indexed >= $scanner_free_limit ) {
+                            $srkit_limit_reached = true;
+                            break 2;
+                        }
 
                         // Output table row
                         echo '<tr data-indexed="' . esc_attr( $srkit_indexed ) . '">
@@ -171,6 +208,9 @@ class SeoRepairKit_ScanLinks {
                 </table>
             </div>
         </div>';
+        if ( $srkit_limit_reached ) {
+            echo '<div class="srk-scanner-limit-message"><span class="dashicons dashicons-lock"></span><p>' . esc_html( sprintf( __( 'Free Link Scanner stopped at %d links. Add Unlimited Broken Links + 404 Monitor for £1.49/month to scan all links, Posts, and public custom post types.', 'seo-repair-kit' ), absint( $scanner_free_limit ) ) ) . '</p></div>';
+        }
         echo '<p class="srk-csv-download"><a href="#" id="download-links-csv" class="srk-dashboard-button srk-button-with-icon"><span class="dashicons dashicons-download"></span>' . esc_html__( 'Download CSV', 'seo-repair-kit' ) . '</a></p>';
 
         // Add nonce to the JavaScript
@@ -201,6 +241,10 @@ class SeoRepairKit_ScanLinks {
 
     // Ajax callback to get HTTP status code
     public function srkit_get_scan_http_status_callback() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'Permission denied.', 'seo-repair-kit' ) );
+        }
+
         
         if ( ! isset( $_POST['srk_scan_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['srk_scan_nonce'] ) ), 'scan_http_status_nonce' ) ) {
             wp_die( esc_html__( 'Invalid nonce', 'seo-repair-kit' ) );

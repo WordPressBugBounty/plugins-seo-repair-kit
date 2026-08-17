@@ -41,7 +41,7 @@ class SRK_Review_Schema_Generator {
 	 */
 	public function output_schema() {
 		// ✅ Check if license plan is expired - block schema output if expired
-		if ( class_exists( 'SRK_License_Helper' ) && SRK_License_Helper::is_license_expired() ) {
+		if ( class_exists( 'SRK_License_Helper' ) && ! SRK_License_Helper::is_schema_manager_enabled() ) {
 			return;
 		}
 

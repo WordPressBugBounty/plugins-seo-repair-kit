@@ -102,7 +102,7 @@ if ( ! class_exists( 'Seo_Repair_Kit_Schema_Integration' ) ) {
 	 */
 	public function inject_schema_markup() {
 		// ✅ Check if license plan is expired - block schema output if expired
-		if ( class_exists( 'SRK_License_Helper' ) && SRK_License_Helper::is_license_expired() ) {
+		if ( class_exists( 'SRK_License_Helper' ) && ! SRK_License_Helper::is_schema_manager_enabled() ) {
 			return;
 		}
 
@@ -273,7 +273,7 @@ if ( ! class_exists( 'Seo_Repair_Kit_Schema_Integration' ) ) {
 	 */
 	public function inject_global_schema() {
 		// ✅ Check if license plan is expired - block schema output if expired
-		if ( class_exists( 'SRK_License_Helper' ) && SRK_License_Helper::is_license_expired() ) {
+		if ( class_exists( 'SRK_License_Helper' ) && ! SRK_License_Helper::is_schema_manager_enabled() ) {
 			return;
 		}
 

@@ -186,14 +186,14 @@ jQuery(document).ready(function ($) {
    * Function to download the scanned links in CSV format.
    */
   function downloadLinksCSV() {
-    var csvContent = "data:text/csv;charset=utf-8,";
-    var headers = [];
+    var rows = [];
 
     // Extract headers from table
+    var headers = [];
     $("#scan-table thead th").each(function () {
-      headers.push($(this).text());
+      headers.push(cleanCsvCell($(this).text()));
     });
-    csvContent += "\n" + headers.join(",") + "\n";
+    rows.push(headers);
 
     // Extract data from each row in the table
     $("#scan-table tbody tr").each(function () {
@@ -201,20 +201,47 @@ jQuery(document).ready(function ($) {
       $(this)
         .find("td")
         .each(function () {
-          rowData.push('"' + $(this).text() + '"');
+          rowData.push(cleanCsvCell(getCellExportText($(this))));
         });
-      csvContent += rowData.join(",") + "\n";
+      rows.push(rowData);
     });
 
+    var csvContent = rows
+      .map(function (row) {
+        return row.map(escapeCsvValue).join(",");
+      })
+      .join("\r\n");
+
     // Create a download link and trigger a click event
-    var encodedUri = encodeURI(csvContent);
     var timestamp = new Date().toISOString().replace(/:/g, "-");
     var filename = "links_list_" + timestamp + ".csv";
+    var blob = new Blob(["\ufeff" + csvContent], { type: "text/csv;charset=utf-8;" });
+    var url = window.URL.createObjectURL(blob);
     var link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
+    link.setAttribute("href", url);
     link.setAttribute("download", filename);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  }
+
+  function getCellExportText($cell) {
+    var $clone = $cell.clone();
+    $clone.find("script, style, .dashicons").remove();
+    return $clone.text();
+  }
+
+  function cleanCsvCell(value) {
+    return String(value || "")
+      .replace(/\u00a0/g, " ")
+      .replace(/[\r\n\t]+/g, " ")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+  }
+
+  function escapeCsvValue(value) {
+    var text = cleanCsvCell(value);
+    return '"' + text.replace(/"/g, '""') + '"';
   }
 });

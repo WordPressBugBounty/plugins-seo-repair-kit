@@ -59,12 +59,7 @@ class Seo_Repair_Kit {
 	 * @since    1.0.1
 	 */
 	public function __construct() {
-		
-		if ( defined( 'SEO_REPAIR_KIT_VERSION' ) ) {
-			$this->version = SEO_REPAIR_KIT_VERSION;
-		} else {
-			$this->version = '2.1.3';
-		}
+		$this->version = SEO_REPAIR_KIT_VERSION;
 		$this->seo_repair_kit = 'seo-repair-kit';
 
 		// Check for plugin updates and run migrations

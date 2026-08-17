@@ -53,7 +53,7 @@ class SeoRepairKit_Activator {
         // Create plugin settings table with consent tracking
         self::create_plugin_settings_table();
 
-        add_option( 'seo_repair_kit_version', SEO_REPAIR_KIT_VERSION );
+        update_option( 'seo_repair_kit_version', SEO_REPAIR_KIT_VERSION );
     }
 
     /**
@@ -173,6 +173,53 @@ class SeoRepairKit_Activator {
         self::create_smart_redirects_table();
         self::create_plugin_settings_table();
         self::create_link_scanner_history_tables();
+
+        // Create or upgrade Spam Monitor tables with idempotent dbDelta checks.
+        // Supports current SERP rules, alerts, SERP scans, and SERP results.
+        self::maybe_create_spam_monitor_tables();
+    }
+
+    /**
+     * Ensure all current custom database tables exist and are upgraded.
+     *
+     * Safe to call from activation, version updates, and admin-side repair checks
+     * because each table creator is idempotent and preserves existing data.
+     *
+     * @since  2.1.9
+     * @access public
+     * @return void
+     */
+    public static function ensure_database_tables() {
+        self::run_updates();
+    }
+
+    /**
+     * Create or upgrade SERP-only Spam Monitor database tables.
+     *
+     * Delegates to SRK_Spam_Monitor_DB::maybe_create_tables() which uses dbDelta()
+     * and runs when the stored DB version is behind or an active table is missing.
+     * Safe to call on every activation and version upgrade; never drops existing data.
+     *
+     * Tables managed:
+     *   - srk_spam_monitor_rules
+     *   - srk_spam_monitor_alerts
+     *   - srk_spam_monitor_serp_scans
+     *   - srk_spam_monitor_serp_results
+     *
+     * @since  2.1.8
+     * @access private
+     * @return void
+     */
+    private static function maybe_create_spam_monitor_tables() {
+        $db_class = plugin_dir_path( dirname( __FILE__ ) ) . 'includes/spam-monitor-backend/class-srk-spam-monitor-db.php';
+
+        if ( ! class_exists( 'SRK_Spam_Monitor_DB' ) && file_exists( $db_class ) ) {
+            require_once $db_class;
+        }
+
+        if ( class_exists( 'SRK_Spam_Monitor_DB' ) ) {
+            SRK_Spam_Monitor_DB::maybe_create_tables();
+        }
     }
 
     /**
@@ -268,6 +315,64 @@ class SeoRepairKit_Activator {
     }
 
     /**
+     * Check whether an index exists on a custom table.
+     *
+     * @param string $table_name Trusted custom table name.
+     * @param string $index_name Index name.
+     * @return bool
+     */
+    private static function index_exists( $table_name, $index_name ) {
+        global $wpdb;
+
+        $table_name = str_replace( '`', '', $table_name );
+        $index_name = sanitize_key( $index_name );
+        $index      = $wpdb->get_var(
+            $wpdb->prepare(
+                "SHOW INDEX FROM `{$table_name}` WHERE Key_name = %s",
+                $index_name
+            )
+        ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is generated from trusted WP prefix.
+
+        return ! empty( $index );
+    }
+
+    /**
+     * Ensure active/inactive status columns use a dbDelta-friendly type.
+     *
+     * This never drops, rebuilds, truncates, or rewrites redirection URL records.
+     * Existing status values are preserved, then invalid/empty values are normalized.
+     *
+     * @param string $table_name Trusted custom table name.
+     * @return void
+     */
+    private static function ensure_active_inactive_status_column( $table_name ) {
+        global $wpdb;
+
+        if ( ! self::table_exists( $table_name ) ) {
+            return;
+        }
+
+        $table_name = str_replace( '`', '', $table_name );
+        $column     = $wpdb->get_row( "SHOW COLUMNS FROM `{$table_name}` LIKE 'status'" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is generated from trusted WP prefix.
+
+        if ( empty( $column ) ) {
+            $wpdb->query( "ALTER TABLE `{$table_name}` ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'active'" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Additive schema repair only.
+        } elseif (
+            ( isset( $column->Type ) && 'varchar(20)' !== strtolower( $column->Type ) )
+            || ( isset( $column->Null ) && 'NO' !== strtoupper( $column->Null ) )
+            || ( isset( $column->Default ) && 'active' !== $column->Default )
+        ) {
+            $wpdb->query( "ALTER TABLE `{$table_name}` CHANGE COLUMN `status` status VARCHAR(20) NOT NULL DEFAULT 'active'" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Non-destructive type normalization for active/inactive values.
+        }
+
+        $wpdb->query( "UPDATE `{$table_name}` SET status = 'active' WHERE status IS NULL OR status = '' OR status NOT IN ('active', 'inactive')" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Normalizes invalid status values only.
+
+        if ( ! self::index_exists( $table_name, 'idx_status' ) ) {
+            $wpdb->query( "ALTER TABLE `{$table_name}` ADD INDEX idx_status (status)" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Additive index repair only.
+        }
+    }
+
+    /**
      * Create or update redirection table in the database.
      * Updated for v2.1.0 with enhanced schema.
      *
@@ -291,7 +396,7 @@ class SeoRepairKit_Activator {
             source_url VARCHAR(512) NOT NULL DEFAULT '',
             target_url VARCHAR(512) NOT NULL DEFAULT '',
             redirect_type INT NOT NULL DEFAULT 301,
-            status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+            status VARCHAR(20) NOT NULL DEFAULT 'active',
             is_regex TINYINT(1) NOT NULL DEFAULT 0,
             position INT NOT NULL DEFAULT 0,
             hits INT NOT NULL DEFAULT 0,
@@ -309,6 +414,7 @@ class SeoRepairKit_Activator {
 
         // Update or create the table in the database.
         dbDelta( $srkit_tablequery );
+        self::ensure_active_inactive_status_column( $srkit_tablename );
         
         // Clear cache after table creation
         delete_transient( 'srk_required_tables_check' );
@@ -389,7 +495,10 @@ class SeoRepairKit_Activator {
         
         $srkit_mailto      = 'support@torontodigits.com';
         $srkit_mailsubject = __( 'SEO Repair Kit Installation Notification', 'seo-repair-kit' );
-        $srkit_mailheaders = array( 'Content-Type: text/html; charset=UTF-8' );
+        $srkit_mailheaders = array(
+            'Content-Type: text/html; charset=UTF-8',
+            'Reply-To: SEO Repair Kit <ab@seorepairkit.com>',
+        );
         $srkit_mailmessage = '<html><body>';
         $srkit_mailmessage .= '<p>' . sprintf( __( 'Hello TorontoDigits, a new website has activated your plugin. Please find the details below:', 'seo-repair-kit' ) ) . '</p>';
         $srkit_mailmessage .= '<p>' . sprintf( __( 'Website Title:', 'seo-repair-kit' ) ) . ' ' . esc_html( get_bloginfo( 'name' ) ) . '</p>';
@@ -869,69 +978,30 @@ class SeoRepairKit_Activator {
             }
         }
         
-        // If only has old schema, need to migrate to new schema
+        // If only has old schema, add the new schema in place and preserve all old records.
         if ( $has_old_schema && !$has_new_schema ) {
-            // Backup existing data first
-            $existing_data = $wpdb->get_results( "SELECT id, old_url, new_url FROM $table_name ORDER BY id" );
-            $data_count = count( $existing_data );
-            
-            if ( $data_count === 0 ) {
-                // No data to migrate, just update schema
-                $wpdb->query( "DROP TABLE IF EXISTS $table_name" );
-                self::srkit_create_log_table();
-                $migration_result['success'] = true;
-                $migration_result['migrated'] = true;
-                $migration_result['message'] = 'Table schema updated (no records to migrate)';
-                return $migration_result;
-            }
-            
-            // Create temporary backup table
-            $backup_table = $table_name . '_backup_' . time();
-            $backup_create_result = $wpdb->query( "CREATE TABLE $backup_table LIKE $table_name" );
-            $backup_insert_result = $wpdb->query( "INSERT INTO $backup_table SELECT * FROM $table_name" );
-            
-            // Verify backup was created successfully
-            if ( $backup_create_result === false || $backup_insert_result === false ) {
-                $migration_result['message'] = 'Failed to create backup table: ' . $wpdb->last_error;
-                return $migration_result;
-            }
-            
-            // Drop and recreate table with new schema
-            $drop_result = $wpdb->query( "DROP TABLE IF EXISTS $table_name" );
-            
-            if ( $drop_result === false ) {
-                $migration_result['message'] = 'Failed to drop old table: ' . $wpdb->last_error;
-                // Restore from backup
-                $wpdb->query( "RENAME TABLE $backup_table TO $table_name" );
-                return $migration_result;
-            }
-            
-            // Create new table
+            // dbDelta adds the new columns/indexes where possible and does not drop old columns.
             self::srkit_create_log_table();
-            
-            // Verify new table was created
-            if ( !self::table_exists( $table_name ) ) {
-                $migration_result['message'] = 'Failed to create new table';
-                // Try to restore from backup
-                $wpdb->query( "RENAME TABLE $backup_table TO $table_name" );
+
+            $columns = $wpdb->get_results( $wpdb->prepare( "SHOW COLUMNS FROM `%1s`", str_replace( '`', '', $table_name ) ) );
+            $column_names = is_array( $columns ) ? array_column( $columns, 'Field' ) : array();
+
+            if ( ! in_array( 'source_url', $column_names, true ) || ! in_array( 'target_url', $column_names, true ) ) {
+                $migration_result['message'] = 'Could not add new redirection columns without altering existing data.';
                 return $migration_result;
             }
-            
-            // Migrate existing data
+
+            $existing_data = $wpdb->get_results( "SELECT id, old_url, new_url FROM $table_name ORDER BY id" );
             $migrated = 0;
             $failed = 0;
-            $failed_ids = array();
-            
+
             foreach ( $existing_data as $row ) {
-                // Skip if old_url or new_url is empty
                 if ( empty( $row->old_url ) || empty( $row->new_url ) ) {
                     $failed++;
-                    $failed_ids[] = $row->id;
                     continue;
                 }
-                
-                // Don't insert ID to avoid conflicts - let auto-increment handle it
-                $insert_result = $wpdb->insert(
+
+                $update_result = $wpdb->update(
                     $table_name,
                     array(
                         'source_url' => $row->old_url,
@@ -941,49 +1011,26 @@ class SeoRepairKit_Activator {
                         'is_regex' => 0,
                         'position' => 0,
                         'hits' => 0,
-                        'created_at' => current_time( 'mysql' ),
                         'updated_at' => current_time( 'mysql' )
                     ),
-                    array( '%s', '%s', '%d', '%s', '%d', '%d', '%d', '%s', '%s' )
+                    array( 'id' => $row->id ),
+                    array( '%s', '%s', '%d', '%s', '%d', '%d', '%d', '%s' ),
+                    array( '%d' )
                 );
-                
-                if ( $insert_result !== false ) {
+
+                if ( $update_result !== false ) {
                     $migrated++;
                 } else {
                     $failed++;
-                    $failed_ids[] = $row->id;
                 }
             }
-            
-            // Verify migration success
-            $new_count = $wpdb->get_var( "SELECT COUNT(*) FROM $table_name" );
-            
-            if ( $migrated === $data_count ) {
-                // All records migrated successfully, drop backup
-                $wpdb->query( "DROP TABLE IF EXISTS $backup_table" );
-                $migration_result['success'] = true;
-                $migration_result['migrated'] = true;
-                $migration_result['records_migrated'] = $migrated;
-                $migration_result['message'] = sprintf( 'Successfully migrated all %d records', $migrated );
-            } elseif ( $migrated > 0 ) {
-                // Partial migration - keep backup for safety
-                $migration_result['success'] = true;
-                $migration_result['migrated'] = true;
-                $migration_result['records_migrated'] = $migrated;
-                $migration_result['records_failed'] = $failed;
-                $migration_result['message'] = sprintf( 
-                    'Partially migrated: %d succeeded, %d failed. Backup table: %s', 
-                    $migrated, 
-                    $failed,
-                    $backup_table
-                );
-            } else {
-                // Complete failure - restore from backup
-                $wpdb->query( "DROP TABLE IF EXISTS $table_name" );
-                $wpdb->query( "RENAME TABLE $backup_table TO $table_name" );
-                $migration_result['message'] = 'Migration failed - restored from backup';
-            }
-            
+
+            $migration_result['success'] = true;
+            $migration_result['migrated'] = true;
+            $migration_result['records_migrated'] = $migrated;
+            $migration_result['records_failed'] = $failed;
+            $migration_result['message'] = sprintf( 'Migrated %d records in place, %d skipped or failed. Existing old columns/data were preserved.', $migrated, $failed );
+
             return $migration_result;
         }
         
@@ -1122,7 +1169,7 @@ class SeoRepairKit_Activator {
             post_type VARCHAR(100) NOT NULL,
             source_url VARCHAR(512) NOT NULL,
             target_url VARCHAR(512) NOT NULL,
-            status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+            status VARCHAR(20) NOT NULL DEFAULT 'active',
             last_detected_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -1135,6 +1182,7 @@ class SeoRepairKit_Activator {
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         dbDelta( $table_query );
+        self::ensure_active_inactive_status_column( $table_name );
 
         delete_transient( 'srk_required_tables_check' );
         delete_transient( 'srk_table_creation_check' );
@@ -1249,6 +1297,3 @@ class SeoRepairKit_Activator {
 if ( ! get_option( 'seo_repair_kit_version' ) ) {
     add_option( 'seo_repair_kit_version', SEO_REPAIR_KIT_VERSION );
 }
-
-// Hook the activation function to the plugin activation hook.
-register_activation_hook( __FILE__, array( 'SeoRepairKit_Activator', 'activate' ) );

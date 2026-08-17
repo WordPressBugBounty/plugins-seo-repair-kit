@@ -471,10 +471,10 @@ class SRK_Meta_Manager_Advanced {
 
                 <!-- Submit Button -->
                 <div class="srk-submit-section">
+                    <?php submit_button(__('Save Changes', 'seo-repair-kit'), 'primary large', 'submit', false); ?>
                     <button type="button" class="srk-reset-button">
                         <?php esc_html_e('Reset to Defaults', 'seo-repair-kit'); ?>
                     </button>
-                    <?php submit_button(__('Save Changes', 'seo-repair-kit'), 'primary large', 'submit', false); ?>
                 </div>
             </form>
         </div>

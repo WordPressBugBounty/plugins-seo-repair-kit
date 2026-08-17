@@ -11,6 +11,11 @@
  * @since      1.0.1
  * @author     TorontoDigits <support@torontodigits.com>
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 class Seo_Repair_Kit_Public {
 
 	/**

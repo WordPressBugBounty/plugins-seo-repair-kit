@@ -1231,7 +1231,7 @@ class SeoRepairKit_AjaxHandlers {
 	private static function is_license_expired() {
 		// Use the centralized helper if available
 		if ( class_exists( 'SRK_License_Helper' ) ) {
-			return SRK_License_Helper::is_license_expired();
+			return ! SRK_License_Helper::is_schema_manager_enabled();
 		}
 
 		// Fallback to direct check if helper not loaded

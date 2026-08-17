@@ -79,7 +79,7 @@
   padding: 2rem;
 }
 
-/* Schema card header with title and Clear License Cache button */
+/* Schema card header with title and license refresh button */
 .srk-schema-card-header {
   display: flex;
   align-items: flex-start;
@@ -678,7 +678,7 @@
 .button-validate-schema {
   background: var(--srk-primary) !important;
   color: #fff !important;
-  padding: 9px 10px !important;
+  padding: 3px 10px !important;
   border-radius: 5px !important;
   border: none !important;
   font-weight: 700;
@@ -2131,9 +2131,14 @@
   border-radius: 5px !important;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 38px;
+  box-sizing: border-box;
   padding: 11px 11px !important;
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1;
+  text-decoration: none;
   transition: background-color 0.2s, border-color 0.2s;
 }
 
@@ -2149,9 +2154,15 @@
 }
 
 #srk-test-google-rich-results .dashicons {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 16px;
   font-size: 16px;
   width: 16px;
   height: 16px;
+  line-height: 1;
+  margin: 0;
 }
 
 /* Google Test Info Box */

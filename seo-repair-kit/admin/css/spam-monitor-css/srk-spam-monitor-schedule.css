@@ -1,0 +1,208 @@
+.srk-spam-monitor-wrap .srk-sm-schedule-card {
+	margin-top: 16px;
+	padding: 20px;
+	border: 1px solid #e5e7eb;
+	background: #fff;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-card__header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 16px;
+	padding-bottom: 16px;
+	border-bottom: 1px solid #e5e7eb;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-card__header h3 {
+	margin: 3px 0 5px;
+	color: #111827;
+	font-size: 18px;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-card__header p,
+.srk-spam-monitor-wrap .srk-sm-schedule-help p {
+	margin: 0;
+	color: #667085;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-card__eyebrow {
+	color: #0b1d51;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: .08em;
+	text-transform: uppercase;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-grid {
+	display: grid;
+	grid-template-columns: repeat(12, minmax(0, 1fr));
+	gap: 16px;
+	padding: 20px 0;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-field {
+	display: flex;
+	flex-direction: column;
+	grid-column: span 3;
+	gap: 7px;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-field > span,
+.srk-spam-monitor-wrap .srk-sm-schedule-summary span {
+	color: #667085;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-field select,
+.srk-spam-monitor-wrap .srk-sm-schedule-field input[type="time"],
+.srk-spam-monitor-wrap .srk-sm-schedule-field input[type="text"] {
+	width: 100%;
+	min-height: 40px;
+	border-color: #e5e7eb;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-field small {
+	color: #667085;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-field.is-disabled {
+	opacity: .72;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-field.is-disabled small {
+	/* color: #f59e0b; */
+	font-weight: 600;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-field--toggle {
+	flex-direction: row;
+	align-items: center;
+	grid-column: span 6;
+	gap: 12px;
+	padding: 12px;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	background: #f6f7fb;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-field--toggle strong,
+.srk-spam-monitor-wrap .srk-sm-schedule-field--toggle span {
+	display: block;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-field--toggle span {
+	margin-top: 3px;
+	color: #667085;
+	font-size: 12px;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-summary {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 1px;
+	overflow: hidden;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	background: #e5e7eb;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-summary > div {
+	min-width: 0;
+	padding: 12px 14px;
+	background: #fff;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-summary strong,
+.srk-spam-monitor-wrap .srk-sm-schedule-summary a {
+	display: block;
+	overflow: hidden;
+	margin-top: 4px;
+	color: #111827;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+
+.srk-spam-monitor-wrap .srk-sm-schedule-help {
+	display: flex;
+	gap: 9px;
+	margin-top: 14px;
+	padding: 10px 12px;
+	border-radius: 7px;
+	background: #f6f7fb;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-help .dashicons {
+	color: #0b1d51;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-actions {
+	display: flex;
+	gap: 10px;
+	margin-top: 16px;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-notice {
+	margin-bottom: 14px;
+	padding: 11px 14px;
+	border-left: 4px solid #0b1d51;
+	background: #fff;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-notice.is-success { border-color: #10b981; }
+.srk-spam-monitor-wrap .srk-sm-schedule-notice.is-error { border-color: #ef4444; }
+.srk-spam-monitor-wrap .srk-sm-schedule-notice.is-loading { border-color: #f59e0b; }
+
+.srk-spam-monitor-wrap .srk-sm-schedule-compact {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 14px;
+	margin-bottom: 16px;
+	padding: 14px 16px;
+	border: 1px solid #e5e7eb;
+	border-left: 4px solid #0b1d51;
+	border-radius: 8px;
+	background: #fff;
+}
+
+.srk-spam-monitor-wrap .srk-sm-schedule-compact__details {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 18px;
+	color: #667085;
+}
+
+.srk-spam-monitor-wrap .srk-sm-source-badge {
+	display: inline-flex;
+	padding: 4px 8px;
+	border: 1px solid #e5e7eb;
+	border-radius: 999px;
+	background: #f6f7fb;
+	color: #0b1d51;
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: capitalize;
+}
+
+.srk-spam-monitor-wrap .srk-sm-source-badge--scheduled {
+	border-color: #a7f3d0;
+	background: #ecfdf5;
+	color: #047857;
+}
+
+@media (max-width: 1100px) {
+	.srk-spam-monitor-wrap .srk-sm-schedule-field { grid-column: span 6; }
+	.srk-spam-monitor-wrap .srk-sm-schedule-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 782px) {
+	.srk-spam-monitor-wrap .srk-sm-schedule-card__header,
+	.srk-spam-monitor-wrap .srk-sm-schedule-compact { align-items: stretch; flex-direction: column; }
+	.srk-spam-monitor-wrap .srk-sm-schedule-field,
+	.srk-spam-monitor-wrap .srk-sm-schedule-field--toggle { grid-column: 1 / -1; }
+	.srk-spam-monitor-wrap .srk-sm-schedule-summary { grid-template-columns: 1fr; }
+	.srk-spam-monitor-wrap .srk-sm-schedule-actions { flex-direction: column; }
+}

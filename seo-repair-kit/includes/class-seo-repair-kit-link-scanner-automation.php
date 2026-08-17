@@ -158,7 +158,7 @@ class SeoRepairKit_LinkScanner_Automation {
 			'interval'           => 'daily',
 			'link_scope'         => 'both',
 			'scan_coverage'      => 'selected',
-			'post_types'         => array( 'post', 'page' ),
+			'post_types'         => array( 'page' ),
 			'max_posts_per_run'  => 30,
 			'max_links_per_post' => 0,
 			'request_timeout'    => 8,
@@ -213,12 +213,19 @@ class SeoRepairKit_LinkScanner_Automation {
 		$settings['email_enabled']      = empty( $settings['email_enabled'] ) ? 0 : 1;
 		$settings['email_recipients']   = sanitize_text_field( (string) $settings['email_recipients'] );
 
-		if ( 'whole_site' === $settings['scan_coverage'] ) {
+		$scanner_unlimited = class_exists( 'SRK_License_Helper' ) ? SRK_License_Helper::is_link_scanner_unlimited() : false;
+
+		if ( ! $scanner_unlimited && class_exists( 'SRK_License_Helper' ) ) {
+			$settings['scan_coverage'] = 'selected';
+			$settings['post_types']    = SRK_License_Helper::normalize_link_scanner_post_types( $settings['post_types'] );
+		} elseif ( 'whole_site' === $settings['scan_coverage'] ) {
 			$settings['post_types'] = $public_post_types;
 		}
 
 		if ( empty( $settings['post_types'] ) ) {
-			$settings['post_types'] = array( 'post' );
+			$settings['post_types'] = class_exists( 'SRK_License_Helper' )
+				? SRK_License_Helper::get_free_link_scanner_post_types()
+				: array( 'page' );
 		}
 
 		return $settings;
@@ -471,14 +478,27 @@ class SeoRepairKit_LinkScanner_Automation {
 			'request_error' => 0,
 		);
 
+		$scanner_unlimited  = class_exists( 'SRK_License_Helper' ) ? SRK_License_Helper::is_link_scanner_unlimited() : false;
+		$scanner_free_limit = class_exists( 'SRK_License_Helper' ) ? SRK_License_Helper::get_link_scanner_limit() : 100;
+		$limit_reached      = false;
+
 		if ( 'whole_site' === $scan_coverage ) {
 			$post_types = self::get_all_public_post_types();
 		}
 
 		$post_types = array_values( array_filter( array_map( 'sanitize_key', (array) $post_types ) ) );
 
+		if ( class_exists( 'SRK_License_Helper' ) ) {
+			$post_types = SRK_License_Helper::normalize_link_scanner_post_types( $post_types );
+			if ( ! $scanner_unlimited ) {
+				$scan_coverage = 'selected';
+			}
+		}
+
 		if ( empty( $post_types ) ) {
-			$post_types = array( 'post' );
+			$post_types = class_exists( 'SRK_License_Helper' )
+				? SRK_License_Helper::get_free_link_scanner_post_types()
+				: array( 'page' );
 		}
 
 		$chunk_size         = max( 5, min( 1000, absint( $chunk_size ) ) );
@@ -488,6 +508,10 @@ class SeoRepairKit_LinkScanner_Automation {
 		$scan_coverage      = in_array( $scan_coverage, array( 'selected', 'whole_site' ), true ) ? $scan_coverage : 'selected';
 
 		foreach ( $post_types as $post_type ) {
+			if ( $limit_reached ) {
+				break;
+			}
+
 			$last_id = 0;
 
 			if ( ! isset( $breakdown[ $post_type ] ) ) {
@@ -512,6 +536,11 @@ class SeoRepairKit_LinkScanner_Automation {
 					$scanned_posts++;
 
 					foreach ( $links as $link ) {
+						if ( ! $scanner_unlimited && $checked >= $scanner_free_limit ) {
+							$limit_reached = true;
+							break 3;
+						}
+
 						$scope = $this->is_internal_link( $link ) ? 'internal' : 'external';
 
 						if ( 'internal' === $link_scope && 'external' === $scope ) {
@@ -578,6 +607,8 @@ class SeoRepairKit_LinkScanner_Automation {
 			'scope_breakdown' => $scope_breakdown,
 			'error_breakdown' => $error_breakdown,
 			'records'         => $records,
+			'limited'         => $limit_reached ? 1 : 0,
+			'freeLimit'       => $scanner_unlimited ? null : (int) $scanner_free_limit,
 		);
 
 		update_option( self::SNAPSHOT_OPTION, $snapshot, false );

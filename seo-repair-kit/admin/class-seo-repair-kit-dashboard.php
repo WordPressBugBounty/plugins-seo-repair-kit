@@ -26,7 +26,8 @@ class SeoRepairKit_Dashboard {
      * @param string $hook Current admin page hook suffix.
      */
     public function enqueue_styles_and_scripts( $hook ) {
-        if ( empty( $_GET['page'] ) || 'seo-repair-kit-dashboard' !== $_GET['page'] ) {
+        $page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only admin page routing.
+        if ( 'seo-repair-kit-dashboard' !== $page ) {
             return;
         }
 
@@ -36,15 +37,7 @@ class SeoRepairKit_Dashboard {
             'srk-dashboard-status-refresh',
             plugin_dir_url( __FILE__ ) . 'js/srk-dashboard-status-refresh.js',
             array( 'jquery' ),
-            defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '2.1.3',
-            true
-        );
-
-        wp_enqueue_script(
-            'srk-lifetime-deal-countdown',
-            plugin_dir_url( __FILE__ ) . 'js/srk-lifetime-deal-countdown.js',
-            array( 'jquery' ),
-            defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '2.1.3',
+            SEO_REPAIR_KIT_VERSION,
             true
         );
 
@@ -67,77 +60,16 @@ class SeoRepairKit_Dashboard {
             $link_snapshot = array();
         }
 
-        $total_links   = isset( $link_snapshot['totalLinks'] ) ? (int) $link_snapshot['totalLinks'] : 0;
-        $broken_links  = isset( $link_snapshot['brokenLinks'] ) ? (int) $link_snapshot['brokenLinks'] : 0;
-        $working_links = isset( $link_snapshot['workingLinks'] ) ? (int) $link_snapshot['workingLinks'] : max( 0, $total_links - $broken_links );
-        $last_scan_ts  = isset( $link_snapshot['timestamp'] ) ? (int) $link_snapshot['timestamp'] : 0;
-        $scan_count    = isset( $link_snapshot['scannedCount'] ) ? (int) $link_snapshot['scannedCount'] : 0;
-
-        $now              = current_time( 'timestamp' );
-        $last_scan_label  = $last_scan_ts ? sprintf( esc_html__( 'Last scan %s ago', 'seo-repair-kit' ), human_time_diff( $last_scan_ts, $now ) ) : esc_html__( 'No scans yet', 'seo-repair-kit' );
-
-		// Automation / schedule.
-		$links_schedule = get_option( 'srk_links_schedule', 'manual' );
-
-        // Check if KeyTrack is enabled via option OR if there are active configurations
-        $keytrack_option_enabled = (bool) get_option( 'srk_keytrack_enabled', false );
-        $keytrack_has_configs = false;
-        
-        // Check if KeyTrack has configurations in the database
-        global $wpdb;
-        $keytrack_config_count = $wpdb->get_var(
-            "SELECT COUNT(*) FROM {$wpdb->prefix}srkit_keytrack_settings"
-        );
-        $keytrack_has_configs = ( $keytrack_config_count > 0 );
-        
-        $keytrack_enabled = $keytrack_option_enabled || $keytrack_has_configs;
-        
-        // Count how many schema types are actually configured and assigned.
-        // Use cached value to avoid expensive database query on every page load.
-        $cache_key = 'srk_schema_count';
-        $schema_count = get_transient( $cache_key );
-        
-        if ( false === $schema_count ) {
-            // Cache miss - query database and cache result for 5 minutes
-            global $wpdb;
-            $schema_options = $wpdb->get_results(
-                $wpdb->prepare(
-                    "SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE %s",
-                    'srk_schema_assignment_%'
-                ),
-                OBJECT
-            );
-            
-            $schema_count = 0;
-            foreach ( $schema_options as $option ) {
-                $schema_data = maybe_unserialize( $option->option_value );
-                // Count if it's a valid array structure (has schema_type) - this means it's configured.
-                // Some schemas might have minimal or empty meta_map but still be valid.
-                if ( is_array( $schema_data ) && ! empty( $schema_data['schema_type'] ) ) {
-                    $schema_count++;
-                }
-            }
-            
-            // Cache for 5 minutes to improve performance
-            set_transient( $cache_key, $schema_count, 5 * MINUTE_IN_SECONDS );
-        }
+        $broken_links     = isset( $link_snapshot['brokenLinks'] ) ? absint( $link_snapshot['brokenLinks'] ) : 0;
+        $link_scan_completed = ! empty( $link_snapshot ) && ( isset( $link_snapshot['timestamp'] ) || isset( $link_snapshot['scannedCount'] ) || isset( $link_snapshot['totalLinks'] ) );
+        $keytrack_enabled = $this->is_keytrack_enabled();
+        $schema_count     = $this->get_schema_count();
 
         // Additional feature flags for widgets.
         $alt_scan_enabled      = (bool) get_option( 'srk_alt_scan_enabled', false );
 		$redirection_enabled   = (bool) get_option( 'srk_redirection_enabled', false );
-        $alt_missing_count     = null;
-
-        // Always fetch the current number of images missing alt text dynamically
-        // using the same data source as the weekly summary service.
-        if ( class_exists( 'SeoRepairKit_WeeklySummaryService' ) ) {
-            $weekly_service = SeoRepairKit_WeeklySummaryService::get_instance();
-            if ( method_exists( $weekly_service, 'srk_get_alt_text_data' ) ) {
-                $alt_stats = $weekly_service->srk_get_alt_text_data();
-                if ( is_array( $alt_stats ) && isset( $alt_stats['missing_count'] ) ) {
-                    $alt_missing_count = (int) $alt_stats['missing_count'];
-                }
-            }
-        }
+        $alt_missing_count     = $this->get_alt_missing_count();
+		$spam_monitor_status    = $this->get_spam_monitor_status();
 		$onboarding_setup      = get_option( 'srk_setup', array() );
 		$onboarding_completed  = ! empty( $onboarding_setup['completed'] );
 
@@ -160,6 +92,7 @@ class SeoRepairKit_Dashboard {
         $monitor_404_url   = admin_url( 'admin.php?page=seo-repair-kit-link-scanner' );
         $alt_text_url      = admin_url( 'admin.php?page=alt-image-missing' );
         $sitemap_manager_url  = admin_url( 'admin.php?page=seo-repair-kit-sitemap-manager' );
+		$spam_monitor_url   = admin_url( 'admin.php?page=seo-repair-kit-spam-monitor' );
 		$upgrade_url       = admin_url( 'admin.php?page=seo-repair-kit-upgrade-pro' );
 		
 		// Build subscribe URL for direct upgrade (same as Upgrade Now button)
@@ -182,7 +115,9 @@ class SeoRepairKit_Dashboard {
             $redirection_enabled,
             $onboarding_completed,
             $license_active,
-            $alt_missing_count
+            $alt_missing_count,
+			$spam_monitor_status,
+            $link_scan_completed
         );
 
         // Count issues by severity
@@ -271,24 +206,52 @@ class SeoRepairKit_Dashboard {
 					<div class="srk-summary-grid">
 						<!-- Your Plan Widget -->
 						<div class="srk-summary-card srk-summary-plan <?php echo $license_active ? 'srk-plan-card-pro' : 'srk-plan-card-free'; ?>">
-							<h4 class="srk-summary-title"><?php esc_html_e( 'Your Plan', 'seo-repair-kit' ); ?></h4>
-
-							<div class="srk-plan-row">
-								<div class="srk-plan-info">
+							<div class="srk-plan-card-head">
+								<div class="srk-plan-card-icon">
+									<span class="dashicons <?php echo $license_active ? 'dashicons-awards' : 'dashicons-lock'; ?>"></span>
+								</div>
+								<div>
+									<h4 class="srk-summary-title"><?php esc_html_e( 'Your Plan', 'seo-repair-kit' ); ?></h4>
 									<div class="srk-plan-pill <?php echo $license_active ? 'srk-plan-pill-pro' : 'srk-plan-pill-free'; ?>">
 										<span class="srk-plan-dot"></span>
 										<span><?php echo esc_html( $plan_label ); ?></span>
 									</div>
-									<p class="srk-summary-text">
-										<?php echo esc_html( $plan_status ); ?>
-									</p>
 								</div>
 							</div>
 
-							<ul class="srk-summary-list">
-								<li><?php esc_html_e( 'Health check for links, schema, and redirects.', 'seo-repair-kit' ); ?></li>
-								<li><?php esc_html_e( 'One place to launch all SEO Repair Kit tools.', 'seo-repair-kit' ); ?></li>
-							</ul>
+							<p class="srk-summary-text srk-plan-summary-text">
+								<?php
+								echo $license_active
+									? esc_html__( 'Your Pro modules are active for this site.', 'seo-repair-kit' )
+									: esc_html__( 'Free tools are ready. Upgrade to unlock paid SEO Repair Kit modules.', 'seo-repair-kit' );
+								?>
+							</p>
+
+							<div class="srk-plan-feature-groups">
+								<div class="srk-plan-feature-group">
+									<span class="srk-plan-feature-label"><?php esc_html_e( 'Free tools', 'seo-repair-kit' ); ?></span>
+									<div class="srk-plan-chip-row">
+										<span><?php esc_html_e( 'KeyTrack', 'seo-repair-kit' ); ?></span>
+										<span><?php esc_html_e( 'Meta Manager', 'seo-repair-kit' ); ?></span>
+										<span><?php esc_html_e( '404 Monitor', 'seo-repair-kit' ); ?></span>
+										<span><?php esc_html_e( 'Redirections', 'seo-repair-kit' ); ?></span>
+										<span><?php esc_html_e( 'Bot Manager', 'seo-repair-kit' ); ?></span>
+										<span><?php esc_html_e( 'Image Alt Missing', 'seo-repair-kit' ); ?></span>
+										<span><?php esc_html_e( 'Sitemap Manager', 'seo-repair-kit' ); ?></span>
+										<span><?php esc_html_e( 'Settings', 'seo-repair-kit' ); ?></span>
+										<span><?php esc_html_e( 'Get Support', 'seo-repair-kit' ); ?></span>
+									</div>
+								</div>
+								<div class="srk-plan-feature-group">
+									<span class="srk-plan-feature-label"><?php esc_html_e( 'Pro modules', 'seo-repair-kit' ); ?></span>
+									<div class="srk-plan-chip-row srk-plan-chip-row-pro">
+										<span><?php esc_html_e( 'Links Manager', 'seo-repair-kit' ); ?></span>
+										<span><?php esc_html_e( 'Spam Monitor', 'seo-repair-kit' ); ?></span>
+										<span><?php esc_html_e( 'Schema Manager', 'seo-repair-kit' ); ?></span>
+										<span><?php esc_html_e( 'AI Chatbot', 'seo-repair-kit' ); ?></span>
+									</div>
+								</div>
+							</div>
 
 							<div class="srk-summary-footer">
 								<a href="<?php echo esc_url( $upgrade_url ); ?>" class="srk-btn-xs">
@@ -305,74 +268,13 @@ class SeoRepairKit_Dashboard {
 
                 <!-- Sidebar (Right) -->
                 <div class="srk-dashboard-sidebar">
-                    <!-- Lifetime Deal Banner -->
-                    <div class="srk-lifetime-deal-banner">
-                        <div class="srk-lifetime-deal-content">
-                            <div class="srk-lifetime-deal-badge">
-                                <span class="dashicons dashicons-awards"></span>
-                                <span class="srk-lifetime-deal-label"><?php esc_html_e( 'Lifetime Deal', 'seo-repair-kit' ); ?></span>
-                            </div>
-                            <h4 class="srk-lifetime-deal-title"><?php esc_html_e( 'Get Lifetime Access', 'seo-repair-kit' ); ?></h4>
-                            <p class="srk-lifetime-deal-description">
-                                <?php esc_html_e( 'Pay once, use forever! Get all Pro features with lifetime updates and support.', 'seo-repair-kit' ); ?>
-                            </p>
-                            <!-- Countdown Timer -->
-                            <div class="srk-lifetime-deal-countdown">
-                                <div class="srk-countdown-label">
-                                    <span class="dashicons dashicons-clock"></span>
-                                    <span><?php esc_html_e( 'Limited Time Offer', 'seo-repair-kit' ); ?></span>
-                                </div>
-                                <div class="srk-countdown-timer" data-days="15" data-hours="0" data-minutes="0" data-seconds="0">
-                                    <div class="srk-countdown-item">
-                                        <span class="srk-countdown-value" id="srk-countdown-days">15</span>
-                                        <span class="srk-countdown-label-unit"><?php esc_html_e( 'Days', 'seo-repair-kit' ); ?></span>
-                                    </div>
-                                    <span class="srk-countdown-separator">:</span>
-                                    <div class="srk-countdown-item">
-                                        <span class="srk-countdown-value" id="srk-countdown-hours">00</span>
-                                        <span class="srk-countdown-label-unit"><?php esc_html_e( 'Hours', 'seo-repair-kit' ); ?></span>
-                                    </div>
-                                    <span class="srk-countdown-separator">:</span>
-                                    <div class="srk-countdown-item">
-                                        <span class="srk-countdown-value" id="srk-countdown-minutes">00</span>
-                                        <span class="srk-countdown-label-unit"><?php esc_html_e( 'Minutes', 'seo-repair-kit' ); ?></span>
-                                    </div>
-                                    <span class="srk-countdown-separator">:</span>
-                                    <div class="srk-countdown-item">
-                                        <span class="srk-countdown-value" id="srk-countdown-seconds">00</span>
-                                        <span class="srk-countdown-label-unit"><?php esc_html_e( 'Seconds', 'seo-repair-kit' ); ?></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="srk-lifetime-deal-pricing">
-                                <div class="srk-lifetime-deal-price-wrapper">
-                                    <span class="srk-lifetime-deal-price-icon">
-                                        <span class="dashicons dashicons-money-alt"></span>
-                                    </span>
-                                    <span class="srk-lifetime-deal-price"><?php esc_html_e( 'Starting from $199', 'seo-repair-kit' ); ?></span>
-                                </div>
-                                <span class="srk-lifetime-deal-savings"><?php esc_html_e( 'Save 67% vs Annual', 'seo-repair-kit' ); ?></span>
-                                <div class="srk-lifetime-deal-no-renewal">
-                                    <span class="dashicons dashicons-yes-alt"></span>
-                                    <span><?php esc_html_e( 'One Time Payment - NO Renewal', 'seo-repair-kit' ); ?></span>
-                                </div>
-                            </div>
-                            <a href="<?php echo esc_url( $subscribe_url ); ?>" target="_blank" rel="noopener noreferrer" class="srk-lifetime-deal-button">
-                                <span class="srk-lifetime-deal-button-icon">
-                                    <span class="dashicons dashicons-cart"></span>
-                                </span>
-                                <span><?php esc_html_e( 'Claim Lifetime Deal', 'seo-repair-kit' ); ?></span>
-                                <span class="dashicons dashicons-arrow-right-alt"></span>
-                            </a>
-                        </div>
-                    </div>
-
                     <!-- Key Tools Section (reordered quick access) -->
                     <div class="srk-sidebar-card">
                         <h4 class="srk-sidebar-title"><?php esc_html_e( 'Key Tools', 'seo-repair-kit' ); ?></h4>
                         <div class="srk-plugin-grid">
                             <!-- Links Manager -->
-                            <a href="<?php echo esc_url( $link_scanner_url ); ?>" class="srk-plugin-item srk-tool-link-scanner">
+                            <a href="<?php echo esc_url( $link_scanner_url ); ?>" class="srk-plugin-item srk-tool-link-scanner srk-plugin-item-pro">
+                                <span class="srk-pro-pill"><?php esc_html_e( 'Pro', 'seo-repair-kit' ); ?></span>
                                 <div class="srk-plugin-icon">
                                     <span class="dashicons dashicons-admin-links"></span>
                                 </div>
@@ -381,21 +283,41 @@ class SeoRepairKit_Dashboard {
                                     <p><?php esc_html_e( 'Scan your site for broken links and fix them fast.', 'seo-repair-kit' ); ?></p>
                                 </div>
                             </a>
-                            <!-- KeyTrack (now available in free version) -->
-                            <a href="<?php echo esc_url( $keytrack_url ); ?>" class="srk-plugin-item srk-tool-keytrack">
+                            <!-- Spam Monitor -->
+                            <a href="<?php echo esc_url( $spam_monitor_url ); ?>" class="srk-plugin-item srk-tool-spam-monitor srk-plugin-item-pro">
+                                <span class="srk-pro-pill"><?php esc_html_e( 'Pro', 'seo-repair-kit' ); ?></span>
                                 <div class="srk-plugin-icon">
-                                    <span class="dashicons dashicons-chart-line"></span>
+                                    <span class="dashicons dashicons-shield-alt"></span>
                                 </div>
                                 <div class="srk-plugin-info">
-                                    <h5><?php esc_html_e( 'KeyTrack', 'seo-repair-kit' ); ?></h5>
-                                    <p><?php esc_html_e( 'Monitor keyword rankings and search performance.', 'seo-repair-kit' ); ?></p>
+                                    <h5><?php esc_html_e( 'Spam Monitor', 'seo-repair-kit' ); ?></h5>
+                                    <p>
+                                        <?php
+                                        if ( empty( $spam_monitor_status['available'] ) ) {
+                                            esc_html_e( 'Spam Monitor services are currently unavailable.', 'seo-repair-kit' );
+                                        } elseif ( empty( $spam_monitor_status['total_scans'] ) ) {
+                                            esc_html_e( 'Run your first Google indexed-spam scan.', 'seo-repair-kit' );
+                                        } elseif ( ! empty( $spam_monitor_status['risky_results'] ) ) {
+                                            printf(
+                                                /* translators: 1: number of scans, 2: number of risky results. */
+                                            esc_html__( '%1$d scans completed; %2$d flagged results in saved history.', 'seo-repair-kit' ),
+                                                absint( $spam_monitor_status['total_scans'] ),
+                                                absint( $spam_monitor_status['risky_results'] )
+                                            );
+                                        } else {
+                                            printf(
+                                                /* translators: %d: number of completed scans. */
+                                                esc_html( _n( '%d scan completed with no risky results.', '%d scans completed with no risky results.', absint( $spam_monitor_status['total_scans'] ), 'seo-repair-kit' ) ),
+                                                absint( $spam_monitor_status['total_scans'] )
+                                            );
+                                        }
+                                        ?>
+                                    </p>
                                 </div>
                             </a>
                             <!-- Schema Manager -->
-                            <a href="<?php echo esc_url( $schema_url ); ?>" class="srk-plugin-item srk-tool-schema <?php echo ! $license_active ? 'srk-plugin-item-pro' : ''; ?>">
-                                <?php if ( ! $license_active ) : ?>
-                                    <span class="srk-pro-pill"><?php esc_html_e( 'Pro', 'seo-repair-kit' ); ?></span>
-                                <?php endif; ?>
+                            <a href="<?php echo esc_url( $schema_url ); ?>" class="srk-plugin-item srk-tool-schema srk-plugin-item-pro">
+                                <span class="srk-pro-pill"><?php esc_html_e( 'Pro', 'seo-repair-kit' ); ?></span>
                                 <div class="srk-plugin-icon">
                                     <span class="dashicons dashicons-admin-settings"></span>
                                 </div>
@@ -405,16 +327,24 @@ class SeoRepairKit_Dashboard {
                                 </div>
                             </a>
                             <!-- AI Chatbot -->
-                            <a href="<?php echo esc_url( $chatbot_url ); ?>" class="srk-plugin-item srk-tool-chatbot <?php echo ! $license_active ? 'srk-plugin-item-pro' : ''; ?>">
-                                <?php if ( ! $license_active ) : ?>
-                                    <span class="srk-pro-pill"><?php esc_html_e( 'Pro', 'seo-repair-kit' ); ?></span>
-                                <?php endif; ?>
+                            <a href="<?php echo esc_url( $chatbot_url ); ?>" class="srk-plugin-item srk-tool-chatbot srk-plugin-item-pro">
+                                <span class="srk-pro-pill"><?php esc_html_e( 'Pro', 'seo-repair-kit' ); ?></span>
                                 <div class="srk-plugin-icon">
                                     <span class="dashicons dashicons-format-chat"></span>
                                 </div>
                                 <div class="srk-plugin-info">
                                     <h5><?php esc_html_e( 'AI Chatbot', 'seo-repair-kit' ); ?></h5>
                                     <p><?php esc_html_e( 'Get real-time SEO assistance and answers.', 'seo-repair-kit' ); ?></p>
+                                </div>
+                            </a>
+                            <!-- KeyTrack -->
+                            <a href="<?php echo esc_url( $keytrack_url ); ?>" class="srk-plugin-item srk-tool-keytrack">
+                                <div class="srk-plugin-icon">
+                                    <span class="dashicons dashicons-chart-line"></span>
+                                </div>
+                                <div class="srk-plugin-info">
+                                    <h5><?php esc_html_e( 'KeyTrack', 'seo-repair-kit' ); ?></h5>
+                                    <p><?php esc_html_e( 'Monitor keyword rankings and search performance.', 'seo-repair-kit' ); ?></p>
                                 </div>
                             </a>
                             <!-- 404 Monitor -->
@@ -522,70 +452,18 @@ class SeoRepairKit_Dashboard {
             $link_snapshot = array();
         }
 
-        $total_links   = isset( $link_snapshot['totalLinks'] ) ? (int) $link_snapshot['totalLinks'] : 0;
-        $broken_links  = isset( $link_snapshot['brokenLinks'] ) ? (int) $link_snapshot['brokenLinks'] : 0;
-        $working_links = isset( $link_snapshot['workingLinks'] ) ? (int) $link_snapshot['workingLinks'] : max( 0, $total_links - $broken_links );
-
-        $links_schedule = get_option( 'srk_links_schedule', 'manual' );
-
-        // Check if KeyTrack is enabled via option OR if there are active configurations
-        $keytrack_option_enabled = (bool) get_option( 'srk_keytrack_enabled', false );
-        $keytrack_has_configs = false;
-        
-        // Check if KeyTrack has configurations in the database
-        global $wpdb;
-        $keytrack_config_count = $wpdb->get_var(
-            "SELECT COUNT(*) FROM {$wpdb->prefix}srkit_keytrack_settings"
-        );
-        $keytrack_has_configs = ( $keytrack_config_count > 0 );
-        
-        $keytrack_enabled = $keytrack_option_enabled || $keytrack_has_configs;
-        
-        // Count how many schema types are actually configured and assigned.
-        // Use cached value to avoid expensive database query on every page load.
-        $cache_key = 'srk_schema_count';
-        $schema_count = get_transient( $cache_key );
-        
-        if ( false === $schema_count ) {
-            // Cache miss - query database and cache result for 5 minutes
-            global $wpdb;
-            $schema_options = $wpdb->get_results(
-                $wpdb->prepare(
-                    "SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE %s",
-                    'srk_schema_assignment_%'
-                ),
-                OBJECT
-            );
-            
-            $schema_count = 0;
-            foreach ( $schema_options as $option ) {
-                $schema_data = maybe_unserialize( $option->option_value );
-                // Count if it's a valid array structure (has schema_type) - this means it's configured.
-                // Some schemas might have minimal or empty meta_map but still be valid.
-                if ( is_array( $schema_data ) && ! empty( $schema_data['schema_type'] ) ) {
-                    $schema_count++;
-                }
-            }
-            
-            // Cache for 5 minutes to improve performance
-            set_transient( $cache_key, $schema_count, 5 * MINUTE_IN_SECONDS );
-        }
+        $broken_links     = isset( $link_snapshot['brokenLinks'] ) ? absint( $link_snapshot['brokenLinks'] ) : 0;
+        $link_scan_completed = ! empty( $link_snapshot ) && ( isset( $link_snapshot['timestamp'] ) || isset( $link_snapshot['scannedCount'] ) || isset( $link_snapshot['totalLinks'] ) );
+        $keytrack_enabled = $this->is_keytrack_enabled();
+        $schema_count     = $this->get_schema_count();
 
         // Additional feature flags.
         $alt_scan_enabled    = (bool) get_option( 'srk_alt_scan_enabled', false );
         $redirection_enabled = (bool) get_option( 'srk_redirection_enabled', false );
 
         // Always fetch alt text stats dynamically (if the weekly summary service is available).
-        $alt_missing_count = null;
-        if ( class_exists( 'SeoRepairKit_WeeklySummaryService' ) ) {
-            $weekly_service = SeoRepairKit_WeeklySummaryService::get_instance();
-            if ( method_exists( $weekly_service, 'srk_get_alt_text_data' ) ) {
-                $alt_stats = $weekly_service->srk_get_alt_text_data();
-                if ( is_array( $alt_stats ) && isset( $alt_stats['missing_count'] ) ) {
-                    $alt_missing_count = (int) $alt_stats['missing_count'];
-                }
-            }
-        }
+        $alt_missing_count  = $this->get_alt_missing_count();
+        $spam_monitor_status = $this->get_spam_monitor_status();
 
         $onboarding_setup     = get_option( 'srk_setup', array() );
         $onboarding_completed = ! empty( $onboarding_setup['completed'] );
@@ -602,7 +480,9 @@ class SeoRepairKit_Dashboard {
             $redirection_enabled,
             $onboarding_completed,
             $license_active,
-            $alt_missing_count
+            $alt_missing_count,
+            $spam_monitor_status,
+            $link_scan_completed
         );
 
         wp_send_json_success(
@@ -610,6 +490,115 @@ class SeoRepairKit_Dashboard {
                 'issues' => $seo_issues,
             )
         );
+    }
+
+    /**
+     * Determine whether KeyTrack has been enabled or configured.
+     *
+     * @return bool
+     */
+    private function is_keytrack_enabled() {
+        if ( (bool) get_option( 'srk_keytrack_enabled', false ) ) {
+            return true;
+        }
+
+        global $wpdb;
+        $table = $wpdb->prefix . 'srkit_keytrack_settings';
+        $table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Small dashboard availability check.
+        if ( $table !== $table_exists ) {
+            return false;
+        }
+
+        // The table name is generated exclusively from the trusted WordPress prefix.
+        $count = $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        return absint( $count ) > 0;
+    }
+
+    /**
+     * Count configured schema assignments, with a short dashboard cache.
+     *
+     * @return int
+     */
+    private function get_schema_count() {
+        $schema_count = get_transient( 'srk_schema_count' );
+        if ( false !== $schema_count ) {
+            return absint( $schema_count );
+        }
+
+        global $wpdb;
+        $schema_options = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT option_value FROM {$wpdb->options} WHERE option_name LIKE %s",
+                $wpdb->esc_like( 'srk_schema_assignment_' ) . '%'
+            ),
+            OBJECT
+        ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Cached aggregate for dashboard status.
+
+        $schema_count = 0;
+        foreach ( $schema_options as $option ) {
+            $schema_data = maybe_unserialize( $option->option_value );
+            if ( is_array( $schema_data ) && ! empty( $schema_data['schema_type'] ) ) {
+                ++$schema_count;
+            }
+        }
+
+        set_transient( 'srk_schema_count', $schema_count, 5 * MINUTE_IN_SECONDS );
+        return $schema_count;
+    }
+
+    /**
+     * Get the current missing-alt count when the shared reporting service is available.
+     *
+     * @return int|null
+     */
+    private function get_alt_missing_count() {
+        if ( ! class_exists( 'SeoRepairKit_WeeklySummaryService' ) ) {
+            return null;
+        }
+
+        $weekly_service = SeoRepairKit_WeeklySummaryService::get_instance();
+        if ( ! method_exists( $weekly_service, 'srk_get_alt_text_data' ) ) {
+            return null;
+        }
+
+        $alt_stats = $weekly_service->srk_get_alt_text_data();
+        return is_array( $alt_stats ) && isset( $alt_stats['missing_count'] ) ? absint( $alt_stats['missing_count'] ) : null;
+    }
+
+    /**
+     * Read a compact Spam Monitor status from its centralized database service.
+     *
+     * @return array
+     */
+    private function get_spam_monitor_status() {
+        $status = array(
+            'available'       => false,
+            'total_scans'     => 0,
+            'risky_results'   => 0,
+            'cleanup_queue'   => 0,
+            'critical_results'=> 0,
+            'spam_results'    => 0,
+            'suspicious_results' => 0,
+        );
+
+        if ( ! class_exists( 'SRK_Spam_Monitor_DB' ) || ! method_exists( 'SRK_Spam_Monitor_DB', 'get_serp_dashboard_summary' ) ) {
+            return $status;
+        }
+
+        $summary = SRK_Spam_Monitor_DB::get_serp_dashboard_summary( 1 );
+        if ( ! is_array( $summary ) ) {
+            return $status;
+        }
+
+        $status['available']          = true;
+        $status['total_scans']        = absint( $summary['total_scans'] ?? 0 );
+        $status['critical_results']   = absint( $summary['critical_results'] ?? 0 );
+        $status['spam_results']       = absint( $summary['spam_results'] ?? 0 );
+        $status['suspicious_results'] = absint( $summary['suspicious_results'] ?? 0 );
+        $status['risky_results']      = $status['critical_results'] + $status['spam_results'] + $status['suspicious_results'];
+        $status['cleanup_queue']      = absint( $summary['cleanup']['cleanup_queue'] ?? 0 );
+
+        return $status;
     }
 
     /**
@@ -627,10 +616,12 @@ class SeoRepairKit_Dashboard {
      * @param bool     $onboarding_completed Whether guided setup has been completed.
      * @param bool     $license_active      Whether a Pro license is active.
      * @param int|null $alt_missing_count   Number of images currently missing alt text (or null if not calculated).
+     * @param array    $spam_monitor_status Current Spam Monitor scan summary.
+     * @param bool     $link_scan_completed Whether at least one Links Manager scan has completed.
      *
      * @return array[]
      */
-    private function get_seo_issues( $broken_links, $keytrack_enabled, $schema_count, $chatbot_enabled, $alt_scan_enabled, $redirection_enabled, $onboarding_completed, $license_active, $alt_missing_count ) {
+    private function get_seo_issues( $broken_links, $keytrack_enabled, $schema_count, $chatbot_enabled, $alt_scan_enabled, $redirection_enabled, $onboarding_completed, $license_active, $alt_missing_count, $spam_monitor_status, $link_scan_completed ) {
         $issues = array();
         
         $link_scanner_url = admin_url( 'admin.php?page=seo-repair-kit-link-scanner' );
@@ -640,6 +631,7 @@ class SeoRepairKit_Dashboard {
         $redirection_url  = admin_url( 'admin.php?page=seo-repair-kit-redirection' );
         $monitor_404_url  = admin_url( 'admin.php?page=seo-repair-kit-link-scanner' );
         $alt_text_url     = admin_url( 'admin.php?page=alt-image-missing' );
+        $spam_monitor_url = admin_url( 'admin.php?page=seo-repair-kit-spam-monitor' );
         $upgrade_url      = admin_url( 'admin.php?page=seo-repair-kit-upgrade-pro' );
         
         // ──────────────────────────────────────────────────────────────
@@ -657,13 +649,21 @@ class SeoRepairKit_Dashboard {
         }
         
         // Success: No broken links
-        if ( $broken_links === 0 ) {
+        if ( 0 === $broken_links && $link_scan_completed ) {
             $issues[] = array(
                 'status'     => 'success',
                 'label'      => esc_html__( 'Passed', 'seo-repair-kit' ),
                 'message'    => esc_html__( 'No broken links detected. Your internal and external links look healthy.', 'seo-repair-kit' ),
                 'action_text' => '',
                 'action_url' => $link_scanner_url,
+            );
+        } elseif ( 0 === $broken_links ) {
+            $issues[] = array(
+                'status'      => 'suggestion',
+                'label'       => esc_html__( 'Suggestion', 'seo-repair-kit' ),
+                'message'     => esc_html__( 'Run a Links Manager scan to establish the current broken-link status.', 'seo-repair-kit' ),
+                'action_text' => esc_html__( 'Run Link Scan', 'seo-repair-kit' ),
+                'action_url'  => $link_scanner_url,
             );
         }
         
@@ -763,14 +763,23 @@ class SeoRepairKit_Dashboard {
         // ──────────────────────────────────────────────────────────────
         // 404 Monitor & Redirections
         // ──────────────────────────────────────────────────────────────
-        // Always show "Passed" status by default for Redirections
-        $issues[] = array(
-            'status'     => 'success',
-            'label'      => esc_html__( 'Passed', 'seo-repair-kit' ),
-            'message'    => esc_html__( 'Redirections are available. You can convert 404s into SEO-friendly redirects.', 'seo-repair-kit' ),
-            'action_text' => '',
-            'action_url' => $redirection_url,
-        );
+        if ( $redirection_enabled ) {
+            $issues[] = array(
+                'status'      => 'success',
+                'label'       => esc_html__( 'Passed', 'seo-repair-kit' ),
+                'message'     => esc_html__( 'Redirections are enabled and available for SEO-friendly URL recovery.', 'seo-repair-kit' ),
+                'action_text' => '',
+                'action_url'  => $redirection_url,
+            );
+        } else {
+            $issues[] = array(
+                'status'      => 'suggestion',
+                'label'       => esc_html__( 'Suggestion', 'seo-repair-kit' ),
+                'message'     => esc_html__( 'Redirections are not enabled. Review the module before creating redirect rules.', 'seo-repair-kit' ),
+                'action_text' => esc_html__( 'Open Redirections', 'seo-repair-kit' ),
+                'action_url'  => $redirection_url,
+            );
+        }
 
         // 404 Monitor is always available; surface it as a suggestion to review.
         $issues[] = array(
@@ -802,14 +811,75 @@ class SeoRepairKit_Dashboard {
                 'action_text' => esc_html__( 'Help Me Fix', 'seo-repair-kit' ),
                 'action_url'  => $alt_text_url,
             );
-        } else {
-            // Passed: No images missing alt text (or count not available)
+        } elseif ( 0 === $alt_missing_count ) {
+            // Passed: The shared reporting service confirmed no missing alt text.
             $issues[] = array(
                 'status'      => 'success',
                 'label'       => esc_html__( 'Passed', 'seo-repair-kit' ),
                 'message'     => esc_html__( 'No images are currently missing alt text. Your image accessibility looks good.', 'seo-repair-kit' ),
                 'action_text' => '',
                 'action_url'  => $alt_text_url,
+            );
+        } else {
+            $issues[] = array(
+                'status'      => 'suggestion',
+                'label'       => esc_html__( 'Suggestion', 'seo-repair-kit' ),
+                'message'     => esc_html__( 'Run the Image Alt Missing scan to calculate the current image accessibility status.', 'seo-repair-kit' ),
+                'action_text' => esc_html__( 'Run Alt Scan', 'seo-repair-kit' ),
+                'action_url'  => $alt_text_url,
+            );
+        }
+
+        // Read persisted Spam Monitor data only; dashboard loading never starts a remote scan.
+        if ( empty( $spam_monitor_status['available'] ) ) {
+            $issues[] = array(
+                'status'      => 'warning',
+                'label'       => esc_html__( 'Warning', 'seo-repair-kit' ),
+                'message'     => esc_html__( 'Spam Monitor status is unavailable. Open the module to verify its database setup.', 'seo-repair-kit' ),
+                'action_text' => esc_html__( 'Open Spam Monitor', 'seo-repair-kit' ),
+                'action_url'  => $spam_monitor_url,
+            );
+        } elseif ( empty( $spam_monitor_status['total_scans'] ) ) {
+            $issues[] = array(
+                'status'      => 'suggestion',
+                'label'       => esc_html__( 'Suggestion', 'seo-repair-kit' ),
+                'message'     => esc_html__( 'Spam Monitor has no Google SERP scans yet. Run a manual scan before enabling automation.', 'seo-repair-kit' ),
+                'action_text' => esc_html__( 'Run First Scan', 'seo-repair-kit' ),
+                'action_url'  => admin_url( 'admin.php?page=seo-repair-kit-spam-monitor&tab=google-serp-scan' ),
+            );
+        } elseif ( ! empty( $spam_monitor_status['cleanup_queue'] ) ) {
+            $confirmed_risk_count = absint( $spam_monitor_status['cleanup_queue'] );
+            $issues[] = array(
+                'status'      => 'error',
+                'label'       => esc_html__( 'Critical', 'seo-repair-kit' ),
+                'message'     => sprintf(
+                    /* translators: %d: number of spam or critical Google results. */
+                    _n( '%d spam or critical Google result needs review.', '%d spam or critical Google results need review.', $confirmed_risk_count, 'seo-repair-kit' ),
+                    $confirmed_risk_count
+                ),
+                'action_text' => esc_html__( 'Review Results', 'seo-repair-kit' ),
+                'action_url'  => admin_url( 'admin.php?page=seo-repair-kit-spam-monitor&tab=gsc-cleanup' ),
+            );
+        } elseif ( ! empty( $spam_monitor_status['suspicious_results'] ) ) {
+            $suspicious_count = absint( $spam_monitor_status['suspicious_results'] );
+            $issues[] = array(
+                'status'      => 'warning',
+                'label'       => esc_html__( 'Warning', 'seo-repair-kit' ),
+                'message'     => sprintf(
+                    /* translators: %d: number of suspicious Google results. */
+                    _n( '%d suspicious Google result needs review.', '%d suspicious Google results need review.', $suspicious_count, 'seo-repair-kit' ),
+                    $suspicious_count
+                ),
+                'action_text' => esc_html__( 'Review Results', 'seo-repair-kit' ),
+                'action_url'  => $spam_monitor_url,
+            );
+        } else {
+            $issues[] = array(
+                'status'      => 'success',
+                'label'       => esc_html__( 'Passed', 'seo-repair-kit' ),
+                'message'     => esc_html__( 'Spam Monitor has no suspicious, spam, or critical results in its saved scan history.', 'seo-repair-kit' ),
+                'action_text' => '',
+                'action_url'  => $spam_monitor_url,
             );
         }
 

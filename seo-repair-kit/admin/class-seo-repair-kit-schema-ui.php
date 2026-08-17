@@ -287,11 +287,11 @@ class SeoRepairKit_SchemaUI {
 							<h2 class="srk-section-title"><?php esc_html_e( 'Enable Schema Types', 'seo-repair-kit' ); ?></h2>
 							<p class="srk-section-description"><?php esc_html_e( 'Select a schema type and map its fields to your post type.', 'seo-repair-kit' ); ?></p>
 						</div>
-						<form method="post" class="srk-inline-form">
-							<?php wp_nonce_field( 'srk_clear_license_cache', 'srk_cc_nonce' ); ?>
-							<input type="hidden" name="srk_clear_cache" value="1" />
+						<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="srk-inline-form">
+							<?php wp_nonce_field( 'srk_refresh_license_status' ); ?>
+							<input type="hidden" name="action" value="srk_refresh_license_status" />
 							<button type="submit" class="srk-btn srk-btn-secondary">
-								<?php esc_html_e( 'Clear License Cache', 'seo-repair-kit' ); ?>
+								<?php esc_html_e( 'Refresh License Status', 'seo-repair-kit' ); ?>
 							</button>
 						</form>
 					</div>
@@ -459,7 +459,7 @@ class SeoRepairKit_SchemaUI {
 										<!-- ✅ NEW: Google Rich Results Test button -->
 										<a href="https://search.google.com/test/rich-results" target="_blank" id="srk-test-google-rich-results" class="button button-google-test" rel="noopener noreferrer"
 											title="<?php esc_attr_e( 'Test with Google Rich Results Test', 'seo-repair-kit' ); ?>">
-											<span class="dashicons dashicons-google" style="vertical-align: middle; margin-right: 4px;"></span>
+											<span class="dashicons dashicons-google" aria-hidden="true"></span>
 											<?php esc_html_e( 'Test with Google', 'seo-repair-kit' ); ?>
 										</a>
 										

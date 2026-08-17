@@ -152,7 +152,7 @@
    ============================================ */
 .srk-upgrade-grid {
     display: grid;
-    grid-template-columns: 360px 1fr;
+    grid-template-columns: minmax(430px, 460px) 1fr;
     gap: 20px;
     align-items: start;
 }
@@ -234,6 +234,55 @@
 .srk-cta-body {
     padding: 0 22px 20px;
     background: var(--srk-card-ghost);
+}
+
+.srk-plan-table-wrap {
+    overflow-x: auto;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.srk-plan-table {
+    width: 100%;
+    min-width: 410px;
+    border-collapse: collapse;
+    color: #FFFFFF;
+    font-size: 12px;
+}
+
+.srk-plan-table th,
+.srk-plan-table td {
+    padding: 10px 9px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.srk-plan-table th {
+    color: #C7D2FE;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.srk-plan-table td:first-child {
+    font-weight: 700;
+}
+
+.srk-plan-table td:nth-child(2),
+.srk-plan-table th:nth-child(2) {
+    text-align: center;
+}
+
+.srk-plan-table td:nth-child(3),
+.srk-plan-table td:nth-child(4) {
+    color: #FBBF24;
+    font-weight: 700;
+}
+
+.srk-plan-table tr:last-child td {
+    border-bottom: none;
 }
 
 .srk-feature {
@@ -366,6 +415,14 @@
     gap: 8px;
 }
 
+.srk-panel-subtitle {
+    margin: -8px 0 18px 0;
+    color: var(--srk-muted);
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 850px;
+}
+
 /* ============================================
    BENEFITS GRID (Dashboard Key Tools Style)
    ============================================ */
@@ -491,6 +548,105 @@
 
 .srk-benefit-schema:hover .srk-benefit-content h4 {
     color: var(--srk-primary);
+}
+
+/* Spam Monitor - Navy */
+.srk-benefit-spam-monitor {
+    border-left: 3px solid #0B1D51;
+}
+
+.srk-benefit-spam-monitor .srk-benefit-icon {
+    background: linear-gradient(135deg, rgba(11, 29, 81, 0.12), rgba(11, 29, 81, 0.07));
+    border-color: rgba(11, 29, 81, 0.25);
+}
+
+.srk-benefit-spam-monitor .srk-benefit-icon .dashicons {
+    color: #0B1D51;
+}
+
+.srk-benefit-spam-monitor:hover {
+    border-left-color: #0B1D51;
+    background: linear-gradient(135deg, rgba(11, 29, 81, 0.04), rgba(11, 29, 81, 0.02));
+}
+
+.srk-benefit-spam-monitor:hover::before {
+    background: linear-gradient(90deg, transparent, #0B1D51, transparent);
+}
+
+.srk-benefit-spam-monitor:hover .srk-benefit-icon {
+    background: linear-gradient(135deg, rgba(11, 29, 81, 0.18), rgba(11, 29, 81, 0.11));
+    border-color: rgba(11, 29, 81, 0.35);
+    box-shadow: 0 2px 6px rgba(11, 29, 81, 0.18);
+}
+
+.srk-benefit-spam-monitor:hover .srk-benefit-content h4 {
+    color: #0B1D51;
+}
+
+/* Unlimited Broken Links + 404 Monitor - Orange */
+.srk-benefit-link-scanner {
+    border-left: 3px solid #F28500;
+}
+
+.srk-benefit-link-scanner .srk-benefit-icon {
+    background: linear-gradient(135deg, rgba(242, 133, 0, 0.12), rgba(245, 158, 11, 0.08));
+    border-color: rgba(242, 133, 0, 0.25);
+}
+
+.srk-benefit-link-scanner .srk-benefit-icon .dashicons {
+    color: #F28500;
+}
+
+.srk-benefit-link-scanner:hover {
+    border-left-color: #D97706;
+    background: linear-gradient(135deg, rgba(242, 133, 0, 0.04), rgba(245, 158, 11, 0.02));
+}
+
+.srk-benefit-link-scanner:hover::before {
+    background: linear-gradient(90deg, transparent, #F28500, transparent);
+}
+
+.srk-benefit-link-scanner:hover .srk-benefit-icon {
+    background: linear-gradient(135deg, rgba(242, 133, 0, 0.18), rgba(245, 158, 11, 0.12));
+    border-color: rgba(242, 133, 0, 0.35);
+    box-shadow: 0 2px 6px rgba(242, 133, 0, 0.18);
+}
+
+.srk-benefit-link-scanner:hover .srk-benefit-content h4 {
+    color: #D97706;
+}
+
+/* Redirection - Indigo */
+.srk-benefit-redirection {
+    border-left: 3px solid #6366F1;
+}
+
+.srk-benefit-redirection .srk-benefit-icon {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(79, 70, 229, 0.08));
+    border-color: rgba(99, 102, 241, 0.25);
+}
+
+.srk-benefit-redirection .srk-benefit-icon .dashicons {
+    color: #6366F1;
+}
+
+.srk-benefit-redirection:hover {
+    border-left-color: #4F46E5;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.04), rgba(79, 70, 229, 0.02));
+}
+
+.srk-benefit-redirection:hover::before {
+    background: linear-gradient(90deg, transparent, #6366F1, transparent);
+}
+
+.srk-benefit-redirection:hover .srk-benefit-icon {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.18), rgba(79, 70, 229, 0.12));
+    border-color: rgba(99, 102, 241, 0.35);
+    box-shadow: 0 2px 6px rgba(99, 102, 241, 0.18);
+}
+
+.srk-benefit-redirection:hover .srk-benefit-content h4 {
+    color: #4F46E5;
 }
 
 /* AI Chatbot - Teal/Cyan */
@@ -681,6 +837,30 @@
     color: #3B82F6;
 }
 
+.srk-support-email {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 6px;
+    padding: 5px 9px;
+    color: #0B1D51;
+    background: rgba(59, 130, 246, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.22);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+}
+
+.srk-support-email:hover,
+.srk-support-email:focus {
+    color: #FFFFFF;
+    background: #0B1D51;
+    border-color: #0B1D51;
+    outline: none;
+    text-decoration: none;
+}
+
 /* ============================================
    LICENSE STATUS PANEL
    ============================================ */
@@ -756,7 +936,7 @@
 
     .srk-cta-card {
         position: static;
-        max-width: 420px;
+        max-width: 520px;
         margin: 0 auto;
     }
 

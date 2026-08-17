@@ -28,7 +28,7 @@ class SeoRepairKit_Robots_LLMs {
      * @since    2.1.1
      */
     public function __construct() {
-        $this->version = defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '2.1.9';
+        $this->version = SEO_REPAIR_KIT_VERSION;
         
         // Enqueue scripts and styles
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -44,6 +44,9 @@ class SeoRepairKit_Robots_LLMs {
         add_action( 'wp_ajax_srk_save_llms_settings', array( $this, 'ajax_save_llms_settings' ) );
         add_action( 'wp_ajax_srk_reset_llms_options', array( $this, 'ajax_reset_llms_options' ) );
         add_action( 'wp_ajax_srk_get_content_list', array( $this, 'ajax_get_content_list' ) );
+
+        // Serve the virtual /llms.txt file before WordPress canonical redirects run.
+        add_action( 'parse_request', array( $this, 'maybe_serve_llms_txt' ), 0 );
     }
 
     /**
@@ -91,6 +94,112 @@ class SeoRepairKit_Robots_LLMs {
                 ),
             )
         );
+    }
+
+    /**
+     * Serve the virtual /llms.txt file from saved Bot Manager content.
+     *
+     * This avoids relying on rewrite-rule flushing and prevents WordPress from
+     * treating /llms.txt as a missing page that can be canonically redirected.
+     *
+     * @since 2.1.9
+     *
+     * @return void
+     */
+    public function maybe_serve_llms_txt() {
+        if ( ! $this->is_llms_txt_request() ) {
+            return;
+        }
+
+        $content = (string) get_option( 'srk_llms_txt_content', '' );
+
+        if ( '' === trim( $content ) ) {
+            status_header( 404 );
+            nocache_headers();
+            header( 'Content-Type: text/plain; charset=UTF-8' );
+            header( 'X-Content-Type-Options: nosniff' );
+            echo esc_html__( 'LLMs.txt is not available.', 'seo-repair-kit' );
+            exit;
+        }
+
+        $user_agent = isset( $_SERVER['HTTP_USER_AGENT'] )
+            ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) )
+            : '';
+
+        if ( $this->is_llms_user_agent_blocked( $user_agent ) ) {
+            status_header( 403 );
+            nocache_headers();
+            header( 'Content-Type: text/plain; charset=UTF-8' );
+            header( 'X-Content-Type-Options: nosniff' );
+            echo esc_html__( 'Access to llms.txt is blocked for this bot.', 'seo-repair-kit' );
+            exit;
+        }
+
+        status_header( 200 );
+        nocache_headers();
+        header( 'Content-Type: text/plain; charset=UTF-8' );
+        header( 'X-Content-Type-Options: nosniff' );
+        echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Saved with sanitize_textarea_field() and intentionally served as text/plain.
+        exit;
+    }
+
+    /**
+     * Determine whether the current request is for this site's /llms.txt URL.
+     *
+     * @since 2.1.9
+     *
+     * @return bool
+     */
+    private function is_llms_txt_request() {
+        if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+            return false;
+        }
+
+        $request_path = wp_parse_url( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ), PHP_URL_PATH );
+        $home_path    = wp_parse_url( home_url( '/' ), PHP_URL_PATH );
+
+        $request_path = '/' . ltrim( rawurldecode( (string) $request_path ), '/' );
+        $home_path    = '/' . trim( rawurldecode( (string) $home_path ), '/' );
+        $home_path    = '/' === $home_path ? '' : untrailingslashit( $home_path );
+
+        return untrailingslashit( $home_path ) . '/llms.txt' === $request_path;
+    }
+
+    /**
+     * Check whether a known AI bot is blocked from accessing llms.txt.
+     *
+     * Unknown bots and ordinary visitors are allowed by default, matching the
+     * Bot Manager UI description.
+     *
+     * @since 2.1.9
+     *
+     * @param string $user_agent Current request user agent.
+     * @return bool
+     */
+    private function is_llms_user_agent_blocked( $user_agent ) {
+        if ( '' === $user_agent ) {
+            return false;
+        }
+
+        $settings = get_option( 'srk_llms_generator_settings', array() );
+        if ( ! is_array( $settings ) || ! array_key_exists( 'allowed_bots', $settings ) ) {
+            return false;
+        }
+
+        $allowed_bots = is_array( $settings['allowed_bots'] ) ? $settings['allowed_bots'] : array();
+        $popular_bots = $this->get_popular_ai_bots();
+
+        foreach ( $popular_bots as $bot_key => $bot ) {
+            if ( empty( $bot['user_agent'] ) ) {
+                continue;
+            }
+
+            if ( false !== stripos( $user_agent, $bot['user_agent'] ) ) {
+                return ! in_array( $bot_key, $allowed_bots, true );
+            }
+        }
+
+        return false;
     }
 
     /**

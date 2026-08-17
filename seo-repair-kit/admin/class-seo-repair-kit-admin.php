@@ -33,6 +33,7 @@ class SeoRepairKit_Admin {
 	private $version;
     private $cached_license_info = null;
 	private $crm_endpoint;
+    private $spam_monitor;
     // Live key for production
     private $crm_app_key = 'base64:S/1nezDK+azLBl1Mo5vvTYX0HieBnG5fJn6H9/r0ZrI=';
 
@@ -47,6 +48,7 @@ class SeoRepairKit_Admin {
 
 		add_action( 'admin_notices', array( $this, 'display_seo_repair_kit_notice' ) );
         add_action( 'admin_post_srkit_update_settings', array( $this, 'handle_update_settings' ) );
+        add_action( 'admin_post_srk_refresh_license_status', array( $this, 'handle_refresh_license_status' ) );
 		add_action( 'admin_menu', array( $this, 'seo_repair_kit_menu_page' ) );
 		add_filter( 'admin_footer_text', array( $this, 'powered_by_torontodigits' ) );
 
@@ -129,7 +131,7 @@ class SeoRepairKit_Admin {
                 'srk-setup-onboarding',
                 plugin_dir_url( __FILE__ ) . 'css/srk-setup-onboarding.css',
                 array(),
-                defined('SEO_REPAIR_KIT_VERSION') ? SEO_REPAIR_KIT_VERSION : '2.1.3'
+                SEO_REPAIR_KIT_VERSION
             );
 
             // Post types list for the “Your Site” step
@@ -144,7 +146,7 @@ class SeoRepairKit_Admin {
                 'srk-setup-onboarding-modal',
                 plugin_dir_url( __FILE__ ) . 'js/srk-setup-onboarding-modal.js',
                 array( 'jquery' ),
-                defined('SEO_REPAIR_KIT_VERSION') ? SEO_REPAIR_KIT_VERSION : '2.1.3',
+                SEO_REPAIR_KIT_VERSION,
                 true
             );
 
@@ -242,7 +244,7 @@ class SeoRepairKit_Admin {
                 ),
                 'adminEmail' => sanitize_email( get_option( 'admin_email' ) ),
                 'saved'     => array(
-                    'postTypes' => get_option( 'td_blc_saved_post_types', array('post') ),
+                    'postTypes' => get_option( 'td_blc_saved_post_types', array( 'page' ) ),
                     'setup'     => get_option( 'srk_setup', array() ),
                 ),
             ) );
@@ -375,6 +377,28 @@ class SeoRepairKit_Admin {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-seo-repair-kit-keytrack.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-seo-repair-kit-alt-text.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-seo-repair-kit-redirection.php';
+        // ── Spam Monitor backend (DB + services + AJAX) ───────────────
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/spam-monitor-backend/class-srk-spam-monitor-db.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/spam-monitor-backend/class-srk-spam-monitor-rules-helper.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/spam-monitor-backend/checks/class-srk-spam-monitor-check-keywords.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/spam-monitor-backend/checks/class-srk-spam-monitor-check-language.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/spam-monitor-backend/checks/class-srk-spam-monitor-check-url-pattern.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/spam-monitor-backend/class-srk-spam-monitor-alerts.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/spam-monitor-backend/class-srk-spam-monitor-alerts-ajax.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/spam-monitor-backend/class-srk-spam-monitor-scan-service.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/spam-monitor-backend/class-srk-spam-monitor-scheduler.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/spam-monitor-backend/class-srk-spam-monitor-schedule-ajax.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/spam-monitor-backend/class-srk-search-console-service.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/spam-monitor-backend/class-srk-spam-monitor-cloud-client.php';
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/spam-monitor-backend/class-srk-spam-monitor-serp-provider.php';
+		// Ensure DB tables exist / are up to date.
+		SRK_Spam_Monitor_DB::maybe_create_tables();
+		// Register alerts AJAX handlers early (needed for admin-ajax.php).
+		new SRK_Spam_Monitor_Alerts_Ajax();
+		$srk_spam_monitor_scheduler = new SRK_Spam_Monitor_Scheduler();
+		new SRK_Spam_Monitor_Schedule_Ajax( $srk_spam_monitor_scheduler );
+		// ── Spam Monitor admin UI ──────────────────────────────────────
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-seo-repair-kit-spam-monitor.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-seo-repair-kit-settings.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-seo-repair-kit-chatbot.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-seo-repair-kit-schema-manager.php';
@@ -411,16 +435,6 @@ class SeoRepairKit_Admin {
        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-gutenberg-integration.php';
        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-elementor-integration.php';
        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php';
-       
-    //    require_once plugin_dir_path( __FILE__ ) . 'includes/class-seo-repair-kit-smart-redirect-helper.php';
-    //     require_once plugin_dir_path( __FILE__ ) . 'includes/class-seo-repair-kit-smart-redirect-generator.php';
-    //     require_once plugin_dir_path( __FILE__ ) . 'includes/class-seo-repair-kit-smart-redirect-runtime.php';
-
-    //     new SeoRepairKit_SmartRedirect_Runtime();
-
-        // require_once plugin_dir_path( __FILE__ ) . 'includes/class-seo-repair-kit-smart-redirect-runtime.php';
-
-        // new SeoRepairKit_SmartRedirect_Runtime();
 
        // Initialize integrations
        new SRK_Post_Meta_Handler();
@@ -430,6 +444,12 @@ class SeoRepairKit_Admin {
            new SRK_Elementor_Integration();
        }
 		SeoRepairKit_AjaxHandlers::register();
+
+        // Spam Monitor should be instantiated early on admin requests so
+		// its AJAX endpoint is registered for admin-ajax.php as well.
+		if ( ! isset( $this->spam_monitor ) ) {
+			$this->spam_monitor = new SeoRepairKit_SpamMonitor();
+		}
 	}
 
 	/**
@@ -460,6 +480,9 @@ class SeoRepairKit_Admin {
                 $p = sanitize_key( $p );
                 if ( in_array( $p, $allowed, true ) ) { $pt[] = $p; }
             }
+        }
+        if ( class_exists( 'SRK_License_Helper' ) ) {
+            $pt = SRK_License_Helper::normalize_link_scanner_post_types( $pt );
         }
         $clean['post_types'] = $pt;
 
@@ -714,8 +737,49 @@ class SeoRepairKit_Admin {
 			add_action('admin_notices', function () {
 				echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'License synced successfully. Schema Manager is now active!', 'seo-repair-kit' ) . '</p></div>';
 			});
-			$this->get_license_status(site_url());
+			if ( class_exists( 'SRK_License_Helper' ) ) {
+				SRK_License_Helper::refresh_license_info();
+			} else {
+				$this->get_license_status(site_url());
+			}
 		}
+	}
+
+	/**
+	 * Force-refresh the CRM license status and redirect back to Upgrade to Pro.
+	 *
+	 * @return void
+	 */
+	public function handle_refresh_license_status() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have sufficient permissions to refresh the license status.', 'seo-repair-kit' ) );
+		}
+
+		check_admin_referer( 'srk_refresh_license_status' );
+
+		if ( ! class_exists( 'SRK_License_Helper' ) ) {
+			$helper_file = plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-srk-license-helper.php';
+			if ( file_exists( $helper_file ) ) {
+				require_once $helper_file;
+			}
+		}
+
+		$result = class_exists( 'SRK_License_Helper' )
+			? SRK_License_Helper::refresh_license_info()
+			: $this->get_license_status( site_url() );
+
+		$refresh_status = ( is_array( $result ) && 'error' !== ( $result['status'] ?? '' ) ) ? 'success' : 'error';
+
+		$redirect_url = wp_get_referer();
+		if ( ! $redirect_url ) {
+			$redirect_url = add_query_arg( 'page', 'seo-repair-kit-upgrade-pro', admin_url( 'admin.php' ) );
+		}
+
+		$redirect_url = remove_query_arg( array( 'srk_license_refresh', 'srk_clear_cache', 'srk_cc_nonce', '_wpnonce' ), $redirect_url );
+		$redirect_url = add_query_arg( 'srk_license_refresh', $refresh_status, $redirect_url );
+
+		wp_safe_redirect( $redirect_url );
+		exit;
 	}
 
 	/**
@@ -783,8 +847,16 @@ class SeoRepairKit_Admin {
 
         // Replaces `_encode($data['data'])` – ensure IDENTICAL encoding to server.
         // If your server signs the raw JSON (no spaces), wp_json_encode matches PHP's json_encode with sane defaults.
-        $payload         = wp_json_encode( $data['data'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
-        $local_signature = hash_hmac( 'sha256', $payload, SRK_SHARED_SECRET );
+        $payload = json_encode( $data['data'] );
+        $key     = defined( 'SRK_API_APP_KEY' ) ? SRK_API_APP_KEY : SRK_SHARED_SECRET;
+        if ( 0 === strpos( $key, 'base64:' ) ) {
+            $decoded = base64_decode( substr( $key, 7 ), true );
+            if ( false !== $decoded ) {
+                $key = $decoded;
+            }
+        }
+
+        $local_signature = hash_hmac( 'sha256', $payload, $key );
 
         if ( hash_equals( (string) $data['signature'], (string) $local_signature ) ) {
             // Save success state for 1 hour.
@@ -961,6 +1033,16 @@ class SeoRepairKit_Admin {
             'all'
         );
 
+        wp_register_style(
+            'srk-spam-monitor-style',
+            plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-spam-monitor.css',
+            array( 'srk-admin-style', 'srk-dashboard-style' ),
+            file_exists( plugin_dir_path( __FILE__ ) . 'css/seo-repair-kit-spam-monitor.css' )
+                ? filemtime( plugin_dir_path( __FILE__ ) . 'css/seo-repair-kit-spam-monitor.css' )
+                : $this->version,
+            'all'
+        );
+
         // Always enqueue base admin CSS.
         wp_enqueue_style( 'srk-admin-style' );
 
@@ -972,6 +1054,13 @@ class SeoRepairKit_Admin {
         // Sitemap Manager page.
         if ( 'seo-repair-kit-sitemap-manager' === $page ) {
             wp_enqueue_style( 'srk-sitemap-manager-style' );
+        }
+
+        // Spam Monitor page.
+        if ( 'seo-repair-kit-spam-monitor' === $page ) {
+            wp_enqueue_style( 'srk-dashboard-style' );
+            wp_enqueue_style( 'srk-spam-monitor-style' );
+            return;
         }
 
         // Links Manager page: load CSS by active tab only.
@@ -1148,6 +1237,7 @@ class SeoRepairKit_Admin {
 			'srk-ai-chatbot',
 			'alt-image-missing',
 			'seo-repair-kit-redirection',
+            'seo-repair-kit-spam-monitor',
 			'seo-repair-kit-settings',
 			'seo-repair-kit-upgrade-pro',
             'seo-repair-kit-meta-manager',
@@ -1227,6 +1317,7 @@ class SeoRepairKit_Admin {
             'seo-repair-kit-settings',
             'seo-repair-kit-upgrade-pro',
             'seo-repair-kit-meta-manager',
+            'seo-repair-kit-spam-monitor',
         );
 
         $is_srk_by_screen =
@@ -1304,6 +1395,16 @@ class SeoRepairKit_Admin {
 			'seo-repair-kit-redirection',
 			array( $srkit_redirection, 'seorepairkit_redirection_page' )
 		);
+
+        $srkit_spam_monitor = $this->spam_monitor;
+        add_submenu_page(
+            'seo-repair-kit-dashboard',
+            esc_html__( 'Spam Monitor', 'seo-repair-kit' ),
+            esc_html__( 'Spam Monitor', 'seo-repair-kit' ),
+            'manage_options',
+            'seo-repair-kit-spam-monitor',
+            array( $srkit_spam_monitor, 'seorepairkit_spam_monitor_page' )
+        );
 
 		/**
 		 * Image Alt Missing page.
@@ -1458,12 +1559,19 @@ class SeoRepairKit_Admin {
 		$seoRepairKitLinkScanner->seorepairkit_link_scanner_page();
 	}
 
+    public function seorepairkit_spam_monitor_page() {
+		$spam_monitor = $this->spam_monitor instanceof SeoRepairKit_SpamMonitor ? $this->spam_monitor : new SeoRepairKit_SpamMonitor();
+		$spam_monitor->seorepairkit_spam_monitor_page();
+	}
+
 	public function get_license_status($domain) {
         if ($this->cached_license_info !== null) return $this->cached_license_info;
 
         $cache_key = 'srk_license_status_' . md5($domain);
         $cached = get_transient($cache_key);
         if ($cached !== false) {
+            $cached = $this->normalize_license_status_payload($cached);
+            set_transient($cache_key, $cached, HOUR_IN_SECONDS);
             $this->cached_license_info = $cached;
             return $cached;
         }
@@ -1494,6 +1602,7 @@ class SeoRepairKit_Admin {
             'expires_at' 			=> $body['data']['expires_at'] ?? null,
             'plan_id' 				=> $body['data']['plan_id'] ?? null,
             'has_chatbot_feature' 	=> $body['data']['has_chatbot_feature'] ?? false,
+            'features'              => ( isset( $body['data']['features'] ) && is_array( $body['data']['features'] ) ) ? $body['data']['features'] : $this->default_feature_map(),
             'license_key' 			=> $body['data']['license_key'] ?? null,
             'message' 				=> $body['data']['active'] ? 'License is active.' : 'License is inactive.',
         ];
@@ -1504,12 +1613,51 @@ class SeoRepairKit_Admin {
     }
 
     /**
+     * Normalize older/raw license cache payloads into the admin screen shape.
+     */
+    private function normalize_license_status_payload($license_info) {
+        if (!is_array($license_info)) {
+            return $this->default_license_response('License is inactive.');
+        }
+
+        if (!isset($license_info['status']) && array_key_exists('active', $license_info)) {
+            $active = !empty($license_info['active']);
+
+            $license_info = [
+                'status'              => $active ? 'active' : 'inactive',
+                'expires_at'          => $license_info['expires_at'] ?? null,
+                'plan_id'             => $license_info['plan_id'] ?? null,
+                'has_chatbot_feature' => !empty($license_info['has_chatbot_feature']),
+                'features'            => isset($license_info['features']) && is_array($license_info['features']) ? $license_info['features'] : $this->default_feature_map(),
+                'license_key'         => $license_info['license_key'] ?? null,
+                'message'             => $active ? 'License is active.' : 'License is inactive.',
+            ];
+        }
+
+        return wp_parse_args(
+            $license_info,
+            [
+                'status'              => 'inactive',
+                'expires_at'          => null,
+                'plan_id'             => null,
+                'has_chatbot_feature' => false,
+                'features'            => $this->default_feature_map(),
+                'license_key'         => null,
+                'message'             => 'License is inactive.',
+            ]
+        );
+    }
+
+    /**
      * Validates the signature using HMAC SHA256.
      */
     private function is_signature_valid($data, $signature) {
         $key = $this->crm_app_key;
         if (strpos($key, 'base64:') === 0) {
-            $key = base64_decode(substr($key, 7));
+            $decoded = base64_decode(substr($key, 7), true);
+            if (false !== $decoded) {
+                $key = $decoded;
+            }
         }
         $calculated = hash_hmac('sha256', json_encode($data), $key);
         return hash_equals($calculated, $signature);
@@ -1524,9 +1672,29 @@ class SeoRepairKit_Admin {
             'expires_at' 			=> null,
             'plan_id' 				=> null,
             'has_chatbot_feature' 	=> false,
+            'features'              => $this->default_feature_map(),
             'license_key' 			=> null,
             'message' 				=> $message,
         ];
+    }
+
+    /**
+     * Free-safe feature defaults when CRM data is unavailable.
+     */
+    private function default_feature_map() {
+        return array(
+            'schema_manager'           => array( 'enabled' => false, 'source' => 'not_purchased' ),
+            'internal_linking'         => array( 'enabled' => false, 'source' => 'not_purchased' ),
+            'spam_monitor'             => array( 'enabled' => false, 'source' => 'not_purchased' ),
+            'link_scanner_unlimited'   => array( 'enabled' => false, 'source' => 'not_purchased' ),
+            'ai_chatbot'               => array( 'enabled' => false, 'source' => 'requires_paid_feature' ),
+            'link_scanner'             => array(
+                'enabled'   => true,
+                'source'    => 'free',
+                'limit'     => 100,
+                'unlimited' => false,
+            ),
+        );
     }
 
 	private function cache_and_return_default(bool $active, string $reason, string $cache_key): array
@@ -1537,6 +1705,7 @@ class SeoRepairKit_Admin {
             'plan_id'              => null,
             'expires_at'           => null,
             'has_chatbot_feature'  => false,
+            'features'             => $this->default_feature_map(),
             'message'              => '[SRK] ' . $reason,
         ];
 

@@ -36,43 +36,47 @@ class SeoRepairKit_Upgrade {
             'seo-repair-kit-upgrade-pro',
             plugin_dir_url(__FILE__) . './css/seo-repair-kit-upgrade-pro.css',
             array(),
-            '2.1.0'
+            '2.1.9'
         );
 
         // ─────────────────────────────────────────────────────────────────────
         // License cache controls (unchanged core behavior)
         // ─────────────────────────────────────────────────────────────────────
         $domain     = site_url();
-        $cache_key  = 'srk_license_status_' . md5( $domain ); // must match Admin class
         $message    = '';
-        $status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '';
+        $status     = isset( $_GET['srk_license_refresh'] ) ? sanitize_key( wp_unslash( $_GET['srk_license_refresh'] ) ) : '';
 
-        if (
-            is_admin() &&
-            current_user_can( 'manage_options' ) &&
-            isset( $_POST['srk_clear_cache'] ) &&
-            $_POST['srk_clear_cache'] === '1'
-        ) {
-            delete_transient( $cache_key );
-
-            if ( false === get_transient( $cache_key ) ) {
-                $message = '✅ License cache cleared successfully.';
-                $status  = 'success';
-            } else {
-                $message = '⚠️ Failed to clear license cache.';
-                $status  = 'error';
-            }
+        if ( 'success' === $status ) {
+            $message = __( 'License status refreshed from CRM successfully.', 'seo-repair-kit' );
+        } elseif ( 'error' === $status ) {
+            $message = __( 'License status could not be refreshed from CRM. Please check connectivity or CRM configuration.', 'seo-repair-kit' );
         }
 
-        // Get license info (unchanged)
-        $srk_admin          = new SeoRepairKit_Admin( '', '' );
-        $license_info       = $srk_admin->get_license_status( $domain );
+        // Get license info through the lightweight shared helper.
+        $license_info       = class_exists( 'SRK_License_Helper' ) ? SRK_License_Helper::get_license_info() : array();
+        $license_info       = is_array( $license_info ) ? $license_info : array();
+        $license_active     = ( 'active' === ( $license_info['status'] ?? '' ) );
+        $license_info       = wp_parse_args(
+            $license_info,
+            array(
+                'status'              => $license_active ? 'active' : 'inactive',
+                'expires_at'          => null,
+                'plan_id'             => null,
+                'has_chatbot_feature' => false,
+                'license_key'         => null,
+                'message'             => $license_active ? 'License is active.' : 'License is inactive.',
+                'last_checked_at'     => null,
+                'cache_expires_at'    => null,
+            )
+        );
         $license_status     = $license_info['status'];
         $expiration         = $license_info['expires_at'];
         $has_chatbot        = ! empty( $license_info['has_chatbot_feature'] );
         $license_message    = $license_info['message'];
         $license_key_masked = $license_info['license_key'] ?? 'N/A';
         $plan_id            = $license_info['plan_id'] ?? 'N/A';
+        $last_checked_at    = $license_info['last_checked_at'] ?? null;
+        $cache_expires_at   = $license_info['cache_expires_at'] ?? null;
 
         $expires_ts         = $expiration ? strtotime( $expiration ) : 0;
         $days_left          = $expires_ts ? $this->srk_days_until( $expires_ts ) : null;
@@ -83,8 +87,8 @@ class SeoRepairKit_Upgrade {
 
         ?>
         <div class="wrap srk-upgrade-wrap">
-            <h1 class="srk-title"><strong><?php esc_html_e( 'Upgrade to Pro', 'seo-repair-kit' ); ?></strong></h1>
-            <p class="srk-subtitle"><?php esc_html_e( 'Unlock powerful features like Schema Manager and the AI SEO Chatbot to supercharge your workflow.', 'seo-repair-kit' ); ?></p>
+            <h1 class="srk-title"><strong><?php esc_html_e( 'Customize Your SEO Repair Kit Plan', 'seo-repair-kit' ); ?></strong></h1>
+            <p class="srk-subtitle"><?php esc_html_e( 'Choose the website plan that fits your SEO workflow.', 'seo-repair-kit' ); ?></p>
 
             <!-- Hero Section (Links Manager Style) -->
             <div class="srk-upgrade-hero">
@@ -93,8 +97,8 @@ class SeoRepairKit_Upgrade {
                         <span class="dashicons dashicons-star-filled"></span>
                     </div>
                     <div class="srk-upgrade-hero-text">
-                        <h1><?php esc_html_e( 'Upgrade to Pro', 'seo-repair-kit' ); ?></h1>
-                        <p><?php esc_html_e( 'Unlock powerful features like Schema Manager, AI SEO Chatbot, and advanced keyword tracking to supercharge your SEO workflow.', 'seo-repair-kit' ); ?></p>
+                        <h1><?php esc_html_e( 'Simple, Flexible SEO Pricing', 'seo-repair-kit' ); ?></h1>
+                        <p><?php esc_html_e( 'Pick a plan by website count, then manage your SEO tools from one plugin.', 'seo-repair-kit' ); ?></p>
                         <div class="srk-upgrade-hero-badge">
                             <span class="dashicons dashicons-awards"></span>
                             <?php esc_html_e( 'PREMIUM FEATURES', 'seo-repair-kit' ); ?>
@@ -157,27 +161,72 @@ class SeoRepairKit_Upgrade {
                     ?>
 
                     <div class="srk-cta-body">
-                        <div class="srk-feature"><i class="dashicons dashicons-yes"></i><span><?php esc_html_e('Unlimited personal websites', 'seo-repair-kit'); ?></span></div>
-                        <div class="srk-feature"><i class="dashicons dashicons-yes"></i><span><?php esc_html_e('Free 15 Content AI credits', 'seo-repair-kit'); ?></span></div>
-                        <div class="srk-feature"><i class="dashicons dashicons-yes"></i><span><?php esc_html_e('Track 500 keywords', 'seo-repair-kit'); ?></span></div>
-                        <div class="srk-feature"><i class="dashicons dashicons-yes"></i><span><?php esc_html_e('Powerful Schema Generator', 'seo-repair-kit'); ?></span></div>
-                        <div class="srk-feature"><i class="dashicons dashicons-yes"></i><span><?php esc_html_e('24/7 Priority Support', 'seo-repair-kit'); ?></span></div>
+                        <div class="srk-plan-table-wrap" aria-label="<?php esc_attr_e( 'SEO Repair Kit plan pricing', 'seo-repair-kit' ); ?>">
+                            <table class="srk-plan-table">
+                                <thead>
+                                    <tr>
+                                        <th><?php esc_html_e( 'Plan', 'seo-repair-kit' ); ?></th>
+                                        <th><?php esc_html_e( 'Websites', 'seo-repair-kit' ); ?></th>
+                                        <th><?php esc_html_e( 'Monthly', 'seo-repair-kit' ); ?></th>
+                                        <th><?php esc_html_e( 'Yearly', 'seo-repair-kit' ); ?></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><?php esc_html_e( 'Individual', 'seo-repair-kit' ); ?></td>
+                                        <td><?php esc_html_e( '1', 'seo-repair-kit' ); ?></td>
+                                        <td><?php esc_html_e( '£7.49/month', 'seo-repair-kit' ); ?></td>
+                                        <td><?php esc_html_e( '£36.99/year', 'seo-repair-kit' ); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td><?php esc_html_e( 'Freelancer', 'seo-repair-kit' ); ?></td>
+                                        <td><?php esc_html_e( '10', 'seo-repair-kit' ); ?></td>
+                                        <td><?php esc_html_e( '£11.49/month', 'seo-repair-kit' ); ?></td>
+                                        <td><?php esc_html_e( '£88.99/year', 'seo-repair-kit' ); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td><?php esc_html_e( 'Studio', 'seo-repair-kit' ); ?></td>
+                                        <td><?php esc_html_e( '25', 'seo-repair-kit' ); ?></td>
+                                        <td><?php esc_html_e( '£22.49/month', 'seo-repair-kit' ); ?></td>
+                                        <td><?php esc_html_e( '£179/year', 'seo-repair-kit' ); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td><?php esc_html_e( 'Agency', 'seo-repair-kit' ); ?></td>
+                                        <td><?php esc_html_e( '100', 'seo-repair-kit' ); ?></td>
+                                        <td><?php esc_html_e( '£44.99/month', 'seo-repair-kit' ); ?></td>
+                                        <td><?php esc_html_e( '£359/year', 'seo-repair-kit' ); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td><?php esc_html_e( 'Enterprise', 'seo-repair-kit' ); ?></td>
+                                        <td><?php esc_html_e( '300', 'seo-repair-kit' ); ?></td>
+                                        <td><?php esc_html_e( '£111.99/month', 'seo-repair-kit' ); ?></td>
+                                        <td><?php esc_html_e( '£899/year', 'seo-repair-kit' ); ?></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="srk-cta-footer">
                         <?php if ( $license_status !== 'active' || ! $has_chatbot || $is_expired ) : ?>
                             <a class="srk-btn srk-btn-primary" target="_blank" href="<?php echo esc_url( $subscribe_url ); ?>">
-                                <?php echo $is_expired ? esc_html__( '🔄 Renew License', 'seo-repair-kit' ) : esc_html__( '⚡ Upgrade Now', 'seo-repair-kit' ); ?>
+                                <?php echo $is_expired ? esc_html__( 'Renew License', 'seo-repair-kit' ) : esc_html__( 'Customize Plan', 'seo-repair-kit' ); ?>
                             </a>
-                            <form method="post">
-                                <input type="hidden" name="srk_clear_cache" value="1" />
-                                <button type="submit" class="srk-btn srk-btn-secondary" aria-label="<?php esc_attr_e('Clear License Cache', 'seo-repair-kit'); ?>">
-                                    <?php esc_html_e( 'Clear License Cache', 'seo-repair-kit' ); ?>
+                            <?php if ( 'active' === $license_status && ! $is_expired ) : ?>
+                                <a class="srk-btn srk-btn-secondary" target="_blank" href="<?php echo esc_url( $subscribe_url ); ?>">
+                                    <?php esc_html_e( 'Customize Your Plan', 'seo-repair-kit' ); ?>
+                                </a>
+                            <?php endif; ?>
+                            <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+                                <?php wp_nonce_field( 'srk_refresh_license_status' ); ?>
+                                <input type="hidden" name="action" value="srk_refresh_license_status" />
+                                <button type="submit" class="srk-btn srk-btn-secondary" aria-label="<?php esc_attr_e('Refresh License Status', 'seo-repair-kit'); ?>">
+                                    <?php esc_html_e( 'Refresh License Status', 'seo-repair-kit' ); ?>
                                 </button>
                             </form>
                             <p class="srk-license-message"><?php echo esc_html( $license_message ); ?></p>
                         <?php else : ?>
-                            <div class="srk-license-active-status">✅ <?php esc_html_e( 'License Active – AI Chatbot Included', 'seo-repair-kit' ); ?></div>
+                            <div class="srk-license-active-status"><?php esc_html_e( 'License Active', 'seo-repair-kit' ); ?></div>
                             <?php if ( $expiration ) : ?>
                                 <p class="srk-license-expiry-info">
                                     <?php esc_html_e( 'Expires on', 'seo-repair-kit' ); ?>:
@@ -187,10 +236,14 @@ class SeoRepairKit_Upgrade {
                                     <?php endif; ?>
                                 </p>
                             <?php endif; ?>
-                            <form method="post">
-                                <input type="hidden" name="srk_clear_cache" value="1" />
+                            <a class="srk-btn srk-btn-primary" target="_blank" href="<?php echo esc_url( $subscribe_url ); ?>">
+                                <?php esc_html_e( 'Customize Your Plan', 'seo-repair-kit' ); ?>
+                            </a>
+                            <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+                                <?php wp_nonce_field( 'srk_refresh_license_status' ); ?>
+                                <input type="hidden" name="action" value="srk_refresh_license_status" />
                                 <button type="submit" class="srk-btn srk-btn-secondary">
-                                    <?php esc_html_e( 'Clear License Cache', 'seo-repair-kit' ); ?>
+                                    <?php esc_html_e( 'Refresh License Status', 'seo-repair-kit' ); ?>
                                 </button>
                             </form>
                             <p class="srk-license-message"><?php echo esc_html( $license_message ); ?></p>
@@ -202,24 +255,43 @@ class SeoRepairKit_Upgrade {
                 <div class="srk-upgrade-content">
                     <!-- Benefits grid -->
                     <div class="srk-panel">
-                        <h2 class="srk-panel-title"><?php esc_html_e('Why Upgrade to Pro?', 'seo-repair-kit'); ?></h2>
+                        <h2 class="srk-panel-title"><?php esc_html_e('Choose the plan that fits your workflow', 'seo-repair-kit'); ?></h2>
+                        <p class="srk-panel-subtitle"><?php esc_html_e('Plans scale by website count, from an individual site to agency and enterprise portfolios.', 'seo-repair-kit'); ?></p>
                         <div class="srk-benefits" role="list">
+                            <div class="srk-benefit srk-benefit-spam-monitor" role="listitem">
+                                <div class="srk-benefit-icon">
+                                    <span class="dashicons dashicons-shield-alt"></span>
+                                </div>
+                                <div class="srk-benefit-content">
+                                    <h4><?php esc_html_e('Spam Monitor', 'seo-repair-kit'); ?></h4>
+                                    <p><?php esc_html_e('Monitor what search engines see, detect suspicious indexed URLs, schedule scans, and connect supported SERP providers when available in your plan.', 'seo-repair-kit'); ?></p>
+                                </div>
+                            </div>
+                            <div class="srk-benefit srk-benefit-link-scanner" role="listitem">
+                                <div class="srk-benefit-icon">
+                                    <span class="dashicons dashicons-admin-links"></span>
+                                </div>
+                                <div class="srk-benefit-content">
+                                    <h4><?php esc_html_e('Unlimited Broken Links + 404 Monitor', 'seo-repair-kit'); ?></h4>
+                                    <p><?php esc_html_e('Find broken links, check internal and external URLs, monitor 404 errors, view source pages, and keep scan history.', 'seo-repair-kit'); ?></p>
+                                </div>
+                            </div>
+                            <div class="srk-benefit srk-benefit-redirection" role="listitem">
+                                <div class="srk-benefit-icon">
+                                    <span class="dashicons dashicons-randomize"></span>
+                                </div>
+                                <div class="srk-benefit-content">
+                                    <h4><?php esc_html_e('Smart Redirects', 'seo-repair-kit'); ?></h4>
+                                    <p><?php esc_html_e('Create and manage redirects to keep changed URLs organized safely inside WordPress.', 'seo-repair-kit'); ?></p>
+                                </div>
+                            </div>
                             <div class="srk-benefit srk-benefit-schema" role="listitem">
                                 <div class="srk-benefit-icon">
                                     <span class="dashicons dashicons-editor-code"></span>
                                 </div>
                                 <div class="srk-benefit-content">
                                     <h4><?php esc_html_e('Schema Manager', 'seo-repair-kit'); ?></h4>
-                                    <p><?php esc_html_e('Generate rich, valid schema for posts, pages, and custom types with a few clicks.', 'seo-repair-kit'); ?></p>
-                                </div>
-                            </div>
-                            <div class="srk-benefit srk-benefit-chatbot" role="listitem">
-                                <div class="srk-benefit-icon">
-                                    <span class="dashicons dashicons-format-chat"></span>
-                                </div>
-                                <div class="srk-benefit-content">
-                                    <h4><?php esc_html_e('AI SEO Chatbot', 'seo-repair-kit'); ?></h4>
-                                    <p><?php esc_html_e('Ask SEO questions in plain English and get actionable guidance, instantly.', 'seo-repair-kit'); ?></p>
+                                    <p><?php esc_html_e('Create, manage, validate, and deploy structured data without manually writing complex Schema markup.', 'seo-repair-kit'); ?></p>
                                 </div>
                             </div>
                             <div class="srk-benefit srk-benefit-keytrack" role="listitem">
@@ -227,26 +299,8 @@ class SeoRepairKit_Upgrade {
                                     <span class="dashicons dashicons-chart-line"></span>
                                 </div>
                                 <div class="srk-benefit-content">
-                                    <h4><?php esc_html_e('Keyword Tracking', 'seo-repair-kit'); ?></h4>
-                                    <p><?php esc_html_e('Monitor up to 500 keywords with trends and quick insights.', 'seo-repair-kit'); ?></p>
-                                </div>
-                            </div>
-                            <div class="srk-benefit srk-benefit-audit" role="listitem">
-                                <div class="srk-benefit-icon">
-                                    <span class="dashicons dashicons-admin-tools"></span>
-                                </div>
-                                <div class="srk-benefit-content">
-                                    <h4><?php esc_html_e('Audit & Fixes', 'seo-repair-kit'); ?></h4>
-                                    <p><?php esc_html_e('Auto-detect critical issues, get step-by-step fixes, and track progress.', 'seo-repair-kit'); ?></p>
-                                </div>
-                            </div>
-                            <div class="srk-benefit srk-benefit-credits" role="listitem">
-                                <div class="srk-benefit-icon">
-                                    <span class="dashicons dashicons-edit"></span>
-                                </div>
-                                <div class="srk-benefit-text">
-                                    <h4><?php esc_html_e('Content Credits', 'seo-repair-kit'); ?></h4>
-                                    <p><?php esc_html_e('Get 15 AI content credits to boost titles, descriptions & FAQs.', 'seo-repair-kit'); ?></p>
+                                    <h4><?php esc_html_e('KeyTrack', 'seo-repair-kit'); ?></h4>
+                                    <p><?php esc_html_e('Review SEO health signals, receive alerts, and keep visibility into issues that need attention.', 'seo-repair-kit'); ?></p>
                                 </div>
                             </div>
                             <div class="srk-benefit srk-benefit-support" role="listitem">
@@ -255,7 +309,10 @@ class SeoRepairKit_Upgrade {
                                 </div>
                                 <div class="srk-benefit-content">
                                     <h4><?php esc_html_e('Priority Support', 'seo-repair-kit'); ?></h4>
-                                    <p><?php esc_html_e('Email us at support@seorepairkit.com for direct access to our support team for fast response.', 'seo-repair-kit'); ?></p>
+                                    <p>
+                                        <?php esc_html_e('Need help choosing the right plan or comparing freelancer and agency packages?', 'seo-repair-kit'); ?>
+                                        <a class="srk-support-email" href="<?php echo esc_url( 'mailto:support@seorepairkit.com' ); ?>">support@seorepairkit.com</a>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -263,7 +320,7 @@ class SeoRepairKit_Upgrade {
 
                     <!-- License panel -->
                     <div class="srk-panel srk-license">
-                        <h2 class="srk-panel-title">🔐 <?php esc_html_e('License Status ( Clear License Cache )', 'seo-repair-kit'); ?></h2>
+                        <h2 class="srk-panel-title"><?php esc_html_e('License Status', 'seo-repair-kit'); ?></h2>
                         <div class="srk-kv">
                             <span class="key"><?php esc_html_e('License Key', 'seo-repair-kit'); ?></span>
                             <span class="val"><?php echo esc_html( $license_key_masked ); ?></span>
@@ -279,6 +336,12 @@ class SeoRepairKit_Upgrade {
 
                             <span class="key"><?php esc_html_e('Chatbot Access', 'seo-repair-kit'); ?></span>
                             <span class="val"><?php echo $has_chatbot ? '' . esc_html__('Enabled','seo-repair-kit') : '' . esc_html__('Not included','seo-repair-kit'); ?></span>
+
+                            <span class="key"><?php esc_html_e('Last Checked', 'seo-repair-kit'); ?></span>
+                            <span class="val"><?php echo esc_html( $last_checked_at ?: __( 'Not checked yet', 'seo-repair-kit' ) ); ?></span>
+
+                            <span class="key"><?php esc_html_e('Cache Expires', 'seo-repair-kit'); ?></span>
+                            <span class="val"><?php echo esc_html( $cache_expires_at ?: __( 'N/A', 'seo-repair-kit' ) ); ?></span>
                         </div>
 
                         <div class="srk-notice">

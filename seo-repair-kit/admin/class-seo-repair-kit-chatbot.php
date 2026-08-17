@@ -12,11 +12,13 @@ class SeoRepairKit_Chatbot {
             wp_die( esc_html__('You do not have permission to view this page.', 'seo-repair-kit') );
         }
 
-        // License check (unchanged)
+        // CRM-backed module check.
         $srk_admin       = new SeoRepairKit_Admin('', '');
         $current_domain  = site_url();
         $license_info    = $srk_admin->get_license_status($current_domain);
-        $is_active_chat  = ($license_info['status'] === 'active' && !empty($license_info['has_chatbot_feature']));
+        $is_active_chat  = class_exists( 'SRK_License_Helper' )
+            ? SRK_License_Helper::is_feature_enabled( SRK_License_Helper::FEATURE_AI_CHATBOT )
+            : ( $license_info['status'] === 'active' && ! empty( $license_info['has_chatbot_feature'] ) );
 
         // Subscribe URL
         $subscribe_url = SRK_API_Client::get_api_url(
@@ -381,7 +383,7 @@ class SeoRepairKit_Chatbot {
                     <div class="srk-chatbot-sidebar-card srk-sidebar-cta">
                         <span class="dashicons dashicons-megaphone"></span>
                         <p><?php esc_html_e('Need help? Our support team is ready to assist you.', 'seo-repair-kit'); ?></p>
-                        <a href="https://seorepairkit.com/support" target="_blank" rel="noopener" class="srk-sidebar-link">
+                        <a href="https://support.seorepairkit.com" target="_blank" rel="noopener" class="srk-sidebar-link">
                             <?php esc_html_e('Contact Support', 'seo-repair-kit'); ?>
                             <span class="dashicons dashicons-external"></span>
                         </a>

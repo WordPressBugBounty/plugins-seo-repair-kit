@@ -2421,8 +2421,16 @@
     border-top: 2px solid #e8eaed;
     text-align: right;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+}
+
+.srk-submit-section .srk-status-message {
+    order: 3;
+    flex: 0 0 100%;
+    margin-top: 12px;
+    text-align: left;
 }
 
 .srk-submit-section .button-primary {

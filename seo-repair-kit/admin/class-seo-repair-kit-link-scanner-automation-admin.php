@@ -35,6 +35,11 @@ class SeoRepairKit_LinkScanner_Automation_Admin {
 
 		$settings          = SeoRepairKit_LinkScanner_Automation::get_settings();
 		$public_post_types = get_post_types( array( 'public' => true ), 'objects' );
+		$scanner_unlimited = class_exists( 'SRK_License_Helper' ) ? SRK_License_Helper::is_link_scanner_unlimited() : false;
+		$scanner_free_limit = class_exists( 'SRK_License_Helper' ) ? SRK_License_Helper::get_link_scanner_limit() : 100;
+		$allowed_post_types = class_exists( 'SRK_License_Helper' )
+			? SRK_License_Helper::get_allowed_link_scanner_post_types()
+			: array_values( array_filter( array( 'page' ), 'post_type_exists' ) );
 		$next_run_ts       = wp_next_scheduled( SeoRepairKit_LinkScanner_Automation::EVENT_HOOK );
 		?>
 		<div class="srk-card">
@@ -42,6 +47,23 @@ class SeoRepairKit_LinkScanner_Automation_Admin {
 				<h3><?php esc_html_e( 'Auto Scan Settings', 'seo-repair-kit' ); ?></h3>
 				<p><?php esc_html_e( 'Configure scheduled link scanning for internal links, external links, or both. Scan selected content types or the whole website, store history, and send email alerts when broken links are found.', 'seo-repair-kit' ); ?></p>
 			</div>
+
+			<?php if ( ! $scanner_unlimited ) : ?>
+				<div class="srk-scanner-access-note">
+					<div class="srk-scanner-access-icon"><span class="dashicons dashicons-lock"></span></div>
+					<div class="srk-scanner-access-copy">
+						<strong><?php esc_html_e( 'Free Auto Scan scope', 'seo-repair-kit' ); ?></strong>
+						<p>
+							<?php
+							printf(
+								esc_html__( 'Free Link Scanner can scan Pages only up to %d links per run. Posts, whole website scans, and public custom post types require the £1.49 unlimited Broken Links + 404 Monitor add-on.', 'seo-repair-kit' ),
+								absint( $scanner_free_limit )
+							);
+							?>
+						</p>
+					</div>
+				</div>
+			<?php endif; ?>
 
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="srk-automation-settings-form">
 				<input type="hidden" name="action" value="srk_save_scan_schedule" />
@@ -88,9 +110,15 @@ class SeoRepairKit_LinkScanner_Automation_Admin {
 						<td>
 							<select name="scan_coverage" id="srk-scan-coverage" class="srk-select">
 								<option value="selected" <?php selected( $settings['scan_coverage'], 'selected' ); ?>><?php esc_html_e( 'Selected Post Types', 'seo-repair-kit' ); ?></option>
-								<option value="whole_site" <?php selected( $settings['scan_coverage'], 'whole_site' ); ?>><?php esc_html_e( 'Whole Website (all public post types)', 'seo-repair-kit' ); ?></option>
+								<option value="whole_site" <?php selected( $settings['scan_coverage'], 'whole_site' ); ?> <?php disabled( ! $scanner_unlimited ); ?>><?php esc_html_e( 'Whole Website (all public post types)', 'seo-repair-kit' ); ?></option>
 							</select>
-							<p class="description"><?php esc_html_e( 'Use Whole Website to automatically include posts, pages, and public custom post types.', 'seo-repair-kit' ); ?></p>
+							<p class="description">
+								<?php
+								echo $scanner_unlimited
+									? esc_html__( 'Use Whole Website to automatically include posts, pages, and public custom post types.', 'seo-repair-kit' )
+									: esc_html__( 'Whole Website coverage is available with the Unlimited Broken Links + 404 Monitor add-on.', 'seo-repair-kit' );
+								?>
+							</p>
 						</td>
 					</tr>
 
@@ -99,9 +127,13 @@ class SeoRepairKit_LinkScanner_Automation_Admin {
 						<td>
 							<div class="srk-checkbox-group">
 								<?php foreach ( $public_post_types as $pt_slug => $pt_obj ) : ?>
-									<label class="srk-checkbox-label">
-										<input type="checkbox" name="post_types[]" value="<?php echo esc_attr( $pt_slug ); ?>" <?php checked( in_array( $pt_slug, (array) $settings['post_types'], true ) ); ?> />
+									<?php $is_allowed = in_array( $pt_slug, $allowed_post_types, true ); ?>
+									<label class="srk-checkbox-label <?php echo $is_allowed ? '' : 'srk-checkbox-label-disabled'; ?>">
+										<input type="checkbox" name="post_types[]" value="<?php echo esc_attr( $pt_slug ); ?>" <?php checked( $is_allowed && in_array( $pt_slug, (array) $settings['post_types'], true ) ); ?> <?php disabled( ! $is_allowed ); ?> />
 										<?php echo esc_html( $pt_obj->labels->name ); ?>
+										<?php if ( ! $is_allowed ) : ?>
+											<span class="srk-plan-lock"><?php esc_html_e( '£1.49 add-on', 'seo-repair-kit' ); ?></span>
+										<?php endif; ?>
 									</label>
 								<?php endforeach; ?>
 							</div>
@@ -348,14 +380,22 @@ class SeoRepairKit_LinkScanner_Automation_Admin {
 			exit;
 		}
 
+		$scan_coverage = isset( $_POST['scan_coverage'] ) ? sanitize_key( wp_unslash( $_POST['scan_coverage'] ) ) : 'selected';
+		$post_types    = isset( $_POST['post_types'] ) ? array_map( 'sanitize_key', (array) wp_unslash( $_POST['post_types'] ) ) : array();
+
+		if ( class_exists( 'SRK_License_Helper' ) && ! SRK_License_Helper::is_link_scanner_unlimited() ) {
+			$scan_coverage = 'selected';
+			$post_types    = SRK_License_Helper::normalize_link_scanner_post_types( $post_types );
+		}
+
 		if ( class_exists( 'SeoRepairKit_LinkScanner_Automation' ) ) {
 			SeoRepairKit_LinkScanner_Automation::save_settings(
 				array(
 					'enabled'            => $enabled,
 					'interval'           => isset( $_POST['interval'] ) ? sanitize_key( wp_unslash( $_POST['interval'] ) ) : 'daily',
 					'link_scope'         => isset( $_POST['link_scope'] ) ? sanitize_key( wp_unslash( $_POST['link_scope'] ) ) : 'both',
-					'scan_coverage'      => isset( $_POST['scan_coverage'] ) ? sanitize_key( wp_unslash( $_POST['scan_coverage'] ) ) : 'selected',
-					'post_types'         => isset( $_POST['post_types'] ) ? array_map( 'sanitize_key', (array) wp_unslash( $_POST['post_types'] ) ) : array(),
+					'scan_coverage'      => $scan_coverage,
+					'post_types'         => $post_types,
 					'max_posts_per_run'  => isset( $_POST['max_posts_per_run'] ) ? absint( wp_unslash( $_POST['max_posts_per_run'] ) ) : 30,
 					'max_links_per_post' => isset( $_POST['max_links_per_post'] ) ? intval( wp_unslash( $_POST['max_links_per_post'] ) ) : 0,
 					'request_timeout'    => isset( $_POST['request_timeout'] ) ? absint( wp_unslash( $_POST['request_timeout'] ) ) : 8,

@@ -16,7 +16,7 @@
  * Plugin Name:       SEO Repair Kit
  * Plugin URI:        https://seorepairkit.com
  * Description:       SEO-friendly AI assistant with meta management, schema management, link repair, keyword tracking, and sitemap control.
- * Version:           2.1.8
+ * Version:           2.1.9
  * Author:            TorontoDigits
  * Author URI:        https://torontodigits.com/
  * License:           GPL-2.0+
@@ -34,23 +34,41 @@ if ( ! defined( 'WPINC' ) ) {
  * Currently plugin version.
  * Start at version 1.0.1 and use SemVer - https://semver.org
  */
-define( 'SEO_REPAIR_KIT_VERSION', '2.1.8' );
+define( 'SEO_REPAIR_KIT_VERSION', '2.1.9' );
+
+/**
+ * Define the base URL for SRK Intelligence Cloud.
+ *
+ * Production users do not edit this in the dashboard. Developers can override
+ * it from wp-config.php before the plugin loads.
+ */
+if ( ! defined( 'SRK_CLOUD_API_BASE_URL' ) ) {
+	define( 'SRK_CLOUD_API_BASE_URL', 'https://cloud.seorepairkit.com' );
+}
 
 /**
  * Secret Key
- * To change the key, you only need to update this line.
+ *
+ * Developers can override these constants in wp-config.php before WordPress
+ * loads the plugin. Keep the defaults production-safe for packaged ZIPs.
  */
-define( 'SRK_SHARED_SECRET', 'S/1nezDK+azLBl1Mo5vvTYX0HieBnG5fJn6H9/r0ZrI=' );
+if ( ! defined( 'SRK_SHARED_SECRET' ) ) {
+	define( 'SRK_SHARED_SECRET', 'S/1nezDK+azLBl1Mo5vvTYX0HieBnG5fJn6H9/r0ZrI=' );
+}
 
 /**
  * This key is used for authentication with the Laravel API.
  */
-define( 'SRK_API_APP_KEY', 'base64:' . SRK_SHARED_SECRET );
+if ( ! defined( 'SRK_API_APP_KEY' ) ) {
+	define( 'SRK_API_APP_KEY', 'base64:' . SRK_SHARED_SECRET );
+}
 
 /**
  * Define the base URL for the Laravel API.
  */
-define( 'SRK_API_BASE_URL', 'https://crm.seorepairkit.com' );
+if ( ! defined( 'SRK_API_BASE_URL' ) ) {
+	define( 'SRK_API_BASE_URL', 'https://crm.seorepairkit.com' );
+}
 
 /**
  * The code that runs during plugin activation.
@@ -69,23 +87,10 @@ add_action('admin_init', function() {
     
     require_once plugin_dir_path(__FILE__) . 'includes/class-seo-repair-kit-activator.php';
 
-    // Fix main redirect table structure (only if needed)
-    SeoRepairKit_Activator::manual_migrate_redirection_table();
+    // Ensure every current custom table exists / is upgraded.
+    SeoRepairKit_Activator::ensure_database_tables();
 
-    // Ensure redirection logs table exists
-    $create_logs = new ReflectionMethod('SeoRepairKit_Activator', 'create_redirection_logs_table');
-    $create_logs->setAccessible(true);
-    $create_logs->invoke(null);
-
-    // Ensure 404 logs table exists
-    $create_404 = new ReflectionMethod('SeoRepairKit_Activator', 'create_404_logs_table');
-    $create_404->setAccessible(true);
-    $create_404->invoke(null);
-
-    // Ensure smart redirects table exists
-    $create_smart_redirects = new ReflectionMethod('SeoRepairKit_Activator', 'create_smart_redirects_table');
-    $create_smart_redirects->setAccessible(true);
-    $create_smart_redirects->invoke(null);
+    // Uses version-gated dbDelta — safe to run daily, never drops data.
     
     // Mark as checked for 24 hours
     set_transient('srk_table_creation_check', time(), DAY_IN_SECONDS);

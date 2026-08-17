@@ -38,15 +38,24 @@ class SeoRepairKit_Settings {
         $monitoring_enabled   = get_option( 'srk_404_monitoring_enabled', true );
         $weekly_report_enabled = (bool) get_option( 'srk_weekly_report_enabled', true );
         $weekly_last_status    = get_option( 'srk_weekly_report_last_status', array() );
+        $scanner_unlimited     = class_exists( 'SRK_License_Helper' ) ? SRK_License_Helper::is_link_scanner_unlimited() : false;
+        $scanner_free_limit    = class_exists( 'SRK_License_Helper' ) ? SRK_License_Helper::get_link_scanner_limit() : 100;
+        $allowed_scan_types    = class_exists( 'SRK_License_Helper' )
+            ? SRK_License_Helper::get_allowed_link_scanner_post_types()
+            : array_values( array_filter( array( 'page' ), 'post_type_exists' ) );
 
-        // If no post types are selected, default to standard content types (Posts & Pages)
+        // If no post types are selected, default free Link Scanner scope to Pages only.
         if ( empty( $srkit_savedposttypes ) ) {
-            $default_post_types = array( 'post', 'page' );
+            $default_post_types = array( 'page' );
             foreach ( $default_post_types as $pt_slug ) {
                 if ( post_type_exists( $pt_slug ) ) {
                     $srkit_savedposttypes[] = $pt_slug;
                 }
             }
+        }
+
+        if ( class_exists( 'SRK_License_Helper' ) ) {
+            $srkit_savedposttypes = SRK_License_Helper::normalize_link_scanner_post_types( $srkit_savedposttypes );
         }
 
         ?>
@@ -62,7 +71,7 @@ class SeoRepairKit_Settings {
                         <p><?php esc_html_e( 'Configure your SEO Repair Kit preferences. Choose which post types to scan and manage 404 error monitoring.', 'seo-repair-kit' ); ?></p>
                     </div>
                 </div>
-            </div>
+			</div>
 
             <div class="srk-settings-grid">
                 <!-- Post Types Settings Card -->
@@ -83,19 +92,44 @@ class SeoRepairKit_Settings {
                             
                             <div class="srk-checkbox-grid">
                                 <?php foreach ( $srkit_publicposttypes as $srkit_settingsposttype ) : ?>
-                                    <label class="srk-checkbox-item">
+                                    <?php
+                                    $is_allowed = in_array( $srkit_settingsposttype->name, $allowed_scan_types, true );
+                                    $is_checked = $is_allowed && in_array( $srkit_settingsposttype->name, $srkit_savedposttypes, true );
+                                    ?>
+                                    <label class="srk-checkbox-item <?php echo $is_allowed ? '' : 'srk-checkbox-item-disabled'; ?>">
                                         <input type="checkbox" 
                                                name="td_blc_saved_post_types[]"
                                                value="<?php echo esc_attr( $srkit_settingsposttype->name ); ?>" 
-                                               <?php checked( in_array( $srkit_settingsposttype->name, $srkit_savedposttypes ) ); ?>>
+                                               <?php checked( $is_checked ); ?>
+                                               <?php disabled( ! $is_allowed ); ?>>
                                         <span class="srk-checkbox-custom"></span>
                                         <span class="srk-checkbox-label">
                                             <span class="srk-checkbox-title"><?php echo esc_html( $srkit_settingsposttype->label ); ?></span>
                                             <span class="srk-checkbox-slug"><?php echo esc_html( $srkit_settingsposttype->name ); ?></span>
+                                            <?php if ( ! $is_allowed ) : ?>
+                                                <span class="srk-checkbox-plan-note"><?php esc_html_e( 'Unlimited Broken Links + 404 Monitor add-on', 'seo-repair-kit' ); ?></span>
+                                            <?php endif; ?>
                                         </span>
                                     </label>
                                 <?php endforeach; ?>
                             </div>
+
+                            <?php if ( ! $scanner_unlimited ) : ?>
+                                <div class="srk-info-box srk-scanner-settings-note">
+                                    <span class="dashicons dashicons-lock"></span>
+                                    <div class="srk-info-content">
+                                        <strong><?php esc_html_e( 'Free Link Scanner limit', 'seo-repair-kit' ); ?></strong>
+                                        <p>
+                                            <?php
+                                            printf(
+                                                esc_html__( 'Pages are available for free up to %d links per scan. Posts and public custom post types require the £1.49 Unlimited Broken Links + 404 Monitor add-on.', 'seo-repair-kit' ),
+                                                absint( $scanner_free_limit )
+                                            );
+                                            ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                             
                             <?php wp_nonce_field( 'save_post_types', 'post_types_nonce' ); ?>
                             
@@ -275,8 +309,20 @@ class SeoRepairKit_Settings {
         $srkit_allowedposttypes = wp_list_pluck( $srkit_allposttypes, 'name' );
         $srkit_selectedposttypes = is_array( $srkit_input ) ? $srkit_input : array();
 
-        // Only allow post types that are in the list of all public post types
-        $srkit_sanitizedposttypes = array_intersect( $srkit_selectedposttypes, $srkit_allowedposttypes );
+        // Only allow post types that are public and included in the current scanner plan.
+        if ( class_exists( 'SRK_License_Helper' ) ) {
+            $srkit_allowedposttypes = array_intersect(
+                $srkit_allowedposttypes,
+                SRK_License_Helper::get_allowed_link_scanner_post_types()
+            );
+        }
+
+        $srkit_sanitizedposttypes = array_values( array_intersect( $srkit_selectedposttypes, $srkit_allowedposttypes ) );
+
+        if ( empty( $srkit_sanitizedposttypes ) && class_exists( 'SRK_License_Helper' ) ) {
+            $srkit_sanitizedposttypes = SRK_License_Helper::get_free_link_scanner_post_types();
+        }
+
         return $srkit_sanitizedposttypes;
     }
 
@@ -320,4 +366,5 @@ class SeoRepairKit_Settings {
             )
         );
     }
+
 }

@@ -827,10 +827,6 @@ class SRK_Meta_Manager_Content_Types {
 				</table>
 
 				<div class="srk-submit-section">
-					<button type="button" class="button srk-reset-content-types-button" style="margin-right: 10px;">
-						<?php esc_html_e( 'Reset to Defaults', 'seo-repair-kit' ); ?>
-					</button>
-
 					<?php
 					submit_button(
 						__( 'Save Changes', 'seo-repair-kit' ),
@@ -839,6 +835,10 @@ class SRK_Meta_Manager_Content_Types {
 						false
 					);
 					?>
+
+					<button type="button" class="button srk-reset-content-types-button">
+						<?php esc_html_e( 'Reset to Defaults', 'seo-repair-kit' ); ?>
+					</button>
 
 					<div id="srk-content-types-status" class="srk-status-message"></div>
 				</div>

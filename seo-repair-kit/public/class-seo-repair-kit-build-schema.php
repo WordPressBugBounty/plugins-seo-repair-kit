@@ -6,6 +6,10 @@
  * @subpackage  Schema
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'Seo_Repair_Kit_Build_Schema' ) ) {
 
 	/**
@@ -22,7 +26,7 @@ if ( ! class_exists( 'Seo_Repair_Kit_Build_Schema' ) ) {
 	 */
 	public function build_schema( $schema_key, $post ) {
 		// ✅ Check if license plan is expired - block schema building if expired
-		if ( class_exists( 'SRK_License_Helper' ) && SRK_License_Helper::is_license_expired() ) {
+		if ( class_exists( 'SRK_License_Helper' ) && ! SRK_License_Helper::is_schema_manager_enabled() ) {
 			return null;
 		}
 
@@ -321,7 +325,7 @@ if ( ! class_exists( 'Seo_Repair_Kit_Build_Schema' ) ) {
 	 */
 	public function build_global_schema( $schema_key ) {
 		// ✅ Check if license plan is expired - block schema building if expired
-		if ( class_exists( 'SRK_License_Helper' ) && SRK_License_Helper::is_license_expired() ) {
+		if ( class_exists( 'SRK_License_Helper' ) && ! SRK_License_Helper::is_schema_manager_enabled() ) {
 			return null;
 		}
 

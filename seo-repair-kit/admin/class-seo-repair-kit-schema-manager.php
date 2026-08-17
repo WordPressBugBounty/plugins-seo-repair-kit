@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * - Preserves license-gate behavior
  * - Mirrors Upgrade Pro style (srk-* classes)
- * - Adds "Clear License Cache" for BOTH inactive and active states
+ * - Adds "Refresh License Status" for BOTH inactive and active states
  * - Hides left overview card when plan is ACTIVE to reduce congestion
  *
  * @since 2.1.0
@@ -100,14 +100,7 @@ class SeoRepairKit_SchemaManager {
      * @return bool
      */
     private function is_schema_feature_enabled(): bool {
-        if ( ! class_exists( 'SeoRepairKit_Admin' ) ) {
-            return false;
-        }
-
-        $admin   = new SeoRepairKit_Admin( '', '' );
-        $license = $admin->get_license_status( site_url() );
-
-        return ( ! empty( $license['status'] ) && 'active' === $license['status'] );
+        return class_exists( 'SRK_License_Helper' ) && SRK_License_Helper::is_schema_manager_enabled();
     }
  
     /**
@@ -133,22 +126,28 @@ class SeoRepairKit_SchemaManager {
         $domain    = site_url();
         $cache_key = 'srk_license_status_' . md5( $domain );
         $message   = '';
-        $status    = '';
+        $status    = isset( $_GET['srk_license_refresh'] ) ? sanitize_key( wp_unslash( $_GET['srk_license_refresh'] ) ) : '';
  
-        $posted_clear_cache = isset( $_POST['srk_clear_cache'] ) ? sanitize_text_field( wp_unslash( $_POST['srk_clear_cache'] ) ) : '';
+        $posted_clear_cache = isset( $_POST['srk_legacy_license_refresh_disabled'] ) ? sanitize_text_field( wp_unslash( $_POST['srk_legacy_license_refresh_disabled'] ) ) : '';
  
-        if ( is_admin() && '1' === $posted_clear_cache ) {
-            check_admin_referer( 'srk_clear_license_cache', 'srk_cc_nonce' );
+        if ( false && is_admin() && '1' === $posted_clear_cache ) {
+            check_admin_referer( 'srk_legacy_license_refresh_disabled', 'srk_legacy_nonce' );
  
             delete_transient( $cache_key );
  
             if ( false === get_transient( $cache_key ) ) {
-                $message = '✅ ' . esc_html__( 'License cache cleared successfully.', 'seo-repair-kit' );
+                $message = esc_html__( 'License status refreshed from CRM successfully.', 'seo-repair-kit' );
                 $status  = 'success';
             } else {
-                $message = '⚠️ ' . esc_html__( 'Failed to clear license cache.', 'seo-repair-kit' );
+                $message = esc_html__( 'License status could not be refreshed from CRM. Please check connectivity or CRM configuration.', 'seo-repair-kit' );
                 $status  = 'error';
             }
+        }
+
+        if ( 'success' === $status ) {
+            $message = esc_html__( 'License status refreshed from CRM successfully.', 'seo-repair-kit' );
+        } elseif ( 'error' === $status ) {
+            $message = esc_html__( 'License status could not be refreshed from CRM. Please check connectivity or CRM configuration.', 'seo-repair-kit' );
         }
  
         $enabled      = $this->is_schema_feature_enabled();
@@ -238,16 +237,16 @@ class SeoRepairKit_SchemaManager {
                                     <a class="srk-btn srk-btn-primary" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( $subscribe_url ); ?>">
                                         <?php esc_html_e( 'Get Premium', 'seo-repair-kit' ); ?>
                                     </a>
-                                    <form method="post" style="display:inline-block; margin-left:8px;">
-                                        <?php wp_nonce_field( 'srk_clear_license_cache', 'srk_cc_nonce' ); ?>
-                                        <input type="hidden" name="srk_clear_cache" value="1" />
+                                    <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="display:inline-block; margin-left:8px;">
+                                        <?php wp_nonce_field( 'srk_refresh_license_status' ); ?>
+                                        <input type="hidden" name="action" value="srk_refresh_license_status" />
                                         <button type="submit" class="srk-btn srk-btn-secondary srk-btn-secondary--on-dark">
-                                            <?php esc_html_e( 'Clear License Cache', 'seo-repair-kit' ); ?>
+                                            <?php esc_html_e( 'Refresh License Status', 'seo-repair-kit' ); ?>
                                         </button>
                                     </form>
                                 </div>
                                 <p style="margin:10px 2px 0; color:#a5b4fc; font-size:12px;">
-                                    <?php esc_html_e( 'If your license status looks outdated, clear the cache and try again.', 'seo-repair-kit' ); ?>
+                                    <?php esc_html_e( 'If your license status looks outdated, refresh it from CRM and try again.', 'seo-repair-kit' ); ?>
                                 </p>
                             </div>
                         </aside>
@@ -428,11 +427,11 @@ class SeoRepairKit_SchemaManager {
                     <a class="srk-btn srk-btn-primary" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( $subscribe_url ); ?>">
                         <?php esc_html_e( 'Upgrade to Premium', 'seo-repair-kit' ); ?>
                     </a>
-                    <form method="post" class="srk-inline-form">
-                        <?php wp_nonce_field( 'srk_clear_license_cache', 'srk_cc_nonce' ); ?>
-                        <input type="hidden" name="srk_clear_cache" value="1" />
+                    <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="srk-inline-form">
+                        <?php wp_nonce_field( 'srk_refresh_license_status' ); ?>
+                        <input type="hidden" name="action" value="srk_refresh_license_status" />
                         <button type="submit" class="srk-btn srk-btn-secondary">
-                            <?php esc_html_e( 'Clear License Cache', 'seo-repair-kit' ); ?>
+                            <?php esc_html_e( 'Refresh License Status', 'seo-repair-kit' ); ?>
                         </button>
                     </form>
                 </div>

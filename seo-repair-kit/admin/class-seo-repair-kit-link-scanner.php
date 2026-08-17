@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Handles Links Manager dashboard.
  * Includes Links Scan, 404 Monitor, Auto Scan, Alerts, Smart Redirects,
- * and Internal Linking placeholder UI.
+ * and Internal Linking module access.
  *
  * @since 2.1.0
  */
@@ -34,7 +34,6 @@ class SeoRepairKit_LinkScanner {
 		$this->db_404 = $wpdb;
 
 		add_action( 'wp_ajax_get_scan_links_dashboard', array( $this, 'srkit_get_scanlinks_dashboard_callback' ) );
-		add_action( 'wp_ajax_nopriv_get_scan_links_dashboard', array( $this, 'srkit_get_scanlinks_dashboard_callback' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_and_scripts' ) );
 
 		// 404 Monitor AJAX actions.
@@ -194,7 +193,19 @@ class SeoRepairKit_LinkScanner {
 
 		$srk_selected_post_types = get_option( 'td_blc_saved_post_types', array() );
 		if ( empty( $srk_selected_post_types ) ) {
-			$srk_selected_post_types = array( 'post', 'page' );
+			$srk_selected_post_types = array( 'page' );
+		}
+
+		$scanner_unlimited       = class_exists( 'SRK_License_Helper' ) ? SRK_License_Helper::is_link_scanner_unlimited() : false;
+		$scanner_free_limit      = class_exists( 'SRK_License_Helper' ) ? SRK_License_Helper::get_link_scanner_limit() : 100;
+		$paid_post_type_objects  = class_exists( 'SRK_License_Helper' ) ? SRK_License_Helper::get_paid_link_scanner_post_type_objects() : array();
+		$srk_selected_post_types = class_exists( 'SRK_License_Helper' )
+			? SRK_License_Helper::normalize_link_scanner_post_types( $srk_selected_post_types )
+			: array_values( array_filter( array( 'page' ), 'post_type_exists' ) );
+
+		$selected_post_type = isset( $_POST['srkSelectedPostType'] ) ? sanitize_key( wp_unslash( $_POST['srkSelectedPostType'] ) ) : '';
+		if ( ! in_array( $selected_post_type, $srk_selected_post_types, true ) ) {
+			$selected_post_type = isset( $srk_selected_post_types[0] ) ? $srk_selected_post_types[0] : '';
 		}
 
 		$link_snapshot = get_option( 'srk_last_links_snapshot', array() );
@@ -304,7 +315,7 @@ class SeoRepairKit_LinkScanner {
 					</button>
 					<button type="button" class="srk-tab-button <?php echo ( 'internal-linking' === $current_tab ) ? 'active' : ''; ?>" data-tab="internal-linking">
 						<span class="dashicons dashicons-networking"></span>
-						<?php esc_html_e( 'Internal Linking (v2.1.9)', 'seo-repair-kit' ); ?>
+						<?php esc_html_e( 'Internal Linking', 'seo-repair-kit' ); ?>
 					</button>
 				</nav>
 			</div>
@@ -317,7 +328,7 @@ class SeoRepairKit_LinkScanner {
 						<p class="srk-summary-subtext"><?php echo esc_html( $scan_count_label ); ?></p>
 					</div>
 					<div class="srk-link-summary-card srk-summary-broken">
-						<span class="srk-summary-eyebrow"><?php esc_html_e( '404 broken links detected', 'seo-repair-kit' ); ?></span>
+						<span class="srk-summary-eyebrow"><?php esc_html_e( 'broken links detected', 'seo-repair-kit' ); ?></span>
 						<div class="srk-summary-value">
 							<?php echo esc_html( number_format_i18n( $broken_links ) ); ?>
 							<span class="srk-summary-pill"><?php echo esc_html( sprintf( __( '%s%%', 'seo-repair-kit' ), number_format_i18n( $broken_percentage ) ) ); ?></span>
@@ -343,6 +354,42 @@ class SeoRepairKit_LinkScanner {
 					</div>
 				</div>
 
+				<?php if ( ! $scanner_unlimited ) : ?>
+					<div class="srk-scanner-access-note">
+						<div class="srk-scanner-access-icon"><span class="dashicons dashicons-info-outline"></span></div>
+						<div class="srk-scanner-access-copy">
+							<strong><?php esc_html_e( 'Free Link Scanner access', 'seo-repair-kit' ); ?></strong>
+							<p>
+								<?php
+								printf(
+									esc_html__( 'Free sites can scan Pages only up to %d links per scan. Add Unlimited Broken Links + 404 Monitor for £1.49/month to scan Posts and public custom post types and remove the scan limit.', 'seo-repair-kit' ),
+									absint( $scanner_free_limit )
+								);
+								?>
+							</p>
+							<?php if ( ! empty( $paid_post_type_objects ) ) : ?>
+								<div class="srk-scanner-locked-types">
+									<span><?php esc_html_e( 'Locked post types:', 'seo-repair-kit' ); ?></span>
+									<?php foreach ( $paid_post_type_objects as $paid_post_type ) : ?>
+										<em><?php echo esc_html( $paid_post_type->labels->name ); ?></em>
+									<?php endforeach; ?>
+								</div>
+							<?php endif; ?>
+						</div>
+						<a class="srk-scanner-upgrade-link" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( SRK_API_Client::get_api_url( SRK_API_Client::ENDPOINT_SUBSCRIBE, array( 'domain' => site_url() ) ) ); ?>">
+							<?php esc_html_e( 'Customize Plan', 'seo-repair-kit' ); ?>
+						</a>
+					</div>
+				<?php else : ?>
+					<div class="srk-scanner-access-note srk-scanner-access-note-active">
+						<div class="srk-scanner-access-icon"><span class="dashicons dashicons-yes-alt"></span></div>
+						<div class="srk-scanner-access-copy">
+							<strong><?php esc_html_e( 'Unlimited Broken Links + 404 Monitor active', 'seo-repair-kit' ); ?></strong>
+							<p><?php esc_html_e( 'Posts, Pages, and public custom post types can be scanned without the free scan limit.', 'seo-repair-kit' ); ?></p>
+						</div>
+					</div>
+				<?php endif; ?>
+
 				<div class="srk-toolbar">
 					<form method="post" action="">
 						<?php wp_nonce_field( 'srkSelectedPostType', 'srkSelectedPostType_nonce' ); ?>
@@ -352,7 +399,7 @@ class SeoRepairKit_LinkScanner {
 							foreach ( $srk_selected_post_types as $srkit_post_type ) {
 								$obj = get_post_type_object( $srkit_post_type );
 								if ( $obj ) {
-									echo '<option value="' . esc_attr( $srkit_post_type ) . '">' . esc_html( $obj->labels->name ) . '</option>';
+									echo '<option value="' . esc_attr( $srkit_post_type ) . '" ' . selected( $selected_post_type, $srkit_post_type, false ) . '>' . esc_html( $obj->labels->name ) . '</option>';
 								}
 							}
 							?>
@@ -484,6 +531,10 @@ class SeoRepairKit_LinkScanner {
 	 * @return void
 	 */
 	public function srkit_get_scanlinks_dashboard_callback() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'seo-repair-kit' ) ), 403 );
+		}
+
 		check_ajax_referer( 'seorepairkitdashboard_ajaxnonce', 'srkitdashboard_nonce' );
 		$srkit_scan_dashboard = new SeoRepairKit_ScanLinks();
 		$srkit_scan_dashboard->seorepairkit_scanning_link();
@@ -525,14 +576,24 @@ class SeoRepairKit_LinkScanner {
 	}
 
 	/**
-	 * Render internal linking placeholder tab.
+	 * Render internal linking tab.
 	 *
 	 * @return void
 	 */
 	private function render_internal_linking_tab() {
+		$enabled = class_exists( 'SRK_License_Helper' ) && SRK_License_Helper::is_internal_linking_enabled();
+
 		echo '<div class="srk-card">';
-		echo '<h3>' . esc_html__( 'Internal Linking (Planned v2.1.9)', 'seo-repair-kit' ) . '</h3>';
-		echo '<p>' . esc_html__( 'This section will include internal link opportunities, orphan content detection, and contextual link recommendations.', 'seo-repair-kit' ) . '</p>';
+		if ( ! $enabled ) {
+			echo '<h3>' . esc_html__( 'Internal Linking requires the paid module (Coming Soon)', 'seo-repair-kit' ) . '</h3>';
+			echo '<p>' . esc_html__( 'Add Internal Linking to this website from your SEO Repair Kit custom plan, then clear the license cache.', 'seo-repair-kit' ) . '</p>';
+			echo '<p><a class="button button-primary" target="_blank" rel="noopener noreferrer" href="' . esc_url( SRK_API_Client::get_api_url( SRK_API_Client::ENDPOINT_SUBSCRIBE, array( 'domain' => site_url() ) ) ) . '">' . esc_html__( 'Customize Plan', 'seo-repair-kit' ) . '</a></p>';
+			echo '</div>';
+			return;
+		}
+
+		echo '<h3>' . esc_html__( 'Internal Linking module active', 'seo-repair-kit' ) . '</h3>';
+		echo '<p>' . esc_html__( 'Your CRM license includes Internal Linking. Internal-link opportunities, orphan content detection, and contextual recommendations can run for this licensed site.', 'seo-repair-kit' ) . '</p>';
 		echo '</div>';
 	}
 
