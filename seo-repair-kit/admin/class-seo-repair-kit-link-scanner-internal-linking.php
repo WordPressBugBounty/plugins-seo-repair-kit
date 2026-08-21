@@ -26,7 +26,7 @@ class SeoRepairKit_LinkScanner_InternalLinking {
 			return;
 		}
 
-		echo '<h3>' . esc_html__( 'Internal Linking module active', 'seo-repair-kit' ) . '</h3>';
+		echo '<h3>' . esc_html__( 'Internal Linking module active (coming soon)', 'seo-repair-kit' ) . '</h3>';
 		echo '<p>' . esc_html__( 'Your CRM license includes Internal Linking. Internal-link opportunities, orphan content detection, and contextual recommendations can run for this licensed site.', 'seo-repair-kit' ) . '</p>';
 		echo '</div>';
 	}

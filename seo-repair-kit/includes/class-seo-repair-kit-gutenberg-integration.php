@@ -543,26 +543,18 @@ class SRK_Gutenberg_Integration {
         $plugin_dir = WP_PLUGIN_DIR . '/seo-repair-kit';
         $plugin_url = WP_PLUGIN_URL . '/seo-repair-kit';
         
-        // Ensure directories exist
-        $js_dir = $plugin_dir . '/admin/js';
+        $js_dir  = $plugin_dir . '/admin/js';
         $css_dir = $plugin_dir . '/admin/css';
-        
-        if (!file_exists($js_dir)) mkdir($js_dir, 0755, true);
-        if (!file_exists($css_dir)) mkdir($css_dir, 0755, true);
         
         // 1. Enqueue CORE JavaScript (Shared)
         $core_js_path = $js_dir . '/srk-core.js';
         $core_js_url = $plugin_url . '/admin/js/srk-core.js';
         
-        if (!file_exists($core_js_path)) {
-            file_put_contents($core_js_path, "// SRK Core JS\n('SRK Core loaded');");
-        }
-        
         wp_enqueue_script(
             'srk-core',
             $core_js_url,
             array('wp-api-fetch', 'jquery'),
-            filemtime($core_js_path),
+            file_exists( $core_js_path ) ? filemtime( $core_js_path ) : SEO_REPAIR_KIT_VERSION,
             true
         );
         
@@ -573,15 +565,11 @@ class SRK_Gutenberg_Integration {
         $classic_js_path = $js_dir . '/srk-classic.js';
         $classic_js_url = $plugin_url . '/admin/js/srk-classic.js';
         
-        if (!file_exists($classic_js_path)) {
-            file_put_contents($classic_js_path, "// SRK Classic JS\n('SRK Classic loaded');");
-        }
-        
         wp_enqueue_script(
             'srk-metabox-script',
             $classic_js_url,
             array('srk-core', 'jquery', 'wp-i18n'),
-            filemtime($classic_js_path),
+            file_exists( $classic_js_path ) ? filemtime( $classic_js_path ) : SEO_REPAIR_KIT_VERSION,
             true
         );
         wp_set_script_translations( 'srk-metabox-script', 'seo-repair-kit', WP_PLUGIN_DIR . '/seo-repair-kit/languages' );
@@ -589,10 +577,7 @@ class SRK_Gutenberg_Integration {
         // 4. Enqueue CSS (unified + meta manager for shared components)
         $css_path = $css_dir . '/srk-gutenberg-meta-panel.css';
         $css_url = $plugin_url . '/admin/css/srk-gutenberg-meta-panel.css';
-        if (!file_exists($css_path)) {
-            file_put_contents($css_path, "/* SRK Unified CSS */");
-        }
-        wp_enqueue_style( 'srk-metabox-styles', $css_url, array(), filemtime($css_path) );
+        wp_enqueue_style( 'srk-metabox-styles', $css_url, array(), file_exists( $css_path ) ? filemtime( $css_path ) : SEO_REPAIR_KIT_VERSION );
         wp_enqueue_style(
             'srk-meta-manager-css',
             $plugin_url . '/admin/css/seo-repair-kit-meta-manager.css',
@@ -622,26 +607,18 @@ class SRK_Gutenberg_Integration {
         $plugin_dir = WP_PLUGIN_DIR . '/seo-repair-kit';
         $plugin_url = WP_PLUGIN_URL . '/seo-repair-kit';
         
-        // Ensure directories exist
-        $js_dir = $plugin_dir . '/admin/js';
+        $js_dir  = $plugin_dir . '/admin/js';
         $css_dir = $plugin_dir . '/admin/css';
-        
-        if (!file_exists($js_dir)) mkdir($js_dir, 0755, true);
-        if (!file_exists($css_dir)) mkdir($css_dir, 0755, true);
         
         // 1. Enqueue CORE JavaScript (Shared)
         $core_js_path = $js_dir . '/srk-core.js';
         $core_js_url = $plugin_url . '/admin/js/srk-core.js';
         
-        if (!file_exists($core_js_path)) {
-            file_put_contents($core_js_path, "// SRK Core JS\n('SRK Core loaded');");
-        }
-        
         wp_enqueue_script(
             'srk-core',
             $core_js_url,
             array('wp-api-fetch', 'jquery'),
-            filemtime($core_js_path),
+            file_exists( $core_js_path ) ? filemtime( $core_js_path ) : SEO_REPAIR_KIT_VERSION,
             true
         );
         
@@ -652,15 +629,11 @@ class SRK_Gutenberg_Integration {
         $gutenberg_js_path = $js_dir . '/srk-gutenberg-meta-panel.js';
         $gutenberg_js_url = $plugin_url . '/admin/js/srk-gutenberg-meta-panel.js';
         
-        if (!file_exists($gutenberg_js_path)) {
-            file_put_contents($gutenberg_js_path, "// SRK Gutenberg JS\n('SRK Gutenberg loaded');");
-        }
-        
         wp_enqueue_script(
             'srk-gutenberg-meta-panel',
             $gutenberg_js_url,
-            array('srk-core', 'wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data', 'wp-i18n'),
-            filemtime($gutenberg_js_path),
+            array('srk-core', 'wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data', 'wp-i18n', 'wp-notices'),
+            file_exists( $gutenberg_js_path ) ? filemtime( $gutenberg_js_path ) : SEO_REPAIR_KIT_VERSION,
             true
         );
         wp_set_script_translations( 'srk-gutenberg-meta-panel', 'seo-repair-kit', WP_PLUGIN_DIR . '/seo-repair-kit/languages' );
@@ -669,15 +642,11 @@ class SRK_Gutenberg_Integration {
         $css_path = $css_dir . '/srk-gutenberg-meta-panel.css';
         $css_url = $plugin_url . '/admin/css/srk-gutenberg-meta-panel.css';
         
-        if (!file_exists($css_path)) {
-            file_put_contents($css_path, "/* SRK Unified CSS */");
-        }
-        
         wp_enqueue_style(
             'srk-gutenberg-meta-panel',
             $css_url,
             array(),
-            filemtime($css_path)
+            file_exists( $css_path ) ? filemtime( $css_path ) : SEO_REPAIR_KIT_VERSION
         );
     }
     

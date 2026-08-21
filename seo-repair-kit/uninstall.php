@@ -12,7 +12,7 @@
  *
  * @link       https://seorepairkit.com
  * @since      1.0.1
- * @version    2.1.9
+ * @version    2.1.10
  * @package    Seo_Repair_Kit
  */
 

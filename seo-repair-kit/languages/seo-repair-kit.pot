@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: SEO Repair Kit 2.1.9\n"
+"Project-Id-Version: SEO Repair Kit 2.1.10\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/seo-repair-kit\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-17T08:39:14+00:00\n"
+"POT-Creation-Date: 2026-08-21T12:26:30+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: seo-repair-kit\n"
@@ -38,7 +38,7 @@ msgstr ""
 
 #. Description of the plugin
 #: seo-repair-kit.php
-msgid "SEO-friendly AI assistant with meta management, schema management, link repair, keyword tracking, and sitemap control."
+msgid "SEO-friendly AI assistant with intelligent spam monitoring, meta management, schema management, link repair, keyword tracking, and sitemap control."
 msgstr ""
 
 #. Author of the plugin
@@ -365,7 +365,7 @@ msgstr ""
 #: admin/class-seo-repair-kit-404-manager.php:475
 #: admin/class-seo-repair-kit-schema-ui.php:435
 #: includes/class-seo-repair-kit-elementor-integration.php:1178
-#: includes/class-seo-repair-kit-gutenberg-integration.php:917
+#: includes/class-seo-repair-kit-gutenberg-integration.php:886
 #: admin/js/srk-gutenberg-meta-panel.js:374
 msgid "Cancel"
 msgstr ""
@@ -1860,7 +1860,7 @@ msgstr ""
 
 #: admin/class-seo-repair-kit-link-scanner-internal-linking.php:29
 #: admin/class-seo-repair-kit-link-scanner.php:595
-msgid "Internal Linking module active"
+msgid "Internal Linking module active (coming soon)"
 msgstr ""
 
 #: admin/class-seo-repair-kit-link-scanner-internal-linking.php:30
@@ -2993,13 +2993,13 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-advanced.php:252
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-main.php:238
 #: includes/class-seo-repair-kit-elementor-integration.php:1158
-#: includes/class-seo-repair-kit-gutenberg-integration.php:897
+#: includes/class-seo-repair-kit-gutenberg-integration.php:866
 msgid "Saving..."
 msgstr ""
 
 #: admin/class-seo-repair-kit-robots-llms.php:89
 #: includes/class-seo-repair-kit-elementor-integration.php:1159
-#: includes/class-seo-repair-kit-gutenberg-integration.php:898
+#: includes/class-seo-repair-kit-gutenberg-integration.php:867
 #: admin/js/srk-gutenberg-meta-panel.js:4286
 #: admin/js/srk-gutenberg-meta-panel.js:4287
 msgid "Saved successfully!"
@@ -3195,7 +3195,7 @@ msgstr ""
 
 #: admin/class-seo-repair-kit-robots-llms.php:604
 #: includes/class-seo-repair-kit-elementor-integration.php:1162
-#: includes/class-seo-repair-kit-gutenberg-integration.php:901
+#: includes/class-seo-repair-kit-gutenberg-integration.php:870
 #: admin/js/srk-gutenberg-meta-panel.js:628
 msgid "Reset to Default"
 msgstr ""
@@ -3248,7 +3248,7 @@ msgstr ""
 #: includes/class-seo-repair-kit-elementor-integration.php:1179
 #: includes/class-seo-repair-kit-gutenberg-integration.php:346
 #: includes/class-seo-repair-kit-gutenberg-integration.php:404
-#: includes/class-seo-repair-kit-gutenberg-integration.php:918
+#: includes/class-seo-repair-kit-gutenberg-integration.php:887
 msgid "(No title)"
 msgstr ""
 
@@ -4842,7 +4842,7 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:720
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:871
 #: includes/class-seo-repair-kit-gutenberg-integration.php:430
-#: includes/class-seo-repair-kit-gutenberg-integration.php:925
+#: includes/class-seo-repair-kit-gutenberg-integration.php:894
 msgid "No Index"
 msgstr ""
 
@@ -4851,7 +4851,7 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:728
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:875
 #: includes/class-seo-repair-kit-gutenberg-integration.php:431
-#: includes/class-seo-repair-kit-gutenberg-integration.php:926
+#: includes/class-seo-repair-kit-gutenberg-integration.php:895
 msgid "No Follow"
 msgstr ""
 
@@ -4860,7 +4860,7 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:736
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:879
 #: includes/class-seo-repair-kit-gutenberg-integration.php:432
-#: includes/class-seo-repair-kit-gutenberg-integration.php:927
+#: includes/class-seo-repair-kit-gutenberg-integration.php:896
 msgid "No Archive"
 msgstr ""
 
@@ -4868,7 +4868,7 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:744
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:883
 #: includes/class-seo-repair-kit-gutenberg-integration.php:433
-#: includes/class-seo-repair-kit-gutenberg-integration.php:928
+#: includes/class-seo-repair-kit-gutenberg-integration.php:897
 msgid "No Translate"
 msgstr ""
 
@@ -4877,7 +4877,7 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:752
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:887
 #: includes/class-seo-repair-kit-gutenberg-integration.php:434
-#: includes/class-seo-repair-kit-gutenberg-integration.php:929
+#: includes/class-seo-repair-kit-gutenberg-integration.php:898
 msgid "No Image Index"
 msgstr ""
 
@@ -4886,7 +4886,7 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:760
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:891
 #: includes/class-seo-repair-kit-gutenberg-integration.php:435
-#: includes/class-seo-repair-kit-gutenberg-integration.php:930
+#: includes/class-seo-repair-kit-gutenberg-integration.php:899
 msgid "No Snippet"
 msgstr ""
 
@@ -4894,13 +4894,13 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:768
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:895
 #: includes/class-seo-repair-kit-gutenberg-integration.php:436
-#: includes/class-seo-repair-kit-gutenberg-integration.php:931
+#: includes/class-seo-repair-kit-gutenberg-integration.php:900
 msgid "No ODP"
 msgstr ""
 
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-advanced.php:411
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:775
-#: includes/class-seo-repair-kit-gutenberg-integration.php:932
+#: includes/class-seo-repair-kit-gutenberg-integration.php:901
 msgid "Max Snippet"
 msgstr ""
 
@@ -4912,7 +4912,7 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-archives.php:653
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:788
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:595
-#: includes/class-seo-repair-kit-gutenberg-integration.php:933
+#: includes/class-seo-repair-kit-gutenberg-integration.php:902
 msgid "Max Video Preview"
 msgstr ""
 
@@ -4924,14 +4924,14 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-archives.php:636
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:801
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:602
-#: includes/class-seo-repair-kit-gutenberg-integration.php:934
+#: includes/class-seo-repair-kit-gutenberg-integration.php:903
 msgid "Max Image Preview"
 msgstr ""
 
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-advanced.php:447
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-archives.php:642
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:806
-#: includes/class-seo-repair-kit-gutenberg-integration.php:935
+#: includes/class-seo-repair-kit-gutenberg-integration.php:904
 #: includes/spam-monitor-backend/class-srk-spam-monitor-alerts.php:487
 #: includes/spam-monitor-backend/class-srk-spam-monitor-alerts.php:488
 msgid "None"
@@ -4940,14 +4940,14 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-advanced.php:450
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-archives.php:643
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:809
-#: includes/class-seo-repair-kit-gutenberg-integration.php:936
+#: includes/class-seo-repair-kit-gutenberg-integration.php:905
 msgid "Standard"
 msgstr ""
 
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-advanced.php:453
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-archives.php:644
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:812
-#: includes/class-seo-repair-kit-gutenberg-integration.php:937
+#: includes/class-seo-repair-kit-gutenberg-integration.php:906
 msgid "Large"
 msgstr ""
 
@@ -4965,7 +4965,7 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-global.php:451
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:1144
 #: includes/class-seo-repair-kit-elementor-integration.php:1164
-#: includes/class-seo-repair-kit-gutenberg-integration.php:903
+#: includes/class-seo-repair-kit-gutenberg-integration.php:872
 msgid "Save Changes"
 msgstr ""
 
@@ -5150,7 +5150,7 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:551
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:738
 #: includes/class-seo-repair-kit-gutenberg-integration.php:379
-#: includes/class-seo-repair-kit-gutenberg-integration.php:922
+#: includes/class-seo-repair-kit-gutenberg-integration.php:891
 msgid "Title & Description"
 msgstr ""
 
@@ -5178,7 +5178,7 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:607
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:648
 #: includes/class-seo-repair-kit-elementor-integration.php:1173
-#: includes/class-seo-repair-kit-gutenberg-integration.php:912
+#: includes/class-seo-repair-kit-gutenberg-integration.php:881
 #: admin/js/srk-gutenberg-meta-panel.js:676
 msgid "View all tags →"
 msgstr ""
@@ -5192,7 +5192,7 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:784
 #: includes/class-seo-repair-kit-elementor-integration.php:1168
 #: includes/class-seo-repair-kit-gutenberg-integration.php:392
-#: includes/class-seo-repair-kit-gutenberg-integration.php:907
+#: includes/class-seo-repair-kit-gutenberg-integration.php:876
 #: includes/class-seo-repair-kit-meta-ajaxs.php:524
 #: admin/js/srk-gutenberg-meta-panel.js:621
 msgid "Meta Description"
@@ -5355,7 +5355,7 @@ msgstr ""
 
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:562
 #: includes/class-seo-repair-kit-elementor-integration.php:1166
-#: includes/class-seo-repair-kit-gutenberg-integration.php:905
+#: includes/class-seo-repair-kit-gutenberg-integration.php:874
 msgid "Preview:"
 msgstr ""
 
@@ -5407,7 +5407,7 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:860
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:919
 #: includes/class-seo-repair-kit-elementor-integration.php:1176
-#: includes/class-seo-repair-kit-gutenberg-integration.php:915
+#: includes/class-seo-repair-kit-gutenberg-integration.php:884
 #: admin/js/srk-gutenberg-meta-panel.js:283
 msgid "Search for an item..."
 msgstr ""
@@ -5681,14 +5681,14 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:739
 #: includes/class-seo-repair-kit-elementor-integration.php:226
 #: includes/class-seo-repair-kit-gutenberg-integration.php:380
-#: includes/class-seo-repair-kit-gutenberg-integration.php:921
+#: includes/class-seo-repair-kit-gutenberg-integration.php:890
 msgid "Advanced"
 msgstr ""
 
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:746
 #: includes/class-seo-repair-kit-elementor-integration.php:1167
 #: includes/class-seo-repair-kit-gutenberg-integration.php:385
-#: includes/class-seo-repair-kit-gutenberg-integration.php:906
+#: includes/class-seo-repair-kit-gutenberg-integration.php:875
 #: admin/js/srk-gutenberg-meta-panel.js:621
 msgid "SEO Title"
 msgstr ""
@@ -5710,7 +5710,7 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:857
 #: includes/class-seo-repair-kit-elementor-integration.php:260
 #: includes/class-seo-repair-kit-gutenberg-integration.php:425
-#: includes/class-seo-repair-kit-gutenberg-integration.php:923
+#: includes/class-seo-repair-kit-gutenberg-integration.php:892
 msgid "Use Default Settings"
 msgstr ""
 
@@ -5720,7 +5720,7 @@ msgstr ""
 
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:866
 #: includes/class-seo-repair-kit-gutenberg-integration.php:428
-#: includes/class-seo-repair-kit-gutenberg-integration.php:924
+#: includes/class-seo-repair-kit-gutenberg-integration.php:893
 #: includes/class-seo-repair-kit-meta-ajaxs.php:547
 msgid "Robots Meta"
 msgstr ""
@@ -7220,7 +7220,7 @@ msgstr ""
 #: includes/class-seo-repair-kit-elementor-integration.php:234
 #: includes/class-seo-repair-kit-elementor-integration.php:1169
 #: includes/class-seo-repair-kit-gutenberg-integration.php:411
-#: includes/class-seo-repair-kit-gutenberg-integration.php:908
+#: includes/class-seo-repair-kit-gutenberg-integration.php:877
 #: includes/class-seo-repair-kit-meta-ajaxs.php:591
 msgid "Canonical URL"
 msgstr ""
@@ -7238,58 +7238,58 @@ msgid "Custom Robots Meta Settings"
 msgstr ""
 
 #: includes/class-seo-repair-kit-elementor-integration.php:1160
-#: includes/class-seo-repair-kit-gutenberg-integration.php:899
+#: includes/class-seo-repair-kit-gutenberg-integration.php:868
 msgid "Error saving"
 msgstr ""
 
 #: includes/class-seo-repair-kit-elementor-integration.php:1161
-#: includes/class-seo-repair-kit-gutenberg-integration.php:900
+#: includes/class-seo-repair-kit-gutenberg-integration.php:869
 msgid "Settings updated from other editor"
 msgstr ""
 
 #: includes/class-seo-repair-kit-elementor-integration.php:1163
-#: includes/class-seo-repair-kit-gutenberg-integration.php:902
+#: includes/class-seo-repair-kit-gutenberg-integration.php:871
 msgid "Reset All to Defaults"
 msgstr ""
 
 #: includes/class-seo-repair-kit-elementor-integration.php:1165
-#: includes/class-seo-repair-kit-gutenberg-integration.php:904
+#: includes/class-seo-repair-kit-gutenberg-integration.php:873
 msgid "Edit Snippet"
 msgstr ""
 
 #: includes/class-seo-repair-kit-elementor-integration.php:1170
-#: includes/class-seo-repair-kit-gutenberg-integration.php:909
+#: includes/class-seo-repair-kit-gutenberg-integration.php:878
 #: admin/js/srk-gutenberg-meta-panel.js:787
 msgid "Title shown in search results"
 msgstr ""
 
 #: includes/class-seo-repair-kit-elementor-integration.php:1171
-#: includes/class-seo-repair-kit-gutenberg-integration.php:910
+#: includes/class-seo-repair-kit-gutenberg-integration.php:879
 #: admin/js/srk-gutenberg-meta-panel.js:787
 msgid "Description shown in search results"
 msgstr ""
 
 #: includes/class-seo-repair-kit-elementor-integration.php:1172
-#: includes/class-seo-repair-kit-gutenberg-integration.php:911
+#: includes/class-seo-repair-kit-gutenberg-integration.php:880
 msgid "Preferred URL for this content"
 msgstr ""
 
 #: includes/class-seo-repair-kit-elementor-integration.php:1174
-#: includes/class-seo-repair-kit-gutenberg-integration.php:913
+#: includes/class-seo-repair-kit-gutenberg-integration.php:882
 #: admin/js/srk-gutenberg-meta-panel.js:248
 #: admin/js/srk-gutenberg-meta-panel.js:812
 msgid "Select a Tag"
 msgstr ""
 
 #: includes/class-seo-repair-kit-elementor-integration.php:1175
-#: includes/class-seo-repair-kit-gutenberg-integration.php:914
+#: includes/class-seo-repair-kit-gutenberg-integration.php:883
 #: admin/js/srk-gutenberg-meta-panel.js:248
 #: admin/js/srk-gutenberg-meta-panel.js:834
 msgid "Replace or Delete Tag"
 msgstr ""
 
 #: includes/class-seo-repair-kit-elementor-integration.php:1177
-#: includes/class-seo-repair-kit-gutenberg-integration.php:916
+#: includes/class-seo-repair-kit-gutenberg-integration.php:885
 #: admin/js/srk-gutenberg-meta-panel.js:252
 msgid "Delete Tag"
 msgstr ""
@@ -7297,12 +7297,12 @@ msgstr ""
 #: includes/class-seo-repair-kit-elementor-integration.php:1180
 #: includes/class-seo-repair-kit-gutenberg-integration.php:347
 #: includes/class-seo-repair-kit-gutenberg-integration.php:405
-#: includes/class-seo-repair-kit-gutenberg-integration.php:919
+#: includes/class-seo-repair-kit-gutenberg-integration.php:888
 msgid "(No description)"
 msgstr ""
 
 #: includes/class-seo-repair-kit-elementor-integration.php:1181
-#: includes/class-seo-repair-kit-gutenberg-integration.php:920
+#: includes/class-seo-repair-kit-gutenberg-integration.php:889
 msgid "Auto-sync enabled"
 msgstr ""
 

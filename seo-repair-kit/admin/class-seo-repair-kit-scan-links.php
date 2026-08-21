@@ -51,7 +51,7 @@ class SeoRepairKit_ScanLinks {
                 'timeout'     => 30,
                 'redirection' => 5,
                 'sslverify'   => true,
-                'user-agent'  => 'SEO Repair Kit Links Manager/' . ( defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '2.1.9' ) . '; ' . home_url(),
+                'user-agent'  => 'SEO Repair Kit Links Manager/' . ( defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '2.1.10' ) . '; ' . home_url(),
             )
         );
         

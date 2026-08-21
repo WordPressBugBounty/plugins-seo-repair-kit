@@ -36,7 +36,7 @@ class SeoRepairKit_Upgrade {
             'seo-repair-kit-upgrade-pro',
             plugin_dir_url(__FILE__) . './css/seo-repair-kit-upgrade-pro.css',
             array(),
-            '2.1.9'
+            '2.1.10'
         );
 
         // ─────────────────────────────────────────────────────────────────────

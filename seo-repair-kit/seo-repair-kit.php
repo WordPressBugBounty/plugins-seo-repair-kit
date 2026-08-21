@@ -15,8 +15,8 @@
  * @wordpress-plugin
  * Plugin Name:       SEO Repair Kit
  * Plugin URI:        https://seorepairkit.com
- * Description:       SEO-friendly AI assistant with meta management, schema management, link repair, keyword tracking, and sitemap control.
- * Version:           2.1.9
+ * Description:       SEO-friendly AI assistant with intelligent spam monitoring, meta management, schema management, link repair, keyword tracking, and sitemap control.
+ * Version:           2.1.10
  * Author:            TorontoDigits
  * Author URI:        https://torontodigits.com/
  * License:           GPL-2.0+
@@ -34,7 +34,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Currently plugin version.
  * Start at version 1.0.1 and use SemVer - https://semver.org
  */
-define( 'SEO_REPAIR_KIT_VERSION', '2.1.9' );
+define( 'SEO_REPAIR_KIT_VERSION', '2.1.10' );
 
 /**
  * Define the base URL for SRK Intelligence Cloud.

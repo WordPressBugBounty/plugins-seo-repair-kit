@@ -3,10 +3,10 @@ Contributors: torontodigits
 Donate link: https://seorepairkit.com/
 Tags: spam monitor, meta manager, broken link, schema markup, 301 redirect, 404 monitor
 Requires at least: 5.0.0
-Tested up to: 7.0.4
+Tested up to: 7.1
 Requires PHP: 7.4.3
-Stable tag: 2.1.9
-Release Date: 17-08-2026
+Stable tag: 2.1.10
+Release Date: 21-08-2026
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -138,6 +138,9 @@ Custom SERP-provider connections and other advanced Spam Monitor capabilities re
 
 == Changelog ==
 
+= 2.1.10 =
+* Compatibility: Verified release metadata and admin/editor integration for the current WordPress compatibility target.
+
 = 2.1.9 =
 * New: Added Spam Monitor module for indexed Google SERP health checks, risky URL review, spam scoring, alerts, and scan history.
 * New: Added Spam Rules for language mismatch detection, spam keyword categories, suspicious URL patterns, and configurable score thresholds.
@@ -148,8 +151,8 @@ Custom SERP-provider connections and other advanced Spam Monitor capabilities re
 
 == Upgrade Notice ==
 
-= 2.1.9 =
-**Feature Update:** Adds Spam Monitor, scheduled SERP monitoring, alerts, Spam Rules.
+= 2.1.10 =
+Compatibility release for current WordPress versions with hardened editor asset loading.
 
 == Installation ==
 
@@ -442,7 +445,7 @@ DataForSEO: https://dataforseo.com/
 * If Spam Monitor scans or provider settings are unavailable, verify the active module, configured SERP provider, and scan settings.
 * If schema is not output, confirm Schema Manager is active and the schema assignment applies to the current content.
 * If links are not detected, confirm the relevant post type is included in the scan settings.
-* If `llms.txt` redirects to the homepage, resave the Bot Manager `llms.txt` configuration and ensure SEO Repair Kit 2.1.9 or newer is installed.
+* If `llms.txt` redirects to the homepage, resave the Bot Manager `llms.txt` configuration and ensure SEO Repair Kit is installed.
 
 == Frequently Asked Questions ==
 
@@ -471,7 +474,7 @@ Confirm the Pro module is active and the schema mapping is assigned to the corre
 Confirm the relevant post type is selected in SEO Repair Kit settings and that the content contains scan-supported links.
 
 = Why does llms.txt redirect to the homepage? =
-Resave Bot Manager llms.txt content and confirm the site is running SEO Repair Kit 2.1.9 or newer.
+Resave Bot Manager llms.txt content and confirm the site is running SEO Repair Kit.
 
 = What are the Pro features? =
 Pro capabilities include Schema Manager, AI Chatbot, and supported paid Spam Monitor functionality such as advanced SERP-provider connections.
