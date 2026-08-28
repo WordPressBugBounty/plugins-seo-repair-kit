@@ -14,6 +14,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class SeoRepairKit_Activator {
 
+    const DB_VERSION = '2.1.11';
+    const DB_VERSION_OPTION = 'srkit_db_version';
+    const DB_UPDATE_LOCK_OPTION = 'srkit_db_update_lock';
+    const DB_UPDATE_LOCK_TTL = 900;
+    private static $schema_update_current = false;
+    private static $schema_cache_invalidation_deferred = false;
+    private static $schema_cache_invalidation_needed = false;
+
     /**
      * Function to run during activation.
      * Initializes tables and versioning.
@@ -32,26 +40,14 @@ class SeoRepairKit_Activator {
             add_option( 'srk_should_run_modal_onboarding', 'yes' );
         }
         
-        // Manage to updates.
-        self::run_updates();
-
-        // Manage error log table.
-        self::srkit_create_log_table();
+        // Manage DB updates once during activation.
+        self::run_updates( true );
 
         // Call the activation notification function.
         self::srkit_activation_activity();
 
         // Call the API activation function.
         self::srk_send_data_to_api();
-
-        // Create the keytrack settings table.
-        self::srkit_create_keytrack_table();
-
-        // Create table for saving Google Search Console data
-        self::create_gsc_data_table();
-
-        // Create plugin settings table with consent tracking
-        self::create_plugin_settings_table();
 
         update_option( 'seo_repair_kit_version', SEO_REPAIR_KIT_VERSION );
     }
@@ -77,8 +73,6 @@ class SeoRepairKit_Activator {
 		return;
 	}
 
-	wp_clean_plugins_cache( true );
-
 	$plugin_data  = get_plugin_data( $plugin_file );
 	$file_version = trim( $plugin_data['Version'] );
 
@@ -86,11 +80,17 @@ class SeoRepairKit_Activator {
 		return;
 	}
 
-	// Always ensure current DB/tables are aligned for existing installs.
-	self::run_updates();
-
 	$stored_version = get_option( 'seo_repair_kit_version' );
-	$plugin_id      = get_option( 'srk_plugin_id' );
+
+    if ( ! $stored_version ) {
+        self::run_updates( true );
+    } elseif ( version_compare( $stored_version, $file_version, '==' ) ) {
+        self::run_updates( false );
+    } else {
+        self::run_updates( true );
+    }
+
+	$plugin_id = get_option( 'srk_plugin_id' );
 
 	if ( ! $plugin_id ) {
 		self::srk_send_data_to_api();
@@ -158,25 +158,290 @@ class SeoRepairKit_Activator {
      * @access private
      * @return void
      */
-    private static function run_updates() {
-        $current_version = get_option( 'seo_repair_kit_version', '1.0.0' );
+    private static function run_updates( $force = false, $target_version = null ) {
+        $target_version = self::DB_VERSION;
+        $stored_db_version = get_option( self::DB_VERSION_OPTION, '' );
 
-        if ( version_compare( $current_version, '2.1.0', '<' ) ) {
-            self::migrate_to_v2_1_0();
+        if ( ! $force && self::$schema_update_current ) {
+            return;
         }
 
-        self::srkit_create_log_table();
-        self::srkit_create_keytrack_table();
-        self::create_gsc_data_table();
-        self::create_redirection_logs_table();
-        self::create_404_logs_table();
-        self::create_smart_redirects_table();
-        self::create_plugin_settings_table();
-        self::create_link_scanner_history_tables();
+        if ( version_compare( (string) $stored_db_version, $target_version, '>=' ) ) {
+            self::$schema_update_current = true;
+            return;
+        }
 
-        // Create or upgrade Spam Monitor tables with idempotent dbDelta checks.
-        // Supports current SERP rules, alerts, SERP scans, and SERP results.
-        self::maybe_create_spam_monitor_tables();
+        $lock_token = self::acquire_db_update_lock();
+        if ( ! $lock_token ) {
+            return;
+        }
+
+        try {
+            $stored_db_version = get_option( self::DB_VERSION_OPTION, '' );
+            if ( version_compare( (string) $stored_db_version, $target_version, '>=' ) ) {
+                self::$schema_update_current = true;
+                return;
+            }
+
+            $current_version = get_option( 'seo_repair_kit_version', '1.0.0' );
+            self::$schema_cache_invalidation_deferred = true;
+            self::$schema_cache_invalidation_needed = false;
+
+            if ( version_compare( $current_version, '2.1.0', '<' ) ) {
+                self::migrate_to_v2_1_0();
+            }
+
+            self::srkit_create_log_table();
+            self::srkit_create_keytrack_table();
+            self::create_gsc_data_table();
+            self::create_redirection_logs_table();
+            self::create_404_logs_table();
+            self::create_smart_redirects_table();
+            self::create_plugin_settings_table();
+            self::create_link_scanner_history_tables();
+
+            // Create or upgrade Spam Monitor tables with idempotent dbDelta checks.
+            // Supports current SERP rules, alerts, SERP scans, and SERP results.
+            self::maybe_create_spam_monitor_tables();
+
+            if ( ! self::verify_required_schema() ) {
+                self::$schema_update_current = false;
+                return;
+            }
+
+            self::update_db_version( $target_version );
+            self::$schema_update_current = true;
+        } finally {
+            self::$schema_cache_invalidation_deferred = false;
+            if ( self::$schema_cache_invalidation_needed ) {
+                self::invalidate_schema_caches();
+                self::$schema_cache_invalidation_needed = false;
+            }
+            self::release_db_update_lock( $lock_token );
+        }
+    }
+
+    /**
+     * Persist the non-autoloaded schema version.
+     *
+     * @param string $version Schema version.
+     * @return void
+     */
+    private static function update_db_version( $version ) {
+        if ( false === get_option( self::DB_VERSION_OPTION, false ) ) {
+            add_option( self::DB_VERSION_OPTION, (string) $version, '', 'no' );
+            return;
+        }
+
+        update_option( self::DB_VERSION_OPTION, (string) $version, false );
+    }
+
+    /**
+     * Verify that required plugin-owned tables and critical columns exist before
+     * marking the main schema version as current.
+     *
+     * @return bool True when the schema is ready.
+     */
+    private static function verify_required_schema() {
+        global $wpdb;
+
+        $required_tables = array(
+            $wpdb->prefix . 'srkit_redirection_table',
+            $wpdb->prefix . 'srkit_keytrack_settings',
+            $wpdb->prefix . 'srkit_gsc_data',
+            $wpdb->prefix . 'srkit_redirection_logs',
+            $wpdb->prefix . 'srkit_404_logs',
+            $wpdb->prefix . 'srkit_smart_redirects',
+            $wpdb->prefix . 'srkit_plugin_settings',
+            $wpdb->prefix . 'srk_link_scan_runs',
+            $wpdb->prefix . 'srk_link_scan_alerts',
+            $wpdb->prefix . 'srk_spam_monitor_rules',
+            $wpdb->prefix . 'srk_spam_monitor_alerts',
+            $wpdb->prefix . 'srk_spam_monitor_serp_scans',
+            $wpdb->prefix . 'srk_spam_monitor_serp_results',
+        );
+
+        foreach ( $required_tables as $table_name ) {
+            if ( ! self::table_exists( $table_name ) ) {
+                return false;
+            }
+        }
+
+        $required_columns = array(
+            $wpdb->prefix . 'srkit_redirection_table' => array(
+                'id',
+                'source_url',
+                'target_url',
+                'redirect_type',
+                'status',
+                'is_regex',
+                'position',
+                'hits',
+            ),
+            $wpdb->prefix . 'srkit_smart_redirects' => array(
+                'id',
+                'redirection_id',
+                'post_type',
+                'source_url',
+                'target_url',
+                'status',
+            ),
+            $wpdb->prefix . 'srkit_plugin_settings' => array(
+                'id',
+                'setting_key',
+                'setting_value',
+                'site_info_consent',
+            ),
+            $wpdb->prefix . 'srk_link_scan_runs' => array(
+                'id',
+                'trigger_type',
+                'link_scope',
+                'scan_coverage',
+                'status',
+            ),
+        );
+
+        foreach ( $required_columns as $table_name => $columns ) {
+            $existing_columns = self::get_table_columns( $table_name );
+
+            foreach ( $columns as $column ) {
+                if ( ! in_array( $column, $existing_columns, true ) ) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Invalidate migration-related caches once per migration.
+     *
+     * @return void
+     */
+    private static function maybe_invalidate_schema_caches() {
+        if ( self::$schema_cache_invalidation_deferred ) {
+            self::$schema_cache_invalidation_needed = true;
+            return;
+        }
+
+        self::invalidate_schema_caches();
+    }
+
+    /**
+     * Delete schema-related transients.
+     *
+     * @return void
+     */
+    private static function invalidate_schema_caches() {
+        delete_transient( 'srk_required_tables_check' );
+        delete_transient( 'srk_table_creation_check' );
+        delete_transient( 'srk_link_scanner_storage_checked' );
+        delete_transient( 'srk_404_table_exists' );
+        delete_transient( 'srk_404_statistics' );
+    }
+
+    /**
+     * Prevent concurrent admin/ajax requests from running schema updates together.
+     *
+     * @return bool
+     */
+    private static function acquire_db_update_lock() {
+        $now        = time();
+        $token      = self::generate_db_update_lock_token();
+        $lock_value = $token . '|' . ( $now + self::DB_UPDATE_LOCK_TTL );
+
+        if ( add_option( self::DB_UPDATE_LOCK_OPTION, $lock_value, '', 'no' ) ) {
+            return $token;
+        }
+
+        $existing_value = (string) get_option( self::DB_UPDATE_LOCK_OPTION, '' );
+        $existing_lock  = self::parse_db_update_lock( $existing_value );
+
+        if ( ! empty( $existing_lock['expires'] ) && $existing_lock['expires'] > $now ) {
+            return false;
+        }
+
+        if ( '' === $existing_value || ! self::delete_db_update_lock_value( $existing_value ) ) {
+            return false;
+        }
+
+        return add_option( self::DB_UPDATE_LOCK_OPTION, $lock_value, '', 'no' ) ? $token : false;
+    }
+
+    /**
+     * Release the schema update lock only when this request owns it.
+     *
+     * @param string $token Lock owner token.
+     * @return void
+     */
+    private static function release_db_update_lock( $token ) {
+        $existing_value = (string) get_option( self::DB_UPDATE_LOCK_OPTION, '' );
+        $existing_lock  = self::parse_db_update_lock( $existing_value );
+
+        if ( empty( $existing_lock['token'] ) || ! hash_equals( (string) $token, (string) $existing_lock['token'] ) ) {
+            return;
+        }
+
+        self::delete_db_update_lock_value( $existing_value );
+    }
+
+    /**
+     * Parse the schema update lock value.
+     *
+     * Supports the previous timestamp-only value so stale locks from older builds
+     * can expire naturally and be replaced safely.
+     *
+     * @param string $value Stored lock value.
+     * @return array{token:string,expires:int}
+     */
+    private static function parse_db_update_lock( $value ) {
+        $value = (string) $value;
+
+        if ( false === strpos( $value, '|' ) ) {
+            return array(
+                'token'   => '',
+                'expires' => absint( $value ),
+            );
+        }
+
+        $parts = explode( '|', $value, 2 );
+
+        return array(
+            'token'   => sanitize_text_field( $parts[0] ),
+            'expires' => isset( $parts[1] ) ? absint( $parts[1] ) : 0,
+        );
+    }
+
+    /**
+     * Delete a lock row by exact stored value.
+     *
+     * @param string $value Stored lock value.
+     * @return bool
+     */
+    private static function delete_db_update_lock_value( $value ) {
+        global $wpdb;
+
+        return (bool) $wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Atomic option-lock cleanup for plugin migration lifecycle.
+            $wpdb->prepare(
+                "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s",
+                self::DB_UPDATE_LOCK_OPTION,
+                (string) $value
+            )
+        );
+    }
+
+    /**
+     * Generate a request-owned schema lock token.
+     *
+     * @return string
+     */
+    private static function generate_db_update_lock_token() {
+        if ( function_exists( 'wp_generate_uuid4' ) ) {
+            return wp_generate_uuid4();
+        }
+
+        return md5( uniqid( 'srkit_db_update_', true ) );
     }
 
     /**
@@ -191,6 +456,15 @@ class SeoRepairKit_Activator {
      */
     public static function ensure_database_tables() {
         self::run_updates();
+    }
+
+    /**
+     * Check whether the recorded SEO Repair Kit schema version is current.
+     *
+     * @return bool
+     */
+    public static function is_database_current() {
+        return version_compare( (string) get_option( self::DB_VERSION_OPTION, '' ), self::DB_VERSION, '>=' );
     }
 
     /**
@@ -230,74 +504,17 @@ class SeoRepairKit_Activator {
      * @return void
      */
     private static function create_link_scanner_history_tables() {
-        global $wpdb;
+        $automation_file = plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-link-scanner-automation.php';
 
-        $runs_table   = $wpdb->prefix . 'srk_link_scan_runs';
-        $alerts_table = $wpdb->prefix . 'srk_link_scan_alerts';
-        $charset      = $wpdb->get_charset_collate();
-
-        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-
-        $sql_runs = "CREATE TABLE {$runs_table} (
-            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-            trigger_type VARCHAR(20) NOT NULL DEFAULT 'scheduled',
-            link_scope VARCHAR(20) NOT NULL DEFAULT 'both',
-            scan_coverage VARCHAR(20) NOT NULL DEFAULT 'selected',
-            post_types LONGTEXT NULL,
-            post_type_breakdown LONGTEXT NULL,
-            scanned_posts_count INT UNSIGNED NOT NULL DEFAULT 0,
-            total_links_count INT UNSIGNED NOT NULL DEFAULT 0,
-            broken_links_count INT UNSIGNED NOT NULL DEFAULT 0,
-            working_links_count INT UNSIGNED NOT NULL DEFAULT 0,
-            records_json LONGTEXT NULL,
-            status VARCHAR(20) NOT NULL DEFAULT 'success',
-            email_sent TINYINT(1) NOT NULL DEFAULT 0,
-            started_at DATETIME NOT NULL,
-            ended_at DATETIME NOT NULL,
-            PRIMARY KEY  (id),
-            KEY idx_ended_at (ended_at),
-            KEY idx_trigger (trigger_type),
-            KEY idx_link_scope (link_scope)
-        ) {$charset};";
-
-        $sql_alerts = "CREATE TABLE {$alerts_table} (
-            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-            scan_run_id BIGINT UNSIGNED NOT NULL,
-            sent_at DATETIME NOT NULL,
-            recipients TEXT NULL,
-            subject TEXT NULL,
-            broken_links_count INT UNSIGNED NOT NULL DEFAULT 0,
-            post_type_breakdown LONGTEXT NULL,
-            payload_snapshot LONGTEXT NULL,
-            PRIMARY KEY  (id),
-            KEY idx_scan_run_id (scan_run_id),
-            KEY idx_sent_at (sent_at)
-        ) {$charset};";
-
-        dbDelta( $sql_runs );
-        dbDelta( $sql_alerts );
-
-        // Explicitly align older installs in case dbDelta did not add columns.
-        $columns = (array) $wpdb->get_results( "SHOW COLUMNS FROM {$runs_table}", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-        $names   = array();
-
-        foreach ( $columns as $column ) {
-            if ( ! empty( $column['Field'] ) ) {
-                $names[] = $column['Field'];
-            }
+        if ( ! class_exists( 'SeoRepairKit_LinkScanner_Automation' ) && file_exists( $automation_file ) ) {
+            require_once $automation_file;
         }
 
-        if ( ! in_array( 'link_scope', $names, true ) ) {
-            $wpdb->query( "ALTER TABLE {$runs_table} ADD COLUMN link_scope VARCHAR(20) NOT NULL DEFAULT 'both' AFTER trigger_type" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+        if ( class_exists( 'SeoRepairKit_LinkScanner_Automation' ) ) {
+            SeoRepairKit_LinkScanner_Automation::maybe_upgrade_history_tables();
         }
 
-        if ( ! in_array( 'scan_coverage', $names, true ) ) {
-            $wpdb->query( "ALTER TABLE {$runs_table} ADD COLUMN scan_coverage VARCHAR(20) NOT NULL DEFAULT 'selected' AFTER link_scope" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-        }
-
-        delete_transient( 'srk_required_tables_check' );
-        delete_transient( 'srk_table_creation_check' );
-        delete_transient( 'srk_link_scanner_storage_checked' );
+        self::maybe_invalidate_schema_caches();
     }
 
     /**
@@ -311,7 +528,29 @@ class SeoRepairKit_Activator {
     private static function table_exists( $table_name ) {
         global $wpdb;
 
-        return $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) ) === $table_name;
+        return $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) ) === $table_name; // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Migration/recovery table existence check for plugin-owned custom table.
+    }
+
+    /**
+     * Get column names for a trusted custom table.
+     *
+     * @param string $table_name Trusted custom table name.
+     * @return string[]
+     */
+    private static function get_table_columns( $table_name ) {
+        global $wpdb;
+
+        $table_name = str_replace( '`', '', $table_name );
+        $rows       = $wpdb->get_results( "SHOW COLUMNS FROM `{$table_name}`", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Migration verification query for plugin-owned table name generated from the trusted WP prefix.
+        $columns    = array();
+
+        foreach ( (array) $rows as $row ) {
+            if ( ! empty( $row['Field'] ) ) {
+                $columns[] = (string) $row['Field'];
+            }
+        }
+
+        return $columns;
     }
 
     /**
@@ -326,12 +565,12 @@ class SeoRepairKit_Activator {
 
         $table_name = str_replace( '`', '', $table_name );
         $index_name = sanitize_key( $index_name );
-        $index      = $wpdb->get_var(
+        $index      = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Migration/recovery index existence check for plugin-owned custom table.
             $wpdb->prepare(
                 "SHOW INDEX FROM `{$table_name}` WHERE Key_name = %s",
                 $index_name
             )
-        ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is generated from trusted WP prefix.
+        ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is generated from trusted WP prefix.
 
         return ! empty( $index );
     }
@@ -353,22 +592,25 @@ class SeoRepairKit_Activator {
         }
 
         $table_name = str_replace( '`', '', $table_name );
-        $column     = $wpdb->get_row( "SHOW COLUMNS FROM `{$table_name}` LIKE 'status'" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is generated from trusted WP prefix.
+        $column     = $wpdb->get_row( "SHOW COLUMNS FROM `{$table_name}` LIKE 'status'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Migration-only schema check; table name is generated from trusted WP prefix.
 
         if ( empty( $column ) ) {
-            $wpdb->query( "ALTER TABLE `{$table_name}` ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'active'" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Additive schema repair only.
+            $wpdb->query( "ALTER TABLE `{$table_name}` ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'active'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Additive schema repair only.
         } elseif (
             ( isset( $column->Type ) && 'varchar(20)' !== strtolower( $column->Type ) )
             || ( isset( $column->Null ) && 'NO' !== strtoupper( $column->Null ) )
             || ( isset( $column->Default ) && 'active' !== $column->Default )
         ) {
-            $wpdb->query( "ALTER TABLE `{$table_name}` CHANGE COLUMN `status` status VARCHAR(20) NOT NULL DEFAULT 'active'" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Non-destructive type normalization for active/inactive values.
+        $wpdb->query( "ALTER TABLE `{$table_name}` CHANGE COLUMN `status` status VARCHAR(20) NOT NULL DEFAULT 'active'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Non-destructive type normalization for active/inactive values.
         }
 
-        $wpdb->query( "UPDATE `{$table_name}` SET status = 'active' WHERE status IS NULL OR status = '' OR status NOT IN ('active', 'inactive')" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Normalizes invalid status values only.
+        $has_invalid_status = $wpdb->get_var( "SELECT 1 FROM `{$table_name}` WHERE status IS NULL OR status = '' OR status NOT IN ('active', 'inactive') LIMIT 1" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Migration-only data check; table name is generated from trusted WP prefix.
+        if ( $has_invalid_status ) {
+            $wpdb->query( "UPDATE `{$table_name}` SET status = 'active' WHERE status IS NULL OR status = '' OR status NOT IN ('active', 'inactive')" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- One-time migration normalization of invalid status values only.
+        }
 
         if ( ! self::index_exists( $table_name, 'idx_status' ) ) {
-            $wpdb->query( "ALTER TABLE `{$table_name}` ADD INDEX idx_status (status)" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Additive index repair only.
+            $wpdb->query( "ALTER TABLE `{$table_name}` ADD INDEX idx_status (status)" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Additive index repair only.
         }
     }
 
@@ -416,9 +658,7 @@ class SeoRepairKit_Activator {
         dbDelta( $srkit_tablequery );
         self::ensure_active_inactive_status_column( $srkit_tablename );
         
-        // Clear cache after table creation
-        delete_transient( 'srk_required_tables_check' );
-        delete_transient( 'srk_table_creation_check' );
+        self::maybe_invalidate_schema_caches();
     }
 
     /**
@@ -434,7 +674,7 @@ class SeoRepairKit_Activator {
         $keytrack_tablename = $wpdb->prefix . 'srkit_keytrack_settings';
         $charset_collate    = $wpdb->get_charset_collate();
 
-        $keytrack_tablequery = "CREATE TABLE IF NOT EXISTS $keytrack_tablename ( 
+        $keytrack_tablequery = "CREATE TABLE $keytrack_tablename ( 
             id BIGINT NOT NULL AUTO_INCREMENT,
             keytrack_name VARCHAR(255) NOT NULL,
             selected_keywords LONGTEXT NOT NULL,
@@ -449,9 +689,7 @@ class SeoRepairKit_Activator {
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         dbDelta( $keytrack_tablequery );
         
-        // Clear cache after table creation
-        delete_transient( 'srk_required_tables_check' );
-        delete_transient( 'srk_table_creation_check' );
+        self::maybe_invalidate_schema_caches();
     }
 
     /**
@@ -467,7 +705,7 @@ class SeoRepairKit_Activator {
         $tablename       = $wpdb->prefix . 'srkit_gsc_data';
         $charset_collate = $wpdb->get_charset_collate();
 
-        $table_query = "CREATE TABLE IF NOT EXISTS $tablename ( 
+        $table_query = "CREATE TABLE $tablename ( 
             id BIGINT NOT NULL AUTO_INCREMENT,
             gsc_data LONGTEXT NOT NULL,
             keytrack_name VARCHAR(255) NOT NULL,
@@ -478,9 +716,7 @@ class SeoRepairKit_Activator {
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         dbDelta( $table_query );
         
-        // Clear cache after table creation
-        delete_transient( 'srk_required_tables_check' );
-        delete_transient( 'srk_table_creation_check' );
+        self::maybe_invalidate_schema_caches();
     }
 
     /**
@@ -908,8 +1144,9 @@ class SeoRepairKit_Activator {
             return $migration_result;
         }
         
-        // Get table columns using safe identifier escaping
-        $columns = $wpdb->get_results( $wpdb->prepare( "SHOW COLUMNS FROM `%1s`", str_replace( '`', '', $table_name ) ) );
+        // Get table columns using a plugin-controlled escaped identifier.
+        $table_name_sql = '`' . str_replace( '`', '``', $table_name ) . '`';
+        $columns = $wpdb->get_results( "SHOW COLUMNS FROM {$table_name_sql}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Migration-only schema check for plugin-owned table.
         if ( empty( $columns ) ) {
             $migration_result['message'] = 'Could not read table structure';
             return $migration_result;
@@ -930,13 +1167,10 @@ class SeoRepairKit_Activator {
         // If has both old and new schema, update old records to new schema
         if ( $has_old_schema && $has_new_schema ) {
             // Migrate old records that haven't been migrated yet
-            $old_records = $wpdb->get_results( 
-                $wpdb->prepare(
-                    "SELECT id, old_url, new_url FROM `%1s` 
+            $old_records = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- One-time migration read from plugin-owned redirection table.
+                "SELECT id, old_url, new_url FROM {$table_name_sql}
                      WHERE (source_url IS NULL OR source_url = '') 
-                     AND old_url IS NOT NULL AND old_url != ''",
-                    str_replace( '`', '', $table_name )
-                )
+                     AND old_url IS NOT NULL AND old_url != ''"
             );
             
             if ( !empty( $old_records ) ) {
@@ -944,7 +1178,7 @@ class SeoRepairKit_Activator {
                 $failed = 0;
                 
                 foreach ( $old_records as $row ) {
-                    $update_result = $wpdb->update(
+                    $update_result = $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- One-time migration write to plugin-owned redirection table.
                         $table_name,
                         array(
                             'source_url' => $row->old_url,
@@ -983,7 +1217,7 @@ class SeoRepairKit_Activator {
             // dbDelta adds the new columns/indexes where possible and does not drop old columns.
             self::srkit_create_log_table();
 
-            $columns = $wpdb->get_results( $wpdb->prepare( "SHOW COLUMNS FROM `%1s`", str_replace( '`', '', $table_name ) ) );
+            $columns = $wpdb->get_results( "SHOW COLUMNS FROM {$table_name_sql}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Migration-only schema check for plugin-owned table.
             $column_names = is_array( $columns ) ? array_column( $columns, 'Field' ) : array();
 
             if ( ! in_array( 'source_url', $column_names, true ) || ! in_array( 'target_url', $column_names, true ) ) {
@@ -991,7 +1225,7 @@ class SeoRepairKit_Activator {
                 return $migration_result;
             }
 
-            $existing_data = $wpdb->get_results( "SELECT id, old_url, new_url FROM $table_name ORDER BY id" );
+            $existing_data = $wpdb->get_results( "SELECT id, old_url, new_url FROM {$table_name_sql} ORDER BY id" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- One-time migration read from plugin-owned redirection table.
             $migrated = 0;
             $failed = 0;
 
@@ -1001,7 +1235,7 @@ class SeoRepairKit_Activator {
                     continue;
                 }
 
-                $update_result = $wpdb->update(
+                $update_result = $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- One-time migration write to plugin-owned redirection table.
                     $table_name,
                     array(
                         'source_url' => $row->old_url,
@@ -1085,7 +1319,7 @@ class SeoRepairKit_Activator {
         $logs_table = $wpdb->prefix . 'srkit_redirection_logs';
         $charset_collate = $wpdb->get_charset_collate();
         
-        $logs_table_query = "CREATE TABLE IF NOT EXISTS $logs_table ( 
+        $logs_table_query = "CREATE TABLE $logs_table ( 
             id BIGINT NOT NULL AUTO_INCREMENT,
             redirection_id BIGINT NULL,
             action VARCHAR(50) NOT NULL DEFAULT 'redirect',
@@ -1103,9 +1337,7 @@ class SeoRepairKit_Activator {
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         dbDelta( $logs_table_query );
         
-        // Clear cache after table creation
-        delete_transient( 'srk_required_tables_check' );
-        delete_transient( 'srk_table_creation_check' );
+        self::maybe_invalidate_schema_caches();
     }
 
     /**
@@ -1121,7 +1353,7 @@ class SeoRepairKit_Activator {
         $table_name = $wpdb->prefix . 'srkit_404_logs';
         $charset_collate = $wpdb->get_charset_collate();
         
-        $table_query = "CREATE TABLE IF NOT EXISTS $table_name ( 
+        $table_query = "CREATE TABLE $table_name ( 
             id BIGINT NOT NULL AUTO_INCREMENT,
             url TEXT NOT NULL,
             referrer TEXT,
@@ -1143,11 +1375,7 @@ class SeoRepairKit_Activator {
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         dbDelta( $table_query );
         
-        // Clear cache after table creation
-        delete_transient( 'srk_required_tables_check' );
-        delete_transient( 'srk_404_table_exists' );
-        delete_transient( 'srk_404_statistics' );
-        delete_transient( 'srk_table_creation_check' );
+        self::maybe_invalidate_schema_caches();
     }
 
     /**
@@ -1163,7 +1391,7 @@ class SeoRepairKit_Activator {
         $table_name = $wpdb->prefix . 'srkit_smart_redirects';
         $charset_collate = $wpdb->get_charset_collate();
 
-        $table_query = "CREATE TABLE IF NOT EXISTS $table_name (
+        $table_query = "CREATE TABLE $table_name (
             id BIGINT NOT NULL AUTO_INCREMENT,
             redirection_id BIGINT NULL,
             post_type VARCHAR(100) NOT NULL,
@@ -1184,8 +1412,7 @@ class SeoRepairKit_Activator {
         dbDelta( $table_query );
         self::ensure_active_inactive_status_column( $table_name );
 
-        delete_transient( 'srk_required_tables_check' );
-        delete_transient( 'srk_table_creation_check' );
+        self::maybe_invalidate_schema_caches();
     }
 
     /**
@@ -1201,7 +1428,7 @@ class SeoRepairKit_Activator {
         $table_name = $wpdb->prefix . 'srkit_plugin_settings';
         $charset_collate = $wpdb->get_charset_collate();
         
-        $table_query = "CREATE TABLE IF NOT EXISTS $table_name ( 
+        $table_query = "CREATE TABLE $table_name ( 
             id BIGINT NOT NULL AUTO_INCREMENT,
             setting_key VARCHAR(255) NOT NULL UNIQUE,
             setting_value LONGTEXT,
@@ -1216,9 +1443,7 @@ class SeoRepairKit_Activator {
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         dbDelta( $table_query );
         
-        // Clear cache after table creation
-        delete_transient( 'srk_required_tables_check' );
-        delete_transient( 'srk_table_creation_check' );
+        self::maybe_invalidate_schema_caches();
     }
 
     /**
@@ -1233,18 +1458,14 @@ class SeoRepairKit_Activator {
         global $wpdb;
         
         $table_name = $wpdb->prefix . 'srkit_plugin_settings';
-        
-        // Check if table exists
-        $table_exists = ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) === $table_name );
 
-        if ( ! $table_exists ) {
-            // Table doesn't exist yet, fall back to option
+        if ( ! self::is_database_current() ) {
             $consent = get_option( 'srk_site_info_consent' );
             return $consent === 1;
         }
         
         // Get consent from database
-        $result = $wpdb->get_var( $wpdb->prepare(
+        $result = $wpdb->get_var( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter,WordPress.DB.PreparedSQL.NotPrepared -- Activation-time plugin settings lookup from plugin-owned settings table.
             "SELECT site_info_consent FROM $table_name WHERE setting_key = %s",
             'main_settings'
         ) );
@@ -1276,14 +1497,12 @@ class SeoRepairKit_Activator {
         // Update WordPress option for backward compatibility
         update_option( 'srk_site_info_consent', $consent_value );
         
-        // Check if table exists
-        if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) !== $table_name ) {
-            // Table doesn't exist yet, create it
+        if ( ! self::is_database_current() ) {
             self::create_plugin_settings_table();
         }
         
         // Insert or update consent in database
-        $wpdb->replace(
+        $wpdb->replace( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Activation-time plugin settings upsert.
             $table_name,
             array(
                 'setting_key' => 'main_settings',

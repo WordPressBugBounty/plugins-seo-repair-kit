@@ -5,8 +5,8 @@ Tags: spam monitor, meta manager, broken link, schema markup, 301 redirect, 404 
 Requires at least: 5.0.0
 Tested up to: 7.1
 Requires PHP: 7.4.3
-Stable tag: 2.1.10
-Release Date: 21-08-2026
+Stable tag: 2.1.11
+Release Date: 28-08-2026
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -138,21 +138,18 @@ Custom SERP-provider connections and other advanced Spam Monitor capabilities re
 
 == Changelog ==
 
-= 2.1.10 =
-* Compatibility: Verified release metadata and admin/editor integration for the current WordPress compatibility target.
-
-= 2.1.9 =
-* New: Added Spam Monitor module for indexed Google SERP health checks, risky URL review, spam scoring, alerts, and scan history.
-* New: Added Spam Rules for language mismatch detection, spam keyword categories, suspicious URL patterns, and configurable score thresholds.
-* New: Added Google SERP Scan dashboard with provider status, scan configuration, returned SERP records, and recent scan history.
-* New: Added scheduled Spam Monitoring with daily, every 3 days, weekly, biweekly, monthly, and testing interval support.
-* New: Added Spam Monitor email reports, alert history, export/clear table actions, and paginated record tables.
-* Improvement: Added Spam Monitor dashboard stats, charts, module status messaging, and WordPress admin UI refinements.
+= 2.1.11 =
+* Performance: Confirmed the database migration guard prevents repeated schema repair work on current admin, AJAX, Heartbeat, frontend, and WP-Cron requests.
+* Security: Hardened Redirection Manager AJAX nonce handling so missing nonce input fails safely without PHP notices.
+* Security: Preserved existing capability checks and nonce action names across redirection create, edit, delete, bulk, import, export, logs, hit statistics, and migration actions.
+* Database: Updated linked Smart Redirect cleanup to use prepared SQL placeholders for redirection ID lists.
+* Reliability: Verified Auto Scan, scheduled scan email reporting, weekly summary scheduling, redirection cleanup, and migration lock behavior in local testing.
+* Maintenance: Updated uninstall cleanup coverage for current scheduled events and plugin-owned options.
 
 == Upgrade Notice ==
 
-= 2.1.10 =
-Compatibility release for current WordPress versions with hardened editor asset loading.
+= 2.1.11 =
+Reliability and security hardening release. Update recommended for safer Redirection Manager AJAX nonce handling, prepared Smart Redirect cleanup SQL, and guarded migration performance behavior. After updating, perform a quick admin smoke test and back up before any old-version migration test.
 
 == Installation ==
 
@@ -475,6 +472,9 @@ Confirm the relevant post type is selected in SEO Repair Kit settings and that t
 
 = Why does llms.txt redirect to the homepage? =
 Resave Bot Manager llms.txt content and confirm the site is running SEO Repair Kit.
+
+= What should I check after updating to 2.1.11? =
+Open the SEO Repair Kit dashboard, Links Manager, Redirection Manager, Auto Scan, 404 Monitor, Schema Manager, Spam Monitor, KeyTrack, and Settings screens to confirm they load normally. If you are upgrading from an older SEO Repair Kit version with existing data, back up the site first and run a staging migration test before updating production.
 
 = What are the Pro features? =
 Pro capabilities include Schema Manager, AI Chatbot, and supported paid Spam Monitor functionality such as advanced SERP-provider connections.

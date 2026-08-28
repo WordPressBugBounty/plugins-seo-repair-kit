@@ -221,7 +221,12 @@ class SRK_Review_Schema_Generator {
 					$item_reviewed_meta_key = str_replace( 'meta:', '', $item_reviewed_mapping );
 
 					// ✅ Fetch all ratings for same itemReviewed
-					$ratings = $wpdb->get_col(
+					$post_type = get_post_type( $post->ID );
+					$cache_key = 'srk_review_schema_ratings_' . md5( wp_json_encode( array( $post_type, $item_reviewed_meta_key, $value ) ) );
+					$ratings   = wp_cache_get( $cache_key, 'seo_repair_kit' );
+
+					if ( false === $ratings ) {
+					$ratings = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached aggregate source for generated review schema.
 						$wpdb->prepare(
 							"SELECT pm.meta_value
 							 FROM $wpdb->postmeta pm
@@ -235,11 +240,13 @@ class SRK_Review_Schema_Generator {
 								AND meta_key = %s
 								AND meta_value = %s
 							 )",
-							get_post_type( $post->ID ),
+							$post_type,
 							$item_reviewed_meta_key,
 							$value
 						)
 					);
+					wp_cache_set( $cache_key, $ratings, 'seo_repair_kit', 5 * MINUTE_IN_SECONDS );
+					}
 
 					if ( ! empty( $ratings ) ) {
 						$ratings = array_map( 'floatval', $ratings );

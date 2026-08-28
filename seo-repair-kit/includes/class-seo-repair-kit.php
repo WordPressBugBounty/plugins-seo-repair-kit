@@ -236,6 +236,10 @@ class Seo_Repair_Kit {
 			return;
 		}
 
+		if ( wp_doing_ajax() && 'pending_update' !== get_option( 'srk_update_pending' ) ) {
+			return;
+		}
+
 		// Include the activator class
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-activator.php';
 		

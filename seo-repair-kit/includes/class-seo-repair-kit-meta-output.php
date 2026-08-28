@@ -69,7 +69,7 @@ class SRK_Meta_Output {
 			return;
 		}
 
-		$version = defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '2.1.3';
+		$version = SEO_REPAIR_KIT_VERSION;
 
 		echo '<!-- SEO Repair Kit ' . esc_attr( $version ) . ' - seorepairkit.com -->' . "\n\n";
 		echo '<meta name="generator" content="SEO Repair Kit ' . esc_attr( $version ) . '" />' . "\n";

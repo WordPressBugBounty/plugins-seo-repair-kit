@@ -93,8 +93,14 @@ class SRK_Meta_Manager_Image_SEO {
      */
     private function get_missing_alt_count() {
         global $wpdb;
+
+        $cached = wp_cache_get( 'srk_image_seo_missing_alt_count', 'seo_repair_kit' );
+        if ( false !== $cached ) {
+            return number_format_i18n( absint( $cached ) );
+        }
        
-        $count = $wpdb->get_var("
+        $count = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached image SEO aggregate using WordPress posts/postmeta tables.
+            "
             SELECT COUNT(*)
             FROM {$wpdb->postmeta} pm
             INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
@@ -107,9 +113,11 @@ class SRK_Meta_Manager_Image_SEO {
                 AND pm2.meta_key = '_wp_attachment_image_alt'
                 AND pm2.meta_value != ''
             )
-        ");
+        "
+        );
+        wp_cache_set( 'srk_image_seo_missing_alt_count', absint( $count ), 'seo_repair_kit', 5 * MINUTE_IN_SECONDS );
        
-        return $count ? number_format($count) : '0';
+        return $count ? number_format_i18n( $count ) : '0';
     }
  
     /**
@@ -117,14 +125,22 @@ class SRK_Meta_Manager_Image_SEO {
      */
     private function get_total_images() {
         global $wpdb;
+
+        $cached = wp_cache_get( 'srk_image_seo_total_images', 'seo_repair_kit' );
+        if ( false !== $cached ) {
+            return number_format_i18n( absint( $cached ) );
+        }
        
-        $count = $wpdb->get_var("
+        $count = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached image SEO aggregate using WordPress attachment rows.
+            "
             SELECT COUNT(*)
             FROM {$wpdb->posts}
             WHERE post_type = 'attachment'
             AND post_mime_type LIKE 'image/%'
-        ");
+        "
+        );
+        wp_cache_set( 'srk_image_seo_total_images', absint( $count ), 'seo_repair_kit', 5 * MINUTE_IN_SECONDS );
        
-        return $count ? number_format($count) : '0';
+        return $count ? number_format_i18n( $count ) : '0';
     }
 }

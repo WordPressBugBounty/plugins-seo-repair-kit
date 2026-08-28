@@ -2061,6 +2061,7 @@
 						post_type: faqData.post_type,
 						post_id: faqData.post_id,
 						faq_items: faqData.faq_items,
+						nonce: srk_ajax_object.schema_nonce || srk_ajax_object.nonce || '',
 						enabled_fields: [], // ✅ FAQ ke liye empty array bhejein
 					},
 					(response) => {

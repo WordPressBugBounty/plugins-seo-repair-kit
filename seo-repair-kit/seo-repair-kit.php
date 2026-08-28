@@ -16,7 +16,7 @@
  * Plugin Name:       SEO Repair Kit
  * Plugin URI:        https://seorepairkit.com
  * Description:       SEO-friendly AI assistant with intelligent spam monitoring, meta management, schema management, link repair, keyword tracking, and sitemap control.
- * Version:           2.1.10
+ * Version:           2.1.11
  * Author:            TorontoDigits
  * Author URI:        https://torontodigits.com/
  * License:           GPL-2.0+
@@ -34,7 +34,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Currently plugin version.
  * Start at version 1.0.1 and use SemVer - https://semver.org
  */
-define( 'SEO_REPAIR_KIT_VERSION', '2.1.10' );
+define( 'SEO_REPAIR_KIT_VERSION', '2.1.11' );
 
 /**
  * Define the base URL for SRK Intelligence Cloud.
@@ -78,29 +78,6 @@ function activate_seorepairkit_plugin() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-seo-repair-kit-activator.php';
 	SeoRepairKit_Activator::activate();
 }
-add_action('admin_init', function() {
-    // Only run table checks once per day to avoid duplicate queries
-    $last_check = get_transient('srk_table_creation_check');
-    if ( false !== $last_check ) {
-        return; // Already checked recently
-    }
-    
-    require_once plugin_dir_path(__FILE__) . 'includes/class-seo-repair-kit-activator.php';
-
-    // Ensure every current custom table exists / is upgraded.
-    SeoRepairKit_Activator::ensure_database_tables();
-
-    // Uses version-gated dbDelta — safe to run daily, never drops data.
-    
-    // Mark as checked for 24 hours
-    set_transient('srk_table_creation_check', time(), DAY_IN_SECONDS);
-    
-    // Clear related caches after table creation
-    delete_transient('srk_required_tables_check');
-    delete_transient('srk_404_table_exists');
-    delete_transient('srk_404_statistics');
-});
-
 /**
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-seo-repair-kit-deactivator.php

@@ -15,6 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class SeoRepairKit_404_Monitor {
 
+    const SUMMARY_COUNTS_OPTION = 'srk_404_summary_counts';
+
     private $db_404;
     private $is_monitoring_enabled;
     
@@ -23,6 +25,45 @@ class SeoRepairKit_404_Monitor {
      * @var array|null
      */
     private static $cached_404_statistics = null;
+
+    /**
+     * Request-level cache for the 404 logs table availability check.
+     *
+     * @var bool|null
+     */
+    private static $cached_table_exists = null;
+
+    /**
+     * Quote a local SQL identifier.
+     *
+     * WordPress 5.0 compatibility prevents using the newer %i placeholder.
+     *
+     * @param string $identifier Identifier.
+     * @return string
+     */
+    private static function quote_identifier( $identifier ) {
+        return '`' . str_replace( '`', '``', $identifier ) . '`';
+    }
+
+    /**
+     * Get the plugin-owned 404 logs table name.
+     *
+     * @return string
+     */
+    private static function get_404_logs_table_name() {
+        global $wpdb;
+
+        return $wpdb->prefix . 'srkit_404_logs';
+    }
+
+    /**
+     * Get the escaped plugin-owned 404 logs table identifier.
+     *
+     * @return string
+     */
+    private static function get_404_logs_table_identifier() {
+        return self::quote_identifier( self::get_404_logs_table_name() );
+    }
 
     /**
      * Constructor
@@ -197,10 +238,9 @@ class SeoRepairKit_404_Monitor {
      * @return bool True if table exists or was created, false otherwise
      */
     private function ensure_table_exists() {
-        $table_name = $this->db_404->prefix . 'srkit_404_logs';
-        
-        // Check if table exists
-        if ( $this->db_404->get_var( "SHOW TABLES LIKE '$table_name'" ) === $table_name ) {
+        $table_name = self::get_404_logs_table_name();
+
+        if ( self::is_404_logs_table_available() ) {
             return true;
         }
         
@@ -214,8 +254,8 @@ class SeoRepairKit_404_Monitor {
                     $method = $reflection->getMethod( 'create_404_logs_table' );
                     $method->setAccessible( true );
                     $method->invoke( null );
-                    // Check again if table was created
-                    return ( $this->db_404->get_var( "SHOW TABLES LIKE '$table_name'" ) === $table_name );
+                    self::$cached_table_exists = null;
+                    return self::is_404_logs_table_available( true );
                 }
             }
         }
@@ -235,21 +275,20 @@ class SeoRepairKit_404_Monitor {
      * @return int|false Log ID or false on failure
      */
     private function insert_404_log( $url, $user_agent, $ip_address, $method, $domain, $referrer = '' ) {
-        $table_name = $this->db_404->prefix . 'srkit_404_logs';
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Real-time 404 log read/write against plugin-owned table; writes update maintained counters and clear caches.
+        $table_name = self::get_404_logs_table_name();
         
-        // Double-check table exists before attempting operations
-        if ( $this->db_404->get_var( "SHOW TABLES LIKE '$table_name'" ) !== $table_name ) {
+        if ( ! self::is_404_logs_table_available() ) {
             return false;
         }
 
         // Check if this URL already exists
-        $existing = $this->db_404->get_row(
-            $this->db_404->prepare(
-                "SELECT id, count FROM $table_name WHERE url = %s LIMIT 1",
-                $url
-            ),
-            OBJECT
+        $existing_sql = $this->db_404->prepare(
+            "SELECT id, count FROM `{$this->db_404->prefix}srkit_404_logs` WHERE url = %s LIMIT 1",
+            $url
         );
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Real-time duplicate check before updating or inserting one 404 log row; identifier is plugin-owned.
+        $existing = $this->db_404->get_row( $existing_sql, OBJECT );
 
         if ( $existing ) {
             // Update existing entry - increment count and update last_accessed
@@ -269,7 +308,7 @@ class SeoRepairKit_404_Monitor {
                 $update_format[] = '%s';
             }
             
-            $result = $this->db_404->update(
+            $result = $this->db_404->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Intentional write to plugin-owned 404 log table; write operations are not cached.
                 $table_name,
                 $update_data,
                 array( 'id' => $existing->id ),
@@ -277,30 +316,38 @@ class SeoRepairKit_404_Monitor {
                 array( '%d' )
             );
 
-            return $result !== false ? $existing->id : false;
+            if ( false !== $result ) {
+                self::adjust_404_summary_counts( 0, 1 );
+                self::clear_404_statistics_cache();
+                return $existing->id;
+            }
+
+            return false;
         } else {
             // Insert new entry
-            $result = $this->db_404->insert(
-                $table_name,
-                array(
-                    'url' => $url,
-                    'user_agent' => $user_agent,
-                    'ip_address' => $ip_address,
-                    'method' => $method,
-                    'domain' => $domain,
-                    'referrer' => $referrer,
-                    'count' => 1,
-                    'first_accessed' => current_time( 'mysql' ),
-                    'last_accessed' => current_time( 'mysql' ),
-                ),
-                array( '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s' )
+            $insert_data = array(
+                'url' => $url,
+                'user_agent' => $user_agent,
+                'ip_address' => $ip_address,
+                'method' => $method,
+                'domain' => $domain,
+                'referrer' => $referrer,
+                'count' => 1,
+                'first_accessed' => current_time( 'mysql' ),
+                'last_accessed' => current_time( 'mysql' ),
             );
+            $insert_format = array( '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s' );
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional write to plugin-owned 404 log table; write operations are not cached.
+            $result = $this->db_404->insert( $table_name, $insert_data, $insert_format );
 
             if ( $result !== false ) {
+                self::adjust_404_summary_counts( 1, 1 );
+                self::clear_404_statistics_cache();
                 return $this->db_404->insert_id;
             }
         }
 
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
         return false;
     }
 
@@ -310,6 +357,7 @@ class SeoRepairKit_404_Monitor {
      * @return array Statistics
      */
     public static function get_404_statistics() {
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached 404 statistics from plugin-owned table; request cache and transient cache are checked before SQL.
         global $wpdb;
         
         // Return instance-level cached statistics if already fetched in this request
@@ -328,8 +376,6 @@ class SeoRepairKit_404_Monitor {
             return $cached_stats;
         }
         
-        $table_name = $wpdb->prefix . 'srkit_404_logs';
-        
         $stats = array(
             'total_404s' => 0,
             'unique_urls' => 0,
@@ -338,26 +384,24 @@ class SeoRepairKit_404_Monitor {
             'recent_404s' => array(),
         );
 
-        // Check if table exists (use prepared statement for LIKE clause)
-        if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) ) !== $table_name ) {
-            // Cache empty stats for 1 minute if table doesn't exist
+        if ( ! self::is_404_logs_table_available() ) {
             set_transient( $cache_key, $stats, MINUTE_IN_SECONDS );
+            self::$cached_404_statistics = $stats;
             return $stats;
         }
 
-        // Table name is safe (from $wpdb->prefix which is trusted)
-        // Execute queries (table name cannot be parameterized in prepare)
-        $stats['total_404s'] = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table_name}" );
-        $stats['unique_urls'] = (int) $wpdb->get_var( "SELECT COUNT(DISTINCT url) FROM {$table_name}" );
-        $stats['total_hits'] = (int) $wpdb->get_var( "SELECT SUM(count) FROM {$table_name}" );
-        
-        $stats['most_hit'] = $wpdb->get_row(
-            "SELECT url, count, last_accessed FROM {$table_name} ORDER BY count DESC, last_accessed DESC LIMIT 1"
-        );
+        $summary = self::get_404_summary_counts();
 
-        $stats['recent_404s'] = $wpdb->get_results(
-            "SELECT url, count, last_accessed FROM {$table_name} ORDER BY last_accessed DESC LIMIT 10"
-        );
+        // One row is stored per URL and repeat hits increment the `count` column.
+        $stats['total_404s'] = (int) $summary['rows'];
+        $stats['unique_urls'] = (int) $summary['rows'];
+        $stats['total_hits'] = (int) $summary['hits'];
+        
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Cached by srk_404_statistics transient and request cache; identifier is plugin-owned.
+        $stats['most_hit'] = $wpdb->get_row( "SELECT url, count, last_accessed FROM `{$wpdb->prefix}srkit_404_logs` ORDER BY count DESC, last_accessed DESC LIMIT 1" );
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Cached by srk_404_statistics transient and request cache; identifier is plugin-owned.
+        $stats['recent_404s'] = $wpdb->get_results( "SELECT url, count, last_accessed FROM `{$wpdb->prefix}srkit_404_logs` ORDER BY last_accessed DESC LIMIT 10" );
 
         // Store in instance-level cache for this request
         self::$cached_404_statistics = $stats;
@@ -365,7 +409,91 @@ class SeoRepairKit_404_Monitor {
         // Cache stats for 2 minutes (cross-request)
         set_transient( $cache_key, $stats, 2 * MINUTE_IN_SECONDS );
 
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
         return $stats;
+    }
+
+    /**
+     * Get maintained 404 summary counters.
+     *
+     * @return array{rows:int,hits:int}
+     */
+    public static function get_404_summary_counts() {
+        $summary = get_option( self::SUMMARY_COUNTS_OPTION, false );
+
+        if ( is_array( $summary ) && isset( $summary['rows'], $summary['hits'] ) ) {
+            return array(
+                'rows' => max( 0, absint( $summary['rows'] ) ),
+                'hits' => max( 0, absint( $summary['hits'] ) ),
+            );
+        }
+
+        return self::rebuild_404_summary_counts();
+    }
+
+    /**
+     * Rebuild 404 summary counters from the table.
+     *
+     * Used only when the persistent summary option is missing or needs recovery.
+     *
+     * @return array{rows:int,hits:int}
+     */
+    public static function rebuild_404_summary_counts() {
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Recovery-only summary rebuild from plugin-owned 404 logs table.
+        global $wpdb;
+
+        $summary = array(
+            'rows' => 0,
+            'hits' => 0,
+        );
+
+        if ( self::is_404_logs_table_available() ) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Recovery-only rebuild for maintained 404 summary counters; identifier is plugin-owned.
+            $summary['rows'] = (int) $wpdb->get_var( "SELECT COUNT(*) FROM `{$wpdb->prefix}srkit_404_logs`" );
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Recovery-only rebuild for maintained 404 summary counters; identifier is plugin-owned.
+            $summary['hits'] = (int) $wpdb->get_var( "SELECT COALESCE(SUM(count), 0) FROM `{$wpdb->prefix}srkit_404_logs`" );
+        }
+
+        self::update_404_summary_counts( $summary );
+
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+        return $summary;
+    }
+
+    /**
+     * Adjust 404 summary counters after a write.
+     *
+     * @param int $row_delta Row-count delta.
+     * @param int $hit_delta Hit-count delta.
+     * @return void
+     */
+    public static function adjust_404_summary_counts( $row_delta = 0, $hit_delta = 0 ) {
+        $summary = self::get_404_summary_counts();
+
+        $summary['rows'] = max( 0, (int) $summary['rows'] + (int) $row_delta );
+        $summary['hits'] = max( 0, (int) $summary['hits'] + (int) $hit_delta );
+
+        self::update_404_summary_counts( $summary );
+    }
+
+    /**
+     * Save 404 summary counters without autoloading.
+     *
+     * @param array $summary Summary counters.
+     * @return void
+     */
+    private static function update_404_summary_counts( $summary ) {
+        $summary = array(
+            'rows' => max( 0, absint( isset( $summary['rows'] ) ? $summary['rows'] : 0 ) ),
+            'hits' => max( 0, absint( isset( $summary['hits'] ) ? $summary['hits'] : 0 ) ),
+        );
+
+        if ( false === get_option( self::SUMMARY_COUNTS_OPTION, false ) ) {
+            add_option( self::SUMMARY_COUNTS_OPTION, $summary, '', 'no' );
+            return;
+        }
+
+        update_option( self::SUMMARY_COUNTS_OPTION, $summary, false );
     }
     
     /**
@@ -380,6 +508,37 @@ class SeoRepairKit_404_Monitor {
     }
 
     /**
+     * Check whether the 404 logs table is available.
+     *
+     * Current schema installations are trusted to avoid runtime SHOW TABLES calls.
+     *
+     * @param bool $force_check Force a physical check, used only after recovery creation.
+     * @return bool
+     */
+    public static function is_404_logs_table_available( $force_check = false ) {
+        global $wpdb;
+
+        if ( ! $force_check && null !== self::$cached_table_exists ) {
+            return self::$cached_table_exists;
+        }
+
+        if (
+            ! $force_check
+            && class_exists( 'SeoRepairKit_Activator' )
+            && SeoRepairKit_Activator::is_database_current()
+        ) {
+            self::$cached_table_exists = true;
+            return true;
+        }
+
+        $table_name = self::get_404_logs_table_name();
+
+        self::$cached_table_exists = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) === $table_name ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Recovery-only physical table check; current schema path returns before SQL.
+
+        return self::$cached_table_exists;
+    }
+
+    /**
      * Clear 404 logs
      *
      * @param int $days Number of days to keep (0 = delete all)
@@ -388,24 +547,27 @@ class SeoRepairKit_404_Monitor {
     public static function clear_404_logs( $days = 0 ) {
         global $wpdb;
         
-        $table_name = $wpdb->prefix . 'srkit_404_logs';
+        $days = absint( $days );
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery -- Cleanup writes target the plugin-owned 404 logs table.
 
         if ( $days > 0 ) {
             // Delete logs older than specified days
             $date_threshold = date( 'Y-m-d H:i:s', strtotime( "-$days days" ) );
-            $result = $wpdb->query(
+            $result = $wpdb->query( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Intentional 404 log cleanup write; write operations are not cached.
                 $wpdb->prepare(
-                    "DELETE FROM $table_name WHERE last_accessed < %s",
+                    "DELETE FROM `{$wpdb->prefix}srkit_404_logs` WHERE last_accessed < %s",
                     $date_threshold
                 )
             );
         } else {
             // Delete all logs
-            $result = $wpdb->query( "TRUNCATE TABLE $table_name" );
+            $result = $wpdb->query( "TRUNCATE TABLE `{$wpdb->prefix}srkit_404_logs`" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.SchemaChange -- Explicit admin cleanup action for plugin-owned 404 logs.
         }
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery
         
         // Clear cached statistics after data modification
         if ( $result !== false ) {
+            self::rebuild_404_summary_counts();
             self::clear_404_statistics_cache();
         }
 

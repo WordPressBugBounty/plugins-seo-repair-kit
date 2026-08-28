@@ -78,13 +78,13 @@ class SRK_Meta_Manager_Taxonomies {
 				'srk-meta-manager-css',
 				$base_url . 'admin/css/seo-repair-kit-meta-manager.css',
 				array(),
-				defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '2.1.3'
+				SEO_REPAIR_KIT_VERSION
 			);
 			wp_enqueue_script(
 				'srk-meta-taxonomies',
 				$base_url . 'admin/js/meta-manager-js/srk-meta-taxonomies.js',
 				array( 'jquery' ),
-				defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '2.1.3',
+				SEO_REPAIR_KIT_VERSION,
 				true
 			);
 		}

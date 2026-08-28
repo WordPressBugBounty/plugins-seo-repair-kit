@@ -17,6 +17,52 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
 
     class SEORepairKit_KeyTrack_Settings {
 
+        const CACHE_GROUP = 'seo_repair_kit';
+        const CACHE_LATEST_SETTINGS = 'srk_keytrack_latest_settings';
+        const CACHE_RECENT_GSC_DATA = 'srk_keytrack_recent_gsc_data';
+        const CACHE_DASHBOARD_ENABLED = 'srk_dashboard_keytrack_enabled';
+
+        /**
+         * Get a plugin-owned table name.
+         *
+         * @param string $key Table key.
+         * @return string
+         */
+        private function srkit_get_table_name( $key ) {
+            global $wpdb;
+
+            $tables = array(
+                'settings' => $wpdb->prefix . 'srkit_keytrack_settings',
+                'gsc_data' => $wpdb->prefix . 'srkit_gsc_data',
+            );
+
+            return isset( $tables[ $key ] ) ? $tables[ $key ] : '';
+        }
+
+        /**
+         * Get an escaped SQL table identifier.
+         *
+         * @param string $key Table key.
+         * @return string
+         */
+        private function srkit_get_table_identifier( $key ) {
+            $table = $this->srkit_get_table_name( $key );
+
+            return '' === $table ? '' : '`' . str_replace( '`', '``', $table ) . '`';
+        }
+
+        /**
+         * Clear request/object cache entries affected by KeyTrack writes.
+         *
+         * @return void
+         */
+        private function srkit_clear_keytrack_cache() {
+            wp_cache_delete( self::CACHE_LATEST_SETTINGS . '_object', self::CACHE_GROUP );
+            wp_cache_delete( self::CACHE_LATEST_SETTINGS . '_array', self::CACHE_GROUP );
+            wp_cache_delete( self::CACHE_RECENT_GSC_DATA, self::CACHE_GROUP );
+            wp_cache_delete( self::CACHE_DASHBOARD_ENABLED, self::CACHE_GROUP );
+        }
+
         public function __construct() {
             // Add cron schedule filter
             add_filter( 'cron_schedules', [ $this, 'add_cron_schedule' ] );
@@ -149,11 +195,14 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
         public function fetch_gsc_scheduled_data() {
             global $wpdb;
 
-            // Query the 'srkit_keytrack_settings' table to get the most recent record
-            // Note: $wpdb->prefix is safe to use directly as it's a trusted value
-            $srkit_kt_settings = $wpdb->get_row(
-                "SELECT id, keytrack_name, selected_keywords, date_range FROM {$wpdb->prefix}srkit_keytrack_settings ORDER BY updated_at DESC LIMIT 1"
-            );
+            $srkit_kt_settings = wp_cache_get( self::CACHE_LATEST_SETTINGS . '_object', self::CACHE_GROUP );
+            if ( false === $srkit_kt_settings ) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Cached read from plugin-owned KeyTrack settings table.
+                $srkit_kt_settings = $wpdb->get_row(
+                    "SELECT id, keytrack_name, selected_keywords, date_range FROM `{$wpdb->prefix}srkit_keytrack_settings` ORDER BY updated_at DESC LIMIT 1"
+                );
+                wp_cache_set( self::CACHE_LATEST_SETTINGS . '_object', $srkit_kt_settings, self::CACHE_GROUP, MINUTE_IN_SECONDS );
+            }
 
             if ( empty( $srkit_kt_settings ) ) {
                 return;
@@ -342,8 +391,9 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
             }
 
             // Save into srkit_gsc_data table
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional write to plugin-owned KeyTrack GSC data table; affected read caches are cleared below.
             $insert_result = $wpdb->insert(
-                "{$wpdb->prefix}srkit_gsc_data",
+                $this->srkit_get_table_name( 'gsc_data' ),
                 [
                     'gsc_data'     => wp_json_encode( $srkit_th_gsc_data ),
                     'keytrack_name'=> sanitize_text_field( $srkit_keytrack_name ),
@@ -371,13 +421,15 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
                 )
             );
 
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional write to plugin-owned KeyTrack settings table; affected read caches are cleared below.
             $update_result = $wpdb->update(
-                "{$wpdb->prefix}srkit_keytrack_settings",
+                $this->srkit_get_table_name( 'settings' ),
                 [ 'next_run_at' => $next_run_at ],
                 [ 'id' => (int) $srkit_kt_settings->id ],
                 [ '%s' ],
                 [ '%d' ]
             );
+            $this->srkit_clear_keytrack_cache();
 
             // next_run_at updated
 
@@ -550,18 +602,23 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
             if ( $cleared !== false ) {
                 // Also update next_run_at in database to null for the most recent record
                 global $wpdb;
+                // phpcs:disable WordPress.DB.DirectDatabaseQuery -- One-row lookup for clearing the scheduled KeyTrack next run from the plugin-owned settings table.
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                 $most_recent_id = $wpdb->get_var(
-                    "SELECT id FROM {$wpdb->prefix}srkit_keytrack_settings ORDER BY updated_at DESC LIMIT 1"
+                    "SELECT id FROM `{$wpdb->prefix}srkit_keytrack_settings` ORDER BY updated_at DESC LIMIT 1"
                 );
+                // phpcs:enable WordPress.DB.DirectDatabaseQuery
                 
                 if ( $most_recent_id ) {
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional write to plugin-owned KeyTrack settings table; affected read caches are cleared below.
                     $wpdb->update(
-                        "{$wpdb->prefix}srkit_keytrack_settings",
+                        $this->srkit_get_table_name( 'settings' ),
                         [ 'next_run_at' => null ],
                         [ 'id' => (int) $most_recent_id ],
                         [ '%s' ],
                         [ '%d' ]
                     );
+                    $this->srkit_clear_keytrack_cache();
                 }
                 
                 add_settings_error(
@@ -673,8 +730,9 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
                 )
             );
 
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional write to plugin-owned KeyTrack settings table; affected read caches are cleared below.
             $insert_result = $wpdb->insert(
-                "{$wpdb->prefix}srkit_keytrack_settings",
+                $this->srkit_get_table_name( 'settings' ),
                 [
                     'keytrack_name'     => sanitize_text_field( $srkit_keytrack_name ),
                     'selected_keywords' => maybe_serialize( array_map( 'sanitize_text_field', $srkit_th_selected_keywords ) ),
@@ -701,6 +759,9 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
                 return;
             }
 
+            update_option( 'srk_keytrack_has_settings', true, false );
+            $this->srkit_clear_keytrack_cache();
+
             // Schedule the cron job
             $this->srkit_kt_form_schedule_gsc_data( $srkit_th_form_date_range );
 
@@ -721,10 +782,15 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
         private function srkit_display_keytrack_settings_form() {
             global $wpdb;
 
-            $srkit_th_last_saved_settings = $wpdb->get_row(
-                "SELECT * FROM {$wpdb->prefix}srkit_keytrack_settings ORDER BY updated_at DESC LIMIT 1",
-                ARRAY_A
-            );
+            $srkit_th_last_saved_settings = wp_cache_get( self::CACHE_LATEST_SETTINGS . '_array', self::CACHE_GROUP );
+            if ( false === $srkit_th_last_saved_settings ) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Cached read from plugin-owned KeyTrack settings table.
+                $srkit_th_last_saved_settings = $wpdb->get_row(
+                    "SELECT * FROM `{$wpdb->prefix}srkit_keytrack_settings` ORDER BY updated_at DESC LIMIT 1",
+                    ARRAY_A
+                );
+                wp_cache_set( self::CACHE_LATEST_SETTINGS . '_array', $srkit_th_last_saved_settings, self::CACHE_GROUP, MINUTE_IN_SECONDS );
+            }
 
             $srkit_keytrack_name        = $srkit_th_last_saved_settings['keytrack_name'] ?? '';
             $srkit_th_selected_keywords = maybe_unserialize( $srkit_th_last_saved_settings['selected_keywords'] ?? [] );
@@ -886,16 +952,16 @@ if ( ! class_exists( 'SEORepairKit_KeyTrack_Settings' ) ) {
         private function srkit_display_recent_gsc_data() {
             global $wpdb;
 
-            $srkit_th_table_name = $wpdb->prefix . 'srkit_gsc_data';
-
-            // Fetch the most recent GSC data and its associated keytrack name
-            $srkit_th_recent_data = $wpdb->get_row(
-                $wpdb->prepare(
-                    "SELECT gsc_data, keytrack_name FROM `%1s` ORDER BY id DESC LIMIT 1",
-                    str_replace( '`', '', $srkit_th_table_name )
-                ),
-                ARRAY_A
-            );
+            $srkit_th_recent_data = wp_cache_get( self::CACHE_RECENT_GSC_DATA, self::CACHE_GROUP );
+            if ( false === $srkit_th_recent_data ) {
+                // Fetch the most recent GSC data and its associated keytrack name.
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Cached read from plugin-owned KeyTrack GSC data table.
+                $srkit_th_recent_data = $wpdb->get_row(
+                    "SELECT gsc_data, keytrack_name FROM `{$wpdb->prefix}srkit_gsc_data` ORDER BY id DESC LIMIT 1",
+                    ARRAY_A
+                );
+                wp_cache_set( self::CACHE_RECENT_GSC_DATA, $srkit_th_recent_data, self::CACHE_GROUP, MINUTE_IN_SECONDS );
+            }
 
             if ( $srkit_th_recent_data ) {
                 $srkit_th_gsc_data    = json_decode( $srkit_th_recent_data['gsc_data'], true );

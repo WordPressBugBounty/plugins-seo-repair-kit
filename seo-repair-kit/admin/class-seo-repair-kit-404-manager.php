@@ -18,6 +18,13 @@ class SeoRepairKit_404_Manager {
     private $db_404;
 
     /**
+     * Request-level table availability cache.
+     *
+     * @var bool|null
+     */
+    private static $table_exists = null;
+
+    /**
      * Constructor
      */
     public function __construct() {
@@ -157,8 +164,10 @@ class SeoRepairKit_404_Manager {
             }
             $where_sql = ! empty( $where_clauses ) ? 'WHERE ' . implode( ' AND ', $where_clauses ) : '';
 
-            // Get total count
-            $total_items = (int) $this->db_404->get_var( "SELECT COUNT(*) FROM $table_name $where_sql" );
+            // Get total count.
+            $total_items = empty( $where_clauses )
+                ? (int) $stats['total_404s']
+                : (int) $this->db_404->get_var( "SELECT COUNT(*) FROM $table_name $where_sql" );
             $total_pages = $show_all ? 1 : ( $per_page > 0 ? ceil( $total_items / $per_page ) : 1 );
             $current_page = $show_all ? 1 : min( $current_page, max( 1, $total_pages ) );
             $offset = $show_all ? 0 : ( $current_page - 1 ) * $per_page;
@@ -203,7 +212,7 @@ class SeoRepairKit_404_Manager {
         <div class="wrap seo-repair-kit-404-manager">
             <h1 class="srk-page-title">
                 <?php esc_html_e( '404 Error Monitor', 'seo-repair-kit' ); ?>
-                <span class="srk-version-badge">v2.1.0</span>
+                <span class="srk-version-badge">v<?php echo esc_html( SEO_REPAIR_KIT_VERSION ); ?></span>
             </h1>
 
             <!-- Statistics Dashboard -->
@@ -826,12 +835,26 @@ class SeoRepairKit_404_Manager {
      */
     private function ensure_404_table_exists() {
         global $wpdb;
+
+        if ( null !== self::$table_exists ) {
+            return self::$table_exists;
+        }
+
+        if (
+            class_exists( 'SeoRepairKit_Activator' )
+            && SeoRepairKit_Activator::is_database_current()
+        ) {
+            self::$table_exists = true;
+            return true;
+        }
         
         $table_name = $wpdb->prefix . 'srkit_404_logs';
         
         // Check if table exists using prepared statement
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Recovery check only when the SRK schema version is not current.
         $result = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) );
         if ( $result === $table_name ) {
+            self::$table_exists = true;
             return true;
         }
         
@@ -859,8 +882,10 @@ class SeoRepairKit_404_Manager {
         }
         
         // Check again if table was created using prepared statement
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Post-recovery verification.
         $result = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) );
-        return ( $result === $table_name );
+        self::$table_exists = ( $result === $table_name );
+        return self::$table_exists;
     }
 
     /**
@@ -874,7 +899,7 @@ class SeoRepairKit_404_Manager {
         $table_name = $wpdb->prefix . 'srkit_404_logs';
         $charset_collate = $wpdb->get_charset_collate();
         
-        $table_query = "CREATE TABLE IF NOT EXISTS $table_name ( 
+        $table_query = "CREATE TABLE $table_name ( 
             id BIGINT NOT NULL AUTO_INCREMENT,
             url TEXT NOT NULL,
             referrer TEXT,

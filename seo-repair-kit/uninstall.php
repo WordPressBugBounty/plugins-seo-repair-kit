@@ -12,7 +12,7 @@
  *
  * @link       https://seorepairkit.com
  * @since      1.0.1
- * @version    2.1.10
+ * @version    2.1.11
  * @package    Seo_Repair_Kit
  */
 
@@ -34,7 +34,7 @@ function srk_uninstall_drop_table( $table_name ) {
 	$table_name = str_replace( '`', '', (string) $table_name );
 
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Exact table names come from the owned allowlist below.
-	$wpdb->query( "DROP TABLE IF EXISTS `{$table_name}`" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Exact owned table allowlist.
+	$wpdb->query( "DROP TABLE IF EXISTS `{$table_name}`" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Explicit uninstall-only drop for exact owned table allowlist.
 }
 
 /**
@@ -112,6 +112,7 @@ srk_uninstall_clear_cron_hooks(
 	array(
 		'srk_link_scanner_cron_scan',
 		'srk_broken_links_scan_event',
+		'srk_weekly_seo_summary_cron',
 		'srk_weekly_summary_email_event',
 		'srk_keytrack_weekly_summary_event',
 		'srk_spam_monitor_scheduled_scan',
@@ -175,6 +176,8 @@ srk_uninstall_delete_options(
 	array(
 		'seo_repair_kit_version',
 		'seo_repair_kit_db_version',
+		'srkit_db_version',
+		'srkit_db_update_lock',
 		'srk_plugin_version',
 		'srk_plugin_id',
 		'srk_plugin_instance_id',
@@ -188,6 +191,7 @@ srk_uninstall_delete_options(
 		'srk_notification_email',
 		'td_blc_saved_post_types',
 		'srk_keytrack_enabled',
+		'srk_keytrack_has_settings',
 		'srk_keytrack_alerts_enabled',
 		'srk_broken_links_notify_enabled',
 		'srk_weekly_report_enabled',
@@ -200,6 +204,8 @@ srk_uninstall_delete_options(
 		'srk_last_links_scan_at',
 		'srk_links_schedule',
 		'srk_link_scanner_schedule_settings',
+		'srk_link_scanner_history_db_version',
+		'srk_link_scanner_history_db_update_lock',
 		'srk_link_scanner_cursor',
 		'srk_link_scanner_last_alert_hash',
 		'srk_link_scanner_url_status_cache',
@@ -213,6 +219,7 @@ srk_uninstall_delete_options(
 		'srk_auto_redirect',
 		'srk_monitor_404s',
 		'srk_404_monitoring_enabled',
+		'srk_404_summary_counts',
 		'srk_redirect_cache_time',
 		'srk_ip_collection',
 		'srk_geolocation_enabled',
@@ -220,6 +227,7 @@ srk_uninstall_delete_options(
 		'srk_enable_htaccess_sync',
 		'srk_htaccess_write_all',
 		'srk_redirection_rules_signature',
+		'srk_redirection_logs_count',
 		'srk_smart_redirect_post_types',
 		'srk_smart_archive_redirect_settings',
 		'srk_smart_redirect_last_generation_summary',

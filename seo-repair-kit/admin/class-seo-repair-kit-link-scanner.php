@@ -27,6 +27,13 @@ class SeoRepairKit_LinkScanner {
 	private $automation_admin = null;
 
 	/**
+	 * Request-level cache for the 404 logs table availability check.
+	 *
+	 * @var bool|null
+	 */
+	private static $cached_404_table_exists = null;
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
@@ -68,6 +75,10 @@ class SeoRepairKit_LinkScanner {
 			require_once $automation_admin_file;
 		}
 
+		if ( class_exists( 'SeoRepairKit_LinkScanner_Automation' ) ) {
+			SeoRepairKit_LinkScanner_Automation::get_instance();
+		}
+
 		$alerts_file = $base_admin_path . 'class-seo-repair-kit-links-alerts.php';
 		if ( file_exists( $alerts_file ) && ! class_exists( 'SeoRepairKit_LinksAlerts' ) ) {
 			require_once $alerts_file;
@@ -86,9 +97,6 @@ class SeoRepairKit_LinkScanner {
 			new SeoRepairKit_SmartRedirects();
 		}
 
-		if ( class_exists( 'SeoRepairKit_LinkScanner_Automation' ) ) {
-			SeoRepairKit_LinkScanner_Automation::get_instance()->ensure_history_tables();
-		}
 	}
 
 	/**
@@ -293,27 +301,27 @@ class SeoRepairKit_LinkScanner {
 
 			<div class="srk-link-scanner-tabs">
 				<nav class="srk-tab-nav">
-					<button type="button" class="srk-tab-button <?php echo ( 'link-scanner' === $current_tab ) ? 'active' : ''; ?>" data-tab="link-scanner">
+					<button type="button" class="srk-tab-button <?php echo ( 'link-scanner' === $current_tab ) ? 'active' : ''; ?>" data-tab="link-scanner" data-tab-url="<?php echo esc_url( admin_url( 'admin.php?page=seo-repair-kit-link-scanner&tab=link-scanner' ) ); ?>">
 						<span class="dashicons dashicons-search"></span>
 						<?php esc_html_e( 'Links Scan', 'seo-repair-kit' ); ?>
 					</button>
-					<button type="button" class="srk-tab-button <?php echo ( '404-monitor' === $current_tab ) ? 'active' : ''; ?>" data-tab="404-monitor">
+					<button type="button" class="srk-tab-button <?php echo ( '404-monitor' === $current_tab ) ? 'active' : ''; ?>" data-tab="404-monitor" data-tab-url="<?php echo esc_url( admin_url( 'admin.php?page=seo-repair-kit-link-scanner&tab=404-monitor' ) ); ?>">
 						<span class="dashicons dashicons-warning"></span>
 						<?php esc_html_e( '404 Monitor', 'seo-repair-kit' ); ?>
 					</button>
-					<button type="button" class="srk-tab-button <?php echo ( 'automation-scan' === $current_tab ) ? 'active' : ''; ?>" data-tab="automation-scan">
+					<button type="button" class="srk-tab-button <?php echo ( 'automation-scan' === $current_tab ) ? 'active' : ''; ?>" data-tab="automation-scan" data-tab-url="<?php echo esc_url( admin_url( 'admin.php?page=seo-repair-kit-link-scanner&tab=automation-scan' ) ); ?>">
 						<span class="dashicons dashicons-clock"></span>
 						<?php esc_html_e( 'Auto Scan', 'seo-repair-kit' ); ?>
 					</button>
-					<button type="button" class="srk-tab-button <?php echo ( 'alerts-notifications' === $current_tab ) ? 'active' : ''; ?>" data-tab="alerts-notifications">
+					<button type="button" class="srk-tab-button <?php echo ( 'alerts-notifications' === $current_tab ) ? 'active' : ''; ?>" data-tab="alerts-notifications" data-tab-url="<?php echo esc_url( admin_url( 'admin.php?page=seo-repair-kit-link-scanner&tab=alerts-notifications' ) ); ?>">
 						<span class="dashicons dashicons-bell"></span>
 						<?php esc_html_e( 'Notifications', 'seo-repair-kit' ); ?>
 					</button>
-					<button type="button" class="srk-tab-button <?php echo ( 'smart-redirects' === $current_tab ) ? 'active' : ''; ?>" data-tab="smart-redirects">
+					<button type="button" class="srk-tab-button <?php echo ( 'smart-redirects' === $current_tab ) ? 'active' : ''; ?>" data-tab="smart-redirects" data-tab-url="<?php echo esc_url( admin_url( 'admin.php?page=seo-repair-kit-link-scanner&tab=smart-redirects' ) ); ?>">
 						<span class="dashicons dashicons-migrate"></span>
 						<?php esc_html_e( 'Smart Redirects', 'seo-repair-kit' ); ?>
 					</button>
-					<button type="button" class="srk-tab-button <?php echo ( 'internal-linking' === $current_tab ) ? 'active' : ''; ?>" data-tab="internal-linking">
+					<button type="button" class="srk-tab-button <?php echo ( 'internal-linking' === $current_tab ) ? 'active' : ''; ?>" data-tab="internal-linking" data-tab-url="<?php echo esc_url( admin_url( 'admin.php?page=seo-repair-kit-link-scanner&tab=internal-linking' ) ); ?>">
 						<span class="dashicons dashicons-networking"></span>
 						<?php esc_html_e( 'Internal Linking', 'seo-repair-kit' ); ?>
 					</button>
@@ -445,28 +453,44 @@ class SeoRepairKit_LinkScanner {
 				</div>
 			</div>
 
-			<div id="srk-tab-404-monitor" class="srk-tab-content <?php echo ( '404-monitor' === $current_tab ) ? 'active' : ''; ?>" style="<?php echo ( '404-monitor' === $current_tab ) ? '' : 'display:none;'; ?>">
-				<?php $this->render_404_monitor_content(); ?>
-			</div>
-
-			<div id="srk-tab-automation-scan" class="srk-tab-content <?php echo ( 'automation-scan' === $current_tab ) ? 'active' : ''; ?>" style="<?php echo ( 'automation-scan' === $current_tab ) ? '' : 'display:none;'; ?>">
-				<?php $this->render_automation_scan_tab(); ?>
-			</div>
-
-			<div id="srk-tab-alerts-notifications" class="srk-tab-content <?php echo ( 'alerts-notifications' === $current_tab ) ? 'active' : ''; ?>" style="<?php echo ( 'alerts-notifications' === $current_tab ) ? '' : 'display:none;'; ?>">
-				<?php $this->render_alerts_notifications_tab(); ?>
-			</div>
-
-			<div id="srk-tab-smart-redirects" class="srk-tab-content <?php echo ( 'smart-redirects' === $current_tab ) ? 'active' : ''; ?>" style="<?php echo ( 'smart-redirects' === $current_tab ) ? '' : 'display:none;'; ?>">
+			<div id="srk-tab-404-monitor" class="srk-tab-content <?php echo ( '404-monitor' === $current_tab ) ? 'active' : ''; ?>" data-loaded="<?php echo ( '404-monitor' === $current_tab ) ? '1' : '0'; ?>" style="<?php echo ( '404-monitor' === $current_tab ) ? '' : 'display:none;'; ?>">
 				<?php
-				if ( class_exists( 'SeoRepairKit_SmartRedirects' ) ) {
+				if ( '404-monitor' === $current_tab ) {
+					$this->render_404_monitor_content();
+				}
+				?>
+			</div>
+
+			<div id="srk-tab-automation-scan" class="srk-tab-content <?php echo ( 'automation-scan' === $current_tab ) ? 'active' : ''; ?>" data-loaded="<?php echo ( 'automation-scan' === $current_tab ) ? '1' : '0'; ?>" style="<?php echo ( 'automation-scan' === $current_tab ) ? '' : 'display:none;'; ?>">
+				<?php
+				if ( 'automation-scan' === $current_tab ) {
+					$this->render_automation_scan_tab();
+				}
+				?>
+			</div>
+
+			<div id="srk-tab-alerts-notifications" class="srk-tab-content <?php echo ( 'alerts-notifications' === $current_tab ) ? 'active' : ''; ?>" data-loaded="<?php echo ( 'alerts-notifications' === $current_tab ) ? '1' : '0'; ?>" style="<?php echo ( 'alerts-notifications' === $current_tab ) ? '' : 'display:none;'; ?>">
+				<?php
+				if ( 'alerts-notifications' === $current_tab ) {
+					$this->render_alerts_notifications_tab();
+				}
+				?>
+			</div>
+
+			<div id="srk-tab-smart-redirects" class="srk-tab-content <?php echo ( 'smart-redirects' === $current_tab ) ? 'active' : ''; ?>" data-loaded="<?php echo ( 'smart-redirects' === $current_tab ) ? '1' : '0'; ?>" style="<?php echo ( 'smart-redirects' === $current_tab ) ? '' : 'display:none;'; ?>">
+				<?php
+				if ( 'smart-redirects' === $current_tab && class_exists( 'SeoRepairKit_SmartRedirects' ) ) {
 					SeoRepairKit_SmartRedirects::render_tab();
 				}
 				?>
 			</div>
 
-			<div id="srk-tab-internal-linking" class="srk-tab-content <?php echo ( 'internal-linking' === $current_tab ) ? 'active' : ''; ?>" style="<?php echo ( 'internal-linking' === $current_tab ) ? '' : 'display:none;'; ?>">
-				<?php $this->render_internal_linking_tab(); ?>
+			<div id="srk-tab-internal-linking" class="srk-tab-content <?php echo ( 'internal-linking' === $current_tab ) ? 'active' : ''; ?>" data-loaded="<?php echo ( 'internal-linking' === $current_tab ) ? '1' : '0'; ?>" style="<?php echo ( 'internal-linking' === $current_tab ) ? '' : 'display:none;'; ?>">
+				<?php
+				if ( 'internal-linking' === $current_tab ) {
+					$this->render_internal_linking_tab();
+				}
+				?>
 			</div>
 		</div>
 
@@ -483,6 +507,13 @@ class SeoRepairKit_LinkScanner {
 				var $targetContent = $('#srk-tab-' + tab);
 
 				if (!$targetButton.length || !$targetContent.length) {
+					return;
+				}
+
+				if ('0' === String($targetContent.attr('data-loaded'))) {
+					if ($targetButton.data('tab-url')) {
+						window.location.href = $targetButton.data('tab-url');
+					}
 					return;
 				}
 
@@ -620,7 +651,7 @@ class SeoRepairKit_LinkScanner {
 			}
 		}
 
-		$this->ensure_404_table_exists();
+		$table_exists = $this->ensure_404_table_exists();
 
 		if ( class_exists( 'SeoRepairKit_404_Monitor' ) ) {
 			$stats = SeoRepairKit_404_Monitor::get_404_statistics();
@@ -634,15 +665,7 @@ class SeoRepairKit_LinkScanner {
 			);
 		}
 
-		$table_name         = $this->db_404->prefix . 'srkit_404_logs';
-		$table_exists_cache = get_transient( 'srk_404_table_exists' );
-		$table_exists       = ( false !== $table_exists_cache && (bool) $table_exists_cache );
-
-		if ( ! $table_exists ) {
-			$this->ensure_404_table_exists();
-			$table_exists_cache = get_transient( 'srk_404_table_exists' );
-			$table_exists       = ( false !== $table_exists_cache && (bool) $table_exists_cache );
-		}
+		$table_name = $this->db_404->prefix . 'srkit_404_logs';
 
 		$per_page_raw = isset( $_GET['srk_404_per_page'] ) ? sanitize_text_field( wp_unslash( $_GET['srk_404_per_page'] ) ) : 20;
 		$show_all     = ( 'all' === $per_page_raw || '-1' === $per_page_raw );
@@ -679,7 +702,9 @@ class SeoRepairKit_LinkScanner {
 			}
 
 			$where_sql   = ! empty( $where_clauses ) ? 'WHERE ' . implode( ' AND ', $where_clauses ) : '';
-			$total_items = (int) $this->db_404->get_var( "SELECT COUNT(*) FROM $table_name $where_sql" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$total_items = empty( $where_clauses )
+				? (int) $stats['total_404s']
+				: (int) $this->db_404->get_var( "SELECT COUNT(*) FROM $table_name $where_sql" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$total_pages = $show_all ? 1 : ( $per_page > 0 ? ceil( $total_items / $per_page ) : 1 );
 
 			$allowed_orderby = array( 'last_accessed', 'first_accessed', 'ip_address' );
@@ -1071,6 +1096,16 @@ class SeoRepairKit_LinkScanner {
 			wp_send_json_error( array( 'message' => __( '404 logs table does not exist.', 'seo-repair-kit' ) ) );
 		}
 
+		$deleted_hit_count = 0;
+		if ( class_exists( 'SeoRepairKit_404_Monitor' ) ) {
+			$deleted_hit_count = (int) $this->db_404->get_var(
+				$this->db_404->prepare(
+					"SELECT count FROM $table_name WHERE id = %d",
+					$log_id
+				)
+			);
+		}
+
 		$result = $this->db_404->delete(
 			$table_name,
 			array( 'id' => $log_id ),
@@ -1079,6 +1114,9 @@ class SeoRepairKit_LinkScanner {
 
 		if ( false !== $result ) {
 			if ( class_exists( 'SeoRepairKit_404_Monitor' ) ) {
+				if ( $result > 0 ) {
+					SeoRepairKit_404_Monitor::adjust_404_summary_counts( -1, -$deleted_hit_count );
+				}
 				SeoRepairKit_404_Monitor::clear_404_statistics_cache();
 			}
 
@@ -1134,6 +1172,16 @@ class SeoRepairKit_LinkScanner {
 		$ids_placeholder = implode( ',', array_fill( 0, count( $log_ids ), '%d' ) );
 
 		if ( 'delete' === $action || 'ignore' === $action ) {
+			$deleted_hit_count = 0;
+			if ( class_exists( 'SeoRepairKit_404_Monitor' ) ) {
+				$deleted_hit_count = (int) $this->db_404->get_var(
+					$this->db_404->prepare(
+						"SELECT COALESCE(SUM(count), 0) FROM $table_name WHERE id IN ($ids_placeholder)",
+						...$log_ids
+					)
+				);
+			}
+
 			$result = $this->db_404->query(
 				$this->db_404->prepare(
 					"DELETE FROM $table_name WHERE id IN ($ids_placeholder)",
@@ -1143,6 +1191,7 @@ class SeoRepairKit_LinkScanner {
 
 			if ( false !== $result && $result > 0 ) {
 				if ( class_exists( 'SeoRepairKit_404_Monitor' ) ) {
+					SeoRepairKit_404_Monitor::adjust_404_summary_counts( -$result, -$deleted_hit_count );
 					SeoRepairKit_404_Monitor::clear_404_statistics_cache();
 				}
 
@@ -1224,11 +1273,17 @@ class SeoRepairKit_LinkScanner {
 				);
 			}
 		} else {
-			$count  = (int) $this->db_404->get_var( "SELECT COUNT(*) FROM $table_name" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$summary = class_exists( 'SeoRepairKit_404_Monitor' )
+				? SeoRepairKit_404_Monitor::get_404_summary_counts()
+				: array( 'rows' => 0, 'hits' => 0 );
+			$count   = (int) $summary['rows'];
 			$result = $this->db_404->query( "TRUNCATE TABLE $table_name" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 			if ( false !== $result ) {
 				$deleted = $count;
+				if ( class_exists( 'SeoRepairKit_404_Monitor' ) ) {
+					SeoRepairKit_404_Monitor::adjust_404_summary_counts( -$count, -absint( $summary['hits'] ) );
+				}
 			} else {
 				$error = $this->db_404->last_error;
 				wp_send_json_error(
@@ -1239,7 +1294,10 @@ class SeoRepairKit_LinkScanner {
 			}
 		}
 
-		if ( $deleted > 0 && class_exists( 'SeoRepairKit_404_Monitor' ) ) {
+		if ( false !== $result && class_exists( 'SeoRepairKit_404_Monitor' ) ) {
+			if ( $days > 0 ) {
+				SeoRepairKit_404_Monitor::rebuild_404_summary_counts();
+			}
 			SeoRepairKit_404_Monitor::clear_404_statistics_cache();
 		}
 
@@ -1289,11 +1347,12 @@ class SeoRepairKit_LinkScanner {
 			$redirect_type = 301;
 		}
 
-		$redirections_table = $this->db_404->prefix . 'srkit_redirection_table';
+		$redirections_table     = $this->db_404->prefix . 'srkit_redirection_table';
+		$redirections_table_sql = '`' . str_replace( '`', '``', $redirections_table ) . '`';
 
-		$existing = $this->db_404->get_var(
+		$existing = $this->db_404->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Real-time duplicate check before inserting a redirect; table identifier is plugin-owned.
 			$this->db_404->prepare(
-				"SELECT id FROM $redirections_table WHERE source_url = %s",
+				"SELECT id FROM {$redirections_table_sql} WHERE source_url = %s",
 				$source_url
 			)
 		);
@@ -1302,21 +1361,21 @@ class SeoRepairKit_LinkScanner {
 			wp_send_json_error( array( 'message' => __( 'A redirect for this URL already exists.', 'seo-repair-kit' ) ) );
 		}
 
-		$result = $this->db_404->insert(
-			$redirections_table,
-			array(
-				'source_url'    => $source_url,
-				'target_url'    => $target_url,
-				'redirect_type' => $redirect_type,
-				'status'        => 'active',
-				'is_regex'      => 0,
-				'position'      => 0,
-				'hits'          => 0,
-				'created_at'    => current_time( 'mysql' ),
-				'updated_at'    => current_time( 'mysql' ),
-			),
-			array( '%s', '%s', '%d', '%s', '%d', '%d', '%d', '%s', '%s' )
+		$redirect_data    = array(
+			'source_url'    => $source_url,
+			'target_url'    => $target_url,
+			'redirect_type' => $redirect_type,
+			'status'        => 'active',
+			'is_regex'      => 0,
+			'position'      => 0,
+			'hits'          => 0,
+			'created_at'    => current_time( 'mysql' ),
+			'updated_at'    => current_time( 'mysql' ),
 		);
+		$redirect_formats = array( '%s', '%s', '%d', '%s', '%d', '%d', '%d', '%s', '%s' );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional insert into plugin-owned redirection table; write operations are not cached.
+		$result = $this->db_404->insert( $redirections_table, $redirect_data, $redirect_formats );
 
 		if ( false !== $result ) {
 			$redirect_id = $this->db_404->insert_id;
@@ -1324,13 +1383,34 @@ class SeoRepairKit_LinkScanner {
 			if ( $delete_404 && $log_id > 0 ) {
 				$this->ensure_404_table_exists();
 				$log_table_name = $this->db_404->prefix . 'srkit_404_logs';
+				$log_table_sql  = '`' . str_replace( '`', '``', $log_table_name ) . '`';
+				$log_table_available = (
+					class_exists( 'SeoRepairKit_Activator' )
+					&& SeoRepairKit_Activator::is_database_current()
+				);
 
-				if ( $this->db_404->get_var( "SHOW TABLES LIKE '$log_table_name'" ) === $log_table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-					$this->db_404->delete(
-						$log_table_name,
-						array( 'id' => $log_id ),
-						array( '%d' )
-					);
+				if ( ! $log_table_available ) {
+					$log_table_available = ( $this->db_404->get_var( $this->db_404->prepare( 'SHOW TABLES LIKE %s', $log_table_name ) ) === $log_table_name ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Recovery check only when schema version is not current.
+				}
+
+				if ( $log_table_available ) {
+					$deleted_hit_count = 0;
+					if ( class_exists( 'SeoRepairKit_404_Monitor' ) ) {
+						$deleted_hit_count = (int) $this->db_404->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Real-time read before deleting one explicit 404 log row; table identifier is plugin-owned.
+							$this->db_404->prepare(
+								"SELECT count FROM {$log_table_sql} WHERE id = %d",
+								$log_id
+							)
+						);
+					}
+
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional write to plugin-owned 404 log table after creating redirect; write operations are not cached.
+					$deleted = $this->db_404->delete( $log_table_name, array( 'id' => $log_id ), array( '%d' ) );
+
+					if ( $deleted > 0 && class_exists( 'SeoRepairKit_404_Monitor' ) ) {
+						SeoRepairKit_404_Monitor::adjust_404_summary_counts( -1, -$deleted_hit_count );
+						SeoRepairKit_404_Monitor::clear_404_statistics_cache();
+					}
 				}
 			}
 
@@ -1339,7 +1419,6 @@ class SeoRepairKit_LinkScanner {
 			$refresh_method         = $redirection_reflection->getMethod( 'refresh_server_rules' );
 			$refresh_method->setAccessible( true );
 			$refresh_method->invoke( $redirection, true );
-
 			wp_send_json_success(
 				array(
 					'message'      => __( 'Redirect created successfully.', 'seo-repair-kit' ),
@@ -1483,18 +1562,25 @@ class SeoRepairKit_LinkScanner {
 	private function ensure_404_table_exists() {
 		global $wpdb;
 
-		$table_name   = $wpdb->prefix . 'srkit_404_logs';
-		$cache_key    = 'srk_404_table_exists';
-		$table_exists = get_transient( $cache_key );
-
-		if ( false === $table_exists ) {
-			$table_exists = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) === $table_name );
-			set_transient( $cache_key, $table_exists ? 1 : 0, 5 * MINUTE_IN_SECONDS );
-		} else {
-			$table_exists = (bool) $table_exists;
+		if ( null !== self::$cached_404_table_exists ) {
+			return self::$cached_404_table_exists;
 		}
 
+		if ( class_exists( 'SeoRepairKit_Activator' ) && SeoRepairKit_Activator::is_database_current() ) {
+			self::$cached_404_table_exists = true;
+			return true;
+		}
+
+		if ( class_exists( 'SeoRepairKit_404_Monitor' ) && method_exists( 'SeoRepairKit_404_Monitor', 'is_404_logs_table_available' ) ) {
+			self::$cached_404_table_exists = SeoRepairKit_404_Monitor::is_404_logs_table_available();
+			return self::$cached_404_table_exists;
+		}
+
+		$table_name   = $wpdb->prefix . 'srkit_404_logs';
+		$table_exists = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) === $table_name );
+
 		if ( $table_exists ) {
+			self::$cached_404_table_exists = true;
 			return true;
 		}
 
@@ -1509,16 +1595,13 @@ class SeoRepairKit_LinkScanner {
 					$method->setAccessible( true );
 					$method->invoke( null );
 
-					delete_transient( $cache_key );
 					delete_transient( 'srk_404_statistics' );
 				} else {
 					$this->create_404_table_directly();
-					delete_transient( $cache_key );
 					delete_transient( 'srk_404_statistics' );
 				}
 			} else {
 				$this->create_404_table_directly();
-				delete_transient( $cache_key );
 				delete_transient( 'srk_404_statistics' );
 			}
 		} else {
@@ -1526,7 +1609,9 @@ class SeoRepairKit_LinkScanner {
 		}
 
 		$result = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) );
-		return ( $result === $table_name );
+		self::$cached_404_table_exists = ( $result === $table_name );
+
+		return self::$cached_404_table_exists;
 	}
 
 	/**
@@ -1540,7 +1625,7 @@ class SeoRepairKit_LinkScanner {
 		$table_name      = $wpdb->prefix . 'srkit_404_logs';
 		$charset_collate = $wpdb->get_charset_collate();
 
-		$table_query = "CREATE TABLE IF NOT EXISTS $table_name (
+		$table_query = "CREATE TABLE $table_name (
 			id BIGINT NOT NULL AUTO_INCREMENT,
 			url TEXT NOT NULL,
 			referrer TEXT,

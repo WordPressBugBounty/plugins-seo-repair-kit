@@ -14,6 +14,46 @@ if ( ! defined( 'ABSPATH' ) ) {
 class SeoRepairKit_SmartRedirect_Generator {
 
 	/**
+	 * Quote a local SQL identifier.
+	 *
+	 * @param string $identifier Identifier.
+	 * @return string
+	 */
+	private static function quote_identifier( $identifier ) {
+		return '`' . str_replace( '`', '``', $identifier ) . '`';
+	}
+
+	/**
+	 * Get a plugin-owned table name.
+	 *
+	 * @param string $key Table key.
+	 * @return string
+	 */
+	private static function get_table_name( $key ) {
+		global $wpdb;
+
+		$tables = array(
+			'link_scan_runs'  => $wpdb->prefix . 'srk_link_scan_runs',
+			'smart_redirects' => $wpdb->prefix . 'srkit_smart_redirects',
+			'redirections'    => $wpdb->prefix . 'srkit_redirection_table',
+		);
+
+		return isset( $tables[ $key ] ) ? $tables[ $key ] : '';
+	}
+
+	/**
+	 * Get an escaped SQL table identifier.
+	 *
+	 * @param string $key Table key.
+	 * @return string
+	 */
+	private static function get_table_identifier( $key ) {
+		$table_name = self::get_table_name( $key );
+
+		return '' === $table_name ? '' : self::quote_identifier( $table_name );
+	}
+
+	/**
 	 * Backfill smart redirects from the latest scan snapshot and recent run history.
 	 *
 	 * This helps when Smart Redirect is enabled after scans already captured broken
@@ -42,17 +82,20 @@ class SeoRepairKit_SmartRedirect_Generator {
 		}
 
 		$history_limit = max( 1, min( 50, absint( $history_limit ) ) );
-		$runs_table    = $wpdb->prefix . 'srk_link_scan_runs';
-		$table_exists  = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $runs_table ) ) === $runs_table );
+		$runs_table = self::get_table_name( 'link_scan_runs' );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Defensive recovery check before reading plugin-owned scan history.
+		$table_exists = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $runs_table ) ) === $runs_table );
 
 		if ( $table_exists ) {
-			$rows = (array) $wpdb->get_results(
+			// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Bounded Smart Redirect backfill read from plugin-owned scan history.
+			$rows = (array) $wpdb->get_results( // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Bounded Smart Redirect backfill read from plugin-owned scan history.
 				$wpdb->prepare(
-					"SELECT records_json FROM {$runs_table} WHERE records_json IS NOT NULL AND records_json != '' ORDER BY id DESC LIMIT %d",
+					"SELECT records_json FROM `{$wpdb->prefix}srk_link_scan_runs` WHERE records_json IS NOT NULL AND records_json != '' ORDER BY id DESC LIMIT %d",
 					$history_limit
 				),
 				ARRAY_A
 			);
+			// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
 			foreach ( $rows as $row ) {
 				$records = json_decode( isset( $row['records_json'] ) ? $row['records_json'] : '', true );
@@ -220,19 +263,22 @@ class SeoRepairKit_SmartRedirect_Generator {
 			return false;
 		}
 
-		$smart_table = $wpdb->prefix . 'srkit_smart_redirects';
-		$redir_table = $wpdb->prefix . 'srkit_redirection_table';
+		$smart_table     = self::get_table_name( 'smart_redirects' );
+		$redir_table     = self::get_table_name( 'redirections' );
+		$smart_table_sql = self::get_table_identifier( 'smart_redirects' );
+		$redir_table_sql = self::get_table_identifier( 'redirections' );
 
-		$smart_exists = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $smart_table ) ) === $smart_table );
-		$redir_exists = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $redir_table ) ) === $redir_table );
+		// phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter -- Smart Redirect identifiers are plugin-owned values from get_table_identifier(); URL/post-type values are prepared.
+		$smart_exists = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $smart_table ) ) === $smart_table ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Defensive recovery check before creating Smart Redirect records in plugin-owned tables.
+		$redir_exists = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $redir_table ) ) === $redir_table ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Defensive recovery check before creating Redirect Manager records in plugin-owned tables.
 
 		if ( ! $smart_exists || ! $redir_exists ) {
 			return false;
 		}
 
-		$existing_smart = $wpdb->get_row(
+		$existing_smart = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Real-time duplicate check before creating/updating a Smart Redirect.
 			$wpdb->prepare(
-				"SELECT * FROM {$smart_table} WHERE source_url = %s AND post_type = %s LIMIT 1",
+				"SELECT * FROM {$smart_table_sql} WHERE source_url = %s AND post_type = %s LIMIT 1",
 				$source_url,
 				$post_type
 			),
@@ -240,7 +286,7 @@ class SeoRepairKit_SmartRedirect_Generator {
 		);
 
 		if ( ! empty( $existing_smart ) ) {
-			$wpdb->update(
+			$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional update to plugin-owned Smart Redirect table; write operations are not cached.
 				$smart_table,
 				array(
 					'last_detected_at' => current_time( 'mysql' ),
@@ -256,16 +302,16 @@ class SeoRepairKit_SmartRedirect_Generator {
 			return $existing_smart;
 		}
 
-		$existing_redirect = $wpdb->get_row(
+		$existing_redirect = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Real-time duplicate check against plugin-owned Redirect Manager table.
 			$wpdb->prepare(
-				"SELECT * FROM {$redir_table} WHERE source_url = %s LIMIT 1",
+				"SELECT * FROM {$redir_table_sql} WHERE source_url = %s LIMIT 1",
 				$source_url
 			),
 			ARRAY_A
 		);
 
 		if ( ! empty( $existing_redirect ) ) {
-			$smart_inserted = $wpdb->insert(
+			$smart_inserted = $wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional insert into plugin-owned Smart Redirect table; write operations are not cached.
 				$smart_table,
 				array(
 					'redirection_id'   => (int) $existing_redirect['id'],
@@ -284,9 +330,9 @@ class SeoRepairKit_SmartRedirect_Generator {
 				return false;
 			}
 
-			$row = $wpdb->get_row(
+			$row = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Immediate readback of the row just inserted for existing response shape.
 				$wpdb->prepare(
-					"SELECT * FROM {$smart_table} WHERE id = %d",
+					"SELECT * FROM {$smart_table_sql} WHERE id = %d",
 					(int) $wpdb->insert_id
 				),
 				ARRAY_A
@@ -299,7 +345,7 @@ class SeoRepairKit_SmartRedirect_Generator {
 			return $row;
 		}
 
-		$redirect_inserted = $wpdb->insert(
+		$redirect_inserted = $wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional insert into plugin-owned Redirect Manager table; write operations are not cached.
 			$redir_table,
 			array(
 				'source_url'    => $source_url,
@@ -321,7 +367,7 @@ class SeoRepairKit_SmartRedirect_Generator {
 
 		$redirect_id = (int) $wpdb->insert_id;
 
-		$smart_inserted = $wpdb->insert(
+		$smart_inserted = $wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional insert into plugin-owned Smart Redirect table; write operations are not cached.
 			$smart_table,
 			array(
 				'redirection_id'   => $redirect_id,
@@ -346,9 +392,9 @@ class SeoRepairKit_SmartRedirect_Generator {
 			self::maybe_refresh_server_rules();
 		}
 
-		$row = $wpdb->get_row(
+		$row = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Immediate readback of the row just inserted for existing response shape.
 			$wpdb->prepare(
-				"SELECT * FROM {$smart_table} WHERE id = %d",
+				"SELECT * FROM {$smart_table_sql} WHERE id = %d",
 				$smart_id
 			),
 			ARRAY_A
@@ -358,6 +404,7 @@ class SeoRepairKit_SmartRedirect_Generator {
 			$row['srk_created_new'] = true;
 		}
 
+		// phpcs:enable PluginCheck.Security.DirectDB.UnescapedDBParameter
 		return $row;
 	}
 

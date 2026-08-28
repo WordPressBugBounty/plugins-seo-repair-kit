@@ -137,7 +137,7 @@ class SRK_Meta_Manager_Main {
 			'srk-meta-manager-css',
 			$this->srk_plugin_url . 'css/seo-repair-kit-meta-manager.css',
 			array(),
-			'2.1.3'
+			SEO_REPAIR_KIT_VERSION
 		);
 
 		$plugin_root_url = plugin_dir_url( dirname( dirname( __FILE__ ) ) );
@@ -146,7 +146,7 @@ class SRK_Meta_Manager_Main {
 			'srk-meta-global-js',
 			$plugin_root_url . 'admin/js/meta-manager-js/srk-meta-global.js',
 			array( 'jquery' ),
-			'2.1.3',
+			SEO_REPAIR_KIT_VERSION,
 			true
 		);
 
@@ -154,7 +154,7 @@ class SRK_Meta_Manager_Main {
 			'srk-meta-content-js',
 			$plugin_root_url . 'admin/js/meta-manager-js/srk-meta-content.js',
 			array( 'jquery' ),
-			'2.1.3',
+			SEO_REPAIR_KIT_VERSION,
 			true
 		);
 
@@ -162,7 +162,7 @@ class SRK_Meta_Manager_Main {
 			'srk-meta-advanced-js',
 			$plugin_root_url . 'admin/js/meta-manager-js/srk-meta-advanced.js',
 			array( 'jquery' ),
-			'2.1.3',
+			SEO_REPAIR_KIT_VERSION,
 			true
 		);
 
@@ -170,7 +170,7 @@ class SRK_Meta_Manager_Main {
 			'srk-meta-taxonomies-js',
 			$plugin_root_url . 'admin/js/meta-manager-js/srk-meta-taxonomies.js',
 			array( 'jquery' ),
-			'2.1.3',
+			SEO_REPAIR_KIT_VERSION,
 			true
 		);
 
@@ -178,7 +178,7 @@ class SRK_Meta_Manager_Main {
 			'srk-meta-archives-js',
 			$plugin_root_url . 'admin/js/meta-manager-js/srk-meta-archives.js',
 			array( 'jquery' ),
-			'2.1.3',
+			SEO_REPAIR_KIT_VERSION,
 			true
 		);
 
@@ -189,7 +189,7 @@ class SRK_Meta_Manager_Main {
 				'srk-meta-archives-js',
 				$plugin_root_url . 'admin/js/meta-manager/srk-meta-archives.js',
 				array( 'jquery' ),
-				'2.1.3',
+				SEO_REPAIR_KIT_VERSION,
 				true
 			);
 		}

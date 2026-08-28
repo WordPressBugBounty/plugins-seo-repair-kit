@@ -1120,7 +1120,7 @@ class SeoRepairKit_AjaxHandlers {
 
 		// ✅ PERFORMANCE: Optimized query with LIMIT and better indexing
 		// Use EXISTS subquery for better performance
-		$public_meta = $wpdb->get_col(
+		$public_meta = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached by the enclosing schema-field transient below.
 			$wpdb->prepare(
 				"SELECT DISTINCT pm.meta_key 
 				FROM {$wpdb->postmeta} pm
@@ -1137,7 +1137,7 @@ class SeoRepairKit_AjaxHandlers {
 		);
 
 		// ✅ PERFORMANCE: Optimized protected meta query
-		$protected_meta = $wpdb->get_col(
+		$protected_meta = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached by the enclosing schema-field transient below.
 			$wpdb->prepare(
 				"SELECT DISTINCT pm.meta_key 
 				FROM {$wpdb->postmeta} pm
@@ -1161,7 +1161,7 @@ class SeoRepairKit_AjaxHandlers {
 		$user_meta_keys = get_transient( $user_meta_cache_key );
 		
 		if ( false === $user_meta_keys ) {
-			$user_meta_keys = $wpdb->get_col(
+			$user_meta_keys = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached in srk_user_meta_keys transient.
 				"SELECT DISTINCT meta_key FROM {$wpdb->usermeta}
 				WHERE meta_key NOT LIKE '\\_%'
 				LIMIT 500"
@@ -1205,7 +1205,7 @@ class SeoRepairKit_AjaxHandlers {
 		}
 
 		$assigned = array();
-		$options  = $wpdb->get_results(
+		$options  = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- WordPress has no API to list options by plugin-owned assignment prefix.
 			"SELECT option_name, option_value FROM {$wpdb->options}
 			WHERE option_name LIKE 'srk_schema_assignment_%'"
 		);
@@ -1268,6 +1268,8 @@ class SeoRepairKit_AjaxHandlers {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message' => 'Unauthorized' ) );
 		}
+
+		check_ajax_referer( 'srk_schema_nonce', 'nonce' );
 
 		$schema    = isset( $_POST['schema'] ) ? sanitize_text_field( wp_unslash( $_POST['schema'] ) ) : '';
 		$post_type = isset( $_POST['post_type'] ) ? sanitize_text_field( wp_unslash( $_POST['post_type'] ) ) : '';
@@ -1677,6 +1679,7 @@ class SeoRepairKit_AjaxHandlers {
 			wp_send_json_error( array( 'message' => 'Unauthorized' ) );
 		}
 
+		check_ajax_referer( 'srk_schema_nonce', 'nonce' );
 
 
 		$schema    = isset( $_POST['schema'] ) ? sanitize_text_field( wp_unslash( $_POST['schema'] ) ) : '';
@@ -2097,6 +2100,8 @@ class SeoRepairKit_AjaxHandlers {
 			wp_send_json_error( array( 'message' => 'Unauthorized' ) );
 		}
 
+		check_ajax_referer( 'srk_schema_nonce', 'nonce' );
+
 		$schema = isset( $_POST['schema'] ) ? sanitize_text_field( wp_unslash( $_POST['schema'] ) ) : '';
 
 		if ( empty( $schema ) ) {
@@ -2122,14 +2127,14 @@ class SeoRepairKit_AjaxHandlers {
 			
 			// Remove FAQ schema meta from all posts
 			global $wpdb;
-			$wpdb->delete(
+			$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional bulk cleanup of FAQ schema post meta; write operations are not cached.
 				$wpdb->postmeta,
 				array( 'meta_key' => 'srk_selected_schema_type', 'meta_value' => 'faq' ),
 				array( '%s', '%s' )
 			);
 			
 			// Also delete FAQ items meta (remove from all posts that have it)
-			$posts_with_faq = $wpdb->get_col(
+			$posts_with_faq = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- One-time cleanup lookup before deleting FAQ schema meta via WordPress APIs.
 				"SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key IN ('srk_faq_items', 'faq_items')"
 			);
 			

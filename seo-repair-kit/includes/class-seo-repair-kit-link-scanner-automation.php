@@ -25,6 +25,10 @@ class SeoRepairKit_LinkScanner_Automation {
 	const DASHBOARD_UNREAD_OPTION = 'srk_link_scanner_unread_alerts';
 	const MAX_SCAN_RECORDS        = 7;
 	const STORAGE_CHECK_TRANSIENT = 'srk_link_scanner_storage_checked';
+	const HISTORY_DB_VERSION        = '2.1.11';
+	const HISTORY_DB_VERSION_OPTION = 'srk_link_scanner_history_db_version';
+	const HISTORY_DB_UPDATE_LOCK_OPTION = 'srk_link_scanner_history_db_update_lock';
+	const HISTORY_DB_UPDATE_LOCK_TTL    = 900;
 
 	/**
 	 * Singleton instance.
@@ -32,6 +36,20 @@ class SeoRepairKit_LinkScanner_Automation {
 	 * @var SeoRepairKit_LinkScanner_Automation|null
 	 */
 	private static $instance = null;
+
+	/**
+	 * Request-level cache for the history schema guard.
+	 *
+	 * @var bool
+	 */
+	private static $history_schema_current = false;
+
+	/**
+	 * Whether the custom cron schedule filter has been registered.
+	 *
+	 * @var bool
+	 */
+	private static $custom_intervals_registered = false;
 
 	/**
 	 * Database instance.
@@ -62,9 +80,8 @@ class SeoRepairKit_LinkScanner_Automation {
 		$this->db = $wpdb;
 
 		$this->load_dependencies();
-		$this->maybe_bootstrap_storage();
 
-		add_filter( 'cron_schedules', array( $this, 'register_custom_intervals' ) );
+		self::register_custom_intervals_filter();
 		add_action( self::EVENT_HOOK, array( $this, 'run_scheduled_scan' ) );
 
 		add_action( 'wp_ajax_srk_ajax_run_scan_now', array( $this, 'ajax_run_scan_now' ) );
@@ -101,29 +118,17 @@ class SeoRepairKit_LinkScanner_Automation {
 	}
 
 	/**
-	 * Run storage bootstrap/check only occasionally.
-	 *
-	 * @return void
-	 */
-	private function maybe_bootstrap_storage() {
-		$checked = get_transient( self::STORAGE_CHECK_TRANSIENT );
-
-		if ( false !== $checked ) {
-			return;
-		}
-
-		$this->ensure_history_tables();
-		set_transient( self::STORAGE_CHECK_TRANSIENT, 1, 12 * HOUR_IN_SECONDS );
-	}
-
-	/**
 	 * Register custom cron intervals.
 	 *
 	 * @param array $schedules Existing schedules.
 	 * @return array
 	 */
-	public function register_custom_intervals( $schedules ) {
+	public static function register_custom_intervals( $schedules ) {
 		$custom_intervals = array(
+			'srk_every_10_minutes' => array(
+				'interval' => 10 * MINUTE_IN_SECONDS,
+				'display'  => __( 'Every 10 Minutes', 'seo-repair-kit' ),
+			),
 			'srk_every_3_days'    => array(
 				'interval' => 3 * DAY_IN_SECONDS,
 				'display'  => __( 'Every 3 Days', 'seo-repair-kit' ),
@@ -145,6 +150,20 @@ class SeoRepairKit_LinkScanner_Automation {
 		}
 
 		return $schedules;
+	}
+
+	/**
+	 * Register Link Scanner custom cron schedules once per request.
+	 *
+	 * @return void
+	 */
+	public static function register_custom_intervals_filter() {
+		if ( self::$custom_intervals_registered ) {
+			return;
+		}
+
+		add_filter( 'cron_schedules', array( __CLASS__, 'register_custom_intervals' ) );
+		self::$custom_intervals_registered = true;
 	}
 
 	/**
@@ -188,6 +207,7 @@ class SeoRepairKit_LinkScanner_Automation {
 
 		$public_post_types = self::get_all_public_post_types();
 		$allowed_intervals = array(
+			'srk_every_10_minutes',
 			'daily',
 			'srk_every_3_days',
 			'weekly',
@@ -281,6 +301,8 @@ class SeoRepairKit_LinkScanner_Automation {
 			$settings = self::get_settings();
 		}
 
+		self::register_custom_intervals_filter();
+
 		wp_clear_scheduled_hook( self::EVENT_HOOK );
 		update_option( 'srk_links_schedule', empty( $settings['enabled'] ) ? 'manual' : $settings['interval'], false );
 
@@ -305,9 +327,10 @@ class SeoRepairKit_LinkScanner_Automation {
 		}
 
 		set_transient( self::LOCK_TRANSIENT, 1, self::LOCK_TTL_SECONDS );
-		$this->ensure_history_tables();
 
 		try {
+			$this->ensure_history_tables();
+
 			$settings = self::get_settings();
 
 			$result = $this->scan_links(
@@ -327,7 +350,7 @@ class SeoRepairKit_LinkScanner_Automation {
 				'status' => 'success',
 				'data'   => $result,
 			);
-		} catch ( Exception $e ) {
+		} catch ( Throwable $e ) {
 			return array(
 				'status'  => 'error',
 				'message' => $e->getMessage(),
@@ -347,7 +370,9 @@ class SeoRepairKit_LinkScanner_Automation {
 			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'seo-repair-kit' ) ), 403 );
 		}
 
-		check_ajax_referer( 'srk_run_scan_now_nonce', 'nonce' );
+		if ( ! check_ajax_referer( 'srk_run_scan_now_nonce', 'nonce', false ) ) {
+			wp_send_json_error( array( 'message' => __( 'Security check failed. Please refresh the page and try again.', 'seo-repair-kit' ) ), 403 );
+		}
 
 		$result = $this->run_manual_scan_now();
 
@@ -393,9 +418,15 @@ class SeoRepairKit_LinkScanner_Automation {
 			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'seo-repair-kit' ) ), 403 );
 		}
 
-		check_ajax_referer( 'srk_reset_scan_table_nonce', 'nonce' );
+		if ( ! check_ajax_referer( 'srk_reset_scan_table_nonce', 'nonce', false ) ) {
+			wp_send_json_error( array( 'message' => __( 'Security check failed. Please refresh the page and try again.', 'seo-repair-kit' ) ), 403 );
+		}
 
-		$this->reset_records( false );
+		try {
+			$this->reset_records( false );
+		} catch ( Throwable $e ) {
+			wp_send_json_error( array( 'message' => $e->getMessage() ), 500 );
+		}
 
 		wp_send_json_success( array( 'message' => __( 'Scan records reset successfully.', 'seo-repair-kit' ) ) );
 	}
@@ -411,9 +442,10 @@ class SeoRepairKit_LinkScanner_Automation {
 		}
 
 		set_transient( self::LOCK_TRANSIENT, 1, self::LOCK_TTL_SECONDS );
-		$this->ensure_history_tables();
 
 		try {
+			$this->ensure_history_tables();
+
 			$settings = self::get_settings();
 
 			if ( empty( $settings['enabled'] ) ) {
@@ -432,7 +464,7 @@ class SeoRepairKit_LinkScanner_Automation {
 
 			$this->maybe_send_alert_email( $result, $settings );
 			$this->update_dashboard_notification_state( $result );
-		} catch ( Exception $e ) {
+		} catch ( Throwable $e ) {
 			// Keep scheduled runs fail-safe without writing temporary debug logs.
 		} finally {
 			delete_transient( self::LOCK_TRANSIENT );
@@ -715,7 +747,10 @@ class SeoRepairKit_LinkScanner_Automation {
 			$limit
 		);
 
-		return array_map( 'intval', (array) $this->db->get_col( $sql ) );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Bounded scan batch query; caching would break scanner progress.
+		$post_ids = $this->db->get_col( $sql );
+
+		return array_map( 'intval', (array) $post_ids );
 	}
 
 	/**
@@ -727,11 +762,15 @@ class SeoRepairKit_LinkScanner_Automation {
 	public function get_recent_runs( $limit = 20 ) {
 		$this->ensure_history_tables();
 
-		$table = $this->db->prefix . 'srk_link_scan_runs';
-		$limit = max( 1, min( 1000, absint( $limit ) ) );
+		$table     = $this->db->prefix . 'srk_link_scan_runs';
+		$table_sql = '`' . str_replace( '`', '``', $table ) . '`';
+		$limit     = max( 1, min( 1000, absint( $limit ) ) );
 
-		return (array) $this->db->get_results(
-			$this->db->prepare( "SELECT * FROM $table ORDER BY id DESC LIMIT %d", $limit ),
+		return (array) $this->db->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Real-time link scan history table read.
+			$this->db->prepare(
+				"SELECT id, trigger_type, link_scope, scan_coverage, post_type_breakdown, scanned_posts_count, total_links_count, broken_links_count, email_sent, ended_at FROM {$table_sql} ORDER BY id DESC LIMIT %d",
+				$limit
+			),
 			ARRAY_A
 		);
 	}
@@ -745,11 +784,12 @@ class SeoRepairKit_LinkScanner_Automation {
 	public function get_recent_alerts( $limit = 20 ) {
 		$this->ensure_history_tables();
 
-		$table = $this->db->prefix . 'srk_link_scan_alerts';
-		$limit = max( 1, min( 1000, absint( $limit ) ) );
+		$table     = $this->db->prefix . 'srk_link_scan_alerts';
+		$table_sql = '`' . str_replace( '`', '``', $table ) . '`';
+		$limit     = max( 1, min( 1000, absint( $limit ) ) );
 
-		return (array) $this->db->get_results(
-			$this->db->prepare( "SELECT * FROM $table ORDER BY id DESC LIMIT %d", $limit ),
+		return (array) $this->db->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Real-time link scan alert history table read.
+			$this->db->prepare( "SELECT * FROM {$table_sql} ORDER BY id DESC LIMIT %d", $limit ),
 			ARRAY_A
 		);
 	}
@@ -789,16 +829,51 @@ class SeoRepairKit_LinkScanner_Automation {
 	/**
 	 * Ensure history tables exist and old installs are upgraded safely.
 	 *
+	 * @param bool $force Recheck the stored schema version within this request.
 	 * @return void
 	 */
-	public function ensure_history_tables() {
-		$runs_table   = $this->db->prefix . 'srk_link_scan_runs';
-		$alerts_table = $this->db->prefix . 'srk_link_scan_alerts';
-		$charset      = $this->db->get_charset_collate();
+	public function ensure_history_tables( $force = false ) {
+		self::maybe_upgrade_history_tables( $force );
+	}
 
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+	/**
+	 * Create or upgrade history tables only when the stored schema version is old.
+	 *
+	 * @param bool $force Recheck the stored schema version within this request.
+	 * @return void
+	 */
+	public static function maybe_upgrade_history_tables( $force = false ) {
+		global $wpdb;
 
-		$sql_runs = "CREATE TABLE {$runs_table} (
+		if ( ! $force && self::$history_schema_current ) {
+			return;
+		}
+
+		$stored_version = get_option( self::HISTORY_DB_VERSION_OPTION, '' );
+		if ( version_compare( (string) $stored_version, self::HISTORY_DB_VERSION, '>=' ) ) {
+			self::$history_schema_current = true;
+			return;
+		}
+
+		$lock_token = self::acquire_history_db_update_lock();
+		if ( ! $lock_token ) {
+			return;
+		}
+
+		try {
+			$stored_version = get_option( self::HISTORY_DB_VERSION_OPTION, '' );
+			if ( version_compare( (string) $stored_version, self::HISTORY_DB_VERSION, '>=' ) ) {
+				self::$history_schema_current = true;
+				return;
+			}
+
+			$runs_table   = $wpdb->prefix . 'srk_link_scan_runs';
+			$alerts_table = $wpdb->prefix . 'srk_link_scan_alerts';
+			$charset      = $wpdb->get_charset_collate();
+
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
+			$sql_runs = "CREATE TABLE {$runs_table} (
 			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
 			trigger_type VARCHAR(20) NOT NULL DEFAULT 'scheduled',
 			link_scope VARCHAR(20) NOT NULL DEFAULT 'both',
@@ -820,7 +895,7 @@ class SeoRepairKit_LinkScanner_Automation {
 			KEY idx_link_scope (link_scope)
 		) {$charset};";
 
-		$sql_alerts = "CREATE TABLE {$alerts_table} (
+			$sql_alerts = "CREATE TABLE {$alerts_table} (
 			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
 			scan_run_id BIGINT UNSIGNED NOT NULL,
 			sent_at DATETIME NOT NULL,
@@ -834,23 +909,37 @@ class SeoRepairKit_LinkScanner_Automation {
 			KEY idx_sent_at (sent_at)
 		) {$charset};";
 
-		dbDelta( $sql_runs );
-		dbDelta( $sql_alerts );
+			dbDelta( $sql_runs );
+			dbDelta( $sql_alerts );
 
-		$this->maybe_upgrade_history_schema();
+			self::maybe_upgrade_history_schema( $runs_table, true );
+			self::update_history_db_version();
+			self::$history_schema_current = true;
+		} finally {
+			self::release_history_db_update_lock( $lock_token );
+		}
 
 	}
 
 	/**
-	 * Explicitly add missing columns/indexes for older installs.
+	 * Explicitly add missing columns for older installs.
 	 *
+	 * @param string $runs_table Runs table name.
+	 * @param bool   $force      Recheck the stored schema version within this request.
 	 * @return void
 	 */
-	private function maybe_upgrade_history_schema() {
-		$runs_table = $this->db->prefix . 'srk_link_scan_runs';
+	private static function maybe_upgrade_history_schema( $runs_table, $force = false ) {
+		global $wpdb;
 
-		$columns = array();
-		$results = (array) $this->db->get_results( "SHOW COLUMNS FROM {$runs_table}", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$stored_version = get_option( self::HISTORY_DB_VERSION_OPTION, '' );
+		if ( version_compare( (string) $stored_version, self::HISTORY_DB_VERSION, '>=' ) ) {
+			return;
+		}
+
+		$runs_table_sql = esc_sql( $runs_table );
+		$columns        = array();
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $runs_table_sql is a plugin-owned history table identifier derived from $wpdb->prefix; this runs only inside the version-guarded migration path.
+		$results        = (array) $wpdb->get_results( "SHOW COLUMNS FROM {$runs_table_sql}", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Version-guarded history schema migration query.
 
 		foreach ( $results as $row ) {
 			if ( ! empty( $row['Field'] ) ) {
@@ -859,19 +948,131 @@ class SeoRepairKit_LinkScanner_Automation {
 		}
 
 		if ( ! in_array( 'link_scope', $columns, true ) ) {
-			$this->db->query( "ALTER TABLE {$runs_table} ADD COLUMN link_scope VARCHAR(20) NOT NULL DEFAULT 'both' AFTER trigger_type" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$link_scope_sql = "ALTER TABLE {$runs_table_sql} ADD COLUMN link_scope VARCHAR(20) NOT NULL DEFAULT 'both' AFTER trigger_type";
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Version-guarded history schema migration.
+			$wpdb->query( $link_scope_sql );
 		}
 
 		if ( ! in_array( 'scan_coverage', $columns, true ) ) {
-			$this->db->query( "ALTER TABLE {$runs_table} ADD COLUMN scan_coverage VARCHAR(20) NOT NULL DEFAULT 'selected' AFTER link_scope" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$scan_coverage_sql = "ALTER TABLE {$runs_table_sql} ADD COLUMN scan_coverage VARCHAR(20) NOT NULL DEFAULT 'selected' AFTER link_scope";
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Version-guarded history schema migration.
+			$wpdb->query( $scan_coverage_sql );
+		}
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange,PluginCheck.Security.DirectDB.UnescapedDBParameter
+	}
+
+	/**
+	 * Persist the non-autoloaded history schema version.
+	 *
+	 * @return void
+	 */
+	private static function update_history_db_version() {
+		if ( false === get_option( self::HISTORY_DB_VERSION_OPTION, false ) ) {
+			add_option( self::HISTORY_DB_VERSION_OPTION, self::HISTORY_DB_VERSION, '', 'no' );
+			return;
 		}
 
-		$indexes     = (array) $this->db->get_results( "SHOW INDEX FROM {$runs_table}", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		$index_names = wp_list_pluck( $indexes, 'Key_name' );
+		update_option( self::HISTORY_DB_VERSION_OPTION, self::HISTORY_DB_VERSION, false );
+	}
 
-		if ( ! in_array( 'idx_link_scope', $index_names, true ) ) {
-			$this->db->query( "ALTER TABLE {$runs_table} ADD KEY idx_link_scope (link_scope)" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	/**
+	 * Acquire a request-owned history schema lock.
+	 *
+	 * @return string|false Lock token on success, false when another request owns it.
+	 */
+	private static function acquire_history_db_update_lock() {
+		$now        = time();
+		$token      = self::generate_history_db_update_lock_token();
+		$lock_value = $token . '|' . ( $now + self::HISTORY_DB_UPDATE_LOCK_TTL );
+
+		if ( add_option( self::HISTORY_DB_UPDATE_LOCK_OPTION, $lock_value, '', 'no' ) ) {
+			return $token;
 		}
+
+		$existing_value = (string) get_option( self::HISTORY_DB_UPDATE_LOCK_OPTION, '' );
+		$existing_lock  = self::parse_history_db_update_lock( $existing_value );
+
+		if ( ! empty( $existing_lock['expires'] ) && $existing_lock['expires'] > $now ) {
+			return false;
+		}
+
+		if ( '' === $existing_value || ! self::delete_history_db_update_lock_value( $existing_value ) ) {
+			return false;
+		}
+
+		return add_option( self::HISTORY_DB_UPDATE_LOCK_OPTION, $lock_value, '', 'no' ) ? $token : false;
+	}
+
+	/**
+	 * Release the history schema lock only when this request owns it.
+	 *
+	 * @param string $token Lock owner token.
+	 * @return void
+	 */
+	private static function release_history_db_update_lock( $token ) {
+		$existing_value = (string) get_option( self::HISTORY_DB_UPDATE_LOCK_OPTION, '' );
+		$existing_lock  = self::parse_history_db_update_lock( $existing_value );
+
+		if ( empty( $existing_lock['token'] ) || ! hash_equals( (string) $token, (string) $existing_lock['token'] ) ) {
+			return;
+		}
+
+		self::delete_history_db_update_lock_value( $existing_value );
+	}
+
+	/**
+	 * Parse the history schema lock value.
+	 *
+	 * @param string $value Stored lock value.
+	 * @return array{token:string,expires:int}
+	 */
+	private static function parse_history_db_update_lock( $value ) {
+		$value = (string) $value;
+
+		if ( false === strpos( $value, '|' ) ) {
+			return array(
+				'token'   => '',
+				'expires' => absint( $value ),
+			);
+		}
+
+		$parts = explode( '|', $value, 2 );
+
+		return array(
+			'token'   => sanitize_text_field( $parts[0] ),
+			'expires' => isset( $parts[1] ) ? absint( $parts[1] ) : 0,
+		);
+	}
+
+	/**
+	 * Delete a history schema lock row by exact stored value.
+	 *
+	 * @param string $value Stored lock value.
+	 * @return bool
+	 */
+	private static function delete_history_db_update_lock_value( $value ) {
+		global $wpdb;
+
+		return (bool) $wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s",
+				self::HISTORY_DB_UPDATE_LOCK_OPTION,
+				(string) $value
+			)
+		);
+	}
+
+	/**
+	 * Generate a request-owned history schema lock token.
+	 *
+	 * @return string
+	 */
+	private static function generate_history_db_update_lock_token() {
+		if ( function_exists( 'wp_generate_uuid4' ) ) {
+			return wp_generate_uuid4();
+		}
+
+		return md5( uniqid( 'srk_link_history_update_', true ) );
 	}
 
 	/**
@@ -995,7 +1196,7 @@ class SeoRepairKit_LinkScanner_Automation {
 			'timeout'     => $timeout,
 			'redirection' => 5,
 			'sslverify'   => true,
-			'user-agent'  => 'SEO Repair Kit Links Manager/' . ( defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '2.1.7' ) . '; ' . home_url(),
+			'user-agent'  => 'SEO Repair Kit Links Manager/' . SEO_REPAIR_KIT_VERSION . '; ' . home_url(),
 		);
 
 		$response = wp_remote_head( $url, $args );
@@ -1220,12 +1421,13 @@ class SeoRepairKit_LinkScanner_Automation {
 	 * @return void
 	 */
 	private function prune_old_scan_runs() {
-		$table = $this->db->prefix . 'srk_link_scan_runs';
-		$limit = self::MAX_SCAN_RECORDS;
+		$table     = $this->db->prefix . 'srk_link_scan_runs';
+		$table_sql = '`' . str_replace( '`', '``', $table ) . '`';
+		$limit     = self::MAX_SCAN_RECORDS;
 
 		$keep_ids = $this->db->get_col(
 			$this->db->prepare(
-				"SELECT id FROM $table ORDER BY id DESC LIMIT %d",
+				"SELECT id FROM {$table_sql} ORDER BY id DESC LIMIT %d",
 				$limit
 			)
 		);
@@ -1239,7 +1441,7 @@ class SeoRepairKit_LinkScanner_Automation {
 
 		$this->db->query(
 			$this->db->prepare(
-				"DELETE FROM $table WHERE id NOT IN ($placeholders)",
+				"DELETE FROM {$table_sql} WHERE id NOT IN ($placeholders)",
 				$keep_ids
 			)
 		); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
@@ -1251,12 +1453,13 @@ class SeoRepairKit_LinkScanner_Automation {
 	 * @return void
 	 */
 	private function prune_old_alerts() {
-		$table = $this->db->prefix . 'srk_link_scan_alerts';
-		$limit = self::MAX_SCAN_RECORDS;
+		$table     = $this->db->prefix . 'srk_link_scan_alerts';
+		$table_sql = '`' . str_replace( '`', '``', $table ) . '`';
+		$limit     = self::MAX_SCAN_RECORDS;
 
 		$keep_ids = $this->db->get_col(
 			$this->db->prepare(
-				"SELECT id FROM $table ORDER BY id DESC LIMIT %d",
+				"SELECT id FROM {$table_sql} ORDER BY id DESC LIMIT %d",
 				$limit
 			)
 		);
@@ -1270,7 +1473,7 @@ class SeoRepairKit_LinkScanner_Automation {
 
 		$this->db->query(
 			$this->db->prepare(
-				"DELETE FROM $table WHERE id NOT IN ($placeholders)",
+				"DELETE FROM {$table_sql} WHERE id NOT IN ($placeholders)",
 				$keep_ids
 			)
 		); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared

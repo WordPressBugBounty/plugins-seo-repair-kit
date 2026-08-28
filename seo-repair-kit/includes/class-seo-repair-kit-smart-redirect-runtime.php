@@ -14,6 +14,45 @@ if ( ! defined( 'ABSPATH' ) ) {
 class SeoRepairKit_SmartRedirect_Runtime {
 
 	/**
+	 * Quote a local SQL identifier.
+	 *
+	 * @param string $identifier Identifier.
+	 * @return string
+	 */
+	private static function quote_identifier( $identifier ) {
+		return '`' . str_replace( '`', '``', $identifier ) . '`';
+	}
+
+	/**
+	 * Get a plugin-owned table name.
+	 *
+	 * @param string $key Table key.
+	 * @return string
+	 */
+	private static function get_table_name( $key ) {
+		global $wpdb;
+
+		$tables = array(
+			'smart_redirects' => $wpdb->prefix . 'srkit_smart_redirects',
+			'redirections'    => $wpdb->prefix . 'srkit_redirection_table',
+		);
+
+		return isset( $tables[ $key ] ) ? $tables[ $key ] : '';
+	}
+
+	/**
+	 * Get an escaped SQL table identifier.
+	 *
+	 * @param string $key Table key.
+	 * @return string
+	 */
+	private static function get_table_identifier( $key ) {
+		$table_name = self::get_table_name( $key );
+
+		return '' === $table_name ? '' : self::quote_identifier( $table_name );
+	}
+
+	/**
 	 * Register frontend hook.
 	 */
 	public function __construct() {
@@ -78,22 +117,25 @@ class SeoRepairKit_SmartRedirect_Runtime {
 			return;
 		}
 
-		$smart_table = $wpdb->prefix . 'srkit_smart_redirects';
+		$smart_table     = self::get_table_name( 'smart_redirects' );
+		$smart_table_sql = self::get_table_identifier( 'smart_redirects' );
 
-		$smart_exists = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $smart_table ) ) === $smart_table );
+		// phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter -- $smart_table_sql is a plugin-owned identifier from get_table_identifier(); request values are prepared.
+		$smart_exists = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $smart_table ) ) === $smart_table ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Defensive recovery check before frontend Smart Redirect lookup.
 
 		if ( ! $smart_exists ) {
 			return;
 		}
 
-		$row = $wpdb->get_row(
+		$row = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Frontend redirect lookup must be real-time to respect active/inactive changes.
 			$wpdb->prepare(
-				"SELECT * FROM {$smart_table} WHERE source_url = %s AND post_type = %s LIMIT 1",
+				"SELECT * FROM {$smart_table_sql} WHERE source_url = %s AND post_type = %s LIMIT 1",
 				$source_url,
 				$post_type
 			),
 			ARRAY_A
 		);
+		// phpcs:enable PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		if ( empty( $row ) ) {
 			$row = SeoRepairKit_SmartRedirect_Generator::create_redirect_for_url( $source_url, $post_type, true );
@@ -153,17 +195,19 @@ class SeoRepairKit_SmartRedirect_Runtime {
 			return;
 		}
 
-		$redir_table = $wpdb->prefix . 'srkit_redirection_table';
+		$redir_table     = self::get_table_name( 'redirections' );
+		$redir_table_sql = self::get_table_identifier( 'redirections' );
 
-		$redir_exists = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $redir_table ) ) === $redir_table );
+		// phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter -- $redir_table_sql is a plugin-owned identifier from get_table_identifier(); row ID is prepared.
+		$redir_exists = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $redir_table ) ) === $redir_table ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Defensive recovery check before hit-count update.
 
 		if ( ! $redir_exists ) {
 			return;
 		}
 
-		$wpdb->query(
+		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional hit-count write to plugin-owned redirect table; write operations are not cached.
 			$wpdb->prepare(
-				"UPDATE {$redir_table}
+				"UPDATE {$redir_table_sql}
 				SET hits = hits + 1, last_hit = %s, updated_at = %s
 				WHERE id = %d",
 				current_time( 'mysql' ),
@@ -171,5 +215,6 @@ class SeoRepairKit_SmartRedirect_Runtime {
 				(int) $row['redirection_id']
 			)
 		);
+		// phpcs:enable PluginCheck.Security.DirectDB.UnescapedDBParameter
 	}
 }

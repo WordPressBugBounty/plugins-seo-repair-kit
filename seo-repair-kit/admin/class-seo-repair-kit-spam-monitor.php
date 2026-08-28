@@ -303,7 +303,7 @@ class SeoRepairKit_SpamMonitor {
 			<div class="srk-spam-monitor-tabs srk-link-scanner-tabs">
 				<nav class="srk-tab-nav">
 					<?php foreach ( $tabs as $tab_slug => $tab_data ) : ?>
-						<button type="button" class="srk-tab-button <?php echo ( $tab_slug === $current_tab ) ? 'active' : ''; ?>" data-tab="<?php echo esc_attr( $tab_slug ); ?>">
+						<button type="button" class="srk-tab-button <?php echo ( $tab_slug === $current_tab ) ? 'active' : ''; ?>" data-tab="<?php echo esc_attr( $tab_slug ); ?>" data-tab-url="<?php echo esc_url( $this->get_tab_url( $tab_slug ) ); ?>">
 							<span class="dashicons <?php echo esc_attr( $tab_data['icon'] ); ?>"></span>
 							<?php echo esc_html( $tab_data['label'] ); ?>
 						</button>
@@ -313,8 +313,12 @@ class SeoRepairKit_SpamMonitor {
 
 			<!-- ── TAB CONTENT ───────────────────────────────────────────────── -->
 			<?php foreach ( $tabs as $tab_slug => $tab_data ) : ?>
-				<div id="srk-tab-<?php echo esc_attr( $tab_slug ); ?>" class="srk-tab-content <?php echo ( $tab_slug === $current_tab ) ? 'active' : ''; ?>" style="<?php echo ( $tab_slug === $current_tab ) ? '' : 'display:none;'; ?>">
-					<?php $this->render_tab_content( $tab_slug ); ?>
+				<div id="srk-tab-<?php echo esc_attr( $tab_slug ); ?>" class="srk-tab-content <?php echo ( $tab_slug === $current_tab ) ? 'active' : ''; ?>" data-loaded="<?php echo ( $tab_slug === $current_tab ) ? '1' : '0'; ?>" style="<?php echo ( $tab_slug === $current_tab ) ? '' : 'display:none;'; ?>">
+					<?php
+					if ( $tab_slug === $current_tab ) {
+						$this->render_tab_content( $tab_slug );
+					}
+					?>
 				</div>
 			<?php endforeach; ?>
 
@@ -373,6 +377,22 @@ class SeoRepairKit_SpamMonitor {
 			</div>
 		<?php endif; ?>
 		<?php
+	}
+
+	/**
+	 * Build a URL for a Spam Monitor tab.
+	 *
+	 * @param string $tab_slug Tab slug.
+	 * @return string
+	 */
+	private function get_tab_url( $tab_slug ) {
+		$tab_slug = sanitize_key( $tab_slug );
+
+		if ( 'dashboard' === $tab_slug ) {
+			return admin_url( 'admin.php?page=seo-repair-kit-spam-monitor' );
+		}
+
+		return admin_url( 'admin.php?page=seo-repair-kit-spam-monitor&tab=' . $tab_slug );
 	}
 
 	/**

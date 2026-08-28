@@ -54,6 +54,13 @@
 			return;
 		}
 
+		if ( '0' === String( $panel.attr( 'data-loaded' ) ) ) {
+			if ( $button.data( 'tab-url' ) ) {
+				window.location.href = $button.data( 'tab-url' );
+			}
+			return;
+		}
+
 		$( '.srk-tab-button' ).removeClass( 'active' );
 		$button.addClass( 'active' );
 		$( '.srk-tab-content' ).removeClass( 'active' ).hide();

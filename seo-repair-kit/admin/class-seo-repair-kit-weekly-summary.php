@@ -101,6 +101,7 @@ class SeoRepairKit_WeeklySummaryService {
 	 * Send complete SEO summary email
 	 */
 	public function srk_send_complete_seo_summary() {
+		try {
 		// Check if weekly reports are enabled.
 		$weekly_report_enabled = get_option( 'srk_weekly_report_enabled', true );
 
@@ -168,6 +169,18 @@ class SeoRepairKit_WeeklySummaryService {
 		}
 
 		return $srk_sent;
+		} catch ( Throwable $e ) {
+			$this->srk_update_last_status(
+				'failed',
+				sprintf(
+					/* translators: %s: error message */
+					__( 'Weekly report failed: %s', 'seo-repair-kit' ),
+					$e->getMessage()
+				)
+			);
+
+			return false;
+		}
 	}
 
 	/**
@@ -271,10 +284,16 @@ class SeoRepairKit_WeeklySummaryService {
 	public function srk_get_redirections_summary_data() {
 		global $wpdb;
 
-		$srk_redirections_table = $wpdb->prefix . 'srkit_redirection_table';
+		$cached = wp_cache_get( 'srk_weekly_redirections_summary', 'seo_repair_kit' );
+		if ( false !== $cached && is_array( $cached ) ) {
+			return $cached;
+		}
+
+		$srk_redirections_table     = $wpdb->prefix . 'srkit_redirection_table';
+		$srk_redirections_table_sql = '`' . str_replace( '`', '``', $srk_redirections_table ) . '`';
 
 		// Check if table exists.
-		$srk_table_exists = $wpdb->get_var(
+		$srk_table_exists = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached weekly-summary availability check for plugin-owned redirection table.
 			$wpdb->prepare(
 				'SHOW TABLES LIKE %s',
 				$srk_redirections_table
@@ -282,7 +301,7 @@ class SeoRepairKit_WeeklySummaryService {
 		);
 
 		if ( $srk_table_exists !== $srk_redirections_table ) {
-			return array(
+			$empty_summary = array(
 				'total_redirections'   => 0,
 				'total_hits'           => 0,
 				'active_redirections'  => 0,
@@ -294,36 +313,31 @@ class SeoRepairKit_WeeklySummaryService {
 				),
 				'period'               => __( 'All Time', 'seo-repair-kit' ),
 			);
+			wp_cache_set( 'srk_weekly_redirections_summary', $empty_summary, 'seo_repair_kit', 5 * MINUTE_IN_SECONDS );
+			return $empty_summary;
 		}
 
 		// Get total redirections count (all time).
-		$srk_total_redirections = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM `%1s`', str_replace( '`', '', $srk_redirections_table ) ) );
+		$srk_total_redirections = $wpdb->get_var( "SELECT COUNT(*) FROM {$srk_redirections_table_sql}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Cached weekly-summary aggregate for plugin-owned redirection table; identifier is derived from $wpdb->prefix.
 
 		// Get total hits (all time).
-		$srk_total_hits = $wpdb->get_var( $wpdb->prepare( 'SELECT SUM(hits) FROM `%1s`', str_replace( '`', '', $srk_redirections_table ) ) );
+		$srk_total_hits = $wpdb->get_var( "SELECT SUM(hits) FROM {$srk_redirections_table_sql}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Cached weekly-summary aggregate for plugin-owned redirection table; identifier is derived from $wpdb->prefix.
 
 		// Get active redirections count.
-		$srk_active_redirections = $wpdb->get_var(
-			$wpdb->prepare( "SELECT COUNT(*) FROM `%1s` WHERE status = 'active'", str_replace( '`', '', $srk_redirections_table ) )
-		);
+		$srk_active_redirections = $wpdb->get_var( "SELECT COUNT(*) FROM {$srk_redirections_table_sql} WHERE status = 'active'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Cached weekly-summary aggregate for plugin-owned redirection table; identifier is derived from $wpdb->prefix.
 
 		// Get inactive redirections count.
-		$srk_inactive_redirections = $wpdb->get_var(
-			$wpdb->prepare( "SELECT COUNT(*) FROM `%1s` WHERE status = 'inactive'", str_replace( '`', '', $srk_redirections_table ) )
-		);
+		$srk_inactive_redirections = $wpdb->get_var( "SELECT COUNT(*) FROM {$srk_redirections_table_sql} WHERE status = 'inactive'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Cached weekly-summary aggregate for plugin-owned redirection table; identifier is derived from $wpdb->prefix.
 
 		// Get most hit redirect (all time).
-		$srk_most_hit_redirect = $wpdb->get_row(
-			$wpdb->prepare(
+		$srk_most_hit_redirect = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Cached weekly-summary lookup for plugin-owned redirection table; identifier is derived from $wpdb->prefix.
 				"SELECT source_url, target_url, hits
-                 FROM `%1s`
+                 FROM {$srk_redirections_table_sql}
                  ORDER BY hits DESC
-                 LIMIT 1",
-				str_replace( '`', '', $srk_redirections_table )
-			)
+                 LIMIT 1"
 		);
 
-		return array(
+		$summary = array(
 			'total_redirections'    => $srk_total_redirections ? intval( $srk_total_redirections ) : 0,
 			'total_hits'            => $srk_total_hits ? intval( $srk_total_hits ) : 0,
 			'active_redirections'   => $srk_active_redirections ? intval( $srk_active_redirections ) : 0,
@@ -339,6 +353,8 @@ class SeoRepairKit_WeeklySummaryService {
 			),
 			'period'                => __( 'All Time', 'seo-repair-kit' ),
 		);
+		wp_cache_set( 'srk_weekly_redirections_summary', $summary, 'seo_repair_kit', 5 * MINUTE_IN_SECONDS );
+		return $summary;
 	}
 
 	/**
@@ -629,7 +645,7 @@ class SeoRepairKit_WeeklySummaryService {
 				),
 			);
 
-		} catch ( Exception $e ) {
+		} catch ( Throwable $e ) {
 			return false;
 		}
 	}
@@ -640,10 +656,16 @@ class SeoRepairKit_WeeklySummaryService {
 	private function srk_get_stored_gsc_data() {
 		global $wpdb;
 
-		$srk_gsc_table = $wpdb->prefix . 'srkit_gsc_data';
+		$cached = wp_cache_get( 'srk_weekly_stored_gsc_data', 'seo_repair_kit' );
+		if ( false !== $cached && is_array( $cached ) ) {
+			return $cached;
+		}
+
+		$srk_gsc_table     = $wpdb->prefix . 'srkit_gsc_data';
+		$srk_gsc_table_sql = '`' . str_replace( '`', '``', $srk_gsc_table ) . '`';
 
 		// Check if table exists.
-		$srk_table_exists = $wpdb->get_var(
+		$srk_table_exists = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached weekly-summary availability check for plugin-owned GSC table.
 			$wpdb->prepare(
 				'SHOW TABLES LIKE %s',
 				$srk_gsc_table
@@ -651,31 +673,32 @@ class SeoRepairKit_WeeklySummaryService {
 		);
 
 		if ( $srk_table_exists !== $srk_gsc_table ) {
-			return array(
+			$not_available = array(
 				'status'  => 'not_available',
 				'message' => __( 'KeyTrack data table not found', 'seo-repair-kit' ),
 				'data'    => array(),
 			);
+			wp_cache_set( 'srk_weekly_stored_gsc_data', $not_available, 'seo_repair_kit', 5 * MINUTE_IN_SECONDS );
+			return $not_available;
 		}
 
 		// Get the most recent GSC data from database.
-		$srk_recent_data = $wpdb->get_row(
-			$wpdb->prepare(
+		$srk_recent_data = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Cached weekly-summary read from plugin-owned GSC table; identifier is derived from $wpdb->prefix.
 				"SELECT gsc_data, keytrack_name, created_at
-                 FROM `%1s`
+                 FROM {$srk_gsc_table_sql}
                  ORDER BY created_at DESC
                  LIMIT 1",
-				str_replace( '`', '', $srk_gsc_table )
-			),
 			ARRAY_A
 		);
 
 		if ( ! $srk_recent_data || empty( $srk_recent_data['gsc_data'] ) ) {
-			return array(
+			$no_data = array(
 				'status'  => 'no_data',
 				'message' => __( 'No KeyTrack data available in database', 'seo-repair-kit' ),
 				'data'    => array(),
 			);
+			wp_cache_set( 'srk_weekly_stored_gsc_data', $no_data, 'seo_repair_kit', 5 * MINUTE_IN_SECONDS );
+			return $no_data;
 		}
 
 		try {
@@ -717,7 +740,7 @@ class SeoRepairKit_WeeklySummaryService {
 				}
 			}
 
-			return array(
+			$result = array(
 				'status'  => 'success',
 				'message' => __( 'Data retrieved from database', 'seo-repair-kit' ),
 				'data'    => array(
@@ -732,13 +755,17 @@ class SeoRepairKit_WeeklySummaryService {
 					'last_updated'      => $srk_recent_data['created_at'] ?? __( 'Unknown', 'seo-repair-kit' ),
 				),
 			);
+			wp_cache_set( 'srk_weekly_stored_gsc_data', $result, 'seo_repair_kit', 5 * MINUTE_IN_SECONDS );
+			return $result;
 
-		} catch ( Exception $e ) {
-			return array(
+		} catch ( Throwable $e ) {
+			$error = array(
 				'status'  => 'error',
 				'message' => $e->getMessage(),
 				'data'    => array(),
 			);
+			wp_cache_set( 'srk_weekly_stored_gsc_data', $error, 'seo_repair_kit', MINUTE_IN_SECONDS );
+			return $error;
 		}
 	}
 

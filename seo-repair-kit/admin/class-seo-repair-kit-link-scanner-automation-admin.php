@@ -84,6 +84,7 @@ class SeoRepairKit_LinkScanner_Automation_Admin {
 						<th scope="row"><?php esc_html_e( 'Scan Interval', 'seo-repair-kit' ); ?></th>
 						<td>
 							<select name="interval" class="srk-select">
+								<option value="srk_every_10_minutes" <?php selected( $settings['interval'], 'srk_every_10_minutes' ); ?>><?php esc_html_e( 'Every 10 minutes', 'seo-repair-kit' ); ?></option>
 								<option value="daily" <?php selected( $settings['interval'], 'daily' ); ?>><?php esc_html_e( 'Every 24 hours', 'seo-repair-kit' ); ?></option>
 								<option value="srk_every_3_days" <?php selected( $settings['interval'], 'srk_every_3_days' ); ?>><?php esc_html_e( 'Every 3 days', 'seo-repair-kit' ); ?></option>
 								<option value="weekly" <?php selected( $settings['interval'], 'weekly' ); ?>><?php esc_html_e( 'Weekly', 'seo-repair-kit' ); ?></option>
@@ -222,6 +223,26 @@ class SeoRepairKit_LinkScanner_Automation_Admin {
 
 		<script>
 		jQuery(document).ready(function($) {
+			var srkAutomationAjaxUrl = window.ajaxurl || '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ); ?>';
+
+			function srkShowScanNotice($target, type, message) {
+				var $notice = $('<div/>').addClass('notice inline').addClass('notice-' + type);
+				$notice.append($('<p/>').text(message));
+				$target.empty().append($notice).show();
+			}
+
+			function srkAjaxErrorMessage(xhr, fallback) {
+				if (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
+					return xhr.responseJSON.data.message;
+				}
+
+				if (xhr.status) {
+					return fallback + ' <?php echo esc_js( __( 'HTTP status:', 'seo-repair-kit' ) ); ?> ' + xhr.status;
+				}
+
+				return fallback;
+			}
+
 			function togglePostTypesRow() {
 				if ($('#srk-scan-coverage').val() === 'whole_site') {
 					$('#srk-post-types-row').hide();
@@ -269,7 +290,7 @@ class SeoRepairKit_LinkScanner_Automation_Admin {
 				$result.hide();
 
 				$.ajax({
-					url: ajaxurl,
+					url: srkAutomationAjaxUrl,
 					type: 'POST',
 					data: {
 						action: 'srk_ajax_run_scan_now',
@@ -277,17 +298,14 @@ class SeoRepairKit_LinkScanner_Automation_Admin {
 					},
 					success: function(response) {
 						if (response.success) {
-							$result.html('<div class="notice notice-success inline"><p>' + response.data.message + '</p></div>').show();
+							srkShowScanNotice($result, 'success', response.data.message);
 						} else {
-							$result.html('<div class="notice notice-error inline"><p>' + (response.data ? response.data.message : '<?php echo esc_js( __( 'Scan failed.', 'seo-repair-kit' ) ); ?>') + '</p></div>').show();
+							srkShowScanNotice($result, 'error', response.data ? response.data.message : '<?php echo esc_js( __( 'Scan failed.', 'seo-repair-kit' ) ); ?>');
 						}
 					},
 					error: function(xhr) {
 						var message = '<?php echo esc_js( __( 'Request failed. Please try again.', 'seo-repair-kit' ) ); ?>';
-						if (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
-							message = xhr.responseJSON.data.message;
-						}
-						$result.html('<div class="notice notice-error inline"><p>' + message + '</p></div>').show();
+						srkShowScanNotice($result, 'error', srkAjaxErrorMessage(xhr, message));
 					},
 					complete: function() {
 						$btn.prop('disabled', false);
@@ -309,7 +327,7 @@ class SeoRepairKit_LinkScanner_Automation_Admin {
 				$result.hide();
 
 				$.ajax({
-					url: ajaxurl,
+					url: srkAutomationAjaxUrl,
 					type: 'POST',
 					data: {
 						action: 'srk_ajax_reset_scan_table',
@@ -317,17 +335,14 @@ class SeoRepairKit_LinkScanner_Automation_Admin {
 					},
 					success: function(response) {
 						if (response.success) {
-							$result.html('<div class="notice notice-success inline"><p>' + response.data.message + '</p></div>').show();
+							srkShowScanNotice($result, 'success', response.data.message);
 						} else {
-							$result.html('<div class="notice notice-error inline"><p>' + (response.data ? response.data.message : '<?php echo esc_js( __( 'Reset failed.', 'seo-repair-kit' ) ); ?>') + '</p></div>').show();
+							srkShowScanNotice($result, 'error', response.data ? response.data.message : '<?php echo esc_js( __( 'Reset failed.', 'seo-repair-kit' ) ); ?>');
 						}
 					},
 					error: function(xhr) {
 						var message = '<?php echo esc_js( __( 'Request failed. Please try again.', 'seo-repair-kit' ) ); ?>';
-						if (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
-							message = xhr.responseJSON.data.message;
-						}
-						$result.html('<div class="notice notice-error inline"><p>' + message + '</p></div>').show();
+						srkShowScanNotice($result, 'error', srkAjaxErrorMessage(xhr, message));
 					},
 					complete: function() {
 						$btn.prop('disabled', false);
@@ -600,8 +615,9 @@ class SeoRepairKit_LinkScanner_Automation_Admin {
 		}
 
 		global $wpdb;
-		$table = $wpdb->prefix . 'srk_link_scan_runs';
-		$run   = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $run_id ), ARRAY_A );
+		$table     = $wpdb->prefix . 'srk_link_scan_runs';
+		$table_sql = '`' . str_replace( '`', '``', $table ) . '`';
+		$run       = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table_sql} WHERE id = %d", $run_id ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter,WordPress.DB.PreparedSQL.NotPrepared -- Real-time single-record CSV export from plugin-owned scan history table; identifier is built from $wpdb->prefix.
 
 		if ( ! $run ) {
 			wp_die( esc_html__( 'Record not found.', 'seo-repair-kit' ) );
@@ -680,8 +696,9 @@ class SeoRepairKit_LinkScanner_Automation_Admin {
 		}
 
 		global $wpdb;
-		$table = $wpdb->prefix . 'srk_link_scan_alerts';
-		$alert = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $alert_id ), ARRAY_A );
+		$table     = $wpdb->prefix . 'srk_link_scan_alerts';
+		$table_sql = '`' . str_replace( '`', '``', $table ) . '`';
+		$alert     = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table_sql} WHERE id = %d", $alert_id ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter,WordPress.DB.PreparedSQL.NotPrepared -- Real-time single-record CSV export from plugin-owned scan alert table; identifier is built from $wpdb->prefix.
 
 		if ( ! $alert ) {
 			wp_die( esc_html__( 'Record not found.', 'seo-repair-kit' ) );

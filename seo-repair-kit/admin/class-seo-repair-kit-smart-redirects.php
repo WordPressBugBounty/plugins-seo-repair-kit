@@ -17,6 +17,60 @@ class SeoRepairKit_SmartRedirects {
 	 */
 	const OPTION_KEY = 'srk_smart_redirect_post_types';
 	const SETTINGS_OPTION = 'srk_smart_archive_redirect_settings';
+	const CACHE_GROUP = 'seo_repair_kit';
+	const RECORDS_CACHE_KEY = 'srk_smart_redirect_records';
+	const RECORDS_CACHE_VERSION_OPTION = 'srk_smart_redirect_records_cache_version';
+
+	/**
+	 * Clear cached Smart Redirect admin data.
+	 *
+	 * @return void
+	 */
+	private static function clear_records_cache() {
+		$version = (string) microtime( true );
+		if ( false === get_option( self::RECORDS_CACHE_VERSION_OPTION, false ) ) {
+			add_option( self::RECORDS_CACHE_VERSION_OPTION, $version, '', 'no' );
+			return;
+		}
+
+		update_option( self::RECORDS_CACHE_VERSION_OPTION, $version, false );
+	}
+
+	/**
+	 * Get a plugin-owned database table name.
+	 *
+	 * @param string $key Table key.
+	 * @return string
+	 */
+	private static function get_table_name( $key ) {
+		global $wpdb;
+
+		$tables = array(
+			'smart_redirects' => $wpdb->prefix . 'srkit_smart_redirects',
+			'redirections'    => $wpdb->prefix . 'srkit_redirection_table',
+		);
+
+		return isset( $tables[ $key ] ) ? $tables[ $key ] : '';
+	}
+
+	/**
+	 * Get an escaped SQL identifier for a plugin-owned table.
+	 *
+	 * WordPress 5.0 compatibility prevents relying on the newer %i placeholder.
+	 * The table key is allowlisted above and the final identifier is backtick-escaped.
+	 *
+	 * @param string $key Table key.
+	 * @return string
+	 */
+	private static function get_table_identifier( $key ) {
+		$table_name = self::get_table_name( $key );
+
+		if ( '' === $table_name ) {
+			return '';
+		}
+
+		return '`' . str_replace( '`', '``', $table_name ) . '`';
+	}
 
 	/**
 	 * Register hooks.
@@ -214,16 +268,17 @@ class SeoRepairKit_SmartRedirects {
 			wp_send_json_error( array( 'message' => __( 'Invalid record ID.', 'seo-repair-kit' ) ) );
 		}
 
-		$smart_table = $wpdb->prefix . 'srkit_smart_redirects';
-		$redir_table = $wpdb->prefix . 'srkit_redirection_table';
-		$row         = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$smart_table} WHERE id = %d", $id ), ARRAY_A );
+		$smart_table     = self::get_table_name( 'smart_redirects' );
+		$redir_table     = self::get_table_name( 'redirections' );
+		$smart_table_sql = esc_sql( self::get_table_name( 'smart_redirects' ) );
+		$row             = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$smart_table_sql} WHERE id = %d", $id ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery,PluginCheck.Security.DirectDB.UnescapedDBParameter,WordPress.DB.PreparedSQL.NotPrepared -- Real-time lookup before toggling one Smart Redirect row; identifier comes from get_table_identifier().
 
 		if ( empty( $row ) ) {
 			wp_send_json_error( array( 'message' => __( 'Record not found.', 'seo-repair-kit' ) ) );
 		}
 
 		$new_status = ( 'active' === $row['status'] ) ? 'inactive' : 'active';
-		$wpdb->update(
+		$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Intentional write to plugin-owned Smart Redirect table; affected caches are cleared below.
 			$smart_table,
 			array(
 				'status'     => $new_status,
@@ -235,7 +290,7 @@ class SeoRepairKit_SmartRedirects {
 		);
 
 		if ( ! empty( $row['redirection_id'] ) ) {
-			$wpdb->update(
+			$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Intentional write to linked plugin-owned redirection table; affected caches are cleared below.
 				$redir_table,
 				array(
 					'status'     => $new_status,
@@ -250,6 +305,7 @@ class SeoRepairKit_SmartRedirects {
 		if ( class_exists( 'SeoRepairKit_SmartRedirect_Generator' ) && method_exists( 'SeoRepairKit_SmartRedirect_Generator', 'refresh_server_rules' ) ) {
 			SeoRepairKit_SmartRedirect_Generator::refresh_server_rules();
 		}
+		self::clear_records_cache();
 
 		wp_send_json_success( array( 'message' => __( 'Smart redirect status updated.', 'seo-repair-kit' ) ) );
 	}
@@ -269,17 +325,18 @@ class SeoRepairKit_SmartRedirects {
 		check_ajax_referer( 'srk_smart_redirect_ajax_nonce', 'nonce' );
 
 		$post_type   = isset( $_POST['post_type'] ) ? sanitize_key( wp_unslash( $_POST['post_type'] ) ) : '';
-		$smart_table = $wpdb->prefix . 'srkit_smart_redirects';
-		$redir_table = $wpdb->prefix . 'srkit_redirection_table';
+		$smart_table     = self::get_table_name( 'smart_redirects' );
+		$redir_table     = self::get_table_name( 'redirections' );
+		$smart_table_sql = esc_sql( self::get_table_name( 'smart_redirects' ) );
 
 		if ( '' !== $post_type ) {
-			$rows = $wpdb->get_results(
-				$wpdb->prepare( "SELECT id, redirection_id FROM {$smart_table} WHERE post_type = %s", $post_type ),
+			$rows = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery,PluginCheck.Security.DirectDB.UnescapedDBParameter,WordPress.DB.PreparedSQL.NotPrepared -- Real-time lookup before resetting selected Smart Redirect records; identifier comes from get_table_identifier().
+				$wpdb->prepare( "SELECT id, redirection_id FROM {$smart_table_sql} WHERE post_type = %s", $post_type ),
 				ARRAY_A
 			);
 		} else {
-			$rows = $wpdb->get_results(
-				"SELECT id, redirection_id FROM {$smart_table}",
+			$rows = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery,PluginCheck.Security.DirectDB.UnescapedDBParameter,WordPress.DB.PreparedSQL.NotPrepared -- Real-time lookup before resetting all Smart Redirect records; identifier comes from get_table_identifier().
+				"SELECT id, redirection_id FROM {$smart_table_sql}",
 				ARRAY_A
 			);
 		}
@@ -287,7 +344,7 @@ class SeoRepairKit_SmartRedirects {
 		if ( ! empty( $rows ) ) {
 			foreach ( $rows as $row ) {
 				if ( ! empty( $row['redirection_id'] ) ) {
-					$wpdb->delete(
+					$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Intentional delete from linked plugin-owned redirection table; affected caches are cleared below.
 						$redir_table,
 						array( 'id' => (int) $row['redirection_id'] ),
 						array( '%d' )
@@ -297,9 +354,9 @@ class SeoRepairKit_SmartRedirects {
 		}
 
 		if ( '' === $post_type ) {
-			$wpdb->query( "TRUNCATE TABLE {$smart_table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->query( "TRUNCATE TABLE {$smart_table_sql}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.DirectDatabaseQuery.SchemaChange,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Intentional reset of plugin-owned Smart Redirect table; identifier comes from get_table_identifier().
 		} else {
-			$wpdb->delete(
+			$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Intentional delete from plugin-owned Smart Redirect table; affected caches are cleared below.
 				$smart_table,
 				array( 'post_type' => $post_type ),
 				array( '%s' )
@@ -313,6 +370,7 @@ class SeoRepairKit_SmartRedirects {
 		// Clear link-scanner URL status cache so the next auto scan can re-detect
 		// actual HTTP codes and regenerate Smart Redirects when needed.
 		delete_option( 'srk_link_scanner_url_status_cache' );
+		self::clear_records_cache();
 
 		wp_send_json_success( array( 'message' => __( 'Smart redirect records reset successfully.', 'seo-repair-kit' ) ) );
 	}
@@ -342,11 +400,12 @@ class SeoRepairKit_SmartRedirects {
 			wp_send_json_error( array( 'message' => __( 'Invalid request.', 'seo-repair-kit' ) ) );
 		}
 
-		$smart_table = $wpdb->prefix . 'srkit_smart_redirects';
-		$redir_table = $wpdb->prefix . 'srkit_redirection_table';
+		$smart_table     = self::get_table_name( 'smart_redirects' );
+		$redir_table     = self::get_table_name( 'redirections' );
+		$smart_table_sql = esc_sql( self::get_table_name( 'smart_redirects' ) );
 
-		$row = $wpdb->get_row(
-			$wpdb->prepare( "SELECT id, redirection_id FROM {$smart_table} WHERE id = %d", $id ),
+		$row = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery,PluginCheck.Security.DirectDB.UnescapedDBParameter,WordPress.DB.PreparedSQL.NotPrepared -- Real-time lookup before deleting one Smart Redirect row; identifier comes from get_table_identifier().
+			$wpdb->prepare( "SELECT id, redirection_id FROM {$smart_table_sql} WHERE id = %d", $id ),
 			ARRAY_A
 		);
 
@@ -357,14 +416,14 @@ class SeoRepairKit_SmartRedirects {
 		// Per requirement: deleting from Smart Redirect table must also delete from Redirection table.
 		// So we always remove the linked redirection record if it exists.
 		if ( ! empty( $row['redirection_id'] ) ) {
-			$wpdb->delete(
+			$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional delete from linked plugin-owned redirection table; affected caches are cleared below.
 				$redir_table,
 				array( 'id' => (int) $row['redirection_id'] ),
 				array( '%d' )
 			);
 		}
 
-		$wpdb->delete(
+		$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional delete from plugin-owned Smart Redirect table; affected caches are cleared below.
 			$smart_table,
 			array( 'id' => $id ),
 			array( '%d' )
@@ -376,6 +435,7 @@ class SeoRepairKit_SmartRedirects {
 
 		// Clear link-scanner URL status cache so future scans don't keep seeing stale 200 responses.
 		delete_option( 'srk_link_scanner_url_status_cache' );
+		self::clear_records_cache();
 
 		wp_send_json_success(
 			array(
@@ -415,6 +475,7 @@ class SeoRepairKit_SmartRedirects {
 	 * @return void
 	 */
 	public static function render_tab() {
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery -- The Smart Redirect tab renders cached plugin-owned custom-table rows through render_smart_redirects_table(); this scope covers PHPCS attribution across the mixed PHP/HTML template.
 		$settings           = self::get_settings();
 		$enabled_post_types = $settings['post_types'];
 		$public_post_types  = get_post_types( array( 'public' => true ), 'objects' );
@@ -629,6 +690,7 @@ class SeoRepairKit_SmartRedirects {
 			</script>
 		</div>
 		<?php
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
 	}
 
 	/**
@@ -637,10 +699,19 @@ class SeoRepairKit_SmartRedirects {
 	 * @return void
 	 */
 	private static function render_smart_redirects_table() {
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery,PluginCheck.Security.DirectDB.UnescapedDBParameter -- This renderer reads cached, plugin-owned Smart Redirect custom-table data; identifiers are allowlisted and values are prepared.
 		global $wpdb;
 
-		$smart_table  = $wpdb->prefix . 'srkit_smart_redirects';
-		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $smart_table ) );
+		$smart_table     = self::get_table_name( 'smart_redirects' );
+		$smart_table_sql = esc_sql( self::get_table_name( 'smart_redirects' ) );
+		$table_exists    = (
+			class_exists( 'SeoRepairKit_Activator' )
+			&& SeoRepairKit_Activator::is_database_current()
+		);
+
+		if ( ! $table_exists ) {
+			$table_exists = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $smart_table ) ) === $smart_table ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Recovery check only when schema version is not current.
+		}
 
 		if ( ! $table_exists ) {
 			return;
@@ -655,48 +726,57 @@ class SeoRepairKit_SmartRedirects {
 		$per_page     = $show_all ? -1 : max( 10, min( 100, (int) $per_page_raw ) );
 		$current_page = isset( $_GET['srk_smart_paged'] ) ? max( 1, (int) $_GET['srk_smart_paged'] ) : 1;
 		$offset       = $show_all ? 0 : ( $current_page - 1 ) * $per_page;
+		$cache_version = (string) get_option( self::RECORDS_CACHE_VERSION_OPTION, '1' );
+		$cache_key     = self::RECORDS_CACHE_KEY . '_' . md5( wp_json_encode( array( $cache_version, $post_type, $status, $per_page_raw, $current_page ) ) );
+		$cached_data  = wp_cache_get( $cache_key, self::CACHE_GROUP );
 
+		if ( false !== $cached_data && is_array( $cached_data ) ) {
+			$total_items          = isset( $cached_data['total_items'] ) ? absint( $cached_data['total_items'] ) : 0;
+			$rows                 = isset( $cached_data['rows'] ) && is_array( $cached_data['rows'] ) ? $cached_data['rows'] : array();
+			$available_post_types = isset( $cached_data['available_post_types'] ) && is_array( $cached_data['available_post_types'] ) ? $cached_data['available_post_types'] : array();
+		} else {
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Cached Smart Redirect admin table reads; $smart_table_sql is plugin-owned from get_table_identifier(), and all user values below are prepared.
 		if ( '' !== $post_type && '' !== $status ) {
-			$total_items = (int) $wpdb->get_var(
+			$total_items = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached Smart Redirect admin list aggregate.
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$smart_table} WHERE post_type = %s AND status = %s",
+					"SELECT COUNT(*) FROM {$smart_table_sql} WHERE post_type = %s AND status = %s",
 					$post_type,
 					$status
 				)
 			);
 		} elseif ( '' !== $post_type ) {
-			$total_items = (int) $wpdb->get_var(
+			$total_items = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached Smart Redirect admin list aggregate.
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$smart_table} WHERE post_type = %s",
+					"SELECT COUNT(*) FROM {$smart_table_sql} WHERE post_type = %s",
 					$post_type
 				)
 			);
 		} elseif ( '' !== $status ) {
-			$total_items = (int) $wpdb->get_var(
+			$total_items = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached Smart Redirect admin list aggregate.
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$smart_table} WHERE status = %s",
+					"SELECT COUNT(*) FROM {$smart_table_sql} WHERE status = %s",
 					$status
 				)
 			);
 		} else {
-			$total_items = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$smart_table}" );
+			$total_items = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$smart_table_sql}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Cached Smart Redirect admin list aggregate.
 		}
 
 		$total_pages = $show_all ? 1 : ( $per_page > 0 ? (int) ceil( $total_items / $per_page ) : 1 );
 
 		if ( '' !== $post_type && '' !== $status ) {
 			$rows = $show_all
-				? $wpdb->get_results(
+				? $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached Smart Redirect admin list query.
 					$wpdb->prepare(
-						"SELECT * FROM {$smart_table} WHERE post_type = %s AND status = %s ORDER BY created_at DESC",
+						"SELECT * FROM {$smart_table_sql} WHERE post_type = %s AND status = %s ORDER BY created_at DESC",
 						$post_type,
 						$status
 					),
 					ARRAY_A
 				)
-				: $wpdb->get_results(
+				: $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached Smart Redirect admin list query.
 					$wpdb->prepare(
-						"SELECT * FROM {$smart_table} WHERE post_type = %s AND status = %s ORDER BY created_at DESC LIMIT %d OFFSET %d",
+						"SELECT * FROM {$smart_table_sql} WHERE post_type = %s AND status = %s ORDER BY created_at DESC LIMIT %d OFFSET %d",
 						$post_type,
 						$status,
 						$per_page,
@@ -706,16 +786,16 @@ class SeoRepairKit_SmartRedirects {
 				);
 		} elseif ( '' !== $post_type ) {
 			$rows = $show_all
-				? $wpdb->get_results(
+				? $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached Smart Redirect admin list query.
 					$wpdb->prepare(
-						"SELECT * FROM {$smart_table} WHERE post_type = %s ORDER BY created_at DESC",
+						"SELECT * FROM {$smart_table_sql} WHERE post_type = %s ORDER BY created_at DESC",
 						$post_type
 					),
 					ARRAY_A
 				)
-				: $wpdb->get_results(
+				: $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached Smart Redirect admin list query.
 					$wpdb->prepare(
-						"SELECT * FROM {$smart_table} WHERE post_type = %s ORDER BY created_at DESC LIMIT %d OFFSET %d",
+						"SELECT * FROM {$smart_table_sql} WHERE post_type = %s ORDER BY created_at DESC LIMIT %d OFFSET %d",
 						$post_type,
 						$per_page,
 						$offset
@@ -724,16 +804,16 @@ class SeoRepairKit_SmartRedirects {
 				);
 		} elseif ( '' !== $status ) {
 			$rows = $show_all
-				? $wpdb->get_results(
+				? $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached Smart Redirect admin list query.
 					$wpdb->prepare(
-						"SELECT * FROM {$smart_table} WHERE status = %s ORDER BY created_at DESC",
+						"SELECT * FROM {$smart_table_sql} WHERE status = %s ORDER BY created_at DESC",
 						$status
 					),
 					ARRAY_A
 				)
-				: $wpdb->get_results(
+				: $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached Smart Redirect admin list query.
 					$wpdb->prepare(
-						"SELECT * FROM {$smart_table} WHERE status = %s ORDER BY created_at DESC LIMIT %d OFFSET %d",
+						"SELECT * FROM {$smart_table_sql} WHERE status = %s ORDER BY created_at DESC LIMIT %d OFFSET %d",
 						$status,
 						$per_page,
 						$offset
@@ -742,10 +822,10 @@ class SeoRepairKit_SmartRedirects {
 				);
 		} else {
 			$rows = $show_all
-				? $wpdb->get_results( "SELECT * FROM {$smart_table} ORDER BY created_at DESC", ARRAY_A )
-				: $wpdb->get_results(
+				? $wpdb->get_results( "SELECT * FROM {$smart_table_sql} ORDER BY created_at DESC", ARRAY_A ) // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Cached Smart Redirect admin list query.
+				: $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached Smart Redirect admin list query.
 					$wpdb->prepare(
-						"SELECT * FROM {$smart_table} ORDER BY created_at DESC LIMIT %d OFFSET %d",
+						"SELECT * FROM {$smart_table_sql} ORDER BY created_at DESC LIMIT %d OFFSET %d",
 						$per_page,
 						$offset
 					),
@@ -753,7 +833,19 @@ class SeoRepairKit_SmartRedirects {
 				);
 		}
 
-		$available_post_types = (array) $wpdb->get_col( "SELECT DISTINCT post_type FROM {$smart_table} ORDER BY post_type ASC" );
+		$available_post_types = (array) $wpdb->get_col( "SELECT DISTINCT post_type FROM {$smart_table_sql} ORDER BY post_type ASC" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Cached Smart Redirect filter values.
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery,PluginCheck.Security.DirectDB.UnescapedDBParameter
+		wp_cache_set(
+			$cache_key,
+			array(
+				'total_items'          => $total_items,
+				'rows'                 => $rows,
+				'available_post_types' => $available_post_types,
+			),
+			self::CACHE_GROUP,
+			MINUTE_IN_SECONDS
+		);
+		}
 		?>
 		<div class="srk-redirect-existing srk-smart-records-card">
 			<div class="srk-smart-records-header">
@@ -929,5 +1021,6 @@ class SeoRepairKit_SmartRedirects {
 			<?php endif; ?>
 		</div>
 		<?php
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery,PluginCheck.Security.DirectDB.UnescapedDBParameter
 	}
 }

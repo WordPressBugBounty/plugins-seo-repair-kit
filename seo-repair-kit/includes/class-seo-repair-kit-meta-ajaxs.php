@@ -40,6 +40,11 @@ class SRK_Meta_Ajax_Handler {
 			return;
 		}
 
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			wp_send_json_error( array( 'message' => 'Permission denied.' ) );
+			return;
+		}
+
 		if ( isset( $meta_data['meta_title'] ) ) {
 			update_post_meta( $post_id, '_srk_meta_title', sanitize_text_field( $meta_data['meta_title'] ) );
 		}
@@ -79,6 +84,11 @@ class SRK_Meta_Ajax_Handler {
 
 		if ( ! $post_id ) {
 			wp_send_json_error( array( 'message' => 'No post ID provided.' ) );
+			return;
+		}
+
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			wp_send_json_error( array( 'message' => 'Permission denied.' ) );
 			return;
 		}
 

@@ -502,16 +502,7 @@ class SeoRepairKit_Dashboard {
             return true;
         }
 
-        global $wpdb;
-        $table = $wpdb->prefix . 'srkit_keytrack_settings';
-        $table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Small dashboard availability check.
-        if ( $table !== $table_exists ) {
-            return false;
-        }
-
-        // The table name is generated exclusively from the trusted WordPress prefix.
-        $count = $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-        return absint( $count ) > 0;
+        return (bool) get_option( 'srk_keytrack_has_settings', false );
     }
 
     /**
@@ -526,13 +517,13 @@ class SeoRepairKit_Dashboard {
         }
 
         global $wpdb;
-        $schema_options = $wpdb->get_results(
+        $schema_options = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached aggregate for dashboard status.
             $wpdb->prepare(
                 "SELECT option_value FROM {$wpdb->options} WHERE option_name LIKE %s",
                 $wpdb->esc_like( 'srk_schema_assignment_' ) . '%'
             ),
             OBJECT
-        ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Cached aggregate for dashboard status.
+        );
 
         $schema_count = 0;
         foreach ( $schema_options as $option ) {

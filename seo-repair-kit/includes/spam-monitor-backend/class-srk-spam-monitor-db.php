@@ -8,9 +8,66 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class SRK_Spam_Monitor_DB {
 
-	const DB_VERSION = '2.0.0';
+	const DB_VERSION = '2.0.1';
 	const DB_VERSION_OPTION = 'srk_spam_monitor_db_version';
 	const ALERT_SETTINGS_OPTION = 'srk_spam_monitor_alert_settings';
+
+	/**
+	 * Request-level alert history cache.
+	 *
+	 * @var array
+	 */
+	private static $alert_history_cache = array();
+
+	/**
+	 * Request-level alert count cache.
+	 *
+	 * @var int|null
+	 */
+	private static $alert_history_count = null;
+
+	/**
+	 * Quote a local SQL identifier.
+	 *
+	 * WordPress 5.0 compatibility prevents using the newer %i placeholder.
+	 *
+	 * @param string $identifier Identifier.
+	 * @return string
+	 */
+	private static function quote_identifier( $identifier ) {
+		return '`' . str_replace( '`', '``', $identifier ) . '`';
+	}
+
+	/**
+	 * Get a plugin-owned table name by allowlisted key.
+	 *
+	 * @param string $key Table key.
+	 * @return string
+	 */
+	private static function get_table_name( $key ) {
+		global $wpdb;
+
+		$tables = array(
+			'rules'        => $wpdb->prefix . 'srk_spam_monitor_rules',
+			'alerts'       => $wpdb->prefix . 'srk_spam_monitor_alerts',
+			'serp_scans'   => $wpdb->prefix . 'srk_spam_monitor_serp_scans',
+			'serp_results' => $wpdb->prefix . 'srk_spam_monitor_serp_results',
+		);
+
+		return isset( $tables[ $key ] ) ? $tables[ $key ] : '';
+	}
+
+	/**
+	 * Get an escaped SQL table identifier by allowlisted key.
+	 *
+	 * @param string $key Table key.
+	 * @return string
+	 */
+	private static function get_table_identifier( $key ) {
+		$table_name = self::get_table_name( $key );
+
+		return '' === $table_name ? '' : self::quote_identifier( $table_name );
+	}
 
 	/**
 	 * Create active custom tables.
@@ -58,7 +115,8 @@ class SRK_Spam_Monitor_DB {
 				KEY idx_domain (domain),
 				KEY idx_risk_level (risk_level),
 				KEY idx_status (status),
-				KEY idx_sent_at (sent_at)
+				KEY idx_sent_at (sent_at),
+				KEY idx_sent_at_id (sent_at, id)
 			) $charset_collate;"
 		);
 
@@ -131,7 +189,12 @@ class SRK_Spam_Monitor_DB {
 			) $charset_collate;"
 		);
 
-		update_option( self::DB_VERSION_OPTION, self::DB_VERSION );
+		if ( false === get_option( self::DB_VERSION_OPTION, false ) ) {
+			add_option( self::DB_VERSION_OPTION, self::DB_VERSION, '', 'no' );
+			return;
+		}
+
+		update_option( self::DB_VERSION_OPTION, self::DB_VERSION, false );
 	}
 
 	/**
@@ -140,24 +203,13 @@ class SRK_Spam_Monitor_DB {
 	 * @return void
 	 */
 	public static function maybe_create_tables() {
-		global $wpdb;
-
 		$installed = get_option( self::DB_VERSION_OPTION, '0.0.0' );
-		$missing_table = false;
 
-		foreach ( self::get_active_table_names() as $table ) {
-			$full_table = $wpdb->prefix . $table;
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
-			$exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $full_table ) );
-			if ( $exists !== $full_table ) {
-				$missing_table = true;
-				break;
-			}
+		if ( version_compare( (string) $installed, self::DB_VERSION, '>=' ) ) {
+			return;
 		}
 
-		if ( version_compare( $installed, self::DB_VERSION, '<' ) || $missing_table ) {
-			self::create_tables();
-		}
+		self::create_tables();
 	}
 
 	/**
@@ -189,6 +241,7 @@ class SRK_Spam_Monitor_DB {
 	 * @return void
 	 */
 	public static function drop_tables() {
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Explicit uninstall lifecycle for plugin-owned Spam Monitor tables; no caching is appropriate for schema deletion.
 		global $wpdb;
 
 		$tables = array(
@@ -207,12 +260,14 @@ class SRK_Spam_Monitor_DB {
 
 		foreach ( $tables as $table ) {
 			$full_table = $wpdb->prefix . $table;
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$wpdb->query( "DROP TABLE IF EXISTS {$full_table}" );
+			$full_table_sql = self::quote_identifier( $full_table );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Explicit Spam Monitor uninstall/drop lifecycle for plugin-owned tables.
+			$wpdb->query( "DROP TABLE IF EXISTS {$full_table_sql}" );
 		}
 
 		delete_option( self::DB_VERSION_OPTION );
 		delete_option( self::ALERT_SETTINGS_OPTION );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 	}
 
 	/**
@@ -225,9 +280,8 @@ class SRK_Spam_Monitor_DB {
 	public static function get_rule( $key, $default = null ) {
 		global $wpdb;
 
-		$table = $wpdb->prefix . 'srk_spam_monitor_rules';
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$value = $wpdb->get_var( $wpdb->prepare( "SELECT rule_value FROM {$table} WHERE rule_key = %s", sanitize_key( $key ) ) );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Read from plugin-owned rules table; identifier comes from get_table_identifier().
+		$value = $wpdb->get_var( $wpdb->prepare( "SELECT rule_value FROM `{$wpdb->prefix}srk_spam_monitor_rules` WHERE rule_key = %s", sanitize_key( $key ) ) );
 
 		if ( null === $value ) {
 			return $default;
@@ -249,12 +303,11 @@ class SRK_Spam_Monitor_DB {
 
 		self::maybe_create_tables();
 
-		$table = $wpdb->prefix . 'srk_spam_monitor_rules';
+		$table = self::get_table_name( 'rules' );
 		$key = sanitize_key( $key );
 		$stored = ( is_array( $value ) || is_object( $value ) ) ? wp_json_encode( $value ) : (string) $value;
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
-		return false !== $wpdb->replace(
+		return false !== $wpdb->replace( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional write to plugin-owned rules table; write operations are not cached.
 			$table,
 			array(
 				'rule_key'   => $key,
@@ -271,13 +324,13 @@ class SRK_Spam_Monitor_DB {
 	 * @return array
 	 */
 	public static function get_all_rules() {
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Request-time read from plugin-owned rules table; merged with local defaults.
 		global $wpdb;
 
 		self::maybe_create_tables();
 
-		$table = $wpdb->prefix . 'srk_spam_monitor_rules';
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$rows = $wpdb->get_results( "SELECT rule_key, rule_value FROM {$table}", ARRAY_A );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Read from plugin-owned rules table; identifier comes from get_table_identifier().
+		$rows = $wpdb->get_results( "SELECT rule_key, rule_value FROM `{$wpdb->prefix}srk_spam_monitor_rules`", ARRAY_A );
 		$rules = self::get_default_rules();
 
 		foreach ( (array) $rows as $row ) {
@@ -285,6 +338,7 @@ class SRK_Spam_Monitor_DB {
 			$rules[ $row['rule_key'] ] = ( JSON_ERROR_NONE === json_last_error() ) ? $decoded : $row['rule_value'];
 		}
 
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $rules;
 	}
 
@@ -345,8 +399,8 @@ class SRK_Spam_Monitor_DB {
 
 		self::maybe_create_tables();
 
-		$table = $wpdb->prefix . 'srk_spam_monitor_alerts';
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$table = self::get_table_name( 'alerts' );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional insert into plugin-owned SERP scan table; write operations are not cached.
 		$inserted = $wpdb->insert(
 			$table,
 			array(
@@ -366,7 +420,12 @@ class SRK_Spam_Monitor_DB {
 			array( '%d', '%d', '%s', '%s', '%s', '%d', '%s', '%d', '%s', '%s', '%s', '%s' )
 		);
 
-		return $inserted ? (int) $wpdb->insert_id : false;
+		if ( $inserted ) {
+			self::clear_alert_history_cache();
+			return (int) $wpdb->insert_id;
+		}
+
+		return false;
 	}
 
 	/**
@@ -382,32 +441,60 @@ class SRK_Spam_Monitor_DB {
 
 		$limit = max( 1, min( 1000, absint( $limit ) ) );
 		$offset = absint( $offset );
-		$table = $wpdb->prefix . 'srk_spam_monitor_alerts';
+		$cache_key = $limit . ':' . $offset;
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		if ( isset( self::$alert_history_cache[ $cache_key ] ) ) {
+			return self::$alert_history_cache[ $cache_key ];
+		}
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Request-cached alert history read from plugin-owned alerts table.
 		$rows = $wpdb->get_results(
-			$wpdb->prepare( "SELECT * FROM {$table} ORDER BY sent_at DESC, id DESC LIMIT %d OFFSET %d", $limit, $offset ),
+			$wpdb->prepare( "SELECT id, domain, alert_type, score, risk_level, url_count, status, sent_at FROM `{$wpdb->prefix}srk_spam_monitor_alerts` FORCE INDEX (idx_sent_at_id) ORDER BY sent_at DESC, id DESC LIMIT %d OFFSET %d", $limit, $offset ),
 			ARRAY_A
 		);
 
-		return is_array( $rows ) ? $rows : array();
+		self::$alert_history_cache[ $cache_key ] = is_array( $rows ) ? $rows : array();
+
+		return self::$alert_history_cache[ $cache_key ];
 	}
 
 	public static function count_alert_history() {
 		global $wpdb;
+
+		if ( null !== self::$alert_history_count ) {
+			return self::$alert_history_count;
+		}
+
 		self::maybe_create_tables();
-		$table = $wpdb->prefix . 'srk_spam_monitor_alerts';
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		return absint( $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" ) );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Request-cached alert count from plugin-owned alerts table.
+		self::$alert_history_count = absint( $wpdb->get_var( "SELECT COUNT(*) FROM `{$wpdb->prefix}srk_spam_monitor_alerts`" ) );
+
+		return self::$alert_history_count;
+	}
+
+	/**
+	 * Clear request-level alert history caches.
+	 *
+	 * @return void
+	 */
+	private static function clear_alert_history_cache() {
+		self::$alert_history_cache = array();
+		self::$alert_history_count = null;
 	}
 
 	public static function get_alert_risk_counts( $days = 30 ) {
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Real-time alert risk aggregate from plugin-owned alerts table.
 		global $wpdb;
 		self::maybe_create_tables();
-		$table = $wpdb->prefix . 'srk_spam_monitor_alerts';
 		$since = gmdate( 'Y-m-d H:i:s', time() - ( max( 1, absint( $days ) ) * DAY_IN_SECONDS ) );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT LOWER(risk_level) risk_level, COUNT(*) total FROM {$table} WHERE sent_at >= %s GROUP BY LOWER(risk_level)", $since ), ARRAY_A );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Real-time alert risk aggregate from plugin-owned alerts table.
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT LOWER(risk_level) risk_level, COUNT(*) total FROM `{$wpdb->prefix}srk_spam_monitor_alerts` WHERE sent_at >= %s GROUP BY LOWER(risk_level)",
+				$since
+			),
+			ARRAY_A
+		);
 		$counts = array( 'clean' => 0, 'suspicious' => 0, 'spam' => 0, 'critical' => 0 );
 		foreach ( (array) $rows as $row ) {
 			$key = sanitize_key( $row['risk_level'] ?? '' );
@@ -415,6 +502,7 @@ class SRK_Spam_Monitor_DB {
 				$counts[ $key ] = absint( $row['total'] ?? 0 );
 			}
 		}
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $counts;
 	}
 
@@ -425,23 +513,24 @@ class SRK_Spam_Monitor_DB {
 	 * @return void
 	 */
 	public static function trim_alert_history( $limit = 100 ) {
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Retention lookup and cleanup for plugin-owned alerts table; cleanup writes are not cached.
 		global $wpdb;
 
 		self::maybe_create_tables();
 
 		$limit = max( 25, min( 1000, absint( $limit ) ) );
-		$table = $wpdb->prefix . 'srk_spam_monitor_alerts';
-
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$table} ORDER BY sent_at DESC, id DESC LIMIT 999999 OFFSET %d", $limit ) );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Retention lookup from plugin-owned alerts table.
+		$ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM `{$wpdb->prefix}srk_spam_monitor_alerts` ORDER BY sent_at DESC, id DESC LIMIT 999999 OFFSET %d", $limit ) );
 		if ( empty( $ids ) ) {
 			return;
 		}
 
 		$ids = array_map( 'absint', $ids );
 		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE id IN ({$placeholders})", $ids ) );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Retention cleanup write for plugin-owned alerts table.
+		$wpdb->query( $wpdb->prepare( "DELETE FROM `{$wpdb->prefix}srk_spam_monitor_alerts` WHERE id IN ({$placeholders})", $ids ) );
+		self::clear_alert_history_cache();
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 	}
 
 	/**
@@ -452,6 +541,7 @@ class SRK_Spam_Monitor_DB {
 	 * @return int|false
 	 */
 	public static function insert_serp_scan( array $response, array $request_args ) {
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional insert into plugin-owned SERP scan table; write operations are not cached.
 		global $wpdb;
 
 		self::maybe_upgrade_serp_tables();
@@ -467,7 +557,7 @@ class SRK_Spam_Monitor_DB {
 		$scan_source = sanitize_key( $request_args['scan_source'] ?? 'manual' );
 		$scan_source = in_array( $scan_source, array( 'manual', 'scheduled' ), true ) ? $scan_source : 'manual';
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional insert into plugin-owned SERP scan table; write operations are not cached.
 		$inserted = $wpdb->insert(
 			$table,
 			array(
@@ -496,7 +586,9 @@ class SRK_Spam_Monitor_DB {
 			array( '%s', '%s', '%s', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )
 		);
 
-		return $inserted ? (int) $wpdb->insert_id : false;
+		$insert_id = $inserted ? (int) $wpdb->insert_id : false;
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+		return $insert_id;
 	}
 
 	/**
@@ -529,7 +621,7 @@ class SRK_Spam_Monitor_DB {
 			$raw_snippet = (string) ( $result['google_snippet'] ?? '' );
 			$normalized_url = esc_url_raw( $result['normalized_url'] ?? '' );
 
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Intentional insert into plugin-owned SERP result table; write operations are not cached.
 			$ok = $wpdb->insert(
 				$table,
 				array(
@@ -570,10 +662,7 @@ class SRK_Spam_Monitor_DB {
 
 		self::maybe_upgrade_serp_tables();
 
-		$scans_table = $wpdb->prefix . 'srk_spam_monitor_serp_scans';
-		$results_table = $wpdb->prefix . 'srk_spam_monitor_serp_results';
-
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.NotPrepared -- Real-time aggregate from plugin-owned SERP scan table.
 		$totals = $wpdb->get_row(
 			"SELECT COUNT(*) AS total_scans,
 				MAX(created_at) AS last_scan_date,
@@ -582,44 +671,59 @@ class SRK_Spam_Monitor_DB {
 				COALESCE(SUM(spam_count), 0) AS spam_results,
 				COALESCE(SUM(suspicious_count), 0) AS suspicious_results,
 				COALESCE(SUM(serp_requests_used), 0) AS serp_requests_used
-			FROM {$scans_table}",
+			FROM `{$wpdb->prefix}srk_spam_monitor_serp_scans`",
 			ARRAY_A
 		);
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$risky_limit  = max( 1, min( 100, absint( $risky_limit ) ) );
 		$risky_offset = absint( $risky_offset );
 		$risky_search = sanitize_text_field( $risky_search );
 		$risky_level  = sanitize_key( $risky_level );
-		$where_sql    = "LOWER(risk_level) IN ('critical', 'spam', 'suspicious')";
-		$where_args   = array();
-		if ( '' !== $risky_search ) {
-			$like = '%' . $wpdb->esc_like( $risky_search ) . '%';
-			$where_sql .= ' AND (domain LIKE %s OR url LIKE %s OR google_title LIKE %s OR issues LIKE %s)';
-			$where_args = array_merge( $where_args, array( $like, $like, $like, $like ) );
+		if ( ! in_array( $risky_level, array( 'critical', 'spam', 'suspicious' ), true ) ) {
+			$risky_level = '';
 		}
-		if ( in_array( $risky_level, array( 'critical', 'spam', 'suspicious' ), true ) ) {
-			$where_sql .= ' AND LOWER(risk_level) = %s';
-			$where_args[] = $risky_level;
-		}
-		$results_sql  = "SELECT domain, url, google_title, risk_level, risk_score, issues, created_at
-			FROM {$results_table} WHERE {$where_sql}
-			ORDER BY risk_score DESC, created_at DESC LIMIT %d OFFSET %d";
-		$results_args = array_merge( $where_args, array( $risky_limit, $risky_offset ) );
-		// Table and WHERE fragments are local fixed/allowlisted SQL; all request values use placeholders.
-		// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
-		$prepared_results_sql = $wpdb->prepare( $results_sql, $results_args );
+		$like = '%' . $wpdb->esc_like( $risky_search ) . '%';
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery -- Results SQL is built from plugin-owned identifiers, allowlisted SQL fragments, and prepared values.
 		$risky_urls = $wpdb->get_results(
-			$prepared_results_sql, // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->prepare(
+				"SELECT domain, url, google_title, risk_level, risk_score, issues, created_at
+				FROM `{$wpdb->prefix}srk_spam_monitor_serp_results`
+				WHERE LOWER(risk_level) IN ('critical', 'spam', 'suspicious')
+					AND ( %s = '' OR domain LIKE %s OR url LIKE %s OR google_title LIKE %s OR issues LIKE %s )
+					AND ( %s = '' OR LOWER(risk_level) = %s )
+				ORDER BY risk_score DESC, created_at DESC LIMIT %d OFFSET %d",
+				$risky_search,
+				$like,
+				$like,
+				$like,
+				$like,
+				$risky_level,
+				$risky_level,
+				$risky_limit,
+				$risky_offset
+			), // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			ARRAY_A
 		);
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$count_sql  = "SELECT COUNT(*) FROM {$results_table} WHERE {$where_sql} AND %d = %d";
-		$count_args = array_merge( $where_args, array( 1, 1 ) );
-		// Table and WHERE fragments are local fixed/allowlisted SQL; all request values use placeholders.
-		// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
-		$prepared_count_sql = $wpdb->prepare( $count_sql, $count_args );
-		$risky_total = absint( $wpdb->get_var( $prepared_count_sql ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery -- Count SQL is built from plugin-owned identifiers, allowlisted SQL fragments, and prepared values.
+		$risky_total = absint(
+			$wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(*) FROM `{$wpdb->prefix}srk_spam_monitor_serp_results`
+					WHERE LOWER(risk_level) IN ('critical', 'spam', 'suspicious')
+						AND ( %s = '' OR domain LIKE %s OR url LIKE %s OR google_title LIKE %s OR issues LIKE %s )
+						AND ( %s = '' OR LOWER(risk_level) = %s )",
+					$risky_search,
+					$like,
+					$like,
+					$like,
+					$like,
+					$risky_level,
+					$risky_level
+				) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			)
+		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery
 
 		return array(
 			'total_scans'           => absint( $totals['total_scans'] ?? 0 ),
@@ -648,17 +752,24 @@ class SRK_Spam_Monitor_DB {
 
 		$limit = max( 1, min( 100, absint( $limit ) ) );
 		$offset = absint( $offset );
-		$table = $wpdb->prefix . 'srk_spam_monitor_serp_scans';
-		list( $where_sql, $where_args ) = self::get_serp_scan_filter_sql( $filters, $wpdb );
-		$query = "SELECT * FROM {$table} {$where_sql} ORDER BY created_at DESC LIMIT %d OFFSET %d";
-		$args  = array_merge( $where_args, array( $limit, $offset ) );
-		// Table/WHERE fragments are locally constructed and filter values use placeholders.
-		// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
-		$prepared_sql = $wpdb->prepare( $query, $args );
+		$filter_args = self::get_serp_scan_filter_args( $filters, $wpdb );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Prepared immediately above from local allowlisted SQL.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Prepared at the call site from plugin-owned identifiers, allowlisted SQL fragments, and prepared values.
 		return $wpdb->get_results(
-			$prepared_sql, // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->prepare(
+				"SELECT * FROM `{$wpdb->prefix}srk_spam_monitor_serp_scans`
+				WHERE ( %s = '' OR domain LIKE %s )
+					AND ( %d = 0 OR id = %d )
+					AND (
+						%s = ''
+						OR ( %s = 'critical' AND overall_risk_score >= 81 )
+						OR ( %s = 'spam' AND overall_risk_score BETWEEN 61 AND 80 )
+						OR ( %s = 'suspicious' AND overall_risk_score BETWEEN 31 AND 60 )
+						OR ( %s = 'clean' AND overall_risk_score <= 30 )
+					)
+				ORDER BY created_at DESC LIMIT %d OFFSET %d",
+				array_merge( $filter_args, array( $limit, $offset ) )
+			), // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			ARRAY_A
 		);
 	}
@@ -666,17 +777,23 @@ class SRK_Spam_Monitor_DB {
 	public static function count_serp_scans( array $filters = array() ) {
 		global $wpdb;
 		self::maybe_upgrade_serp_tables();
-		$table = $wpdb->prefix . 'srk_spam_monitor_serp_scans';
-		list( $where_sql, $where_args ) = self::get_serp_scan_filter_sql( $filters, $wpdb );
-		$query = "SELECT COUNT(*) FROM {$table} {$where_sql}" . ( $where_sql ? ' AND' : ' WHERE' ) . ' %d = %d';
-		$args  = array_merge( $where_args, array( 1, 1 ) );
-		// Table/WHERE fragments are locally constructed and filter values use placeholders.
-		// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared
-		$prepared_sql = $wpdb->prepare( $query, $args );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Prepared immediately above from local allowlisted SQL.
+		$filter_args = self::get_serp_scan_filter_args( $filters, $wpdb );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Prepared at the call site from plugin-owned identifiers, allowlisted SQL fragments, and prepared values.
 		return absint(
 			$wpdb->get_var(
-				$prepared_sql // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$wpdb->prepare(
+					"SELECT COUNT(*) FROM `{$wpdb->prefix}srk_spam_monitor_serp_scans`
+					WHERE ( %s = '' OR domain LIKE %s )
+						AND ( %d = 0 OR id = %d )
+						AND (
+							%s = ''
+							OR ( %s = 'critical' AND overall_risk_score >= 81 )
+							OR ( %s = 'spam' AND overall_risk_score BETWEEN 61 AND 80 )
+							OR ( %s = 'suspicious' AND overall_risk_score BETWEEN 31 AND 60 )
+							OR ( %s = 'clean' AND overall_risk_score <= 30 )
+						)",
+					$filter_args
+				) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			)
 		);
 	}
@@ -685,29 +802,30 @@ class SRK_Spam_Monitor_DB {
 		global $wpdb;
 		self::maybe_upgrade_serp_tables();
 		$dataset = sanitize_key( $dataset );
-		$alerts  = $wpdb->prefix . 'srk_spam_monitor_alerts';
 		if ( 'alerts' === $dataset ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$result = $wpdb->query( "DELETE FROM {$alerts}" );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Intentional cleanup write for plugin-owned alerts table.
+			$result = $wpdb->query( "DELETE FROM `{$wpdb->prefix}srk_spam_monitor_alerts`" );
+			if ( false !== $result ) {
+				self::clear_alert_history_cache();
+			}
 			return false === $result ? false : absint( $result );
 		}
 		if ( 'serp' !== $dataset ) {
 			return false;
 		}
-		$scans   = $wpdb->prefix . 'srk_spam_monitor_serp_scans';
-		$results = $wpdb->prefix . 'srk_spam_monitor_serp_results';
 		$wpdb->query( 'START TRANSACTION' );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$deleted_results = $wpdb->query( "DELETE FROM {$results}" );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$deleted_scans = $wpdb->query( "DELETE FROM {$scans}" );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$deleted_alerts = $wpdb->query( "DELETE FROM {$alerts} WHERE scan_id IS NOT NULL AND scan_id > 0" );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Intentional cleanup write for plugin-owned SERP results table.
+		$deleted_results = $wpdb->query( "DELETE FROM `{$wpdb->prefix}srk_spam_monitor_serp_results`" );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Intentional cleanup write for plugin-owned SERP scans table.
+		$deleted_scans = $wpdb->query( "DELETE FROM `{$wpdb->prefix}srk_spam_monitor_serp_scans`" );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Intentional cleanup write for plugin-owned alerts table.
+		$deleted_alerts = $wpdb->query( "DELETE FROM `{$wpdb->prefix}srk_spam_monitor_alerts` WHERE scan_id IS NOT NULL AND scan_id > 0" );
 		if ( false === $deleted_results || false === $deleted_scans || false === $deleted_alerts ) {
 			$wpdb->query( 'ROLLBACK' );
 			return false;
 		}
 		$wpdb->query( 'COMMIT' );
+		self::clear_alert_history_cache();
 		return absint( $deleted_results ) + absint( $deleted_scans ) + absint( $deleted_alerts );
 	}
 
@@ -722,46 +840,47 @@ class SRK_Spam_Monitor_DB {
 
 	public static function get_export_records( $dataset, $limit = 500, $offset = 0 ) {
 		global $wpdb;
+		$dataset = sanitize_key( $dataset );
 		$columns = self::get_export_columns( $dataset );
 		if ( empty( $columns ) ) {
 			return array();
 		}
-		$tables = array( 'serp_scans' => 'srk_spam_monitor_serp_scans', 'serp_results' => 'srk_spam_monitor_serp_results', 'alerts' => 'srk_spam_monitor_alerts' );
-		$table = $wpdb->prefix . $tables[ $dataset ];
-		$order = 'alerts' === $dataset ? 'sent_at DESC, id DESC' : ( 'serp_results' === $dataset ? 'created_at DESC, id DESC' : 'created_at DESC, id DESC' );
-		$fields = implode( ', ', array_keys( $columns ) );
 		$limit = max( 1, min( 1000, absint( $limit ) ) );
 		$offset = absint( $offset );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		return (array) $wpdb->get_results( $wpdb->prepare( "SELECT {$fields} FROM {$table} ORDER BY {$order} LIMIT %d OFFSET %d", $limit, $offset ), ARRAY_A );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Paginated export read from allowlisted plugin-owned table and fields.
+		if ( 'alerts' === $dataset ) {
+			return (array) $wpdb->get_results( $wpdb->prepare( "SELECT `id`, `scan_id`, `domain`, `alert_type`, `url`, `score`, `risk_level`, `url_count`, `recipient`, `subject`, `status`, `sent_at` FROM `{$wpdb->prefix}srk_spam_monitor_alerts` ORDER BY `sent_at` DESC, `id` DESC LIMIT %d OFFSET %d", $limit, $offset ), ARRAY_A );
+		}
+		if ( 'serp_results' === $dataset ) {
+			return (array) $wpdb->get_results( $wpdb->prepare( "SELECT `id`, `scan_id`, `domain`, `position`, `url`, `google_title`, `google_snippet`, `risk_score`, `risk_level`, `issues`, `cleanup_status`, `http_status`, `in_sitemap`, `created_at` FROM `{$wpdb->prefix}srk_spam_monitor_serp_results` ORDER BY `created_at` DESC, `id` DESC LIMIT %d OFFSET %d", $limit, $offset ), ARRAY_A );
+		}
+		if ( 'serp_scans' === $dataset ) {
+			return (array) $wpdb->get_results( $wpdb->prepare( "SELECT `id`, `domain`, `scan_source`, `provider_used`, `requested_results`, `received_results`, `serp_requests_used`, `overall_risk_score`, `clean_count`, `suspicious_count`, `spam_count`, `critical_count`, `status`, `created_at`, `completed_at` FROM `{$wpdb->prefix}srk_spam_monitor_serp_scans` ORDER BY `created_at` DESC, `id` DESC LIMIT %d OFFSET %d", $limit, $offset ), ARRAY_A );
+		}
+
+		return array();
 	}
 
-	private static function get_serp_scan_filter_sql( array $filters, $wpdb ) {
-		$conditions = array();
-		$args       = array();
-		$domain     = sanitize_text_field( $filters['domain'] ?? '' );
-		$risk       = sanitize_key( $filters['risk'] ?? '' );
-		$scan_id    = absint( preg_replace( '/[^0-9]/', '', (string) ( $filters['scan_id'] ?? '' ) ) );
+	private static function get_serp_scan_filter_args( array $filters, $wpdb ) {
+		$domain  = sanitize_text_field( $filters['domain'] ?? '' );
+		$risk    = sanitize_key( $filters['risk'] ?? '' );
+		$scan_id = absint( preg_replace( '/[^0-9]/', '', (string) ( $filters['scan_id'] ?? '' ) ) );
 
-		if ( '' !== $domain ) {
-			$conditions[] = 'domain LIKE %s';
-			$args[] = '%' . $wpdb->esc_like( $domain ) . '%';
-		}
-		if ( $scan_id ) {
-			$conditions[] = 'id = %d';
-			$args[] = $scan_id;
-		}
-		if ( 'critical' === $risk ) {
-			$conditions[] = 'overall_risk_score >= 81';
-		} elseif ( 'spam' === $risk ) {
-			$conditions[] = 'overall_risk_score BETWEEN 61 AND 80';
-		} elseif ( 'suspicious' === $risk ) {
-			$conditions[] = 'overall_risk_score BETWEEN 31 AND 60';
-		} elseif ( 'clean' === $risk ) {
-			$conditions[] = 'overall_risk_score <= 30';
+		if ( ! in_array( $risk, array( 'critical', 'spam', 'suspicious', 'clean' ), true ) ) {
+			$risk = '';
 		}
 
-		return array( $conditions ? 'WHERE ' . implode( ' AND ', $conditions ) : '', $args );
+		return array(
+			$domain,
+			'%' . $wpdb->esc_like( $domain ) . '%',
+			$scan_id,
+			$scan_id,
+			$risk,
+			$risk,
+			$risk,
+			$risk,
+			$risk,
+		);
 	}
 
 	/**
@@ -777,15 +896,11 @@ class SRK_Spam_Monitor_DB {
 
 		$limit = max( 1, min( 500, absint( $limit ) ) );
 		$offset = absint( $offset );
-		$results_table = $wpdb->prefix . 'srk_spam_monitor_serp_results';
-		$scans_table = $wpdb->prefix . 'srk_spam_monitor_serp_scans';
-
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$rows = $wpdb->get_results(
+		$rows = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Real-time paginated cleanup candidate list; identifiers come from get_table_identifier().
 			$wpdb->prepare(
 				"SELECT results.*, scans.created_at AS scan_created_at
-				FROM {$results_table} results
-				LEFT JOIN {$scans_table} scans ON scans.id = results.scan_id
+				FROM `{$wpdb->prefix}srk_spam_monitor_serp_results` results
+				LEFT JOIN `{$wpdb->prefix}srk_spam_monitor_serp_scans` scans ON scans.id = results.scan_id
 				WHERE LOWER(results.risk_level) IN ('critical', 'spam')
 				ORDER BY
 					CASE LOWER(results.risk_level)
@@ -808,22 +923,20 @@ class SRK_Spam_Monitor_DB {
 	public static function count_gsc_cleanup_candidates() {
 		global $wpdb;
 		self::maybe_upgrade_serp_tables();
-		$table = $wpdb->prefix . 'srk_spam_monitor_serp_results';
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		return absint( $wpdb->get_var( "SELECT COUNT(*) FROM {$table} WHERE LOWER(risk_level) IN ('critical', 'spam')" ) );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Real-time cleanup candidate count from plugin-owned SERP results table.
+		return absint( $wpdb->get_var( "SELECT COUNT(*) FROM `{$wpdb->prefix}srk_spam_monitor_serp_results` WHERE LOWER(risk_level) IN ('critical', 'spam')" ) );
 	}
 
 	public static function get_gsc_cleanup_candidate_summary() {
 		global $wpdb;
 		self::maybe_upgrade_serp_tables();
-		$table = $wpdb->prefix . 'srk_spam_monitor_serp_results';
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Real-time cleanup candidate summary from plugin-owned SERP results table.
 		$row = $wpdb->get_row( "SELECT
 			SUM(CASE WHEN LOWER(risk_level) = 'critical' THEN 1 ELSE 0 END) critical,
 			SUM(CASE WHEN LOWER(risk_level) = 'spam' THEN 1 ELSE 0 END) spam,
 			SUM(CASE WHEN cleanup_status = 'Resolved' THEN 1 ELSE 0 END) resolved,
 			SUM(CASE WHEN in_sitemap = 1 THEN 1 ELSE 0 END) sitemap_issues
-			FROM {$table} WHERE LOWER(risk_level) IN ('critical', 'spam')", ARRAY_A );
+			FROM `{$wpdb->prefix}srk_spam_monitor_serp_results` WHERE LOWER(risk_level) IN ('critical', 'spam')", ARRAY_A );
 		return array_map( 'absint', wp_parse_args( (array) $row, array( 'critical' => 0, 'spam' => 0, 'resolved' => 0, 'sitemap_issues' => 0 ) ) );
 	}
 
@@ -837,9 +950,7 @@ class SRK_Spam_Monitor_DB {
 
 		self::maybe_upgrade_serp_tables();
 
-		$table = $wpdb->prefix . 'srk_spam_monitor_serp_results';
-
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Real-time cleanup dashboard summary from plugin-owned SERP results table.
 		$row = $wpdb->get_row(
 			"SELECT
 				SUM(CASE WHEN LOWER(risk_level) = 'critical' THEN 1 ELSE 0 END) AS critical_indexed_spam,
@@ -848,7 +959,7 @@ class SRK_Spam_Monitor_DB {
 				SUM(CASE WHEN cleanup_status IN ('Monitoring Google', 'Sitemap Resubmitted', 'Waiting For Google') THEN 1 ELSE 0 END) AS waiting_for_google,
 				SUM(CASE WHEN cleanup_status = 'Resolved' THEN 1 ELSE 0 END) AS resolved_cases,
 				SUM(CASE WHEN in_sitemap = 1 AND COALESCE(cleanup_status, 'Detected') NOT IN ('Resolved', 'False Positive') THEN 1 ELSE 0 END) AS sitemap_issues
-			FROM {$table}",
+			FROM `{$wpdb->prefix}srk_spam_monitor_serp_results`",
 			ARRAY_A
 		);
 
@@ -878,9 +989,8 @@ class SRK_Spam_Monitor_DB {
 			return null;
 		}
 
-		$table = $wpdb->prefix . 'srk_spam_monitor_serp_results';
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $result_id ), ARRAY_A );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Real-time lookup of one plugin-owned SERP result.
+		$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `{$wpdb->prefix}srk_spam_monitor_serp_results` WHERE id = %d", $result_id ), ARRAY_A );
 
 		return is_array( $row ) ? $row : null;
 	}
@@ -932,8 +1042,7 @@ class SRK_Spam_Monitor_DB {
 		}
 
 		$table = $wpdb->prefix . 'srk_spam_monitor_serp_results';
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
-		return false !== $wpdb->update( $table, $data, array( 'id' => $result_id ), $formats, array( '%d' ) );
+		return false !== $wpdb->update( $table, $data, array( 'id' => $result_id ), $formats, array( '%d' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Intentional update to plugin-owned SERP result table; write operations are not cached.
 	}
 
 	/**
@@ -952,23 +1061,20 @@ class SRK_Spam_Monitor_DB {
 
 		self::maybe_upgrade_serp_tables();
 
-		$scans_table = $wpdb->prefix . 'srk_spam_monitor_serp_scans';
-		$results_table = $wpdb->prefix . 'srk_spam_monitor_serp_results';
-
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$scan = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$scans_table} WHERE id = %d", $scan_id ), ARRAY_A );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.NotPrepared -- Real-time lookup of one plugin-owned SERP scan.
+		$scan = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `{$wpdb->prefix}srk_spam_monitor_serp_scans` WHERE id = %d", $scan_id ), ARRAY_A );
 		if ( ! $scan ) {
 			return null;
 		}
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$total = absint( $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$results_table} WHERE scan_id = %d", $scan_id ) ) );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.NotPrepared -- Real-time count of plugin-owned SERP results for one scan.
+		$total = absint( $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM `{$wpdb->prefix}srk_spam_monitor_serp_results` WHERE scan_id = %d", $scan_id ) ) );
 		if ( $limit ) {
 			$limit   = max( 1, min( 100, absint( $limit ) ) );
 			$offset  = absint( $offset );
-			$results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$results_table} WHERE scan_id = %d ORDER BY position ASC, id ASC LIMIT %d OFFSET %d", $scan_id, $limit, $offset ), ARRAY_A );
+			$results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `{$wpdb->prefix}srk_spam_monitor_serp_results` WHERE scan_id = %d ORDER BY position ASC, id ASC LIMIT %d OFFSET %d", $scan_id, $limit, $offset ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.NotPrepared -- Real-time paginated SERP results for one scan.
 		} else {
-			$results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$results_table} WHERE scan_id = %d ORDER BY position ASC, id ASC", $scan_id ), ARRAY_A );
+			$results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `{$wpdb->prefix}srk_spam_monitor_serp_results` WHERE scan_id = %d ORDER BY position ASC, id ASC", $scan_id ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.NotPrepared -- Real-time full SERP results export/read for one scan.
 		}
 
 		return array( 'scan' => $scan, 'results' => $results, 'total' => $total );

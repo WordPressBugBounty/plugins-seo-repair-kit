@@ -391,8 +391,6 @@ class SeoRepairKit_Admin {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/spam-monitor-backend/class-srk-search-console-service.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/spam-monitor-backend/class-srk-spam-monitor-cloud-client.php';
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/spam-monitor-backend/class-srk-spam-monitor-serp-provider.php';
-		// Ensure DB tables exist / are up to date.
-		SRK_Spam_Monitor_DB::maybe_create_tables();
 		// Register alerts AJAX handlers early (needed for admin-ajax.php).
 		new SRK_Spam_Monitor_Alerts_Ajax();
 		$srk_spam_monitor_scheduler = new SRK_Spam_Monitor_Scheduler();
@@ -1077,50 +1075,25 @@ class SeoRepairKit_Admin {
 	 * @since    2.0.0
      */
 	public function display_seo_repair_kit_notice() {
-		global $wpdb;
-		
-		// Cache table existence checks to avoid duplicate queries
-		$cache_key = 'srk_required_tables_check';
-		$missing_tables = get_transient( $cache_key );
-		
-		// If cache doesn't exist or is false, check tables
-		if ( false === $missing_tables ) {
-			// List of required tables
-			$required_tables = [
-				$wpdb->prefix . 'srkit_redirection_table',
-				$wpdb->prefix . 'srkit_keytrack_settings',
-				$wpdb->prefix . 'srkit_gsc_data'
-			];
-		
-			// Check for missing tables
-			$missing_tables = [];
-			foreach ( $required_tables as $table_name ) {
-				if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) ) != $table_name ) {
-					$missing_tables[] = $table_name;
-				}
-			}
-			
-			// Cache for 5 minutes to reduce database queries
-			set_transient( $cache_key, $missing_tables, 5 * MINUTE_IN_SECONDS );
+		if ( class_exists( 'SeoRepairKit_Activator' ) && SeoRepairKit_Activator::is_database_current() ) {
+			return;
 		}
-	
-		// If any table is missing, display the notice
-		if ( ! empty( $missing_tables ) ) {
-			$screen = get_current_screen();
-	
-			// Check if we are on the dashboard or plugin page before displaying the notice
-			if ( $screen->id === 'dashboard' || $screen->parent_base === 'seo-repair-kit-dashboard' ) {
-				?>
-				<div class="notice notice-info is-dismissible">
-					<h2><?php esc_html_e( 'SEO Repair Kit database update required', 'seo-repair-kit' ); ?></h2>
-					<p><?php esc_html_e( 'To keep your website SEO in top shape, we need to update your settings to the latest version. This process runs in the background and may take a few moments.', 'seo-repair-kit' ); ?></p>
-					<p>
-						<a href="<?php echo esc_url( admin_url( 'admin-post.php?action=srkit_update_settings' ) ); ?>" class="button button-primary"><?php esc_html_e( 'Update Settings', 'seo-repair-kit' ); ?></a>
-					</p>
-				</div>
-				<?php
-			}
+
+		$screen = get_current_screen();
+
+		if ( ! $screen || ( 'dashboard' !== $screen->id && 'seo-repair-kit-dashboard' !== $screen->parent_base ) ) {
+			return;
 		}
+
+		?>
+		<div class="notice notice-info is-dismissible">
+			<h2><?php esc_html_e( 'SEO Repair Kit database update required', 'seo-repair-kit' ); ?></h2>
+			<p><?php esc_html_e( 'To keep your website SEO in top shape, we need to update your settings to the latest version. This process runs in the background and may take a few moments.', 'seo-repair-kit' ); ?></p>
+			<p>
+				<a href="<?php echo esc_url( admin_url( 'admin-post.php?action=srkit_update_settings' ) ); ?>" class="button button-primary"><?php esc_html_e( 'Update Settings', 'seo-repair-kit' ); ?></a>
+			</p>
+		</div>
+		<?php
 	}
 
 	/**

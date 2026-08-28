@@ -582,7 +582,7 @@ class SRK_Gutenberg_Integration {
             'srk-meta-manager-css',
             $plugin_url . '/admin/css/seo-repair-kit-meta-manager.css',
             array( 'srk-metabox-styles' ),
-            defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '2.1.3'
+            SEO_REPAIR_KIT_VERSION
         );
     }
     
@@ -932,7 +932,8 @@ class SRK_Gutenberg_Integration {
      */
     public function save_metabox_data($post_id) {
         // Check nonce
-        if (!isset($_POST['srk_metabox_nonce']) || !wp_verify_nonce($_POST['srk_metabox_nonce'], 'srk_metabox_save')) {
+        $nonce = isset( $_POST['srk_metabox_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['srk_metabox_nonce'] ) ) : '';
+        if (!wp_verify_nonce($nonce, 'srk_metabox_save')) {
             return;
         }
 
@@ -963,7 +964,8 @@ class SRK_Gutenberg_Integration {
         
         foreach ($fields as $field => $meta_key) {
             if (isset($data[$field])) {
-                $value = sanitize_text_field($data[$field]);
+                $raw_value = wp_unslash( $data[$field] );
+                $value     = ( '_srk_canonical_url' === $meta_key ) ? esc_url_raw( $raw_value ) : sanitize_text_field( $raw_value );
                 update_post_meta($post_id, $meta_key, $value);
             }
         }
@@ -971,7 +973,7 @@ class SRK_Gutenberg_Integration {
         // Save advanced settings: when use_default=1 store only use_default_settings and show_meta_box (no robots_meta).
         $advanced_settings = null;
         if ( isset( $data['srk_advanced_settings'] ) && ! empty( $data['srk_advanced_settings'] ) ) {
-            $advanced_settings = json_decode( stripslashes( $data['srk_advanced_settings'] ), true );
+            $advanced_settings = json_decode( wp_unslash( $data['srk_advanced_settings'] ), true );
         }
         // Classic editor: build from srk_classic_* fields.
         if ( ( ! $advanced_settings || ! is_array( $advanced_settings ) ) && isset( $data['srk_classic_use_default'] ) ) {
@@ -1035,15 +1037,20 @@ class SRK_Gutenberg_Integration {
      * AJAX: Get post data for preview
      */
     public function ajax_get_post_data() {
-        if (!wp_verify_nonce($_POST['nonce'], 'srk_unified_nonce')) {
+        $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+        if (!wp_verify_nonce($nonce, 'srk_unified_nonce')) {
             wp_send_json_error('Security check failed');
         }
 
-        $post_id = intval($_POST['post_id']);
+        $post_id = isset( $_POST['post_id'] ) ? absint( wp_unslash( $_POST['post_id'] ) ) : 0;
         $post = get_post($post_id);
 
         if (!$post) {
             wp_send_json_error('Post not found');
+        }
+
+        if (!current_user_can('edit_post', $post_id)) {
+            wp_send_json_error('Permission denied');
         }
 
         $advanced_settings = get_post_meta($post_id, '_srk_advanced_settings', true);
@@ -1073,11 +1080,12 @@ class SRK_Gutenberg_Integration {
      * AJAX: Save meta data - FIXED VERSION (Handles Follow Mode)
      */
     public function ajax_save_meta_data() {
-        if (!wp_verify_nonce($_POST['nonce'], 'srk_unified_nonce')) {
+        $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+        if (!wp_verify_nonce($nonce, 'srk_unified_nonce')) {
             wp_send_json_error('Security check failed');
         }
 
-        $post_id = intval($_POST['post_id']);
+        $post_id = isset( $_POST['post_id'] ) ? absint( wp_unslash( $_POST['post_id'] ) ) : 0;
         
         if (!current_user_can('edit_post', $post_id)) {
             wp_send_json_error('Permission denied');
@@ -1189,11 +1197,12 @@ class SRK_Gutenberg_Integration {
      */
     public function ajax_reset_to_content_type() {
         // Security check
-        if (!wp_verify_nonce($_POST['nonce'], 'srk_unified_nonce')) {
+        $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+        if (!wp_verify_nonce($nonce, 'srk_unified_nonce')) {
             wp_send_json_error('Security check failed');
         }
 
-        $post_id = intval($_POST['post_id']);
+        $post_id = isset( $_POST['post_id'] ) ? absint( wp_unslash( $_POST['post_id'] ) ) : 0;
         
         // Check permissions
         if (!current_user_can('edit_post', $post_id)) {
@@ -1244,11 +1253,12 @@ class SRK_Gutenberg_Integration {
      * AJAX: Save advanced settings
      */
     public function ajax_save_advanced_settings() {
-        if (!wp_verify_nonce($_POST['nonce'], 'srk_unified_nonce')) {
+        $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+        if (!wp_verify_nonce($nonce, 'srk_unified_nonce')) {
             wp_send_json_error('Security check failed');
         }
 
-        $post_id = intval($_POST['post_id']);
+        $post_id = isset( $_POST['post_id'] ) ? absint( wp_unslash( $_POST['post_id'] ) ) : 0;
         
         // Check permissions
         if (!current_user_can('edit_post', $post_id)) {
@@ -1301,11 +1311,16 @@ class SRK_Gutenberg_Integration {
      * AJAX: Sync meta data
      */
     public function ajax_sync_meta_data() {
-        if (!wp_verify_nonce($_POST['nonce'], 'srk_unified_nonce')) {
+        $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+        if (!wp_verify_nonce($nonce, 'srk_unified_nonce')) {
             wp_send_json_error('Security check failed');
         }
         
-        $post_id = intval($_POST['post_id']);
+        $post_id = isset( $_POST['post_id'] ) ? absint( wp_unslash( $_POST['post_id'] ) ) : 0;
+
+        if (!current_user_can('edit_post', $post_id)) {
+            wp_send_json_error('Permission denied');
+        }
         
         $advanced_settings = get_post_meta($post_id, '_srk_advanced_settings', true);
         if (empty($advanced_settings)) {
@@ -1331,16 +1346,18 @@ class SRK_Gutenberg_Integration {
         register_rest_route('srk/v1', '/meta/(?P<id>\d+)', array(
             'methods' => 'GET',
             'callback' => array($this, 'rest_get_meta'),
-            'permission_callback' => function() {
-                return current_user_can('edit_posts');
+            'permission_callback' => function($request) {
+                $post_id = absint($request['id']);
+                return $post_id && current_user_can('edit_post', $post_id);
             }
         ));
         
         register_rest_route('srk/v1', '/meta/(?P<id>\d+)', array(
             'methods' => 'POST',
             'callback' => array($this, 'rest_update_meta'),
-            'permission_callback' => function() {
-                return current_user_can('edit_posts');
+            'permission_callback' => function($request) {
+                $post_id = absint($request['id']);
+                return $post_id && current_user_can('edit_post', $post_id);
             }
         ));
     }
@@ -1450,8 +1467,8 @@ class SRK_Gutenberg_Integration {
                     'single'            => true,
                     'show_in_rest'      => array( 'schema' => $advanced_settings_schema ),
                     'sanitize_callback' => array( $this, 'sanitize_advanced_settings_meta' ),
-                    'auth_callback'     => function () {
-                        return current_user_can( 'edit_posts' );
+                    'auth_callback'     => function ( $allowed, $meta_key, $object_id ) {
+                        return current_user_can( 'edit_post', $object_id );
                     },
                 )
             );
@@ -1463,8 +1480,8 @@ class SRK_Gutenberg_Integration {
                     'single'            => true,
                     'show_in_rest'      => true,
                     'sanitize_callback' => 'sanitize_text_field',
-                    'auth_callback'     => function () {
-                        return current_user_can( 'edit_posts' );
+                    'auth_callback'     => function ( $allowed, $meta_key, $object_id ) {
+                        return current_user_can( 'edit_post', $object_id );
                     },
                 )
             );
@@ -1476,8 +1493,8 @@ class SRK_Gutenberg_Integration {
                     'single'            => true,
                     'show_in_rest'      => true,
                     'sanitize_callback' => 'sanitize_text_field',
-                    'auth_callback'     => function () {
-                        return current_user_can( 'edit_posts' );
+                    'auth_callback'     => function ( $allowed, $meta_key, $object_id ) {
+                        return current_user_can( 'edit_post', $object_id );
                     },
                 )
             );
@@ -1489,8 +1506,8 @@ class SRK_Gutenberg_Integration {
                     'single'            => true,
                     'show_in_rest'      => true,
                     'sanitize_callback' => 'esc_url_raw',
-                    'auth_callback'     => function () {
-                        return current_user_can( 'edit_posts' );
+                    'auth_callback'     => function ( $allowed, $meta_key, $object_id ) {
+                        return current_user_can( 'edit_post', $object_id );
                     },
                 )
             );
@@ -1501,8 +1518,8 @@ class SRK_Gutenberg_Integration {
                     'type'          => 'number',
                     'single'        => true,
                     'show_in_rest'  => true,
-                    'auth_callback' => function () {
-                        return current_user_can( 'edit_posts' );
+                    'auth_callback' => function ( $allowed, $meta_key, $object_id ) {
+                        return current_user_can( 'edit_post', $object_id );
                     },
                 )
             );

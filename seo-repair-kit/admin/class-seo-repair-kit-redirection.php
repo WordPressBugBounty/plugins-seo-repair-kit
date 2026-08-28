@@ -40,6 +40,10 @@ class SeoRepairKit_Redirection
      */
     private static $cached_total_count = null;
 
+    const ACTIVE_REDIRECTS_CACHE_KEY = 'srk_active_redirections_cache';
+    const ACTIVE_REDIRECTS_CACHE_TTL = 5 * MINUTE_IN_SECONDS;
+    const REDIRECTION_LOGS_COUNT_OPTION = 'srk_redirection_logs_count';
+
     /**
      * Constructor
      */
@@ -96,7 +100,7 @@ class SeoRepairKit_Redirection
      */
     private function delete_linked_smart_redirects_by_redirection_ids($redirection_ids)
     {
-        $redirection_ids = array_values(array_filter(array_map('intval', (array) $redirection_ids), function ($id) {
+        $redirection_ids = array_values(array_filter(array_map('absint', (array) $redirection_ids), function ($id) {
             return $id > 0;
         }));
 
@@ -110,9 +114,79 @@ class SeoRepairKit_Redirection
             return;
         }
 
+        $placeholders = implode(',', array_fill(0, count($redirection_ids), '%d'));
+
         $this->db_srkitredirection->query(
-            "DELETE FROM {$smart_table} WHERE redirection_id IN (" . implode(',', $redirection_ids) . ")"
+            $this->db_srkitredirection->prepare(
+                "DELETE FROM {$smart_table} WHERE redirection_id IN ({$placeholders})",
+                $redirection_ids
+            )
         );
+    }
+
+    /**
+     * Read the redirection AJAX nonce safely.
+     *
+     * @return string
+     */
+    private function get_redirection_nonce()
+    {
+        return isset($_POST['srkit_redirection_nonce'])
+            ? sanitize_text_field(wp_unslash($_POST['srkit_redirection_nonce']))
+            : '';
+    }
+
+    /**
+     * Get the redirect logs count without scanning the logs table on every admin page load.
+     *
+     * @return int
+     */
+    private function get_redirection_logs_count()
+    {
+        $stored_count = get_option(self::REDIRECTION_LOGS_COUNT_OPTION, null);
+
+        if (null !== $stored_count && false !== $stored_count && is_numeric($stored_count)) {
+            return max(0, (int) $stored_count);
+        }
+
+        $logs_table = $this->db_srkitredirection->prefix . 'srkit_redirection_logs';
+        $logs_table_sql = '`' . str_replace('`', '``', $logs_table) . '`';
+        $count = (int) $this->db_srkitredirection->get_var("SELECT COALESCE(MAX(id), 0) FROM {$logs_table_sql}"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- One-time backfill for the maintained redirect logs counter using the indexed append-only primary key.
+
+        add_option(self::REDIRECTION_LOGS_COUNT_OPTION, $count, '', 'no');
+
+        return $count;
+    }
+
+    /**
+     * Increment the stored redirect logs count after a successful log insert.
+     *
+     * @return void
+     */
+    private function increment_redirection_logs_count()
+    {
+        $stored_count = get_option(self::REDIRECTION_LOGS_COUNT_OPTION, null);
+
+        if (null === $stored_count || false === $stored_count || ! is_numeric($stored_count)) {
+            return;
+        }
+
+        update_option(self::REDIRECTION_LOGS_COUNT_OPTION, max(0, (int) $stored_count) + 1, false);
+    }
+
+    /**
+     * Reset the stored redirect logs count.
+     *
+     * @return void
+     */
+    private function reset_redirection_logs_count()
+    {
+        if (false === get_option(self::REDIRECTION_LOGS_COUNT_OPTION, false)) {
+            add_option(self::REDIRECTION_LOGS_COUNT_OPTION, 0, '', 'no');
+            return;
+        }
+
+        update_option(self::REDIRECTION_LOGS_COUNT_OPTION, 0, false);
     }
 
     /**
@@ -184,8 +258,7 @@ class SeoRepairKit_Redirection
      */
     private function generate_htaccess_rules()
     {
-        $table = $this->db_srkitredirection->prefix . 'srkit_redirection_table';
-        $redirections = $this->db_srkitredirection->get_results("SELECT source_url, target_url, redirect_type, is_regex FROM $table WHERE status = 'active'");
+        $redirections = $this->get_active_redirections();
 
         if (empty($redirections)) {
             return array();
@@ -493,6 +566,15 @@ class SeoRepairKit_Redirection
      */
     public function ensure_htaccess_rules_seeded()
     {
+        if ( wp_doing_ajax() ) {
+            return;
+        }
+
+        $current_page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+        if ( 'seo-repair-kit-redirection' !== $current_page ) {
+            return;
+        }
+
         if (false === get_option($this->htaccess_signature_option, false)) {
             $this->update_htaccess_rules(true);
         }
@@ -757,8 +839,8 @@ class SeoRepairKit_Redirection
                             $logs_offset = ($logs_current_page - 1) * $logs_per_page;
                         }
                         
-                        // Get total count of logs
-                        $logs_total_items = $this->db_srkitredirection->get_var("SELECT COUNT(*) FROM $logs_table");
+                        // Get total count of logs from the maintained counter; falls back to one table count for older installs.
+                        $logs_total_items = $this->get_redirection_logs_count();
                         $logs_total_pages = $logs_show_all ? 1 : ceil($logs_total_items / $logs_per_page);
                         
                         // Get paginated logs
@@ -1230,15 +1312,20 @@ class SeoRepairKit_Redirection
                     <p><?php esc_html_e('If you have redirection records from a previous version of the plugin, you can migrate them to the new Advanced Redirection system.', 'seo-repair-kit'); ?></p>
                     
                     <?php
-                    // Check if migration is needed
+                    // Check if migration is needed.
                     global $wpdb;
-                    $table_name = $wpdb->prefix . 'srkit_redirection_table';
-                    $needs_migration = false;
+                    $table_name       = $wpdb->prefix . 'srkit_redirection_table';
+                    $table_name_sql   = '`' . str_replace( '`', '``', $table_name ) . '`';
+                    $needs_migration  = false;
                     $migration_status = '';
-                    
-                    if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) ) === $table_name ) {
-                        // Use identifier escaping for table name in SHOW COLUMNS
-                        $columns = $wpdb->get_results( $wpdb->prepare( "SHOW COLUMNS FROM `%1s`", str_replace( '`', '', $table_name ) ) );
+                    $migration_cache  = wp_cache_get( 'srk_redirection_migration_status', 'seo_repair_kit' );
+
+                    if ( false !== $migration_cache && is_array( $migration_cache ) ) {
+                        $needs_migration  = ! empty( $migration_cache['needs_migration'] );
+                        $migration_status = isset( $migration_cache['migration_status'] ) ? $migration_cache['migration_status'] : '';
+                    } elseif ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) ) === $table_name ) { // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Cached migration status panel check for plugin-owned custom table.
+                        // Use identifier escaping for table name in SHOW COLUMNS.
+                        $columns = $wpdb->get_results( "SHOW COLUMNS FROM {$table_name_sql}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Cached migration status panel check for plugin-owned custom table; identifier is derived from $wpdb->prefix.
                         if ( $columns ) {
                             $column_names = array_column( $columns, 'Field' );
                             $has_old_schema = in_array( 'old_url', $column_names ) && in_array( 'new_url', $column_names );
@@ -1246,18 +1333,15 @@ class SeoRepairKit_Redirection
                             
                             if ( $has_old_schema && !$has_new_schema ) {
                                 $needs_migration = true;
-                                // Use identifier escaping for table name in SELECT
-                                $old_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM `%1s`", str_replace( '`', '', $table_name ) ) );
+                                // Use identifier escaping for table name in SELECT.
+                                $old_count = $wpdb->get_var( "SELECT COUNT(*) FROM {$table_name_sql}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Cached migration status panel check for plugin-owned custom table; identifier is derived from $wpdb->prefix.
                                 $migration_status = sprintf( esc_html__( 'Found %d records from old version that need migration.', 'seo-repair-kit' ), $old_count );
                             } elseif ( $has_old_schema && $has_new_schema ) {
-                                // Use identifier escaping for table name in SELECT
-                                $unmigrated = $wpdb->get_var( 
-                                    $wpdb->prepare(
-                                        "SELECT COUNT(*) FROM `%1s` 
+                                // Use identifier escaping for table name in SELECT.
+                                $unmigrated = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Cached migration status panel check for plugin-owned custom table; identifier is derived from $wpdb->prefix.
+                                    "SELECT COUNT(*) FROM {$table_name_sql}
                                          WHERE (source_url IS NULL OR source_url = '') 
-                                         AND old_url IS NOT NULL AND old_url != ''",
-                                        str_replace( '`', '', $table_name )
-                                    )
+                                         AND old_url IS NOT NULL AND old_url != ''"
                                 );
                                 if ( $unmigrated > 0 ) {
                                     $needs_migration = true;
@@ -1272,6 +1356,15 @@ class SeoRepairKit_Redirection
                     } else {
                         $migration_status = esc_html__( 'No redirection table found - no migration needed.', 'seo-repair-kit' );
                     }
+                    wp_cache_set(
+                        'srk_redirection_migration_status',
+                        array(
+                            'needs_migration'  => $needs_migration,
+                            'migration_status' => $migration_status,
+                        ),
+                        'seo_repair_kit',
+                        MINUTE_IN_SECONDS
+                    );
                     ?>
                     
                     <div class="srk-migration-status" style="margin: 15px 0;">
@@ -2232,12 +2325,7 @@ class SeoRepairKit_Redirection
         }
 
         $current_url = $this->get_current_url();
-        $redirections_table = $this->db_srkitredirection->prefix . 'srkit_redirection_table';
-        
-        // Get all active redirections
-        $redirections = $this->db_srkitredirection->get_results(
-            "SELECT * FROM $redirections_table WHERE status = 'active' ORDER BY position ASC"
-        );
+        $redirections = $this->get_active_redirections();
 
         foreach ($redirections as $redirection) {
             if ($this->matches_redirection($current_url, $redirection)) {
@@ -2254,6 +2342,45 @@ class SeoRepairKit_Redirection
                 exit;
             }
         }
+    }
+
+    /**
+     * Get active redirects with a short cache to avoid querying on every page view.
+     *
+     * @return array
+     */
+    private function get_active_redirections()
+    {
+        $cached = get_transient(self::ACTIVE_REDIRECTS_CACHE_KEY);
+        if (is_array($cached)) {
+            return $cached;
+        }
+
+        $redirections_table = $this->db_srkitredirection->prefix . 'srkit_redirection_table';
+        $table_exists = $this->db_srkitredirection->get_var(
+            $this->db_srkitredirection->prepare("SHOW TABLES LIKE %s", $redirections_table)
+        );
+
+        if ($table_exists !== $redirections_table) {
+            return array();
+        }
+
+        $redirections = $this->db_srkitredirection->get_results(
+            "SELECT id, source_url, target_url, redirect_type, is_regex, position FROM $redirections_table WHERE status = 'active' ORDER BY position ASC, id ASC"
+        );
+
+        $redirections = is_array($redirections) ? $redirections : array();
+        set_transient(self::ACTIVE_REDIRECTS_CACHE_KEY, $redirections, self::ACTIVE_REDIRECTS_CACHE_TTL);
+
+        return $redirections;
+    }
+
+    /**
+     * Clear active redirect cache after any rule mutation.
+     */
+    private static function clear_active_redirections_cache()
+    {
+        delete_transient(self::ACTIVE_REDIRECTS_CACHE_KEY);
     }
 
     /**
@@ -2420,6 +2547,10 @@ class SeoRepairKit_Redirection
                 'created_at' => current_time('mysql')
             )
         );
+
+        if (false !== $result) {
+            $this->increment_redirection_logs_count();
+        }
     }
 
     /**
@@ -2442,7 +2573,7 @@ class SeoRepairKit_Redirection
             $referrer = 'Import Operation';
         }
         
-        $this->db_srkitredirection->insert(
+        $result = $this->db_srkitredirection->insert(
             $logs_table,
             array(
                 'redirection_id' => null, // No specific redirect ID for admin changes
@@ -2454,6 +2585,10 @@ class SeoRepairKit_Redirection
                 'created_at' => current_time('mysql')
             )
         );
+
+        if (false !== $result) {
+            $this->increment_redirection_logs_count();
+        }
     }
 
 
@@ -2478,12 +2613,13 @@ class SeoRepairKit_Redirection
         }
 
         // Check nonce
-        if (!isset($_POST['srkit_redirection_nonce'])) {
+        $nonce = $this->get_redirection_nonce();
+        if ('' === $nonce) {
             wp_send_json_error('Security nonce missing');
             return;
         }
 
-        if (!wp_verify_nonce($_POST['srkit_redirection_nonce'], 'srk_save_redirection_nonce')) {
+        if (!wp_verify_nonce($nonce, 'srk_save_redirection_nonce')) {
             wp_send_json_error('Security check failed - nonce verification failed');
             return;
         }
@@ -2629,6 +2765,7 @@ class SeoRepairKit_Redirection
             
             // Clear cached statistics after data modification
             self::clear_hit_statistics_cache();
+            self::clear_active_redirections_cache();
             
             // Log redirection update event (always log CRUD operations)
             $this->log_redirection_change_event($data, 'updated');
@@ -2675,6 +2812,7 @@ class SeoRepairKit_Redirection
             
             // Clear cached statistics after data modification
             self::clear_hit_statistics_cache();
+            self::clear_active_redirections_cache();
             
             // Log redirection creation event (always log CRUD operations)
             $this->log_redirection_change_event($data, 'created');
@@ -2695,12 +2833,13 @@ class SeoRepairKit_Redirection
             return;
         }
         
-        if (!wp_verify_nonce($_POST['srkit_redirection_nonce'], 'srk_save_redirection_nonce')) {
+        $nonce = $this->get_redirection_nonce();
+        if (!wp_verify_nonce($nonce, 'srk_save_redirection_nonce')) {
             wp_die('Security check failed');
         }
 
         $redirections_table = $this->db_srkitredirection->prefix . 'srkit_redirection_table';
-        $redirection_id = intval($_POST['redirection_id']);
+        $redirection_id = isset($_POST['redirection_id']) ? absint(wp_unslash($_POST['redirection_id'])) : 0;
 
         $result = $this->db_srkitredirection->delete(
             $redirections_table,
@@ -2717,6 +2856,7 @@ class SeoRepairKit_Redirection
 
             // Clear cached statistics after data modification
             self::clear_hit_statistics_cache();
+            self::clear_active_redirections_cache();
             
             // Log redirection deletion event
             $this->log_redirection_change_event(array('source_url' => 'DELETED', 'target_url' => 'DELETED'), 'deleted');
@@ -2739,7 +2879,8 @@ class SeoRepairKit_Redirection
             return;
         }
         
-        if (!wp_verify_nonce($_POST['srkit_redirection_nonce'], 'srk_save_redirection_nonce')) {
+        $nonce = $this->get_redirection_nonce();
+        if (!wp_verify_nonce($nonce, 'srk_save_redirection_nonce')) {
             wp_die('Security check failed');
         }
 
@@ -2754,8 +2895,8 @@ class SeoRepairKit_Redirection
             return;
         }
 
-        $action = sanitize_text_field($_POST['bulk_action']);
-        $redirection_ids = array_map('intval', $_POST['redirection_ids']);
+        $action = sanitize_text_field(wp_unslash($_POST['bulk_action']));
+        $redirection_ids = array_map('absint', wp_unslash($_POST['redirection_ids']));
         
         // Filter out invalid IDs and ensure they're positive
         $redirection_ids = array_filter($redirection_ids, function($id) {
@@ -2807,6 +2948,7 @@ class SeoRepairKit_Redirection
         if ($result !== false) {
             // Clear cached statistics after data modification
             self::clear_hit_statistics_cache();
+            self::clear_active_redirections_cache();
             
             if (in_array($action, array('activate', 'deactivate', 'delete'), true)) {
                 $this->refresh_server_rules();
@@ -2828,7 +2970,8 @@ class SeoRepairKit_Redirection
             return;
         }
         
-        if (!wp_verify_nonce($_POST['srkit_redirection_nonce'], 'srk_save_redirection_nonce')) {
+        $nonce = $this->get_redirection_nonce();
+        if (!wp_verify_nonce($nonce, 'srk_save_redirection_nonce')) {
             wp_die('Security check failed');
         }
 
@@ -2836,7 +2979,7 @@ class SeoRepairKit_Redirection
         
         if (isset($_POST['redirection_id']) && $_POST['redirection_id']) {
             // Reset specific redirection hits
-            $redirection_id = intval($_POST['redirection_id']);
+            $redirection_id = absint(wp_unslash($_POST['redirection_id']));
             $result = $this->db_srkitredirection->update(
                 $redirections_table,
                 array('hits' => 0, 'last_hit' => null),
@@ -2872,7 +3015,8 @@ class SeoRepairKit_Redirection
             return;
         }
         
-        if (!wp_verify_nonce($_POST['srkit_redirection_nonce'], 'srk_save_redirection_nonce')) {
+        $nonce = $this->get_redirection_nonce();
+        if (!wp_verify_nonce($nonce, 'srk_save_redirection_nonce')) {
             wp_die('Security check failed');
         }
 
@@ -2995,7 +3139,8 @@ class SeoRepairKit_Redirection
      */
     public function srk_export_redirections()
     {
-        if (!wp_verify_nonce($_POST['srkit_redirection_nonce'], 'srk_save_redirection_nonce')) {
+        $nonce = $this->get_redirection_nonce();
+        if (!wp_verify_nonce($nonce, 'srk_save_redirection_nonce')) {
             wp_die('Security check failed');
         }
 
@@ -3003,7 +3148,7 @@ class SeoRepairKit_Redirection
             wp_send_json_error('Permission denied');
         }
 
-        $format = isset($_POST['format']) ? sanitize_text_field($_POST['format']) : 'csv';
+        $format = isset($_POST['format']) ? sanitize_text_field(wp_unslash($_POST['format'])) : 'csv';
         
         // Validate format
         if (!in_array($format, array('csv', 'json', 'nginx', 'htaccess'))) {
@@ -3033,7 +3178,7 @@ class SeoRepairKit_Redirection
                 $json_structure = array(
                     'export_info' => array(
                         'plugin' => 'SEO Repair Kit',
-                        'version' => '2.1.0',
+                        'version' => SEO_REPAIR_KIT_VERSION,
                         'export_date' => current_time('mysql'),
                         'record_count' => count($rows),
                         'headers' => $headers,
@@ -3247,7 +3392,8 @@ class SeoRepairKit_Redirection
      */
     public function srk_clear_logs()
     {
-        if (!wp_verify_nonce($_POST['srkit_redirection_nonce'], 'srk_save_redirection_nonce')) {
+        $nonce = $this->get_redirection_nonce();
+        if (!wp_verify_nonce($nonce, 'srk_save_redirection_nonce')) {
             wp_die('Security check failed');
         }
 
@@ -3261,6 +3407,7 @@ class SeoRepairKit_Redirection
         $result = $this->db_srkitredirection->query("TRUNCATE TABLE $logs_table");
         
         if ($result !== false) {
+            $this->reset_redirection_logs_count();
             wp_send_json_success('All logs cleared successfully');
         }
         wp_send_json_error('Failed to clear logs');
@@ -3271,7 +3418,8 @@ class SeoRepairKit_Redirection
      */
     public function srk_import_redirections()
     {
-        if (!wp_verify_nonce($_POST['srkit_redirection_nonce'], 'srk_save_redirection_nonce')) {
+        $nonce = $this->get_redirection_nonce();
+        if (!wp_verify_nonce($nonce, 'srk_save_redirection_nonce')) {
             wp_die('Security check failed');
         }
 
@@ -3805,6 +3953,7 @@ class SeoRepairKit_Redirection
             }
         }
 
+        self::clear_active_redirections_cache();
         $this->refresh_server_rules();
         wp_send_json_success(array(
             'message' => $message,
@@ -4151,12 +4300,13 @@ class SeoRepairKit_Redirection
         }
 
         // Check nonce
-        if (!isset($_POST['srkit_redirection_nonce'])) {
+        $nonce = $this->get_redirection_nonce();
+        if ('' === $nonce) {
             wp_send_json_error('Security nonce missing');
             return;
         }
 
-        if (!wp_verify_nonce($_POST['srkit_redirection_nonce'], 'srk_save_redirection_nonce')) {
+        if (!wp_verify_nonce($nonce, 'srk_save_redirection_nonce')) {
             wp_send_json_error('Security check failed');
             return;
         }
@@ -4184,6 +4334,7 @@ class SeoRepairKit_Redirection
                 );
             }
             
+            self::clear_active_redirections_cache();
             $this->refresh_server_rules(true);
             wp_send_json_success(array(
                 'message' => $response_message,

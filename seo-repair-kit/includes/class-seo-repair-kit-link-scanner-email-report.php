@@ -214,7 +214,7 @@ class SeoRepairKit_LinkScanner_Email_Report {
 											<?php esc_html_e( 'View complete details and fix these issues.', 'seo-repair-kit' ); ?>
 										</div>
 										<a href="<?php echo esc_url( $dashboard_url ); ?>" style="display:inline-block;background:#2563eb;color:#ffffff;text-decoration:none;font-size:16px;font-weight:700;line-height:1;padding:16px 30px;border-radius:12px;">
-											<?php esc_html_e( 'Open Dashboard', 'seo-repair-kit' ); ?> ↗
+											<?php esc_html_e( 'Open Dashboard', 'seo-repair-kit' ); ?>
 										</a>
 									</div>
 								</td>
@@ -482,7 +482,7 @@ class SeoRepairKit_LinkScanner_Email_Report {
 						sprintf(
 							/* translators: %s: plugin version */
 							__( 'This is an automated message from SEO Repair Kit v%s', 'seo-repair-kit' ),
-							defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : '2.1.7'
+							SEO_REPAIR_KIT_VERSION
 						)
 					);
 					?>
@@ -502,12 +502,12 @@ class SeoRepairKit_LinkScanner_Email_Report {
 	 * @return array
 	 */
 	private static function parse_recipients( $recipients ) {
-		return array_filter(
-			array_map(
-				'sanitize_email',
-				array_map( 'trim', explode( ',', (string) $recipients ) )
-			)
+		$emails = array_map(
+			'sanitize_email',
+			array_map( 'trim', explode( ',', (string) $recipients ) )
 		);
+
+		return array_values( array_filter( $emails, 'is_email' ) );
 	}
 
 	/**

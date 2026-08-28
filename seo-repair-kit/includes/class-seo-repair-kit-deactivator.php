@@ -37,7 +37,7 @@ class SeoRepairKit_Deactivator {
         $api_url = SRK_API_Client::get_api_url( SRK_API_Client::ENDPOINT_PLUGIN_STATUS );
 
         $plugin_id = get_option( 'srk_plugin_id' );
-        $plugin_version = defined( 'SEO_REPAIR_KIT_VERSION' ) ? SEO_REPAIR_KIT_VERSION : 'unknown';
+        $plugin_version = SEO_REPAIR_KIT_VERSION;
 
         // Prepare the data payload
         $data = array( 

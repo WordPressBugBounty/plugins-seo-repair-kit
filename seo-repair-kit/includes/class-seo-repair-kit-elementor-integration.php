@@ -48,6 +48,10 @@ class SRK_Elementor_Integration {
     public function save_elementor_meta( $document, $data ) {
         $post_id = $document->get_main_id();
         $settings = $data['settings'] ?? [];
+
+        if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) {
+            return;
+        }
         
         // Save basic meta fields - THESE ARE THE CORRECT META KEYS
         if ( isset( $settings['srk_meta_title'] ) ) {
@@ -1205,12 +1209,13 @@ class SRK_Elementor_Integration {
      */
     public function ajax_reset_elementor_meta() {
         // Verify nonce
-        if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'srk_elementor_nonce' ) ) {
+        $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'srk_elementor_nonce' ) ) {
             wp_send_json_error( 'Invalid security token' );
         }
         
-        $post_id = intval( $_POST['post_id'] ?? 0 );
-        $field = sanitize_text_field( $_POST['field'] ?? '' );
+        $post_id = isset( $_POST['post_id'] ) ? absint( wp_unslash( $_POST['post_id'] ) ) : 0;
+        $field = isset( $_POST['field'] ) ? sanitize_key( wp_unslash( $_POST['field'] ) ) : '';
         
         if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) {
             wp_send_json_error( 'Permission denied' );
