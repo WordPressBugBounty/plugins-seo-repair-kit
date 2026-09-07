@@ -89,6 +89,16 @@ class SeoRepairKit_LinkScanner {
 			require_once $smart_redirects_file;
 		}
 
+		$internal_linking_file = plugin_dir_path( __FILE__ ) . 'class-seo-repair-kit-internal-linking.php';
+
+		if ( file_exists( $internal_linking_file ) && ! class_exists( 'SeoRepairKit_InternalLinking' ) ) {
+			require_once $internal_linking_file;
+		}
+
+		if ( class_exists( 'SeoRepairKit_InternalLinking' ) ) {
+			SeoRepairKit_InternalLinking::get_instance();
+		}
+
 		if ( class_exists( 'SeoRepairKit_LinkScanner_Automation_Admin' ) ) {
 			$this->automation_admin = new SeoRepairKit_LinkScanner_Automation_Admin();
 		}
@@ -485,13 +495,10 @@ class SeoRepairKit_LinkScanner {
 				?>
 			</div>
 
-			<div id="srk-tab-internal-linking" class="srk-tab-content <?php echo ( 'internal-linking' === $current_tab ) ? 'active' : ''; ?>" data-loaded="<?php echo ( 'internal-linking' === $current_tab ) ? '1' : '0'; ?>" style="<?php echo ( 'internal-linking' === $current_tab ) ? '' : 'display:none;'; ?>">
-				<?php
-				if ( 'internal-linking' === $current_tab ) {
-					$this->render_internal_linking_tab();
-				}
-				?>
+			<div id="srk-tab-internal-linking" class="srk-tab-content <?php echo ( 'internal-linking' === $current_tab ) ? 'active' : ''; ?>" style="<?php echo ( 'internal-linking' === $current_tab ) ? '' : 'display:none;'; ?>" >
+				<?php if ( class_exists( 'SeoRepairKit_InternalLinking' ) ) { SeoRepairKit_InternalLinking::get_instance()->render_tab(); } ?>
 			</div>
+
 		</div>
 
 		<script>
@@ -604,28 +611,6 @@ class SeoRepairKit_LinkScanner {
 
 		$automation = SeoRepairKit_LinkScanner_Automation::get_instance();
 		SeoRepairKit_LinksAlerts::render_history_tables( $automation );
-	}
-
-	/**
-	 * Render internal linking tab.
-	 *
-	 * @return void
-	 */
-	private function render_internal_linking_tab() {
-		$enabled = class_exists( 'SRK_License_Helper' ) && SRK_License_Helper::is_internal_linking_enabled();
-
-		echo '<div class="srk-card">';
-		if ( ! $enabled ) {
-			echo '<h3>' . esc_html__( 'Internal Linking requires the paid module (Coming Soon)', 'seo-repair-kit' ) . '</h3>';
-			echo '<p>' . esc_html__( 'Add Internal Linking to this website from your SEO Repair Kit custom plan, then clear the license cache.', 'seo-repair-kit' ) . '</p>';
-			echo '<p><a class="button button-primary" target="_blank" rel="noopener noreferrer" href="' . esc_url( SRK_API_Client::get_api_url( SRK_API_Client::ENDPOINT_SUBSCRIBE, array( 'domain' => site_url() ) ) ) . '">' . esc_html__( 'Customize Plan', 'seo-repair-kit' ) . '</a></p>';
-			echo '</div>';
-			return;
-		}
-
-		echo '<h3>' . esc_html__( 'Internal Linking module active (coming soon)', 'seo-repair-kit' ) . '</h3>';
-		echo '<p>' . esc_html__( 'Your CRM license includes Internal Linking. Internal-link opportunities, orphan content detection, and contextual recommendations can run for this licensed site.', 'seo-repair-kit' ) . '</p>';
-		echo '</div>';
 	}
 
 	/**

@@ -12,7 +12,7 @@
  *
  * @link       https://seorepairkit.com
  * @since      1.0.1
- * @version    2.1.11
+ * @version    2.1.12
  * @package    Seo_Repair_Kit
  */
 
@@ -112,11 +112,15 @@ srk_uninstall_clear_cron_hooks(
 	array(
 		'srk_link_scanner_cron_scan',
 		'srk_broken_links_scan_event',
-		'srk_weekly_seo_summary_cron',
 		'srk_weekly_summary_email_event',
 		'srk_keytrack_weekly_summary_event',
 		'srk_spam_monitor_scheduled_scan',
 		'srk_spam_monitor_scheduled_serp_scan',
+		'srk_il_queue_embedding_batch',
+		'srk_il_queue_semantic_graph',
+		'srk_il_queue_merge_semantic',
+		'srk_il_queue_hybrid_opportunities',
+		'srk_il_queue_ai_pipeline',
 	)
 );
 
@@ -135,6 +139,14 @@ $tables_to_drop = array(
 	$wpdb->prefix . 'srk_link_scan_runs',
 	$wpdb->prefix . 'srk_link_scan_alerts',
 	$wpdb->prefix . 'srkit_smart_redirects',
+	$wpdb->prefix . 'srk_il_content_index',
+	$wpdb->prefix . 'srk_il_keywords',
+	$wpdb->prefix . 'srk_il_links',
+	$wpdb->prefix . 'srk_il_opportunities',
+	$wpdb->prefix . 'srk_il_auto_rules',
+	$wpdb->prefix . 'srk_il_url_changes',
+	$wpdb->prefix . 'srk_il_scan_runs',
+	$wpdb->prefix . 'srk_il_embeddings',
 );
 
 foreach ( $tables_to_drop as $table_name ) {
@@ -293,6 +305,13 @@ srk_uninstall_delete_options(
 		'srk_spam_monitor_schedule_settings',
 		'srk_spam_monitor_schedule_lock',
 		'srk_spam_monitor_scan_lock',
+		'srk_internal_linking_db_version',
+		'srk_internal_linking_db_migration_lock',
+		'srk_internal_linking_settings',
+		'srk_il_auto_linking_settings',
+		'srk_il_activation_scan_pending',
+		'srk_il_activation_scan_id',
+		'srk_il_activation_scan_page',
 	)
 );
 
@@ -321,6 +340,8 @@ srk_uninstall_delete_options_by_prefix(
 		'_transient_timeout_srk_user_meta_keys',
 		'_transient_srk_sm_sitemap_health_',
 		'_transient_timeout_srk_sm_sitemap_health_',
+		'_transient_srk_il_',
+		'_transient_timeout_srk_il_',
 	)
 );
 
@@ -362,6 +383,8 @@ $meta_keys_exact = array(
 	'_srk_meta_keywords',
 	'_srk_canonical_url',
 	'_srk_advanced_settings',
+	'_srk_il_pending_editor_links',
+	'_srk_il_opportunities_stale',
 );
 
 foreach ( $meta_keys_exact as $meta_key ) {

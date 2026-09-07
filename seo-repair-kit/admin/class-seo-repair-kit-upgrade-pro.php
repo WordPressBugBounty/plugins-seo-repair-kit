@@ -276,13 +276,13 @@ class SeoRepairKit_Upgrade {
                                     <p><?php esc_html_e('Find broken links, check internal and external URLs, monitor 404 errors, view source pages, and keep scan history.', 'seo-repair-kit'); ?></p>
                                 </div>
                             </div>
-                            <div class="srk-benefit srk-benefit-redirection" role="listitem">
+                            <div class="srk-benefit srk-benefit-internal-linking" role="listitem">
                                 <div class="srk-benefit-icon">
-                                    <span class="dashicons dashicons-randomize"></span>
+                                    <span class="dashicons dashicons-editor-ul"></span>
                                 </div>
                                 <div class="srk-benefit-content">
-                                    <h4><?php esc_html_e('Smart Redirects', 'seo-repair-kit'); ?></h4>
-                                    <p><?php esc_html_e('Create and manage redirects to keep changed URLs organized safely inside WordPress.', 'seo-repair-kit'); ?></p>
+                                    <h4><?php esc_html_e('Internal Linking', 'seo-repair-kit'); ?></h4>
+                                    <p><?php esc_html_e('Discover contextual link opportunities, index content, review orphan pages, and improve topic paths with editor and AI-assisted suggestions.', 'seo-repair-kit'); ?></p>
                                 </div>
                             </div>
                             <div class="srk-benefit srk-benefit-schema" role="listitem">

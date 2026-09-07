@@ -554,6 +554,39 @@
 .srk-tool-schema:hover .srk-plugin-icon .dashicons {
   color: var(--srk-primary);
 }
+/* Internal Linking - Blue */
+.srk-tool-internal-linking {
+  border-left: 3px solid #2563EB;
+}
+
+.srk-tool-internal-linking:not(.srk-plugin-item-pro) .srk-plugin-icon {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(14, 165, 233, 0.08));
+  border-color: rgba(37, 99, 235, 0.25);
+}
+
+.srk-tool-internal-linking:not(.srk-plugin-item-pro) .srk-plugin-icon .dashicons {
+  color: #2563EB;
+}
+
+.srk-tool-internal-linking:hover {
+  border-left-color: #1D4ED8;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.04), rgba(14, 165, 233, 0.02));
+}
+
+.srk-tool-internal-linking:hover::before {
+  background: linear-gradient(90deg, transparent, #2563EB, transparent);
+}
+
+.srk-tool-internal-linking:hover .srk-plugin-icon {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.18), rgba(14, 165, 233, 0.12));
+  border-color: rgba(37, 99, 235, 0.35);
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
+}
+
+.srk-tool-internal-linking:hover .srk-plugin-info h5,
+.srk-tool-internal-linking:hover .srk-plugin-icon .dashicons {
+  color: #2563EB;
+}
 
 /* AI Chatbot - Teal/Cyan */
 .srk-tool-chatbot {

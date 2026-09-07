@@ -26,7 +26,6 @@ window.SRK_Gutenberg = {
     }
 
     const { registerPlugin } = wp.plugins;
-    const { PluginDocumentSettingPanel } = wp.editPost;
     const {
         TextControl,
         Button,
@@ -1582,13 +1581,11 @@ window.SRK_Gutenberg = {
             ),
 
             createElement(
-                PluginDocumentSettingPanel,
+                'div',
                 {
-                    name: 'srk-seo-panel',
-                    title: __('SEO Repair Kit', 'seo-repair-kit'),
-                    className: 'srk-seo-panel',
-                    icon: 'search'
+                    className: 'srk-meta-panel srk-meta-panel--embedded'
                 },
+
                 // Preview Section
                 createElement('div', { style: { padding: '16px' } },
                     createElement('div', {
@@ -1801,14 +1798,7 @@ window.SRK_Gutenberg = {
 
     // Register the Gutenberg plugin
 
-    try {
-        registerPlugin('srk-gutenberg-seo-panel', {
-            render: SRKGutenbergSeoPanel,
-            icon: 'search'
-        });
-
-    } catch (error) {
-    }
+    window.SRKMetaManagerPanel = SRKGutenbergSeoPanel;
 
 })(window.wp);
 

@@ -165,6 +165,8 @@ class SeoRepairKit_Admin {
                 'sitemap'     => admin_url( 'admin.php?page=seo-repair-kit-sitemap-manager' ),
                 'settings'    => admin_url( 'admin.php?page=seo-repair-kit-settings' ),
                 'upgrade'     => admin_url( 'admin.php?page=seo-repair-kit-upgrade-pro' ),
+                'internalLinking' => admin_url( 'admin.php?page=seo-repair-kit-internal-linking' ),
+
             );
 
             $assets = array(
@@ -421,6 +423,7 @@ class SeoRepairKit_Admin {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-ajax-handlers.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-schema-validator.php';
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-seo-repair-kit-weekly-summary.php';
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-seo-repair-kit-internal-linking.php';
 
         // Meta manager file struture class-seo-repair-kit-meta-ajax-handlers.php
        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/meta-manager/class-seo-repair-kit-meta-manager-main.php';
@@ -1041,6 +1044,15 @@ class SeoRepairKit_Admin {
             'all'
         );
 
+        // Register Internal Linking CSS File.
+        wp_register_style(
+            'srk-internal-linking-style',
+            plugin_dir_url( __FILE__ ) . 'css/seo-repair-kit-internal-linking.css',
+            array(),
+            $this->version,
+            'all'
+        );
+
         // Always enqueue base admin CSS.
         wp_enqueue_style( 'srk-admin-style' );
 
@@ -1214,6 +1226,7 @@ class SeoRepairKit_Admin {
 			'seo-repair-kit-settings',
 			'seo-repair-kit-upgrade-pro',
             'seo-repair-kit-meta-manager',
+            'seo-repair-kit-internal-linking',
 		);
 
 		$is_srk_by_screen =
@@ -1291,6 +1304,7 @@ class SeoRepairKit_Admin {
             'seo-repair-kit-upgrade-pro',
             'seo-repair-kit-meta-manager',
             'seo-repair-kit-spam-monitor',
+            'seo-repair-kit-internal-linking',
         );
 
         $is_srk_by_screen =
@@ -1378,6 +1392,23 @@ class SeoRepairKit_Admin {
             'seo-repair-kit-spam-monitor',
             array( $srkit_spam_monitor, 'seorepairkit_spam_monitor_page' )
         );
+
+         /**
+         * Internal Linking page.
+         *
+         * @since 2.1.12
+         */
+        $srkit_internal_linking = SeoRepairKit_InternalLinking::get_instance();
+
+        add_submenu_page(
+            'seo-repair-kit-dashboard',
+            esc_html__( 'Internal Linking', 'seo-repair-kit' ),
+            esc_html__( 'Internal Linking', 'seo-repair-kit' ),
+            'manage_options',
+            'seo-repair-kit-internal-linking',
+            array( $srkit_internal_linking, 'render_admin_page' )
+        );
+
 
 		/**
 		 * Image Alt Missing page.

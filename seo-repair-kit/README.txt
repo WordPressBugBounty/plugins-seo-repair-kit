@@ -1,39 +1,33 @@
-=== SEO Repair Kit - Spam Monitor, Meta Manager, Schema Manager, SEO Content Monitoring, GSC Integration, Keyword & Rank Tracking ===
+=== SEO Repair Kit - Spam Monitor, Meta Manager, Schema Manager, Internal Linking, SEO Content Monitoring, GSC Integration ===
 Contributors: torontodigits
 Donate link: https://seorepairkit.com/
-Tags: spam monitor, meta manager, broken link, schema markup, 301 redirect, 404 monitor
+Tags: spam monitor, meta manager, internal linking, broken link, schema markup, 301 redirect, 404 monitor
 Requires at least: 5.0.0
 Tested up to: 7.1
 Requires PHP: 7.4.3
-Stable tag: 2.1.11
-Release Date: 28-08-2026
+Stable tag: 2.1.12
+Release Date: 07-09-2026
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Monitor and repair WordPress SEO with link scans, redirects, metadata, schema, Search Console insights, and indexed-spam monitoring.
+Monitor and repair WordPress SEO with link scans, redirects, metadata, schema, Internal Linking, Search Console insights, and indexed-spam monitoring.
 
 == Description ==
 
 **SEO Repair Kit** by [TorontoDigits](https://www.torontodigits.com) helps WordPress site owners monitor, identify, and fix practical SEO issues from one dashboard.
 
-It combines link health monitoring, 404 tracking, redirects, metadata management, sitemap controls, image alt-text checks, Search Console insights, schema tools, bot management, automated reports, and indexed-spam monitoring.
+It combines link health monitoring, 404 tracking, redirects, metadata management, sitemap controls, image alt-text checks, Search Console insights, schema tools, Internal Linking, bot management, automated reports, and indexed-spam monitoring.
 
 SEO Repair Kit is designed for site owners, developers, marketers, content teams, and agencies that want actionable SEO tools without managing several separate workflows.
 
 = Core Features =
 
 **Links Manager**
-* Scan internal and external links for HTTP status issues
-* Review broken, healthy, redirected, and problematic links
-* Export findings to CSV
-* Create redirects from problem URLs
-* Access Link Scan, 404 Monitor, Auto Scan, Notifications, and Smart Redirects from one Links Manager area
+* Scan links, review statuses, export findings, and create redirects
+* Access Link Scan, 404 Monitor, Auto Scan, Notifications, and Smart Redirects
 
 **Auto Scan**
-* Schedule automatic link scans
-* Choose scan intervals such as daily, every 3 days, weekly, biweekly, or monthly
-* Configure scan scope, post types, batch size, links per post, and request timeout
-* Store scan history and latest scan snapshots
+* Schedule link scans with flexible intervals, scope, batch, timeout, and history settings
 
 **Notifications**
 * Send automated scan reports and broken-link or clean-scan alerts by email
@@ -41,10 +35,7 @@ SEO Repair Kit is designed for site owners, developers, marketers, content teams
 * Review alert history from the Links Manager
 
 **Smart Redirects**
-* Automatically create 301 redirects from eligible broken singular URLs to their post-type archives
-* Enable Smart Redirects per post type
-* Reset all Smart Redirect records or reset records by selected post type
-* Manage generated redirects from the Redirection Manager
+* Create eligible archive redirects from broken singular URLs and manage generated records
 
 **Redirection + 404 Monitoring**
 * Create and manage 301/302 redirects
@@ -53,22 +44,20 @@ SEO Repair Kit is designed for site owners, developers, marketers, content teams
 * Convert recurring 404 URLs into redirects quickly
 
 **Meta Manager**
-* Manage SEO titles and descriptions globally and per content type
-* Configure robots directives, including max preview directives
-* Override metadata on individual posts/pages
-* Supports Gutenberg and Elementor workflows
-* Supports dynamic template tags like `%title%`, `%excerpt%`, and `%site_title%`
+* Manage SEO titles, descriptions, robots directives, templates, and editor overrides
 
 **KeyTrack (Search Console Insights)**
-* Works with Google Site Kit/Search Console
-* View clicks, impressions, CTR, and average position
-* Analyze page/query trends in one place
-* Configure threshold-based reporting workflows
+* View Search Console clicks, impressions, CTR, position, page/query trends, and reports
 
 **Schema Manager (Pro)**
 * Build and manage JSON-LD schema with visual controls
 * Map WordPress content to supported schema properties
 * Preview configured schema before output
+
+**Internal Linking (Paid Module)**
+* Find contextual internal-link opportunities
+* Review orphan content, approved links, target keywords, and reports
+* Use Auto Linking, Gutenberg suggestions, and AI/semantic workflows when enabled
 
 **AI Chatbot (Pro)**
 * Get contextual SEO Repair Kit guidance directly inside WordPress
@@ -89,11 +78,7 @@ SEO Repair Kit is designed for site owners, developers, marketers, content teams
 * Update alt text records efficiently
 
 **Spam Monitor (Pro)**
-* Scan indexed Google SERP results for suspicious, spam, and critical URL risks
-* Configure Spam Rules for language mismatch, spam keywords, suspicious URL patterns, and score thresholds
-* Review risky URLs, returned SERP records, recent scans, alerts, and cleanup history
-* Schedule Spam Monitor scans daily, every 3 days, weekly, biweekly, or monthly
-* Send scan reports and alerts by email with saved scan history in the WordPress dashboard
+* Scan indexed Google results for suspicious URLs, configure rules, review history, schedule scans, and send alerts
 
 Custom SERP-provider connections and other advanced Spam Monitor capabilities require the paid module.
 
@@ -111,45 +96,52 @@ Custom SERP-provider connections and other advanced Spam Monitor capabilities re
 6. SEO Repair Kit Smart Redirect
 7. SEO Repair Kit Advanced Redirections
 8. SEO Repair Kit Import and Export Redirections
-9. SEO Repair Kit Image Alt Text Manager
-10. SEO Repair Kit Schema Manager
-11. SEO Repair Kit KeyTrack Overview Dashboard
-12. Meta Manager – Global Meta
-13. Meta Manager – Content Types Overview
-14. Meta Manager – Taxonomies Overview
-15. Meta Manager – Archives Overview
-16. Meta Manager – Advance Settings
-17. SEO Repair Kit - Sitemap Manager
-18. Bot Manager - llms.txt Management
-19. Bot Manager - robots.txt Management
-20. SEO Repair Kit AI Chatbot Interface
-21. SEO Repair Kit Settings
-22. SEO Repair Kit Upgrade to Pro
-23. SEO Repair Kit Weekly Email Report
-24. SEO Repair Kit KeyTrack Threshold Email Report
-25. SEO Repair Kit Broken Links Detected Email Report
-26. SEO Repair Kit No Broken Links Detected Email Report
-27. SEO Repair Kit Spam Monitor Dashboard
-28. SEO Repair Kit Spam Rules
-29. SEO Repair Kit Google SERP Scan
-30. SEO Repair Kit Search Console Cleanup
-31. SEO Repair Kit Spam Monitor Alerts
-32. SEO Repair Kit Scheduled Spam Monitoring Settings
+9. SEO Repair Kit Spam Monitor Dashboard
+10. SEO Repair Kit Spam Rules
+11. SEO Repair Kit Google SERP Scan
+12. SEO Repair Kit Search Console Cleanup
+13. SEO Repair Kit Spam Monitor Alerts
+14. SEO Repair Kit Scheduled Spam Monitoring Settings
+15. SEO Repair Kit Internal Linking Dashboard
+16. SEO Repair Kit Internal Linking Content Index
+17. SEO Repair Kit Internal Linking Target Keywords
+18. SEO Repair Kit Internal Linking Link Opportunities
+19. SEO Repair Kit Internal Linking Auto Linking
+20. SEO Repair Kit Internal Linking URL Changer
+21. SEO Repair Kit Internal Linking Approved links
+22. SEO Repair Kit Internal Linking Orphan Content
+23. SEO Repair Kit Internal Linking Reports
+24. SEO Repair Kit Internal Linking Settings
+25. SEO Repair Kit Image Alt Text Manager
+26. SEO Repair Kit Schema Manager
+27. SEO Repair Kit KeyTrack Overview Dashboard
+28. Meta Manager – Global Meta
+29. Meta Manager – Content Types Overview
+30. Meta Manager – Taxonomies Overview
+31. Meta Manager – Archives Overview
+32. Meta Manager – Advance Settings
+33. SEO Repair Kit - Sitemap Manager
+34. Bot Manager - Bot Manager - llms.txt Management
+35. Bot Manager - Bot Manager - robots.txt Management
+36. SEO Repair Kit AI Chatbot Interface
+37. SEO Repair Kit Settings
+38. SEO Repair Kit Upgrade to Pro
+39. SEO Repair Kit Weekly Email Report
+40. SEO Repair Kit KeyTrack Threshold Email Report
+41. SEO Repair Kit Broken Links Detected Email Report
+42. SEO Repair Kit No Broken Links Detected Email Report
 
 == Changelog ==
 
-= 2.1.11 =
-* Performance: Confirmed the database migration guard prevents repeated schema repair work on current admin, AJAX, Heartbeat, frontend, and WP-Cron requests.
-* Security: Hardened Redirection Manager AJAX nonce handling so missing nonce input fails safely without PHP notices.
-* Security: Preserved existing capability checks and nonce action names across redirection create, edit, delete, bulk, import, export, logs, hit statistics, and migration actions.
-* Database: Updated linked Smart Redirect cleanup to use prepared SQL placeholders for redirection ID lists.
-* Reliability: Verified Auto Scan, scheduled scan email reporting, weekly summary scheduling, redirection cleanup, and migration lock behavior in local testing.
-* Maintenance: Updated uninstall cleanup coverage for current scheduled events and plugin-owned options.
+= 2.1.12 =
+* Added Internal Linking as a paid module with protected admin, AJAX, Gutenberg, indexing, and queue workflows.
+* Hardened Internal Linking database migrations with versioning, locking, schema verification, bounded backfills, and semantic links support.
+* Added Internal Linking to Dashboard Key Tools and Upgrade to Pro messaging.
 
 == Upgrade Notice ==
 
-= 2.1.11 =
-Reliability and security hardening release. Update recommended for safer Redirection Manager AJAX nonce handling, prepared Smart Redirect cleanup SQL, and guarded migration performance behavior. After updating, perform a quick admin smoke test and back up before any old-version migration test.
+= 2.1.12 =
+Internal Linking is now a paid module with hardened database migrations and protected admin, AJAX, Gutenberg, indexing, and queue workflows. Test Internal Linking on staging before production rollout.
 
 == Installation ==
 
@@ -177,12 +169,13 @@ After activation, open SEO Repair Kit from the WordPress admin menu.
    * Enable alt text scanning
    * Enable redirection management
    * Review Spam Monitor module settings when available
+   * Review Internal Linking module access and settings when available
    * Set notification email address
 3. Complete the onboarding to save your preferences, or skip and configure later in Settings.
 
 = Dashboard Overview =
 
-Open SEO Repair Kit from the WordPress admin menu to view site health, SEO issues, feature status, and quick-access tools.
+Open SEO Repair Kit from the WordPress admin menu to view site health, plan status, reports, and quick-access tools including Internal Linking when available.
 
 = Links Manager =
 
@@ -204,75 +197,23 @@ Use the Notifications tab to review automated scan email history, including scan
 
 = Smart Redirects =
 
-Use the Smart Redirects tab to automatically create 301 redirects for broken internal singular URLs to their post-type archive pages.
-
-Examples:
-* `/case-studies/broken-slug/` redirects to `/case-studies/`
-* `/blog/deleted-post/` redirects to `/blog/`
-* `/products/old-item/` redirects to `/products/`
-
-You can enable Smart Redirects per post type, view generated records, toggle status, delete records with linked redirects, reset all records, reset by selected post type, and manage all redirects in the Redirection Manager.
-
-Note: Post types without archive pages cannot be enabled for archive redirects.
+Use Smart Redirects to create eligible 301 archive redirects for broken internal singular URLs. Enable supported post types, review generated records, reset records, and manage linked redirects in Redirection Manager.
 
 = Alt Text Manager =
 
-1. Navigate to "SEO Repair Kit" > "Image Alt Missing" in the admin menu.
-2. View all images missing alt text with their details.
-3. Update alt text individually:
-   * Click on an image to edit
-   * Enter descriptive alt text
-   * Save changes
-4. Use bulk update feature to update multiple images at once.
-5. Filter and search images by post type or status.
-6. Monitor alt text optimization progress and statistics.
+Open SEO Repair Kit > Image Alt Missing to find images without alt text, update records individually or in bulk, and filter by post type or status.
 
 = Redirection Manager =
 
-1. Go to "SEO Repair Kit" > "Redirection" in the admin menu.
-2. Create a new redirect:
-   * Enter source URL (old URL)
-   * Enter target URL (new URL)
-   * Select redirect type (301 Permanent or 302 Temporary)
-   * Optionally enable regex pattern matching
-   * Set redirect status (active/inactive)
-   * Save the redirect
-3. View all redirects in a comprehensive table showing:
-   * Source and target URLs
-   * Redirect type and status
-   * Hit count and last hit timestamp
-   * Position for ordering
-4. Edit or delete existing redirects.
-5. Monitor most active redirects with hit analytics.
-6. Use the redirect logs to track redirect performance.
+Open SEO Repair Kit > Redirection to create, edit, delete, import, and export 301/302 redirects with status controls, optional regex support, hit tracking, ordering, and logs.
 
 = 404 Error Monitor =
 
-1. Navigate to "SEO Repair Kit" > "404 Manager" (or access via Links Manager).
-2. Enable 404 monitoring in Settings if not already enabled.
-3. View all 404 errors with details:
-   * Requested URL
-   * Referrer information
-   * User agent and IP address
-   * Access count and timestamps
-4. Create redirects directly from 404 logs:
-   * Select a 404 error
-   * Choose target URL
-   * Create redirect with one click
-5. Filter 404 errors by domain, date, or count.
-6. Monitor 404 trends and patterns.
+Open SEO Repair Kit > 404 Manager to review requested URLs, referrers, user agents, IPs, counts, and timestamps. Filter logs and create redirects directly from recurring 404s.
 
 = Sitemap Control =
 
-1. Go to **SEO Repair Kit Sitemap Control**
-2. Enable the option **Enable Sitemap Control**
-3. Select the post types you want to include (Posts, Pages, Custom Post Types, etc.)
-4. Select the taxonomies you want to include (Categories, Tags, custom taxonomies)
-5. Click **Save Sitemap Settings**
-
-Only the selected items will remain in your WordPress core sitemap.
-
-Tip: If your sitemap is not opening, go to **Settings Permalinks** and click œSave Changes to refresh it.
+Open SEO Repair Kit Sitemap Control to choose which post types and taxonomies appear in the WordPress core sitemap. If the sitemap does not refresh, resave WordPress permalinks.
 
 = Bot Manager =
 
@@ -280,27 +221,7 @@ Open SEO Repair Kit > Bot Manager to manage robots.txt, generate llms.txt, and c
 
 = KeyTrack - Keyword Performance Tracking =
 
-1. Install and activate Google Site Kit plugin (required for KeyTrack).
-2. Connect Google Site Kit to your Google Search Console account.
-3. Go to "SEO Repair Kit" > "KeyTrack" in the admin menu.
-4. Create a KeyTrack configuration:
-   * Enter a name for your KeyTrack
-   * Select keywords to track
-   * Choose date range for analysis
-   * Configure threshold settings (optional)
-   * Save configuration
-5. View performance data in multiple tabs:
-   * **Overview**: Summary metrics (clicks, impressions, CTR, average position)
-   * **Pages**: Top performing pages with detailed metrics
-   * **Queries**: Top search queries with performance data
-   * **Settings**: Manage KeyTrack configurations
-6. Set up email reports:
-   * Configure threshold alerts
-   * Set report frequency
-   * Add recipient email addresses
-7. Analyze trends with interactive line charts.
-8. Export data for external analysis.
-9. Watch the demo video: [youtube https://www.youtube.com/watch?v=uiWgcazUDcc]
+Install Google Site Kit, connect Search Console, then open SEO Repair Kit > KeyTrack to review clicks, impressions, CTR, position, pages, queries, thresholds, reports, charts, and exports.
 
 = Schema Manager (Pro Feature) =
 
@@ -308,83 +229,29 @@ With the required Pro module active, open SEO Repair Kit > Schema Manager, choos
 
 Configured schema is output as JSON-LD on applicable pages.
 
+= Internal Linking (Paid Module) =
+
+With an active Internal Linking module, open SEO Repair Kit > Internal Linking to index content, review link opportunities, manage target keywords, configure Auto Linking, check orphan content, and use Gutenberg suggestions. If the module is inactive or expired, Internal Linking is locked while existing data remains preserved.
+
 = Spam Monitor (Pro Feature) =
 
-Go to "SEO Repair Kit" > "Spam Monitor" to review indexed Google result health, risky URLs, spam scoring, and scan history from one dashboard.
-
-Spam Monitor includes:
-* **Dashboard**: Review total SERP scans, checked Google results, critical indexed spam, cleanup queue, scan status, and risk summaries.
-* **Spam Rules**: Configure language mismatch rules, spam keyword categories, suspicious URL patterns, and score thresholds.
-* **Google SERP Scan**: Run manual scans, review returned Google SERP records, and inspect recent scan history.
-* **Search Console Cleanup**: Organize cleanup review steps for suspicious indexed URLs.
-* **Alerts**: Review Spam Monitor alert history and recent notifications.
-* **Settings**: Configure scheduled Spam Monitoring, alert recipients, scan cadence, and scan request limits.
-
-Scheduled Spam Monitor scans can run daily, every 3 days, weekly, biweekly, or monthly. A short testing interval may be available for development/testing workflows.
-
-Free users can scan with the SEO Repair Kit trial provider. The paid Spam Monitor module allows supported custom SERP provider connections such as Serper.dev, SERP API, and DataForSEO.
+Open SEO Repair Kit > Spam Monitor to scan indexed Google results, configure spam rules, review risky URLs, manage cleanup notes, view alerts, and schedule reports. Free users can use the trial provider; paid access unlocks supported custom SERP providers.
 
 = Meta Manager =
 
-1. Navigate to "SEO Repair Kit" > "Meta Manager".
-
-2. Configure SEO using these tabs:
-
-   **Global Meta**
-   * Set title separator, homepage SEO title & description
-   * Configure default SEO templates and knowledge graph
-
-   **Content Types**
-   * Define title and description templates for posts, pages, and CPTs
-   * Configure robots directives
-
-   **Taxonomies**
-   * Set SEO templates for categories, tags, and custom taxonomies
-   * Control indexing behavior
-
-   **Archives**
-   * Manage SEO settings for author, date, and search archives
-
-   **Advanced Settings**
-   * Configure robots directives (index/noindex, follow/nofollow, preview limits)
-   * Default robots: `index, follow, max-image-preview:large`
-   * Disable default to manually select directives
-   * Respects WordPress **Settings Reading Discourage search engines** option
-
-3. Save settings to apply SEO metadata automatically.
-
-4. Override metadata per post/page using the **SEO Repair Kit Meta Manager** box.
-
-5. **Editor Support**
-   * Works with Gutenberg and Elementor editors.
-
-6. Per-page options include:
-   * Custom SEO title
-   * Meta description
-   * Robots directives
-   * Canonical URL
-   * Search result preview
-
-7. If custom metadata is not defined, Meta Manager automatically applies the global template settings as a fallback.
+Open SEO Repair Kit > Meta Manager to configure global meta, content type templates, taxonomy/archive settings, robots directives, canonical URLs, and per-page metadata. Gutenberg and Elementor editor controls are supported.
 
 = AI Chatbot (Pro Feature) =
 
-1. Ensure you have an active Pro license.
-2. Navigate to "SEO Repair Kit" > "AI Chatbot".
-3. Ask the AI assistant for SEO guidance, troubleshooting, and optimization tips.
-
-The chatbot can help with:
-* Meta Manager configuration and SEO metadata guidance
-* Schema Manager setup
-* Redirection and broken link fixes
-* KeyTrack keyword tracking insights
-* General SEO best practices
-
-It provides context-aware responses and real-time suggestions directly inside the WordPress dashboard.
+With an active Pro license, open SEO Repair Kit > AI Chatbot for plugin guidance, SEO workflow help, schema setup, redirection fixes, and KeyTrack insights.
 
 == External Services ==
 
 Some SEO Repair Kit features integrate with external services. These services are used only for functionality that requires external data or processing.
+
+**SEO Repair Kit Licensing / Module Entitlement**
+
+SEO Repair Kit may contact its licensing service to validate paid module access, including Schema Manager, Internal Linking, AI Chatbot, and supported Spam Monitor functionality.
 
 **Google Site Kit / Google Search Console**
 
@@ -400,6 +267,10 @@ When configured in supported paid workflows, Spam Monitor may send SERP requests
 Serper.dev: https://serper.dev/
 SerpApi: https://serpapi.com/
 DataForSEO: https://dataforseo.com/
+
+**SEO Repair Kit Cloud / AI Workflows**
+
+When paid AI-assisted workflows are configured, SEO Repair Kit may send required content or metadata to the configured SEO Repair Kit cloud/API endpoint.
 
 = Settings Configuration =
 
@@ -441,6 +312,7 @@ DataForSEO: https://dataforseo.com/
 * If KeyTrack shows no data, confirm Google Site Kit is installed and connected to the correct Google Search Console property.
 * If Spam Monitor scans or provider settings are unavailable, verify the active module, configured SERP provider, and scan settings.
 * If schema is not output, confirm Schema Manager is active and the schema assignment applies to the current content.
+* If Internal Linking is locked, confirm the Internal Linking paid module is active and refresh license status from the plugin license screen.
 * If links are not detected, confirm the relevant post type is included in the scan settings.
 * If `llms.txt` redirects to the homepage, resave the Bot Manager `llms.txt` configuration and ensure SEO Repair Kit is installed.
 
@@ -473,11 +345,14 @@ Confirm the relevant post type is selected in SEO Repair Kit settings and that t
 = Why does llms.txt redirect to the homepage? =
 Resave Bot Manager llms.txt content and confirm the site is running SEO Repair Kit.
 
-= What should I check after updating to 2.1.11? =
-Open the SEO Repair Kit dashboard, Links Manager, Redirection Manager, Auto Scan, 404 Monitor, Schema Manager, Spam Monitor, KeyTrack, and Settings screens to confirm they load normally. If you are upgrading from an older SEO Repair Kit version with existing data, back up the site first and run a staging migration test before updating production.
+= Is Internal Linking a paid module? =
+Yes. Internal Linking requires an active paid module. If access is inactive or expired, the feature is locked and existing data is preserved.
+
+= What should I check after updating to 2.1.12? =
+Open the SEO Repair Kit dashboard, Links Manager, Redirection Manager, Auto Scan, 404 Monitor, Schema Manager, Internal Linking, Spam Monitor, KeyTrack, Gutenberg editor, and Settings screens to confirm they load normally. If you are upgrading from an older SEO Repair Kit version with existing data, back up the site first and run a staging migration test before updating production.
 
 = What are the Pro features? =
-Pro capabilities include Schema Manager, AI Chatbot, and supported paid Spam Monitor functionality such as advanced SERP-provider connections.
+Pro and paid-module capabilities include Schema Manager, Internal Linking, AI Chatbot, and supported paid Spam Monitor functionality such as advanced SERP-provider connections.
 
 Available free and paid functionality may vary by plugin version or active module.
 

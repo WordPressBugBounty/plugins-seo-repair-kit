@@ -2,22 +2,22 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: SEO Repair Kit 2.1.11\n"
+"Project-Id-Version: SEO Repair Kit 2.1.12\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/seo-repair-kit\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-28T13:43:01+00:00\n"
+"POT-Creation-Date: 2026-09-07T10:49:29+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: seo-repair-kit\n"
 
 #. Plugin Name of the plugin
 #: seo-repair-kit.php
-#: admin/class-seo-repair-kit-admin.php:1339
-#: admin/class-seo-repair-kit-admin.php:1340
+#: admin/class-seo-repair-kit-admin.php:1353
+#: admin/class-seo-repair-kit-admin.php:1354
 #: admin/class-seo-repair-kit-keytrack.php:88
 #: admin/class-seo-repair-kit-keytrack.php:90
 #: admin/class-seo-repair-kit-keytrack.php:235
@@ -27,7 +27,6 @@ msgstr ""
 #: includes/class-seo-repair-kit-elementor-integration.php:168
 #: includes/class-seo-repair-kit-gutenberg-integration.php:290
 #: includes/spam-monitor-backend/templates/email/spam-scan-report.php:180
-#: admin/js/srk-gutenberg-meta-panel.js:1588
 msgid "SEO Repair Kit"
 msgstr ""
 
@@ -52,125 +51,125 @@ msgid "https://torontodigits.com/"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:63
-#: admin/class-seo-repair-kit-link-scanner.php:150
+#: admin/class-seo-repair-kit-link-scanner.php:160
 msgid "Are you sure you want to delete this 404 log?"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:64
-#: admin/class-seo-repair-kit-link-scanner.php:151
+#: admin/class-seo-repair-kit-link-scanner.php:161
 msgid "Are you sure you want to clear all 404 logs? This cannot be undone."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:65
-#: admin/class-seo-repair-kit-link-scanner.php:152
+#: admin/class-seo-repair-kit-link-scanner.php:162
 msgid "Are you sure you want to delete selected 404 logs?"
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:66
-#: admin/class-seo-repair-kit-link-scanner.php:153
+#: admin/class-seo-repair-kit-link-scanner.php:163
 msgid "Error: Unable to delete 404 log."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:67
-#: admin/class-seo-repair-kit-link-scanner.php:154
+#: admin/class-seo-repair-kit-link-scanner.php:164
 msgid "404 logs cleared successfully."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:68
-#: admin/class-seo-repair-kit-link-scanner.php:155
+#: admin/class-seo-repair-kit-link-scanner.php:165
 msgid "Redirect created successfully from 404."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:69
-#: admin/class-seo-repair-kit-link-scanner.php:156
+#: admin/class-seo-repair-kit-link-scanner.php:166
 msgid "Error: Unable to create redirect."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:70
-#: admin/class-seo-repair-kit-link-scanner.php:157
+#: admin/class-seo-repair-kit-link-scanner.php:167
 #: admin/class-seo-repair-kit-redirection.php:655
 msgid "Export generated successfully."
 msgstr ""
 
 #: admin/class-seo-repair-kit-404-manager.php:98
-#: admin/class-seo-repair-kit-link-scanner.php:649
+#: admin/class-seo-repair-kit-link-scanner.php:634
 msgid "Error: 404 Monitor class file not found. Please deactivate and reactivate the plugin."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:214
+#: admin/class-seo-repair-kit-404-manager.php:212
 msgid "404 Error Monitor"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:222
-#: admin/class-seo-repair-kit-link-scanner.php:734
+#: admin/class-seo-repair-kit-404-manager.php:220
+#: admin/class-seo-repair-kit-link-scanner.php:719
 msgid "Total 404 Errors"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:224
+#: admin/class-seo-repair-kit-404-manager.php:222
 msgid "Total occurrences"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:227
-#: admin/class-seo-repair-kit-link-scanner.php:739
+#: admin/class-seo-repair-kit-404-manager.php:225
+#: admin/class-seo-repair-kit-link-scanner.php:724
 msgid "Unique URLs"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:229
+#: admin/class-seo-repair-kit-404-manager.php:227
 msgid "Distinct 404 pages"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:232
+#: admin/class-seo-repair-kit-404-manager.php:230
 msgid "Total Log Entries"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:234
+#: admin/class-seo-repair-kit-404-manager.php:232
 msgid "Logged entries"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:237
-#: admin/class-seo-repair-kit-link-scanner.php:749
+#: admin/class-seo-repair-kit-404-manager.php:235
+#: admin/class-seo-repair-kit-link-scanner.php:734
 msgid "Most Hit 404"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:246
+#: admin/class-seo-repair-kit-404-manager.php:244
 msgid "Highest count"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:258
+#: admin/class-seo-repair-kit-404-manager.php:256
 msgid "Filter by URL:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:259
-#: admin/class-seo-repair-kit-link-scanner.php:780
+#: admin/class-seo-repair-kit-404-manager.php:257
+#: admin/class-seo-repair-kit-link-scanner.php:765
 msgid "Search URL..."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:263
+#: admin/class-seo-repair-kit-404-manager.php:261
 msgid "Filter by IP:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:264
-#: admin/class-seo-repair-kit-link-scanner.php:788
+#: admin/class-seo-repair-kit-404-manager.php:262
+#: admin/class-seo-repair-kit-link-scanner.php:773
 msgid "Search IP..."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:268
+#: admin/class-seo-repair-kit-404-manager.php:266
 msgid "Order by:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:270
-#: admin/class-seo-repair-kit-404-manager.php:315
-#: admin/class-seo-repair-kit-link-scanner.php:798
+#: admin/class-seo-repair-kit-404-manager.php:268
+#: admin/class-seo-repair-kit-404-manager.php:313
+#: admin/class-seo-repair-kit-link-scanner.php:783
 msgid "Last Accessed"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:271
+#: admin/class-seo-repair-kit-404-manager.php:269
 msgid "Hit Count"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:272
-#: admin/class-seo-repair-kit-404-manager.php:309
-#: admin/class-seo-repair-kit-link-scanner.php:857
+#: admin/class-seo-repair-kit-404-manager.php:270
+#: admin/class-seo-repair-kit-404-manager.php:307
+#: admin/class-seo-repair-kit-link-scanner.php:842
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:307
 #: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:206
 #: includes/class-seo-repair-kit-schema-validator.php:571
@@ -178,40 +177,44 @@ msgstr ""
 msgid "URL"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:273
-#: admin/class-seo-repair-kit-404-manager.php:314
-#: admin/class-seo-repair-kit-link-scanner.php:799
+#: admin/class-seo-repair-kit-404-manager.php:271
+#: admin/class-seo-repair-kit-404-manager.php:312
+#: admin/class-seo-repair-kit-link-scanner.php:784
 msgid "First Accessed"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:276
+#: admin/class-seo-repair-kit-404-manager.php:274
 msgid "Descending"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:277
+#: admin/class-seo-repair-kit-404-manager.php:275
 msgid "Ascending"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:282
+#: admin/class-seo-repair-kit-404-manager.php:280
 #: admin/class-seo-repair-kit-smart-redirects.php:887
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:232
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:168
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:292
 #: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:246
 msgid "Filter"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:283
-#: admin/class-seo-repair-kit-link-scanner.php:810
+#: admin/class-seo-repair-kit-404-manager.php:281
+#: admin/class-seo-repair-kit-link-scanner.php:795
 #: admin/class-seo-repair-kit-smart-redirects.php:892
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:1226
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:172
 msgid "Reset"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:292
-#: admin/class-seo-repair-kit-link-scanner.php:819
+#: admin/class-seo-repair-kit-404-manager.php:290
+#: admin/class-seo-repair-kit-link-scanner.php:804
 #: admin/class-seo-repair-kit-redirection.php:787
 msgid "Bulk Actions"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:293
+#: admin/class-seo-repair-kit-404-manager.php:291
 #: admin/class-seo-repair-kit-redirection.php:790
 #: admin/class-seo-repair-kit-redirection.php:2182
 #: admin/class-seo-repair-kit-schema-ui.php:368
@@ -219,23 +222,25 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:294
+#: admin/class-seo-repair-kit-404-manager.php:292
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:262
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:287
 msgid "Ignore"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:296
-#: admin/class-seo-repair-kit-link-scanner.php:823
+#: admin/class-seo-repair-kit-404-manager.php:294
+#: admin/class-seo-repair-kit-link-scanner.php:808
 #: admin/class-seo-repair-kit-redirection.php:793
 msgid "Apply"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:297
-#: admin/class-seo-repair-kit-link-scanner.php:828
+#: admin/class-seo-repair-kit-404-manager.php:295
+#: admin/class-seo-repair-kit-link-scanner.php:813
 msgid "Clear All Logs"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:298
-#: admin/class-seo-repair-kit-link-scanner.php:832
+#: admin/class-seo-repair-kit-404-manager.php:296
+#: admin/class-seo-repair-kit-link-scanner.php:817
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-alerts.php:223
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:294
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:360
@@ -245,66 +250,75 @@ msgstr ""
 msgid "Export CSV"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:299
-#: admin/class-seo-repair-kit-link-scanner.php:836
+#: admin/class-seo-repair-kit-404-manager.php:297
+#: admin/class-seo-repair-kit-link-scanner.php:821
 msgid "Refresh Stats"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:310
+#: admin/class-seo-repair-kit-404-manager.php:308
 msgid "Count"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:311
+#: admin/class-seo-repair-kit-404-manager.php:309
 #: admin/class-seo-repair-kit-redirection.php:819
 msgid "Referrer"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:312
-#: admin/class-seo-repair-kit-link-scanner.php:859
+#: admin/class-seo-repair-kit-404-manager.php:310
+#: admin/class-seo-repair-kit-link-scanner.php:844
 #: admin/class-seo-repair-kit-redirection.php:817
 msgid "IP Address"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:313
-#: admin/class-seo-repair-kit-link-scanner.php:860
+#: admin/class-seo-repair-kit-404-manager.php:311
+#: admin/class-seo-repair-kit-link-scanner.php:845
 #: admin/class-seo-repair-kit-redirection.php:818
 msgid "User Agent"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:316
-#: admin/class-seo-repair-kit-link-scanner.php:863
+#: admin/class-seo-repair-kit-404-manager.php:314
+#: admin/class-seo-repair-kit-link-scanner.php:848
 #: admin/class-seo-repair-kit-redirection.php:2120
 #: admin/class-seo-repair-kit-smart-redirects.php:924
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:43
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:273
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:233
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:394
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:132
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:248
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:429
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:222
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:105
 msgid "Actions"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:355
-#: admin/class-seo-repair-kit-404-manager.php:485
-#: admin/class-seo-repair-kit-link-scanner.php:908
+#: admin/class-seo-repair-kit-404-manager.php:353
+#: admin/class-seo-repair-kit-404-manager.php:483
+#: admin/class-seo-repair-kit-link-scanner.php:893
 #: admin/class-seo-repair-kit-scan-links.php:190
 msgid "Create Redirect"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:365
+#: admin/class-seo-repair-kit-404-manager.php:363
 msgid "No 404 errors found."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:378
+#: admin/class-seo-repair-kit-404-manager.php:376
 #, php-format
 msgid "Showing %1$d-%2$d of %3$d entries"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:401
+#: admin/class-seo-repair-kit-404-manager.php:399
 msgid "&laquo; Previous"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:416
+#: admin/class-seo-repair-kit-404-manager.php:414
 msgid "Next &raquo;"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:422
+#: admin/class-seo-repair-kit-404-manager.php:420
 #: admin/class-seo-repair-kit-alt-text.php:345
-#: admin/class-seo-repair-kit-link-scanner.php:1040
+#: admin/class-seo-repair-kit-link-scanner.php:1025
 #: admin/class-seo-repair-kit-redirection.php:1047
 #: admin/class-seo-repair-kit-redirection.php:2297
 #: admin/class-seo-repair-kit-smart-redirects.php:988
@@ -312,85 +326,94 @@ msgstr ""
 msgid "Per page:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:428
+#: admin/class-seo-repair-kit-404-manager.php:426
 #: admin/class-seo-repair-kit-alt-text.php:161
 #: admin/class-seo-repair-kit-alt-text.php:351
-#: admin/class-seo-repair-kit-link-scanner.php:1048
+#: admin/class-seo-repair-kit-link-scanner.php:1033
 #: admin/class-seo-repair-kit-redirection.php:1053
 #: admin/class-seo-repair-kit-redirection.php:2303
 #: admin/class-seo-repair-kit-smart-redirects.php:994
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:133
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:353
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:501
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:94
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:296
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:370
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:182
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:312
 msgid "All"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:436
-#: admin/class-seo-repair-kit-link-scanner.php:1056
+#: admin/class-seo-repair-kit-404-manager.php:434
+#: admin/class-seo-repair-kit-link-scanner.php:1041
 msgid "No 404 Errors Yet"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:437
-#: admin/class-seo-repair-kit-link-scanner.php:1057
+#: admin/class-seo-repair-kit-404-manager.php:435
+#: admin/class-seo-repair-kit-link-scanner.php:1042
 msgid "404 error monitoring is active. Any 404 errors will be logged here automatically."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:446
+#: admin/class-seo-repair-kit-404-manager.php:444
 msgid "Create Redirect from 404"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:452
+#: admin/class-seo-repair-kit-404-manager.php:450
 msgid "Source URL (404 URL):"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:454
+#: admin/class-seo-repair-kit-404-manager.php:452
 msgid "This is the URL that resulted in a 404 error."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:458
+#: admin/class-seo-repair-kit-404-manager.php:456
 #: admin/class-seo-repair-kit-redirection.php:748
 msgid "Target URL:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:460
+#: admin/class-seo-repair-kit-404-manager.php:458
 msgid "Enter the URL to redirect to. Use relative path (e.g., /new-page/) or full URL."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:464
+#: admin/class-seo-repair-kit-404-manager.php:462
 #: admin/class-seo-repair-kit-redirection.php:756
 msgid "Redirect Type:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:476
+#: admin/class-seo-repair-kit-404-manager.php:474
 msgid "Delete 404 log entry after creating redirect"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:484
+#: admin/class-seo-repair-kit-404-manager.php:482
 #: admin/class-seo-repair-kit-schema-ui.php:435
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:376
 #: includes/class-seo-repair-kit-elementor-integration.php:1182
 #: includes/class-seo-repair-kit-gutenberg-integration.php:886
-#: admin/js/srk-gutenberg-meta-panel.js:374
+#: admin/js/srk-gutenberg-meta-panel.js:373
 msgid "Cancel"
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:498
-#: admin/class-seo-repair-kit-404-manager.php:536
-#: admin/class-seo-repair-kit-404-manager.php:603
-#: admin/class-seo-repair-kit-404-manager.php:646
-#: admin/class-seo-repair-kit-404-manager.php:738
-#: admin/class-seo-repair-kit-404-manager.php:812
-#: admin/class-seo-repair-kit-admin.php:591
-#: admin/class-seo-repair-kit-dashboard.php:444
+#: admin/class-seo-repair-kit-404-manager.php:496
+#: admin/class-seo-repair-kit-404-manager.php:534
+#: admin/class-seo-repair-kit-404-manager.php:601
+#: admin/class-seo-repair-kit-404-manager.php:644
+#: admin/class-seo-repair-kit-404-manager.php:736
+#: admin/class-seo-repair-kit-404-manager.php:810
+#: admin/class-seo-repair-kit-admin.php:594
+#: admin/class-seo-repair-kit-dashboard.php:454
 #: admin/class-seo-repair-kit-link-scanner-automation-admin.php:379
 #: admin/class-seo-repair-kit-link-scanner-automation-admin.php:438
 #: admin/class-seo-repair-kit-link-scanner-automation-admin.php:462
 #: admin/class-seo-repair-kit-link-scanner-automation-admin.php:541
 #: admin/class-seo-repair-kit-link-scanner-automation-admin.php:603
 #: admin/class-seo-repair-kit-link-scanner-automation-admin.php:684
-#: admin/class-seo-repair-kit-link-scanner.php:566
-#: admin/class-seo-repair-kit-link-scanner.php:1075
-#: admin/class-seo-repair-kit-link-scanner.php:1140
-#: admin/class-seo-repair-kit-link-scanner.php:1233
-#: admin/class-seo-repair-kit-link-scanner.php:1323
-#: admin/class-seo-repair-kit-link-scanner.php:1445
-#: admin/class-seo-repair-kit-link-scanner.php:1530
+#: admin/class-seo-repair-kit-link-scanner.php:573
+#: admin/class-seo-repair-kit-link-scanner.php:1060
+#: admin/class-seo-repair-kit-link-scanner.php:1125
+#: admin/class-seo-repair-kit-link-scanner.php:1218
+#: admin/class-seo-repair-kit-link-scanner.php:1308
+#: admin/class-seo-repair-kit-link-scanner.php:1430
+#: admin/class-seo-repair-kit-link-scanner.php:1515
 #: admin/class-seo-repair-kit-robots-llms.php:855
 #: admin/class-seo-repair-kit-robots-llms.php:894
 #: admin/class-seo-repair-kit-robots-llms.php:923
@@ -432,263 +455,280 @@ msgstr ""
 #: includes/class-seo-repair-kit-meta-ajaxs.php:197
 #: includes/class-seo-repair-kit-meta-ajaxs.php:283
 #: includes/class-seo-repair-kit-meta-ajaxs.php:342
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1224
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1761
 #: includes/spam-monitor-backend/class-srk-spam-monitor-alerts-ajax.php:63
 #: includes/spam-monitor-backend/class-srk-spam-monitor-schedule-ajax.php:128
 msgid "Permission denied."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:505
-#: admin/class-seo-repair-kit-link-scanner.php:1089
+#: admin/class-seo-repair-kit-404-manager.php:503
+#: admin/class-seo-repair-kit-link-scanner.php:1074
 msgid "Invalid 404 log ID."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:515
-#: admin/class-seo-repair-kit-404-manager.php:555
-#: admin/class-seo-repair-kit-404-manager.php:750
-#: admin/class-seo-repair-kit-link-scanner.php:1096
-#: admin/class-seo-repair-kit-link-scanner.php:1163
-#: admin/class-seo-repair-kit-link-scanner.php:1251
-#: admin/class-seo-repair-kit-link-scanner.php:1462
+#: admin/class-seo-repair-kit-404-manager.php:513
+#: admin/class-seo-repair-kit-404-manager.php:553
+#: admin/class-seo-repair-kit-404-manager.php:748
+#: admin/class-seo-repair-kit-link-scanner.php:1081
+#: admin/class-seo-repair-kit-link-scanner.php:1148
+#: admin/class-seo-repair-kit-link-scanner.php:1236
+#: admin/class-seo-repair-kit-link-scanner.php:1447
 msgid "404 logs table does not exist."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:525
-#: admin/class-seo-repair-kit-link-scanner.php:1123
+#: admin/class-seo-repair-kit-404-manager.php:523
+#: admin/class-seo-repair-kit-link-scanner.php:1108
 msgid "404 log deleted successfully."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:527
-#: admin/class-seo-repair-kit-link-scanner.php:1126
+#: admin/class-seo-repair-kit-404-manager.php:525
+#: admin/class-seo-repair-kit-link-scanner.php:1111
 msgid "Failed to delete 404 log."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:545
-#: admin/class-seo-repair-kit-link-scanner.php:1156
+#: admin/class-seo-repair-kit-404-manager.php:543
+#: admin/class-seo-repair-kit-link-scanner.php:1141
 msgid "Invalid action or IDs."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:570
-#: admin/class-seo-repair-kit-link-scanner.php:1200
+#: admin/class-seo-repair-kit-404-manager.php:568
+#: admin/class-seo-repair-kit-link-scanner.php:1185
 #, php-format
 msgid "%d 404 log deleted."
 msgid_plural "%d 404 logs deleted."
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-404-manager.php:574
+#: admin/class-seo-repair-kit-404-manager.php:572
 msgid "Failed to delete 404 logs."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:587
-#: admin/class-seo-repair-kit-link-scanner.php:1201
+#: admin/class-seo-repair-kit-404-manager.php:585
+#: admin/class-seo-repair-kit-link-scanner.php:1186
 #, php-format
 msgid "%d 404 log ignored."
 msgid_plural "%d 404 logs ignored."
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-404-manager.php:591
+#: admin/class-seo-repair-kit-404-manager.php:589
 msgid "Failed to ignore 404 logs."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:594
-#: admin/class-seo-repair-kit-link-scanner.php:1219
+#: admin/class-seo-repair-kit-404-manager.php:592
+#: admin/class-seo-repair-kit-link-scanner.php:1204
 msgid "Invalid action."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:636
-#: admin/class-seo-repair-kit-link-scanner.php:1306
+#: admin/class-seo-repair-kit-404-manager.php:634
+#: admin/class-seo-repair-kit-link-scanner.php:1291
 #, php-format
 msgid "%d log entry cleared."
 msgid_plural "%d log entries cleared."
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-404-manager.php:658
-#: admin/class-seo-repair-kit-link-scanner.php:1342
+#: admin/class-seo-repair-kit-404-manager.php:656
+#: admin/class-seo-repair-kit-link-scanner.php:1327
 msgid "Source URL and Target URL are required."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:679
-#: admin/class-seo-repair-kit-link-scanner.php:1361
+#: admin/class-seo-repair-kit-404-manager.php:677
+#: admin/class-seo-repair-kit-link-scanner.php:1346
 msgid "A redirect for this URL already exists."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:724
-#: admin/class-seo-repair-kit-link-scanner.php:1424
+#: admin/class-seo-repair-kit-404-manager.php:722
+#: admin/class-seo-repair-kit-link-scanner.php:1409
 msgid "Redirect created successfully."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:729
-#: admin/class-seo-repair-kit-link-scanner.php:1431
+#: admin/class-seo-repair-kit-404-manager.php:727
+#: admin/class-seo-repair-kit-link-scanner.php:1416
 msgid "Failed to create redirect."
 msgstr ""
 
-#: admin/class-seo-repair-kit-404-manager.php:759
-#: admin/class-seo-repair-kit-link-scanner.php:1471
+#: admin/class-seo-repair-kit-404-manager.php:757
+#: admin/class-seo-repair-kit-link-scanner.php:1456
 msgid "No 404 logs to export."
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:276
+#: admin/class-seo-repair-kit-admin.php:278
 msgid "Onboarding steps"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:279
+#: admin/class-seo-repair-kit-admin.php:281
 msgid "Exit guided setup"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:279
+#: admin/class-seo-repair-kit-admin.php:281
 msgid "Exit Guided Setup"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:290
-#: admin/class-seo-repair-kit-admin.php:1703
+#: admin/class-seo-repair-kit-admin.php:292
+#: admin/class-seo-repair-kit-admin.php:1734
 #: admin/class-seo-repair-kit-scan-links.php:197
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:541
 msgid "Loading..."
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:308
-#: admin/class-seo-repair-kit-admin.php:328
-#: admin/class-seo-repair-kit-admin.php:870
+#: admin/class-seo-repair-kit-admin.php:310
+#: admin/class-seo-repair-kit-admin.php:330
+#: admin/class-seo-repair-kit-admin.php:873
 msgid "You do not have permission to access this endpoint."
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:342
-#: admin/class-seo-repair-kit-admin.php:884
+#: admin/class-seo-repair-kit-admin.php:344
+#: admin/class-seo-repair-kit-admin.php:887
 msgid "Invalid redirect destination."
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:720
+#: admin/class-seo-repair-kit-admin.php:723
 msgid "Once Monthly"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:736
+#: admin/class-seo-repair-kit-admin.php:739
 msgid "License synced successfully. Schema Manager is now active!"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:753
+#: admin/class-seo-repair-kit-admin.php:756
 msgid "You do not have sufficient permissions to refresh the license status."
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1090
+#: admin/class-seo-repair-kit-admin.php:1102
+#: includes/class-srk-admin-notices.php:54
 msgid "SEO Repair Kit database update required"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1091
+#: admin/class-seo-repair-kit-admin.php:1103
+#: includes/class-srk-admin-notices.php:55
 msgid "To keep your website SEO in top shape, we need to update your settings to the latest version. This process runs in the background and may take a few moments."
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1093
+#: admin/class-seo-repair-kit-admin.php:1105
+#: includes/class-srk-admin-notices.php:57
 msgid "Update Settings"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1107
+#: admin/class-seo-repair-kit-admin.php:1119
 #: includes/class-seo-repair-kit-meta-ajaxs.php:112
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
 #. translators: %s: TorontoDigits website link and logo
-#: admin/class-seo-repair-kit-admin.php:1245
+#: admin/class-seo-repair-kit-admin.php:1258
 #, php-format
 msgid "Powered By: %s"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1246
+#: admin/class-seo-repair-kit-admin.php:1259
 msgid "Powered By: TorontoDigits"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1350
-#: admin/class-seo-repair-kit-admin.php:1351
-#: admin/class-seo-repair-kit-dashboard.php:248
-#: admin/class-seo-repair-kit-dashboard.php:282
+#: admin/class-seo-repair-kit-admin.php:1364
+#: admin/class-seo-repair-kit-admin.php:1365
+#: admin/class-seo-repair-kit-dashboard.php:247
+#: admin/class-seo-repair-kit-dashboard.php:281
 msgid "Links Manager"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1365
-#: admin/class-seo-repair-kit-admin.php:1366
+#: admin/class-seo-repair-kit-admin.php:1379
+#: admin/class-seo-repair-kit-admin.php:1380
 msgid "Redirection"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1375
-#: admin/class-seo-repair-kit-admin.php:1376
-#: admin/class-seo-repair-kit-dashboard.php:249
-#: admin/class-seo-repair-kit-dashboard.php:293
+#: admin/class-seo-repair-kit-admin.php:1389
+#: admin/class-seo-repair-kit-admin.php:1390
+#: admin/class-seo-repair-kit-dashboard.php:248
+#: admin/class-seo-repair-kit-dashboard.php:292
 #: admin/class-seo-repair-kit-upgrade-pro.php:266
 #: includes/spam-monitor-backend/templates/email/spam-scan-report.php:59
 msgid "Spam Monitor"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1390
-#: admin/class-seo-repair-kit-admin.php:1391
-#: admin/class-seo-repair-kit-dashboard.php:239
-#: admin/class-seo-repair-kit-dashboard.php:396
+#: admin/class-seo-repair-kit-admin.php:1405
+#: admin/class-seo-repair-kit-admin.php:1406
+#: admin/class-seo-repair-kit-dashboard.php:335
+#: admin/class-seo-repair-kit-internal-linking.php:577
+#: admin/class-seo-repair-kit-internal-linking.php:670
+#: admin/class-seo-repair-kit-link-scanner.php:336
+#: admin/class-seo-repair-kit-upgrade-pro.php:284
+msgid "Internal Linking"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:1421
+#: admin/class-seo-repair-kit-admin.php:1422
+#: admin/class-seo-repair-kit-dashboard.php:238
+#: admin/class-seo-repair-kit-dashboard.php:406
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-image-seo.php:33
 msgid "Image Alt Missing"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1404
-#: admin/class-seo-repair-kit-admin.php:1405
-#: admin/class-seo-repair-kit-dashboard.php:250
-#: admin/class-seo-repair-kit-dashboard.php:325
+#: admin/class-seo-repair-kit-admin.php:1435
+#: admin/class-seo-repair-kit-admin.php:1436
+#: admin/class-seo-repair-kit-dashboard.php:249
+#: admin/class-seo-repair-kit-dashboard.php:324
 #: admin/class-seo-repair-kit-schema-manager.php:186
 #: admin/class-seo-repair-kit-upgrade-pro.php:293
 msgid "Schema Manager"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1419
-#: admin/class-seo-repair-kit-admin.php:1420
-#: admin/class-seo-repair-kit-dashboard.php:234
-#: admin/class-seo-repair-kit-dashboard.php:346
+#: admin/class-seo-repair-kit-admin.php:1450
+#: admin/class-seo-repair-kit-admin.php:1451
+#: admin/class-seo-repair-kit-dashboard.php:233
+#: admin/class-seo-repair-kit-dashboard.php:356
 #: admin/class-seo-repair-kit-upgrade-pro.php:302
 msgid "KeyTrack"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1434
-#: admin/class-seo-repair-kit-admin.php:1435
-#: admin/class-seo-repair-kit-dashboard.php:235
-#: admin/class-seo-repair-kit-dashboard.php:366
+#: admin/class-seo-repair-kit-admin.php:1465
+#: admin/class-seo-repair-kit-admin.php:1466
+#: admin/class-seo-repair-kit-dashboard.php:234
+#: admin/class-seo-repair-kit-dashboard.php:376
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-main.php:783
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-main.php:784
 msgid "Meta Manager"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1448
-#: admin/class-seo-repair-kit-admin.php:1449
-#: admin/class-seo-repair-kit-dashboard.php:240
-#: admin/class-seo-repair-kit-dashboard.php:406
+#: admin/class-seo-repair-kit-admin.php:1479
+#: admin/class-seo-repair-kit-admin.php:1480
+#: admin/class-seo-repair-kit-dashboard.php:239
+#: admin/class-seo-repair-kit-dashboard.php:416
 #: includes/class-seo-repair-kit-sitemap-manager.php:462
 msgid "Sitemap Manager"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1466
-#: admin/class-seo-repair-kit-admin.php:1467
-#: admin/class-seo-repair-kit-dashboard.php:238
-#: admin/class-seo-repair-kit-dashboard.php:386
+#: admin/class-seo-repair-kit-admin.php:1497
+#: admin/class-seo-repair-kit-admin.php:1498
+#: admin/class-seo-repair-kit-dashboard.php:237
+#: admin/class-seo-repair-kit-dashboard.php:396
 #: admin/class-seo-repair-kit-robots-llms.php:278
 msgid "Bot Manager"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1481
-#: admin/class-seo-repair-kit-admin.php:1482
-#: admin/class-seo-repair-kit-dashboard.php:251
-#: admin/class-seo-repair-kit-dashboard.php:336
+#: admin/class-seo-repair-kit-admin.php:1512
+#: admin/class-seo-repair-kit-admin.php:1513
+#: admin/class-seo-repair-kit-dashboard.php:250
+#: admin/class-seo-repair-kit-dashboard.php:346
 msgid "AI Chatbot"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1496
-#: admin/class-seo-repair-kit-admin.php:1497
-#: admin/class-seo-repair-kit-dashboard.php:241
-#: admin/class-seo-repair-kit-dashboard.php:416
-#: admin/class-seo-repair-kit-link-scanner.php:418
+#: admin/class-seo-repair-kit-admin.php:1527
+#: admin/class-seo-repair-kit-admin.php:1528
+#: admin/class-seo-repair-kit-dashboard.php:240
+#: admin/class-seo-repair-kit-dashboard.php:426
+#: admin/class-seo-repair-kit-internal-linking.php:107
+#: admin/class-seo-repair-kit-link-scanner.php:428
 #: admin/class-seo-repair-kit-redirection.php:690
 #: admin/class-seo-repair-kit-settings.php:70
 #: admin/class-seo-repair-kit-spam-monitor.php:265
 msgid "Settings"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1511
-#: admin/class-seo-repair-kit-admin.php:1512
-#: admin/class-seo-repair-kit-dashboard.php:261
+#: admin/class-seo-repair-kit-admin.php:1542
+#: admin/class-seo-repair-kit-admin.php:1543
+#: admin/class-seo-repair-kit-dashboard.php:260
 msgid "Upgrade to Pro"
 msgstr ""
 
@@ -781,8 +821,8 @@ msgstr ""
 
 #: admin/class-seo-repair-kit-alt-text.php:278
 #: admin/class-seo-repair-kit-alt-text.php:283
-#: admin/class-seo-repair-kit-link-scanner.php:976
-#: admin/class-seo-repair-kit-link-scanner.php:981
+#: admin/class-seo-repair-kit-link-scanner.php:961
+#: admin/class-seo-repair-kit-link-scanner.php:966
 #: admin/class-seo-repair-kit-redirection.php:979
 #: admin/class-seo-repair-kit-redirection.php:984
 #: admin/class-seo-repair-kit-redirection.php:2228
@@ -795,8 +835,8 @@ msgstr ""
 
 #: admin/class-seo-repair-kit-alt-text.php:332
 #: admin/class-seo-repair-kit-alt-text.php:337
-#: admin/class-seo-repair-kit-link-scanner.php:1027
-#: admin/class-seo-repair-kit-link-scanner.php:1032
+#: admin/class-seo-repair-kit-link-scanner.php:1012
+#: admin/class-seo-repair-kit-link-scanner.php:1017
 #: admin/class-seo-repair-kit-redirection.php:1034
 #: admin/class-seo-repair-kit-redirection.php:1039
 #: admin/class-seo-repair-kit-redirection.php:2284
@@ -988,20 +1028,20 @@ msgstr ""
 msgid "Upgrade to unlock all features"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:154
+#: admin/class-seo-repair-kit-dashboard.php:153
 msgid "Site SEO Analysis"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:157
+#: admin/class-seo-repair-kit-dashboard.php:156
 msgid "Re-check Status"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:166
+#: admin/class-seo-repair-kit-dashboard.php:165
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:231
 msgid "Issue"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:167
+#: admin/class-seo-repair-kit-dashboard.php:166
 #: admin/class-seo-repair-kit-redirection.php:814
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:311
 #: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:212
@@ -1009,138 +1049,145 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:188
+#: admin/class-seo-repair-kit-dashboard.php:187
 msgid "View Details"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:200
+#: admin/class-seo-repair-kit-dashboard.php:199
 msgid "No SEO issues detected. Your site looks great!"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:214
+#: admin/class-seo-repair-kit-dashboard.php:213
 msgid "Your Plan"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:225
+#: admin/class-seo-repair-kit-dashboard.php:224
 msgid "Your Pro modules are active for this site."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:226
+#: admin/class-seo-repair-kit-dashboard.php:225
 msgid "Free tools are ready. Upgrade to unlock paid SEO Repair Kit modules."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:232
+#: admin/class-seo-repair-kit-dashboard.php:231
 msgid "Free tools"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:236
-#: admin/class-seo-repair-kit-dashboard.php:356
-#: admin/class-seo-repair-kit-link-scanner.php:310
+#: admin/class-seo-repair-kit-dashboard.php:235
+#: admin/class-seo-repair-kit-dashboard.php:366
+#: admin/class-seo-repair-kit-link-scanner.php:320
 msgid "404 Monitor"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:237
-#: admin/class-seo-repair-kit-dashboard.php:376
+#: admin/class-seo-repair-kit-dashboard.php:236
+#: admin/class-seo-repair-kit-dashboard.php:386
 #: admin/class-seo-repair-kit-redirection.php:687
 msgid "Redirections"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:242
-#: admin/class-seo-repair-kit-dashboard.php:426
+#: admin/class-seo-repair-kit-dashboard.php:241
+#: admin/class-seo-repair-kit-dashboard.php:436
 msgid "Get Support"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:246
+#: admin/class-seo-repair-kit-dashboard.php:245
 msgid "Pro modules"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:260
+#: admin/class-seo-repair-kit-dashboard.php:259
 msgid "Manage License"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:273
+#: admin/class-seo-repair-kit-dashboard.php:272
 msgid "Key Tools"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:277
-#: admin/class-seo-repair-kit-dashboard.php:288
-#: admin/class-seo-repair-kit-dashboard.php:320
-#: admin/class-seo-repair-kit-dashboard.php:331
+#: admin/class-seo-repair-kit-dashboard.php:276
+#: admin/class-seo-repair-kit-dashboard.php:287
+#: admin/class-seo-repair-kit-dashboard.php:319
+#: admin/class-seo-repair-kit-dashboard.php:330
+#: admin/class-seo-repair-kit-dashboard.php:341
 msgid "Pro"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:283
+#: admin/class-seo-repair-kit-dashboard.php:282
 msgid "Scan your site for broken links and fix them fast."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:297
+#: admin/class-seo-repair-kit-dashboard.php:296
 msgid "Spam Monitor services are currently unavailable."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:299
+#: admin/class-seo-repair-kit-dashboard.php:298
 msgid "Run your first Google indexed-spam scan."
 msgstr ""
 
 #. translators: 1: number of scans, 2: number of risky results.
-#: admin/class-seo-repair-kit-dashboard.php:303
+#: admin/class-seo-repair-kit-dashboard.php:302
 #, php-format
 msgid "%1$d scans completed; %2$d flagged results in saved history."
 msgstr ""
 
 #. translators: %d: number of completed scans.
-#: admin/class-seo-repair-kit-dashboard.php:310
+#: admin/class-seo-repair-kit-dashboard.php:309
 #, php-format
 msgid "%d scan completed with no risky results."
 msgid_plural "%d scans completed with no risky results."
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-dashboard.php:326
+#: admin/class-seo-repair-kit-dashboard.php:325
 msgid "Add and manage rich schema markup for content."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:337
-msgid "Get real-time SEO assistance and answers."
+#: admin/class-seo-repair-kit-dashboard.php:336
+msgid "Find contextual link opportunities and build stronger content paths."
 msgstr ""
 
 #: admin/class-seo-repair-kit-dashboard.php:347
-msgid "Monitor keyword rankings and search performance."
+msgid "Get real-time SEO assistance and answers."
 msgstr ""
 
 #: admin/class-seo-repair-kit-dashboard.php:357
-msgid "Track 404 errors and convert them into redirects."
+msgid "Monitor keyword rankings and search performance."
 msgstr ""
 
 #: admin/class-seo-repair-kit-dashboard.php:367
-msgid "Manage meta tags and descriptions for your site."
+msgid "Track 404 errors and convert them into redirects."
 msgstr ""
 
 #: admin/class-seo-repair-kit-dashboard.php:377
-msgid "Create and manage redirects to recover SEO value."
+msgid "Manage meta tags and descriptions for your site."
 msgstr ""
 
 #: admin/class-seo-repair-kit-dashboard.php:387
-msgid "Control search engines and AI crawlers with robots.txt and llms.txt."
+msgid "Create and manage redirects to recover SEO value."
 msgstr ""
 
 #: admin/class-seo-repair-kit-dashboard.php:397
-msgid "Find images missing alt text and improve accessibility."
+msgid "Control search engines and AI crawlers with robots.txt and llms.txt."
 msgstr ""
 
 #: admin/class-seo-repair-kit-dashboard.php:407
-msgid "Control and customize your WordPress core sitemap easily."
+msgid "Find images missing alt text and improve accessibility."
 msgstr ""
 
 #: admin/class-seo-repair-kit-dashboard.php:417
-msgid "Configure how SEO Repair Kit works on your site."
+msgid "Control and customize your WordPress core sitemap easily."
 msgstr ""
 
 #: admin/class-seo-repair-kit-dashboard.php:427
+msgid "Configure how SEO Repair Kit works on your site."
+msgstr ""
+
+#: admin/class-seo-repair-kit-dashboard.php:437
 msgid "Contact our team if you need help or have questions."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:635
-#: admin/class-seo-repair-kit-dashboard.php:845
+#: admin/class-seo-repair-kit-dashboard.php:645
+#: admin/class-seo-repair-kit-dashboard.php:855
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:189
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:448
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-alerts.php:156
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-alerts.php:188
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-alerts.php:227
@@ -1153,194 +1200,307 @@ msgstr ""
 msgid "Critical"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:636
+#: admin/class-seo-repair-kit-dashboard.php:646
 #, php-format
 msgid "%d broken link found on your site."
 msgid_plural "%d broken links found on your site."
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-dashboard.php:637
-#: admin/class-seo-repair-kit-dashboard.php:671
-#: admin/class-seo-repair-kit-dashboard.php:708
-#: admin/class-seo-repair-kit-dashboard.php:739
-#: admin/class-seo-repair-kit-dashboard.php:802
+#: admin/class-seo-repair-kit-dashboard.php:647
+#: admin/class-seo-repair-kit-dashboard.php:681
+#: admin/class-seo-repair-kit-dashboard.php:718
+#: admin/class-seo-repair-kit-dashboard.php:749
+#: admin/class-seo-repair-kit-dashboard.php:812
 msgid "Help Me Fix"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:646
-#: admin/class-seo-repair-kit-dashboard.php:679
-#: admin/class-seo-repair-kit-dashboard.php:714
-#: admin/class-seo-repair-kit-dashboard.php:747
-#: admin/class-seo-repair-kit-dashboard.php:760
-#: admin/class-seo-repair-kit-dashboard.php:809
-#: admin/class-seo-repair-kit-dashboard.php:870
-#: admin/class-seo-repair-kit-dashboard.php:891
+#: admin/class-seo-repair-kit-dashboard.php:656
+#: admin/class-seo-repair-kit-dashboard.php:689
+#: admin/class-seo-repair-kit-dashboard.php:724
+#: admin/class-seo-repair-kit-dashboard.php:757
+#: admin/class-seo-repair-kit-dashboard.php:770
+#: admin/class-seo-repair-kit-dashboard.php:819
+#: admin/class-seo-repair-kit-dashboard.php:880
+#: admin/class-seo-repair-kit-dashboard.php:901
 msgid "Passed"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:647
+#: admin/class-seo-repair-kit-dashboard.php:657
 msgid "No broken links detected. Your internal and external links look healthy."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:654
-#: admin/class-seo-repair-kit-dashboard.php:696
-#: admin/class-seo-repair-kit-dashboard.php:737
-#: admin/class-seo-repair-kit-dashboard.php:768
+#: admin/class-seo-repair-kit-dashboard.php:664
+#: admin/class-seo-repair-kit-dashboard.php:706
+#: admin/class-seo-repair-kit-dashboard.php:747
 #: admin/class-seo-repair-kit-dashboard.php:778
-#: admin/class-seo-repair-kit-dashboard.php:817
-#: admin/class-seo-repair-kit-dashboard.php:836
-#: admin/class-seo-repair-kit-dashboard.php:901
+#: admin/class-seo-repair-kit-dashboard.php:788
+#: admin/class-seo-repair-kit-dashboard.php:827
+#: admin/class-seo-repair-kit-dashboard.php:846
+#: admin/class-seo-repair-kit-dashboard.php:911
 msgid "Suggestion"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:655
+#: admin/class-seo-repair-kit-dashboard.php:665
 msgid "Run a Links Manager scan to establish the current broken-link status."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:656
+#: admin/class-seo-repair-kit-dashboard.php:666
 msgid "Run Link Scan"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:669
-#: admin/class-seo-repair-kit-dashboard.php:706
-#: admin/class-seo-repair-kit-dashboard.php:792
-#: admin/class-seo-repair-kit-dashboard.php:828
-#: admin/class-seo-repair-kit-dashboard.php:858
-#: admin/class-seo-repair-kit-dashboard.php:883
+#: admin/class-seo-repair-kit-dashboard.php:679
+#: admin/class-seo-repair-kit-dashboard.php:716
+#: admin/class-seo-repair-kit-dashboard.php:802
+#: admin/class-seo-repair-kit-dashboard.php:838
+#: admin/class-seo-repair-kit-dashboard.php:868
+#: admin/class-seo-repair-kit-dashboard.php:893
 msgid "Warning"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:670
+#: admin/class-seo-repair-kit-dashboard.php:680
 msgid "KeyTrack is not enabled. Enable it to track search performance."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:680
+#: admin/class-seo-repair-kit-dashboard.php:690
 msgid "KeyTrack is enabled. Your keyword performance is being monitored."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:697
+#: admin/class-seo-repair-kit-dashboard.php:707
 msgid "Schema Manager is a Pro feature. Activate a Pro license to enable schema markup and rich results."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:698
-#: admin/class-seo-repair-kit-dashboard.php:885
+#: admin/class-seo-repair-kit-dashboard.php:708
+#: admin/class-seo-repair-kit-dashboard.php:895
 msgid "View Plans"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:707
+#: admin/class-seo-repair-kit-dashboard.php:717
 msgid "No schema markup is enabled. Turn on at least one schema type to improve rich results."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:716
+#: admin/class-seo-repair-kit-dashboard.php:726
 #, php-format
 msgid "%d schema type is configured and active on your site."
 msgid_plural "%d schema types are configured and active on your site."
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-dashboard.php:738
+#: admin/class-seo-repair-kit-dashboard.php:748
 msgid "AI Assistant is not enabled. Turn it on to get real-time SEO guidance inside WordPress."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:748
+#: admin/class-seo-repair-kit-dashboard.php:758
 msgid "AI Assistant is active. You can ask SEO questions and get instant answers."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:761
+#: admin/class-seo-repair-kit-dashboard.php:771
 msgid "Redirections are enabled and available for SEO-friendly URL recovery."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:769
+#: admin/class-seo-repair-kit-dashboard.php:779
 msgid "Redirections are not enabled. Review the module before creating redirect rules."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:770
+#: admin/class-seo-repair-kit-dashboard.php:780
 msgid "Open Redirections"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:779
+#: admin/class-seo-repair-kit-dashboard.php:789
 msgid "Review your 404 Error Monitor regularly to catch and fix high-traffic 404 pages."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:780
+#: admin/class-seo-repair-kit-dashboard.php:790
 msgid "Open 404 Monitor"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:794
+#: admin/class-seo-repair-kit-dashboard.php:804
 #, php-format
 msgid "%d image is missing alt text. Fill in descriptive alt attributes to improve accessibility and image SEO."
 msgid_plural "%d images are missing alt text. Fill in descriptive alt attributes to improve accessibility and image SEO."
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-dashboard.php:810
+#: admin/class-seo-repair-kit-dashboard.php:820
 msgid "No images are currently missing alt text. Your image accessibility looks good."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:818
+#: admin/class-seo-repair-kit-dashboard.php:828
 msgid "Run the Image Alt Missing scan to calculate the current image accessibility status."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:819
+#: admin/class-seo-repair-kit-dashboard.php:829
 msgid "Run Alt Scan"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:829
+#: admin/class-seo-repair-kit-dashboard.php:839
 msgid "Spam Monitor status is unavailable. Open the module to verify its database setup."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:830
+#: admin/class-seo-repair-kit-dashboard.php:840
 msgid "Open Spam Monitor"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:837
+#: admin/class-seo-repair-kit-dashboard.php:847
 msgid "Spam Monitor has no Google SERP scans yet. Run a manual scan before enabling automation."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:838
+#: admin/class-seo-repair-kit-dashboard.php:848
 msgid "Run First Scan"
 msgstr ""
 
 #. translators: %d: number of spam or critical Google results.
-#: admin/class-seo-repair-kit-dashboard.php:848
+#: admin/class-seo-repair-kit-dashboard.php:858
 #, php-format
 msgid "%d spam or critical Google result needs review."
 msgid_plural "%d spam or critical Google results need review."
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-dashboard.php:851
-#: admin/class-seo-repair-kit-dashboard.php:864
+#: admin/class-seo-repair-kit-dashboard.php:861
+#: admin/class-seo-repair-kit-dashboard.php:874
 msgid "Review Results"
 msgstr ""
 
 #. translators: %d: number of suspicious Google results.
-#: admin/class-seo-repair-kit-dashboard.php:861
+#: admin/class-seo-repair-kit-dashboard.php:871
 #, php-format
 msgid "%d suspicious Google result needs review."
 msgid_plural "%d suspicious Google results need review."
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-dashboard.php:871
+#: admin/class-seo-repair-kit-dashboard.php:881
 msgid "Spam Monitor has no suspicious, spam, or critical results in its saved scan history."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:884
+#: admin/class-seo-repair-kit-dashboard.php:894
 msgid "Your Pro license is not active. Some advanced features may be limited."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:892
+#: admin/class-seo-repair-kit-dashboard.php:902
 msgid "Your Pro license is active. All premium SEO features are available."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:902
+#: admin/class-seo-repair-kit-dashboard.php:912
 msgid "Complete the Guided Setup to make sure all SEO Repair Kit features are configured for your site."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:903
+#: admin/class-seo-repair-kit-dashboard.php:913
 msgid "Open Settings"
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:53
+#: admin/class-seo-repair-kit-spam-monitor.php:260
+#: admin/class-seo-repair-kit-weekly-summary.php:1189
+msgid "Dashboard"
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:59
+msgid "Content Index"
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:65
+msgid "Target Keywords"
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:71
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:37
+msgid "Link Opportunities"
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:77
+msgid "Auto Linking"
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:83
+msgid "URL Changer"
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:89
+msgid "Approved Links"
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:95
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-dashboard.php:131
+msgid "Orphan Content"
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:101
+msgid "Reports"
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:522
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:154
+#: includes/internal-linking-backend/class-srk-internal-linking-indexer.php:284
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:31
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:56
+msgid "Internal Linking is a paid module. Please upgrade or renew Internal Linking to use this feature."
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:559
+#: admin/class-seo-repair-kit-robots-llms.php:213
+msgid "You do not have permission to access this page."
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:578
+msgid "Find link opportunities, index content, detect orphan pages, review approved links, manage target keywords, auto linking rules, and URL changes."
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:582
+msgid "Internal Linking Tabs"
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:607
+msgid "This tab failed to load."
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:630
+msgid "Missing tab class configuration."
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:636
+msgid "Class not found."
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:645
+msgid "Render method missing."
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:671
+msgid "Internal Linking is available with the paid Internal Linking module."
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:676
+#: admin/class-seo-repair-kit-schema-manager.php:422
+msgid "Premium Required"
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:677
+msgid "Internal Linking is part of a paid SEO Repair Kit module. Upgrade or renew this module to unlock indexing, link opportunities, Auto Linking, reports, and editor suggestions."
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:678
+msgid "Your existing Internal Linking data and already inserted links are preserved."
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:681
+msgid "Upgrade Internal Linking"
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:688
+#: admin/class-seo-repair-kit-schema-manager.php:244
+#: admin/class-seo-repair-kit-schema-manager.php:434
+#: admin/class-seo-repair-kit-schema-ui.php:294
+#: admin/class-seo-repair-kit-upgrade-pro.php:223
+#: admin/class-seo-repair-kit-upgrade-pro.php:224
+#: admin/class-seo-repair-kit-upgrade-pro.php:246
+msgid "Refresh License Status"
+msgstr ""
+
+#: admin/class-seo-repair-kit-internal-linking.php:804
+#, php-format
+msgid "Page %1$d of %2$d"
 msgstr ""
 
 #: admin/class-seo-repair-kit-keytrack-settings.php:119
@@ -1485,10 +1645,13 @@ msgid "Average Position"
 msgstr ""
 
 #: admin/class-seo-repair-kit-keytrack-settings.php:987
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:265
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:532
 msgid "Keyword"
 msgstr ""
 
 #: admin/class-seo-repair-kit-keytrack-settings.php:988
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:218
 msgid "Clicks"
 msgstr ""
 
@@ -1649,7 +1812,7 @@ msgid "Every 3 days"
 msgstr ""
 
 #: admin/class-seo-repair-kit-link-scanner-automation-admin.php:90
-#: admin/class-seo-repair-kit-link-scanner.php:244
+#: admin/class-seo-repair-kit-link-scanner.php:254
 msgid "Weekly"
 msgstr ""
 
@@ -1658,7 +1821,7 @@ msgid "Bi-weekly"
 msgstr ""
 
 #: admin/class-seo-repair-kit-link-scanner-automation-admin.php:92
-#: admin/class-seo-repair-kit-link-scanner.php:246
+#: admin/class-seo-repair-kit-link-scanner.php:256
 #: admin/class-seo-repair-kit-upgrade-pro.php:170
 #: includes/class-seo-repair-kit-link-scanner-automation.php:142
 msgid "Monthly"
@@ -1717,6 +1880,7 @@ msgid "Used only when Scan Coverage is set to Selected Post Types."
 msgstr ""
 
 #: admin/class-seo-repair-kit-link-scanner-automation-admin.php:147
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:100
 msgid "Batch Size"
 msgstr ""
 
@@ -1826,7 +1990,7 @@ msgid "Reset failed."
 msgstr ""
 
 #: admin/class-seo-repair-kit-link-scanner-automation-admin.php:364
-#: admin/class-seo-repair-kit-link-scanner.php:601
+#: admin/class-seo-repair-kit-link-scanner.php:608
 msgid "Alerts module is not available."
 msgstr ""
 
@@ -1857,347 +2021,340 @@ msgid "Invalid alert ID."
 msgstr ""
 
 #: admin/class-seo-repair-kit-link-scanner-internal-linking.php:23
-#: admin/class-seo-repair-kit-link-scanner.php:619
 msgid "Internal Linking requires the paid module (Coming Soon)"
 msgstr ""
 
 #: admin/class-seo-repair-kit-link-scanner-internal-linking.php:24
-#: admin/class-seo-repair-kit-link-scanner.php:620
 msgid "Add Internal Linking to this website from your SEO Repair Kit custom plan, then clear the license cache."
 msgstr ""
 
 #: admin/class-seo-repair-kit-link-scanner-internal-linking.php:29
-#: admin/class-seo-repair-kit-link-scanner.php:626
 msgid "Internal Linking module active (coming soon)"
 msgstr ""
 
 #: admin/class-seo-repair-kit-link-scanner-internal-linking.php:30
-#: admin/class-seo-repair-kit-link-scanner.php:627
 msgid "Your CRM license includes Internal Linking. Internal-link opportunities, orphan content detection, and contextual recommendations can run for this licensed site."
 msgstr ""
 
 #. translators: %s: human time diff
-#: admin/class-seo-repair-kit-link-scanner.php:233
+#. translators: %s: human-readable time difference
+#: admin/class-seo-repair-kit-link-scanner.php:243
 #: admin/class-seo-repair-kit-settings.php:241
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:4017
 #, php-format
 msgid "%s ago"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:234
+#: admin/class-seo-repair-kit-link-scanner.php:244
 msgid "No scans yet"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:241
-#: admin/class-seo-repair-kit-link-scanner.php:249
+#: admin/class-seo-repair-kit-link-scanner.php:251
+#: admin/class-seo-repair-kit-link-scanner.php:259
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:187
 #: includes/spam-monitor-backend/class-srk-spam-monitor-alerts.php:473
 msgid "Manual"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:242
+#: admin/class-seo-repair-kit-link-scanner.php:252
 msgid "Every 24 Hours"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:243
+#: admin/class-seo-repair-kit-link-scanner.php:253
 #: includes/class-seo-repair-kit-link-scanner-automation.php:134
 msgid "Every 3 Days"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:245
+#: admin/class-seo-repair-kit-link-scanner.php:255
 #: includes/class-seo-repair-kit-link-scanner-automation.php:138
 msgid "Bi-Weekly"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:252
+#: admin/class-seo-repair-kit-link-scanner.php:262
 #, php-format
 msgid "Runs automatically (%s cadence)."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:253
+#: admin/class-seo-repair-kit-link-scanner.php:263
 msgid "Launch scans manually whenever you need a health check."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:256
+#: admin/class-seo-repair-kit-link-scanner.php:266
 #, php-format
 msgid "%s URLs have been checked so far."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:257
+#: admin/class-seo-repair-kit-link-scanner.php:267
 msgid "Run your first scan to capture a baseline."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:261
+#: admin/class-seo-repair-kit-link-scanner.php:271
 #, php-format
 msgid "%1$s%% of the scanned links need fixes."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:264
+#: admin/class-seo-repair-kit-link-scanner.php:274
 msgid "Clean slate! No broken links were found."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:276
+#: admin/class-seo-repair-kit-link-scanner.php:286
 msgid "Links Manager Dashboard"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:277
+#: admin/class-seo-repair-kit-link-scanner.php:287
 msgid "Manage everything related to links in one place: link scanning, 404 monitoring, automation schedules, and alert history."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:281
+#: admin/class-seo-repair-kit-link-scanner.php:291
 msgid "AUTOMATED SCANNING"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:285
+#: admin/class-seo-repair-kit-link-scanner.php:295
 msgid "404 TRACKING"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:289
+#: admin/class-seo-repair-kit-link-scanner.php:299
 #: admin/class-seo-repair-kit-redirection.php:678
 msgid "SMART REDIRECTS"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:306
+#: admin/class-seo-repair-kit-link-scanner.php:316
 msgid "Links Scan"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:314
+#: admin/class-seo-repair-kit-link-scanner.php:324
 msgid "Auto Scan"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:318
+#: admin/class-seo-repair-kit-link-scanner.php:328
 msgid "Notifications"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:322
-#: admin/class-seo-repair-kit-upgrade-pro.php:284
+#: admin/class-seo-repair-kit-link-scanner.php:332
 msgid "Smart Redirects"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:326
-msgid "Internal Linking"
-msgstr ""
-
-#: admin/class-seo-repair-kit-link-scanner.php:334
+#: admin/class-seo-repair-kit-link-scanner.php:344
 msgid "Total links checked"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:339
+#: admin/class-seo-repair-kit-link-scanner.php:349
 msgid "broken links detected"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:342
-#: admin/class-seo-repair-kit-link-scanner.php:350
+#: admin/class-seo-repair-kit-link-scanner.php:352
+#: admin/class-seo-repair-kit-link-scanner.php:360
 #, php-format
 msgid "%s%%"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:347
+#: admin/class-seo-repair-kit-link-scanner.php:357
 msgid "Healthy links"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:352
+#: admin/class-seo-repair-kit-link-scanner.php:362
 msgid "Working links confirmed in your last scan."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:355
-#: admin/class-seo-repair-kit-link-scanner.php:428
+#: admin/class-seo-repair-kit-link-scanner.php:365
+#: admin/class-seo-repair-kit-link-scanner.php:438
 msgid "Automation"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:369
+#: admin/class-seo-repair-kit-link-scanner.php:379
 msgid "Free Link Scanner access"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:373
+#: admin/class-seo-repair-kit-link-scanner.php:383
 #, php-format
 msgid "Free sites can scan Pages only up to %d links per scan. Add Unlimited Broken Links + 404 Monitor for £1.49/month to scan Posts and public custom post types and remove the scan limit."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:380
+#: admin/class-seo-repair-kit-link-scanner.php:390
 msgid "Locked post types:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:388
-#: admin/class-seo-repair-kit-link-scanner.php:621
+#: admin/class-seo-repair-kit-link-scanner.php:398
 #: admin/class-seo-repair-kit-upgrade-pro.php:213
 msgid "Customize Plan"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:395
+#: admin/class-seo-repair-kit-link-scanner.php:405
 msgid "Unlimited Broken Links + 404 Monitor active"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:396
+#: admin/class-seo-repair-kit-link-scanner.php:406
 msgid "Posts, Pages, and public custom post types can be scanned without the free scan limit."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:404
+#: admin/class-seo-repair-kit-link-scanner.php:414
 msgid "Select Post Type:"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:415
+#: admin/class-seo-repair-kit-link-scanner.php:425
 msgid "Start Scan"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:424
+#: admin/class-seo-repair-kit-link-scanner.php:434
 msgid "Last scan"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:439
+#: admin/class-seo-repair-kit-link-scanner.php:449
 #: admin/class-seo-repair-kit-scan-links.php:104
 msgid "Scanning links..."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:450
+#: admin/class-seo-repair-kit-link-scanner.php:460
 msgid "No scan yet!"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:451
+#: admin/class-seo-repair-kit-link-scanner.php:461
 msgid "Pick a post type and click \"Start Scan\" to begin."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:586
+#: admin/class-seo-repair-kit-link-scanner.php:593
 msgid "Auto Scan admin module is not available."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:736
+#: admin/class-seo-repair-kit-link-scanner.php:721
 msgid "Total occurrences tracked"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:741
+#: admin/class-seo-repair-kit-link-scanner.php:726
 msgid "Distinct 404 pages found"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:744
+#: admin/class-seo-repair-kit-link-scanner.php:729
 msgid "Log Entries"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:746
+#: admin/class-seo-repair-kit-link-scanner.php:731
 msgid "Total logged entries"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:753
-#: admin/class-seo-repair-kit-link-scanner.php:858
+#: admin/class-seo-repair-kit-link-scanner.php:738
+#: admin/class-seo-repair-kit-link-scanner.php:843
 #: admin/class-seo-repair-kit-redirection.php:2119
 msgid "Hits"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:762
+#: admin/class-seo-repair-kit-link-scanner.php:747
 msgid "No data yet"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:778
+#: admin/class-seo-repair-kit-link-scanner.php:763
 msgid "Filter by URL"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:786
+#: admin/class-seo-repair-kit-link-scanner.php:771
 msgid "Filter by IP"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:794
+#: admin/class-seo-repair-kit-link-scanner.php:779
 msgid "Sort by"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:802
+#: admin/class-seo-repair-kit-link-scanner.php:787
 msgid "Desc"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:803
+#: admin/class-seo-repair-kit-link-scanner.php:788
 msgid "Asc"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:809
+#: admin/class-seo-repair-kit-link-scanner.php:794
 msgid "Apply Filters"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:820
+#: admin/class-seo-repair-kit-link-scanner.php:805
 msgid "Delete Selected"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:821
+#: admin/class-seo-repair-kit-link-scanner.php:806
 msgid "Ignore Selected"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:847
+#: admin/class-seo-repair-kit-link-scanner.php:832
 msgid "404 Error Logs"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:849
+#: admin/class-seo-repair-kit-link-scanner.php:834
 #, php-format
 msgid "%s entry"
 msgid_plural "%s entries"
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:861
+#: admin/class-seo-repair-kit-link-scanner.php:846
 msgid "First Seen"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:862
+#: admin/class-seo-repair-kit-link-scanner.php:847
 msgid "Last Seen"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:876
+#: admin/class-seo-repair-kit-link-scanner.php:861
 #: admin/class-seo-repair-kit-scan-links.php:185
 msgid "Open URL"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:920
+#: admin/class-seo-repair-kit-link-scanner.php:905
 msgid "No 404 errors found"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:921
+#: admin/class-seo-repair-kit-link-scanner.php:906
 msgid "Try adjusting your filters or check back later."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:936
+#: admin/class-seo-repair-kit-link-scanner.php:921
 #: admin/class-seo-repair-kit-redirection.php:948
 #, php-format
 msgid "Showing all %1$d log entries"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:943
+#: admin/class-seo-repair-kit-link-scanner.php:928
 #: admin/class-seo-repair-kit-redirection.php:955
 #, php-format
 msgid "Showing %1$d to %2$d of %3$d log entries"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:974
+#: admin/class-seo-repair-kit-link-scanner.php:959
 #: admin/class-seo-repair-kit-redirection.php:977
 #: admin/class-seo-repair-kit-redirection.php:2226
 msgid "Previous page"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:1026
+#: admin/class-seo-repair-kit-link-scanner.php:1011
 #: admin/class-seo-repair-kit-redirection.php:1033
 #: admin/class-seo-repair-kit-redirection.php:2283
 msgid "Next page"
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:1071
-#: admin/class-seo-repair-kit-link-scanner.php:1136
-#: admin/class-seo-repair-kit-link-scanner.php:1229
-#: admin/class-seo-repair-kit-link-scanner.php:1319
-#: admin/class-seo-repair-kit-link-scanner.php:1441
-#: admin/class-seo-repair-kit-link-scanner.php:1526
+#: admin/class-seo-repair-kit-link-scanner.php:1056
+#: admin/class-seo-repair-kit-link-scanner.php:1121
+#: admin/class-seo-repair-kit-link-scanner.php:1214
+#: admin/class-seo-repair-kit-link-scanner.php:1304
+#: admin/class-seo-repair-kit-link-scanner.php:1426
+#: admin/class-seo-repair-kit-link-scanner.php:1511
 #: admin/class-seo-repair-kit-smart-redirects.php:400
 msgid "Invalid request."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:1080
-#: admin/class-seo-repair-kit-link-scanner.php:1145
-#: admin/class-seo-repair-kit-link-scanner.php:1238
-#: admin/class-seo-repair-kit-link-scanner.php:1328
-#: admin/class-seo-repair-kit-link-scanner.php:1450
-#: admin/class-seo-repair-kit-link-scanner.php:1535
+#: admin/class-seo-repair-kit-link-scanner.php:1065
+#: admin/class-seo-repair-kit-link-scanner.php:1130
+#: admin/class-seo-repair-kit-link-scanner.php:1223
+#: admin/class-seo-repair-kit-link-scanner.php:1313
+#: admin/class-seo-repair-kit-link-scanner.php:1435
+#: admin/class-seo-repair-kit-link-scanner.php:1520
 msgid "Security token missing. Please refresh the page and try again."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:1084
-#: admin/class-seo-repair-kit-link-scanner.php:1149
-#: admin/class-seo-repair-kit-link-scanner.php:1242
-#: admin/class-seo-repair-kit-link-scanner.php:1332
-#: admin/class-seo-repair-kit-link-scanner.php:1454
-#: admin/class-seo-repair-kit-link-scanner.php:1539
+#: admin/class-seo-repair-kit-link-scanner.php:1069
+#: admin/class-seo-repair-kit-link-scanner.php:1134
+#: admin/class-seo-repair-kit-link-scanner.php:1227
+#: admin/class-seo-repair-kit-link-scanner.php:1317
+#: admin/class-seo-repair-kit-link-scanner.php:1439
+#: admin/class-seo-repair-kit-link-scanner.php:1524
 #: admin/class-seo-repair-kit-robots-llms.php:850
 #: admin/class-seo-repair-kit-robots-llms.php:889
 #: admin/class-seo-repair-kit-robots-llms.php:918
@@ -2214,16 +2371,16 @@ msgstr ""
 msgid "Security check failed. Please refresh the page and try again."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:1169
+#: admin/class-seo-repair-kit-link-scanner.php:1154
 msgid "Invalid log IDs."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:1214
+#: admin/class-seo-repair-kit-link-scanner.php:1199
 msgid "Failed to process 404 logs."
 msgstr ""
 
-#: admin/class-seo-repair-kit-link-scanner.php:1271
-#: admin/class-seo-repair-kit-link-scanner.php:1291
+#: admin/class-seo-repair-kit-link-scanner.php:1256
+#: admin/class-seo-repair-kit-link-scanner.php:1276
 msgid "Failed to clear 404 logs."
 msgstr ""
 
@@ -2700,6 +2857,7 @@ msgid "Clear Logs"
 msgstr ""
 
 #: admin/class-seo-repair-kit-redirection.php:813
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:42
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-alerts.php:245
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:369
 #: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:264
@@ -2709,11 +2867,17 @@ msgstr ""
 #: admin/class-seo-repair-kit-redirection.php:815
 #: admin/class-seo-repair-kit-redirection.php:2114
 #: admin/class-seo-repair-kit-smart-redirects.php:921
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:195
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:290
 msgid "Source URL"
 msgstr ""
 
 #: admin/class-seo-repair-kit-redirection.php:816
 #: admin/class-seo-repair-kit-redirection.php:2115
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:40
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:267
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:197
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:536
 msgid "Target URL"
 msgstr ""
 
@@ -2873,6 +3037,7 @@ msgstr ""
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-settings.php:272
 #: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:116
 #: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:708
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:675
 #: includes/spam-monitor-backend/class-srk-spam-monitor-alerts.php:489
 #: includes/spam-monitor-backend/class-srk-spam-monitor-scheduler.php:632
 msgid "Disabled"
@@ -2933,6 +3098,9 @@ msgstr ""
 
 #: admin/class-seo-repair-kit-redirection.php:2116
 #: admin/class-seo-repair-kit-scan-links.php:145
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:211
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:130
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:245
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-alerts.php:247
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:371
 msgid "Type"
@@ -2942,6 +3110,10 @@ msgstr ""
 #: admin/class-seo-repair-kit-scan-links.php:146
 #: admin/class-seo-repair-kit-smart-redirects.php:923
 #: admin/class-seo-repair-kit-upgrade-pro.php:331
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:41
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:271
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:212
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:104
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-alerts.php:251
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:374
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-gsc-cleanup.php:401
@@ -3010,8 +3182,8 @@ msgstr ""
 #: admin/class-seo-repair-kit-robots-llms.php:89
 #: includes/class-seo-repair-kit-elementor-integration.php:1163
 #: includes/class-seo-repair-kit-gutenberg-integration.php:867
-#: admin/js/srk-gutenberg-meta-panel.js:4286
-#: admin/js/srk-gutenberg-meta-panel.js:4287
+#: admin/js/srk-gutenberg-meta-panel.js:4276
+#: admin/js/srk-gutenberg-meta-panel.js:4277
 msgid "Saved successfully!"
 msgstr ""
 
@@ -3037,10 +3209,6 @@ msgstr ""
 
 #: admin/class-seo-repair-kit-robots-llms.php:134
 msgid "Access to llms.txt is blocked for this bot."
-msgstr ""
-
-#: admin/class-seo-repair-kit-robots-llms.php:213
-msgid "You do not have permission to access this page."
 msgstr ""
 
 #: admin/class-seo-repair-kit-robots-llms.php:224
@@ -3206,7 +3374,7 @@ msgstr ""
 #: admin/class-seo-repair-kit-robots-llms.php:604
 #: includes/class-seo-repair-kit-elementor-integration.php:1166
 #: includes/class-seo-repair-kit-gutenberg-integration.php:870
-#: admin/js/srk-gutenberg-meta-panel.js:628
+#: admin/js/srk-gutenberg-meta-panel.js:627
 msgid "Reset to Default"
 msgstr ""
 
@@ -3469,6 +3637,7 @@ msgid "ID"
 msgstr ""
 
 #: admin/class-seo-repair-kit-scan-links.php:144
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:183
 #: includes/class-seo-repair-kit-schema-validator.php:573
 msgid "Title"
 msgstr ""
@@ -3500,6 +3669,7 @@ msgid "Free Link Scanner stopped at %d links. Add Unlimited Broken Links + 404 M
 msgstr ""
 
 #: admin/class-seo-repair-kit-scan-links.php:214
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:536
 msgid "Download CSV"
 msgstr ""
 
@@ -3587,25 +3757,12 @@ msgstr ""
 msgid "Get Premium"
 msgstr ""
 
-#: admin/class-seo-repair-kit-schema-manager.php:244
-#: admin/class-seo-repair-kit-schema-manager.php:434
-#: admin/class-seo-repair-kit-schema-ui.php:294
-#: admin/class-seo-repair-kit-upgrade-pro.php:223
-#: admin/class-seo-repair-kit-upgrade-pro.php:224
-#: admin/class-seo-repair-kit-upgrade-pro.php:246
-msgid "Refresh License Status"
-msgstr ""
-
 #: admin/class-seo-repair-kit-schema-manager.php:249
 msgid "If your license status looks outdated, refresh it from CRM and try again."
 msgstr ""
 
 #: admin/class-seo-repair-kit-schema-manager.php:267
 msgid "JSON-LD complies with schema.org vocabulary and follows Google rich-result guidelines where applicable."
-msgstr ""
-
-#: admin/class-seo-repair-kit-schema-manager.php:422
-msgid "Premium Required"
 msgstr ""
 
 #: admin/class-seo-repair-kit-schema-manager.php:424
@@ -3689,6 +3846,8 @@ msgid "Schema Already Configured"
 msgstr ""
 
 #: admin/class-seo-repair-kit-schema-ui.php:428
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:602
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:417
 msgid "Close"
 msgstr ""
 
@@ -4062,11 +4221,6 @@ msgstr ""
 msgid "Could not create the CSV export."
 msgstr ""
 
-#: admin/class-seo-repair-kit-spam-monitor.php:260
-#: admin/class-seo-repair-kit-weekly-summary.php:1189
-msgid "Dashboard"
-msgstr ""
-
 #: admin/class-seo-repair-kit-spam-monitor.php:261
 #: admin/class-seo-repair-kit-spam-monitor.php:289
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:201
@@ -4359,7 +4513,7 @@ msgid "Find broken links, check internal and external URLs, monitor 404 errors, 
 msgstr ""
 
 #: admin/class-seo-repair-kit-upgrade-pro.php:285
-msgid "Create and manage redirects to keep changed URLs organized safely inside WordPress."
+msgid "Discover contextual link opportunities, index content, review orphan pages, and improve topic paths with editor and AI-assisted suggestions."
 msgstr ""
 
 #: admin/class-seo-repair-kit-upgrade-pro.php:294
@@ -4522,6 +4676,7 @@ msgid "Data retrieved from database"
 msgstr ""
 
 #: admin/class-seo-repair-kit-weekly-summary.php:755
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:452
 #: includes/spam-monitor-backend/class-srk-spam-monitor-scheduler.php:544
 msgid "Unknown"
 msgstr ""
@@ -4760,6 +4915,1148 @@ msgstr ""
 msgid "from now"
 msgstr ""
 
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:23
+msgid "Inserted Links"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:24
+msgid "Manage internal links inserted from opportunities or removed from content."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:28
+msgid "Inserted"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:29
+msgid "Pending Opportunities"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:30
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:59
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:219
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:290
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:451
+msgid "Ignored"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:31
+#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-gsc-cleanup.php:519
+msgid "Removed"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:38
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:127
+msgid "Source Post"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:39
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:426
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:198
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:293
+msgid "Anchor Text"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:50
+msgid "No approved links found yet."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:87
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:88
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:290
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:291
+msgid "View post"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:97
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:98
+msgid "Remove inserted link"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:116
+#, php-format
+msgid "Showing %1$d-%2$d of %3$d inserted links"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:129
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:349
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:487
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:293
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:345
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:305
+msgid "Rows per page"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:72
+msgid "Auto Linking Rules"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:75
+msgid "Create keyword-to-URL rules, scan only matching content, apply selected links, and remove auto links safely."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:87
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:222
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:430
+msgid "Rule Settings"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:105
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:540
+msgid "Active Links"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:133
+msgid "Create Rule"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:143
+msgid "Keyword / Anchor Text"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:149
+msgid "e.g. SEO audit"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:157
+msgid "Destination URL"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:172
+msgid "Selection Mode"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:195
+msgid "Auto"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:215
+msgid "Case sensitive"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:231
+msgid "Create & Scan Rule"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:251
+msgid "Rules"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:269
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:393
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:398
+msgid "Links"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:285
+msgid "Loading rules..."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:305
+msgid "Content Matches Found"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:314
+msgid "Apply Selected"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:323
+msgid "Remove Rule Links"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:335
+msgid "Create or scan a rule to see only posts containing the keyword."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:356
+msgid "You are about to delete an Autolinking Rule"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:359
+msgid "Do you want to remove the rule, but leave the links in the content?"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:363
+msgid "Or do you want to remove the links too?"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:368
+msgid "Delete Rule And Links"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:372
+msgid "Just Delete Rule"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:431
+msgid "Configure advanced options for this auto-link rule."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:446
+msgid "Max Links Per Post"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:455
+msgid "Limits the number of automatic links inserted into one source post."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:460
+msgid "Max Links Per Keyword"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:470
+msgid "Default Link Priority"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:479
+msgid "Higher priority links are inserted first when multiple keywords match the same sentence."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:484
+msgid "Only add links to posts published after the given date"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:496
+msgid "Target Post Types"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:523
+msgid "Add link if post already has this link?"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:533
+msgid "Only create internal links when target is published?"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:548
+msgid "Restrict autolinks to specific categories"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:574
+msgid "Restrict autolinks to specific tags"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:148
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-dashboard.php:79
+msgid "Indexed Content"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:156
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:385
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:359
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:390
+msgid "Domains Report"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:166
+msgid "Total Indexed"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:170
+msgid "Pages"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:174
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:392
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:397
+msgid "Posts"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:178
+msgid "CPT Items"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:185
+msgid "Website Content Scan"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:186
+msgid "System idle"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:190
+msgid "Complete"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:198
+msgid "Start Scanning"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:201
+msgid "Pause"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:210
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:500
+msgid "Post Title"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:213
+msgid "Word Count"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:215
+msgid "Inbound Internal"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:216
+msgid "Inbound Internal Links are links on other pages on this site that are pointing to this page."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:221
+msgid "Outbound Internal"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:222
+msgid "Outbound Internal Links are links on this page that point to other pages on this site."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:227
+msgid "Outbound External"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:228
+msgid "Outbound External Links are links on this page that point to other websites."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:232
+msgid "Last Indexed"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:301
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:302
+msgid "Edit post"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:312
+msgid "No indexed content found yet. Click Start Indexing to build the content index."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:336
+#, php-format
+msgid "Showing %1$d-%2$d of %3$d indexed items"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:386
+msgid "Domain-level external link reporting will use indexed external links from the content index."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:391
+#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-alerts.php:232
+#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-alerts.php:246
+#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:306
+#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:370
+#: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:123
+#: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:237
+#: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:259
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:291
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:396
+msgid "Domain"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:433
+msgid "View Posts"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:436
+msgid "View Links"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:444
+msgid "No domains found."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:456
+#, php-format
+msgid "Showing %1$d-%2$d of %3$d domains"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:463
+msgid "No domains found"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-dashboard.php:22
+msgid "No indexed content data is available yet."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-dashboard.php:26
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:3964
+msgid "Never"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-dashboard.php:61
+msgid "Internal Linking Health Dashboard"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-dashboard.php:68
+msgid "Overview of your website's internal linking structure and opportunities."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-dashboard.php:92
+msgid "Internal Links"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-dashboard.php:105
+msgid "Opportunities"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-dashboard.php:118
+msgid "Auto Links"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-dashboard.php:144
+msgid "Last Index"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-dashboard.php:166
+msgid "Health Score "
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-dashboard.php:210
+msgid "Recent Activity"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-dashboard.php:226
+msgid "No activity is available yet."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-dashboard.php:275
+msgid "Recommended Actions"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-dashboard.php:292
+msgid "Run Content Index"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-dashboard.php:309
+msgid "Review Link Opportunities"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-dashboard.php:326
+msgid "Fix Orphan Content"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:38
+msgid "Review and approve internal link suggestions generated from your indexed content and active target keywords."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:44
+msgid "Generate Opportunities"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:50
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:388
+msgid "Pending"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:52
+msgid "Highest Score"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:58
+msgid "Approved Today"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:68
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:70
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:158
+msgid "Search"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:69
+msgid "Search source, target, anchor..."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:84
+#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:297
+#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-rules.php:609
+#: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:250
+msgid "Clear"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:90
+msgid "Suggestion Type:"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:95
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:168
+msgid "Rule-Based"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:96
+msgid "AI Suggestion"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:128
+msgid "Anchor"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:129
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:216
+msgid "Target Post"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:131
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:428
+#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-alerts.php:249
+#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:310
+#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:373
+#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-gsc-cleanup.php:365
+#: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:210
+#: includes/spam-monitor-backend/class-srk-spam-monitor-alerts.php:616
+msgid "Score"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:140
+msgid "No pending opportunities found. Run Content Index and Target Keywords first, then refresh opportunities."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:167
+msgid "AI Semantic"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:210
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:239
+msgid "Untitled target"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:222
+msgid "View target post"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:259
+msgid "Apply Link"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-link-opportunities.php:277
+#, php-format
+msgid "Showing %1$d-%2$d of %3$d opportunities"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:102
+msgid "Orphan Content Discovery"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:106
+msgid "Detect pages that have no inbound links, making them hard for users and Google to find."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:118
+msgid "Refresh Orphan Status"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:128
+msgid "Critical Orphans"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:133
+msgid "Low Inbound"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:138
+msgid "Healthy Content"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:143
+msgid "Ignored Items"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:164
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:247
+msgid "Risk Level"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:179
+msgid "All Active"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:199
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:449
+msgid "Low"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:209
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:450
+msgid "Healthy"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:244
+msgid "Post/Page Title"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:246
+msgid "Inbound Links"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:283
+msgid "Find Opportunities"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:299
+msgid "No orphan content found. Run Content Index first or refresh orphan status."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:311
+#, php-format
+msgid "Showing %1$d-%2$d of %3$d orphan items"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:404
+msgid "Layman Explanation"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:405
+msgid "Orphan Content means pages that no other page links to. These pages are harder for users and search engines to discover."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:412
+msgid "Orphan Link Opportunities"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:425
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:194
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:289
+msgid "Source Page"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:427
+msgid "Sentence"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:434
+msgid "No opportunities loaded."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-reports.php:80
+msgid "Smart Reports"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-reports.php:81
+msgid "Visual insights into your internal and external linking profile."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-reports.php:116
+msgid "Explanation"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-reports.php:120
+msgid "Reports help you understand how your website pages connect with each other and where improvements are needed."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:40
+msgid "Internal Linking Settings"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:48
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:69
+msgid "General Settings"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:58
+msgid "AI Settings"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:75
+msgid "Enable Internal Linking"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:76
+msgid "Globally toggle the internal linking module."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:86
+msgid "Enable Auto Linking"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:87
+msgid "Allow keyword rules to create links automatically."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:96
+msgid "Skip Existing Links"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:97
+msgid "Skip Headings (H1-H6)"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:98
+msgid "Skip HTML Blocks"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:111
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:190
+msgid "Stop / Ignore Words"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:154
+msgid "Content Language"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:180
+msgid "Select according to your Website Language."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:197
+msgid "Enter one ignored word or phrase per line. Saved changes apply only to the currently selected language."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:207
+msgid "One word or phrase per line"
+msgstr ""
+
+#. translators: %d: number of stopwords
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:226
+#, php-format
+msgid "Using saved language override: %d entries."
+msgstr ""
+
+#. translators: %d: number of stopwords
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:237
+#, php-format
+msgid "Using the default language file: %d entries."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:259
+msgid "Content Scope"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:264
+msgid "Post Types Whitelist"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:301
+msgid "Taxonomies Whitelist"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:336
+msgid "Process Post Statuses"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:352
+msgid "Publish"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:370
+msgid "Draft"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:397
+msgid "Link Controls & Timeline"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:405
+msgid "Max Outbound Links / Post"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:412
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:437
+#: admin/meta-manager/class-seo-repair-kit-meta-manager-archives.php:621
+#: admin/meta-manager/class-seo-repair-kit-meta-manager-archives.php:659
+msgid "Unlimited"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:421
+msgid "Leave empty for no outbound link limit."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:430
+msgid "Max Inbound Links / Post"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:446
+msgid "Leave empty for no inbound link limit."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:456
+msgid "Suggestions Limit"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:462
+msgid "Posts Older Than"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:463
+msgid "Posts Published After"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:471
+msgid "Matching Rules"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:475
+msgid "Same Category Only"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:476
+msgid "Link to Orphaned Only"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:477
+msgid "Ignore Numbers"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:482
+msgid "Target Keyword Sources"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:504
+msgid "Prioritize anchors matching the title."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:524
+msgid "URL Slug"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:528
+msgid "Extract keywords from permalinks."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:548
+#: admin/meta-manager/class-seo-repair-kit-meta-manager-main.php:755
+msgid "Taxonomies"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:552
+msgid "Use categories, tags, and selected taxonomy terms."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:572
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:357
+msgid "Custom Keywords"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:576
+msgid "Use custom target keywords."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:586
+msgid "Content Processing"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:591
+msgid "Skip N Sentences"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:592
+msgid "Skip N Paragraphs"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:595
+msgid "Min Anchor Words"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:616
+msgid "Max Anchor Words"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:635
+msgid "Max Keywords / Post"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:662
+msgid "AI Engine"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:674
+msgid "Enable AI Engine"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:681
+msgid "Use AI to find internal-link opportunities based on the meaning and context of your content."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:706
+msgid "AI Batch Size"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:712
+msgid "(5–10)"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:734
+msgid "Number of content items processed in each background AI batch."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:746
+msgid "AI API Key"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:767
+msgid "Enter your AI provider API key"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:774
+msgid "Enter your AI API key, then click Save Changes to save it."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:791
+msgid "Test Connection"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:801
+msgid "Run AI Pipeline Now"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:887
+msgid "AI Analysis Status"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:894
+msgid "Content Intelligence Overview"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:909
+msgid "AI processing is running"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:916
+msgid "Waiting for AI analysis"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:923
+msgid "AI analysis is up to date"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:930
+msgid "Ready for AI analysis"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:965
+msgid "Content Analyzed"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:972
+msgid "Content with a ready AI embedding."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:1003
+msgid "Waiting to Analyze"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:1010
+msgid "Content still waiting for AI processing."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:1041
+msgid "AI Link Opportunities"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:1048
+msgid "Canonical link opportunities selected by AI."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:1066
+msgid "AI Content Analysis"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:1087
+msgid "AI content analysis progress"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:1111
+#, php-format
+msgid "%1$s of %2$s content items analyzed"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:1137
+msgid "AI Link Opportunity Discovery"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:1160
+msgid "AI link opportunity discovery progress"
+msgstr ""
+
+#. translators: 1: processed posts, 2: total posts, 3: AI opportunities
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:1187
+#, php-format
+msgid "%1$s of %2$s analyzed content items checked — %3$s opportunities found"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:1224
+msgid "System active"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:1224
+msgid "Ready to save"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-settings.php:1227
+#: admin/meta-manager/class-seo-repair-kit-meta-manager-advanced.php:474
+#: admin/meta-manager/class-seo-repair-kit-meta-manager-archives.php:681
+#: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:832
+#: admin/meta-manager/class-seo-repair-kit-meta-manager-global.php:451
+#: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:1144
+#: includes/class-seo-repair-kit-elementor-integration.php:1168
+#: includes/class-seo-repair-kit-gutenberg-integration.php:872
+msgid "Save Changes"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:115
+msgid "Target Keywords Engine"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:123
+msgid "Refresh Keywords"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:130
+msgid "Post Coverage"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:134
+msgid "Total Keywords"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:138
+msgid "Custom/Manual"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:142
+msgid "GSC Impressions"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:165
+msgid "Search post title or keyword..."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:178
+msgid "Active Sources:"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:184
+msgid "Slug"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:185
+msgid "Taxonomy"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:186
+#: admin/meta-manager/class-seo-repair-kit-meta-manager-global.php:248
+msgid "Custom"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:217
+msgid "Active Keywords"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:219
+msgid "Impr."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:220
+msgid "CTR"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:221
+msgid "Avg. Pos"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:273
+msgid "Manage"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:280
+msgid "No keywords found. First run Content Index, then click Refresh Keywords."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:290
+#, php-format
+msgid "Showing %1$d-%2$d of %3$d keyword groups"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:345
+msgid "Manage detected and custom keywords for this target post."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:354
+msgid "Detected Keywords"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:361
+msgid "Add custom keyword..."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-target-keywords.php:363
+msgid "Add Keyword"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:21
+msgid "Global URL Changer"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:22
+msgid "Safely replace old URLs with new URLs across your website content."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:29
+msgid "Safe replacement workflow"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:33
+msgid "Run a dry scan first, review affected posts, then confirm replacement."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:45
+msgid "URL Replacement"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:51
+msgid "Old URL or Path"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:61
+msgid "New URL or Path"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:72
+msgid "Run Dry Scan"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:80
+msgid "Replace URL"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:92
+msgid "URL Change Logs"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:99
+msgid "Old URL"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:100
+msgid "New URL"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:101
+msgid "Affected Posts"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:102
+msgid "Links Changed"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:103
+msgid "Failed"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:115
+msgid "No URL changes yet."
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:197
+msgid "Undo"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:234
+msgid "What this does"
+msgstr ""
+
+#: admin/internal-linking/class-seo-repair-kit-internal-linking-url-changer.php:239
+msgid "URL Changer searches post content, previews affected posts, replaces only matching href URLs, stores compact rollback positions, re-indexes changed posts, and supports conflict-safe Undo."
+msgstr ""
+
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-advanced.php:253
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-main.php:239
 msgid "Settings saved!"
@@ -4975,16 +6272,6 @@ msgstr ""
 msgid "This will be output on ALL non-singular pages (archives, search, taxonomies) as:"
 msgstr ""
 
-#: admin/meta-manager/class-seo-repair-kit-meta-manager-advanced.php:474
-#: admin/meta-manager/class-seo-repair-kit-meta-manager-archives.php:681
-#: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:832
-#: admin/meta-manager/class-seo-repair-kit-meta-manager-global.php:451
-#: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:1144
-#: includes/class-seo-repair-kit-elementor-integration.php:1168
-#: includes/class-seo-repair-kit-gutenberg-integration.php:872
-msgid "Save Changes"
-msgstr ""
-
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-advanced.php:476
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-archives.php:683
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:840
@@ -5195,7 +6482,7 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-content-types.php:648
 #: includes/class-seo-repair-kit-elementor-integration.php:1177
 #: includes/class-seo-repair-kit-gutenberg-integration.php:881
-#: admin/js/srk-gutenberg-meta-panel.js:676
+#: admin/js/srk-gutenberg-meta-panel.js:675
 msgid "View all tags →"
 msgstr ""
 
@@ -5210,7 +6497,7 @@ msgstr ""
 #: includes/class-seo-repair-kit-gutenberg-integration.php:392
 #: includes/class-seo-repair-kit-gutenberg-integration.php:876
 #: includes/class-seo-repair-kit-meta-ajaxs.php:534
-#: admin/js/srk-gutenberg-meta-panel.js:621
+#: admin/js/srk-gutenberg-meta-panel.js:620
 msgid "Meta Description"
 msgstr ""
 
@@ -5291,11 +6578,6 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-archives.php:615
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:588
 msgid "Max Snippet Length"
-msgstr ""
-
-#: admin/meta-manager/class-seo-repair-kit-meta-manager-archives.php:621
-#: admin/meta-manager/class-seo-repair-kit-meta-manager-archives.php:659
-msgid "Unlimited"
 msgstr ""
 
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-archives.php:622
@@ -5424,7 +6706,7 @@ msgstr ""
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-taxonomies.php:919
 #: includes/class-seo-repair-kit-elementor-integration.php:1180
 #: includes/class-seo-repair-kit-gutenberg-integration.php:884
-#: admin/js/srk-gutenberg-meta-panel.js:283
+#: admin/js/srk-gutenberg-meta-panel.js:282
 msgid "Search for an item..."
 msgstr ""
 
@@ -5462,10 +6744,6 @@ msgstr ""
 
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-global.php:205
 msgid "Show More..."
-msgstr ""
-
-#: admin/meta-manager/class-seo-repair-kit-meta-manager-global.php:248
-msgid "Custom"
 msgstr ""
 
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-global.php:260
@@ -5624,10 +6902,6 @@ msgstr ""
 msgid "Content Types"
 msgstr ""
 
-#: admin/meta-manager/class-seo-repair-kit-meta-manager-main.php:755
-msgid "Taxonomies"
-msgstr ""
-
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-main.php:760
 msgid "Image SEO"
 msgstr ""
@@ -5705,7 +6979,7 @@ msgstr ""
 #: includes/class-seo-repair-kit-elementor-integration.php:1171
 #: includes/class-seo-repair-kit-gutenberg-integration.php:385
 #: includes/class-seo-repair-kit-gutenberg-integration.php:875
-#: admin/js/srk-gutenberg-meta-panel.js:621
+#: admin/js/srk-gutenberg-meta-panel.js:620
 msgid "SEO Title"
 msgstr ""
 
@@ -5929,16 +7203,6 @@ msgstr ""
 msgid "All risk"
 msgstr ""
 
-#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-alerts.php:232
-#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-alerts.php:246
-#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:306
-#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:370
-#: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:123
-#: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:237
-#: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:259
-msgid "Domain"
-msgstr ""
-
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-alerts.php:234
 msgid "All status"
 msgstr ""
@@ -5957,15 +7221,6 @@ msgstr ""
 #: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:209
 #: includes/spam-monitor-backend/class-srk-spam-monitor-alerts.php:615
 msgid "Risk"
-msgstr ""
-
-#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-alerts.php:249
-#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:310
-#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:373
-#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-gsc-cleanup.php:365
-#: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:210
-#: includes/spam-monitor-backend/class-srk-spam-monitor-alerts.php:616
-msgid "Score"
 msgstr ""
 
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-alerts.php:250
@@ -6093,6 +7348,7 @@ msgstr ""
 
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:137
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-settings.php:351
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:548
 msgid "Last Scan"
 msgstr ""
 
@@ -6200,12 +7456,6 @@ msgstr ""
 #: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:198
 #: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:248
 msgid "Clear SERP Data"
-msgstr ""
-
-#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:297
-#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-rules.php:609
-#: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:250
-msgid "Clear"
 msgstr ""
 
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:308
@@ -6408,10 +7658,6 @@ msgstr ""
 
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-gsc-cleanup.php:516
 msgid "Server Error"
-msgstr ""
-
-#: admin/spam-monitor/class-seo-repair-kit-spam-monitor-gsc-cleanup.php:519
-msgid "Removed"
 msgstr ""
 
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-gsc-cleanup.php:522
@@ -7275,13 +8521,13 @@ msgstr ""
 
 #: includes/class-seo-repair-kit-elementor-integration.php:1174
 #: includes/class-seo-repair-kit-gutenberg-integration.php:878
-#: admin/js/srk-gutenberg-meta-panel.js:787
+#: admin/js/srk-gutenberg-meta-panel.js:786
 msgid "Title shown in search results"
 msgstr ""
 
 #: includes/class-seo-repair-kit-elementor-integration.php:1175
 #: includes/class-seo-repair-kit-gutenberg-integration.php:879
-#: admin/js/srk-gutenberg-meta-panel.js:787
+#: admin/js/srk-gutenberg-meta-panel.js:786
 msgid "Description shown in search results"
 msgstr ""
 
@@ -7292,21 +8538,21 @@ msgstr ""
 
 #: includes/class-seo-repair-kit-elementor-integration.php:1178
 #: includes/class-seo-repair-kit-gutenberg-integration.php:882
-#: admin/js/srk-gutenberg-meta-panel.js:248
-#: admin/js/srk-gutenberg-meta-panel.js:812
+#: admin/js/srk-gutenberg-meta-panel.js:247
+#: admin/js/srk-gutenberg-meta-panel.js:811
 msgid "Select a Tag"
 msgstr ""
 
 #: includes/class-seo-repair-kit-elementor-integration.php:1179
 #: includes/class-seo-repair-kit-gutenberg-integration.php:883
-#: admin/js/srk-gutenberg-meta-panel.js:248
-#: admin/js/srk-gutenberg-meta-panel.js:834
+#: admin/js/srk-gutenberg-meta-panel.js:247
+#: admin/js/srk-gutenberg-meta-panel.js:833
 msgid "Replace or Delete Tag"
 msgstr ""
 
 #: includes/class-seo-repair-kit-elementor-integration.php:1181
 #: includes/class-seo-repair-kit-gutenberg-integration.php:885
-#: admin/js/srk-gutenberg-meta-panel.js:252
+#: admin/js/srk-gutenberg-meta-panel.js:251
 msgid "Delete Tag"
 msgstr ""
 
@@ -7488,6 +8734,8 @@ msgid "This is an automated message from SEO Repair Kit v%s"
 msgstr ""
 
 #: includes/class-seo-repair-kit-meta-ajaxs.php:131
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:132
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1096
 msgid "You do not have permission to perform this action."
 msgstr ""
 
@@ -7523,6 +8771,7 @@ msgid "No settings data received."
 msgstr ""
 
 #: includes/class-seo-repair-kit-meta-ajaxs.php:317
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:300
 msgid "Settings saved successfully."
 msgstr ""
 
@@ -8111,6 +9360,1184 @@ msgstr ""
 msgid "Consider adding a Sitemap directive to help search engines discover your content."
 msgstr ""
 
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:40
+msgid "Invalid WordPress post ID."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:50
+msgid "AI semantic engine is disabled."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:116
+msgid "The WordPress post does not contain enough content for AI processing."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:214
+msgid "Embedding provider returned an empty vector."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:244
+msgid "Embedding was generated but could not be stored in the database."
+msgstr ""
+
+#. translators: %s: semantic similarity percentage
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:541
+#, php-format
+msgid "AI semantic similarity: %s. Anchor selected through local phrase matching."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:726
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:813
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:844
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1978
+msgid "AI provider layer is not loaded."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:932
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:899
+msgid "Embedding input cannot be empty."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:975
+msgid "Embedding provider returned an invalid chunk vector."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:1089
+msgid "No embedding vectors were generated."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:1106
+msgid "Embedding chunk dimensions are invalid."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:1142
+msgid "Embedding provider returned inconsistent vector dimensions."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:1170
+msgid "Embedding provider returned an invalid vector value."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:1186
+msgid "Embedding chunk weight is invalid."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:1650
+msgid "WordPress post could not be found."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:1660
+msgid "Only published content can be processed by the AI engine."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-engine.php:1695
+msgid "This post type is excluded from Internal Linking."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:338
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:935
+msgid "AI API key is required."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:446
+msgid "The AI API key provider is not supported."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:543
+msgid "No compatible embedding model is available for this API key."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:607
+msgid "SEO Repair Kit could not identify or connect to this AI API key."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:663
+msgid "Unable to verify the OpenRouter API key."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:756
+msgid "Unable to load OpenRouter embedding models."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:863
+msgid "No compatible OpenRouter embedding model is currently available for this API key."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:950
+msgid "AI API base URL is required."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:960
+msgid "AI embedding model is required."
+msgstr ""
+
+#. translators: %s: provider request error
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:1037
+#, php-format
+msgid "AI embedding request failed: %s"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:1069
+#, php-format
+msgid "AI embedding provider returned HTTP %d."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:1096
+msgid "AI provider returned an invalid embedding response."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:1111
+msgid "AI provider returned an empty embedding vector."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:1155
+msgid "AI provider is not configured."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:1236
+msgid "AI chat request failed."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:1391
+msgid "Gemini embedding input is empty."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:1401
+msgid "Gemini API key is required."
+msgstr ""
+
+#. translators: %s: request error
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:1528
+#, php-format
+msgid "Gemini embedding request failed: %s"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:1564
+#, php-format
+msgid "Gemini embedding request returned HTTP %d."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:1592
+msgid "Gemini returned a response but no valid embedding vector was found."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ai-provider.php:1611
+msgid "Gemini returned an empty embedding vector."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:86
+msgid "You do not have permission to run this action."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:108
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:674
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:599
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:1026
+#: includes/internal-linking-backend/class-srk-internal-linking-url-changer.php:112
+#: includes/internal-linking-backend/class-srk-internal-linking-url-changer.php:360
+msgid "You do not have permission to edit this post."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:172
+msgid "Internal Linking database is not ready yet. Please open the WordPress admin area and try again."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:229
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:251
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:480
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:539
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1900
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1950
+msgid "Service layer is not loaded."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:247
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:362
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:528
+msgid "Missing scan ID."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:270
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:320
+msgid "Internal Linking settings class is not loaded."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:329
+msgid "Settings reset successfully."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:344
+msgid "Keywords engine is not loaded."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:382
+msgid "Unable to add keyword."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:385
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:421
+msgid "Custom keyword added."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:402
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:156
+msgid "Keyword is required."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:463
+msgid "Keywords generated successfully."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:502
+msgid "Unable to create opportunity scan run."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:572
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:690
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:735
+msgid "Missing opportunity ID."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:577
+msgid "Opportunity ignored."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:760
+msgid "Missing inserted link ID."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:793
+msgid "Invalid inserted link ID."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:799
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:2127
+msgid "Inserted link record was not found."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:803
+msgid "This link is not currently marked as inserted."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:828
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:2139
+msgid "Source post was not found."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:833
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1863
+msgid "You do not have permission to edit the source post."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:844
+msgid "The inserted link record does not contain a valid anchor or target URL."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:852
+msgid "The inserted link could not be found in the current post content. It may already have been edited or removed manually."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:889
+msgid "WordPress updated the post, but the internal link could not be verified as removed."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:901
+msgid "The internal link was removed, but its opportunity record could not be deleted."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:915
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:941
+msgid "Inserted link removed successfully."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1072
+msgid "Missing post ID."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1079
+msgid "Orphan content ignored."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1109
+msgid "Missing orphan content post ID."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1120
+msgid "The opportunity engine is unavailable."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1180
+msgid "Orphan content refreshed successfully."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1198
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:2224
+msgid "Missing keyword ID."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1204
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:2238
+msgid "Unable to delete custom keyword."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1209
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:2246
+msgid "Custom keyword deleted."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1253
+msgid "Rule created and scanned."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1342
+msgid "No auto-link rules created yet."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1383
+msgid "Edit rule"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1392
+msgid "Find matches"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1401
+msgid "Refresh rule"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1410
+msgid "Delete rule"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1430
+#, php-format
+msgid "Showing %d rules"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1452
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1584
+msgid "Missing rule ID."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1466
+msgid "Rule deleted."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1483
+msgid "Invalid rule status request."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1494
+msgid "Unable to update rule status."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1518
+msgid "Missing rule or post ID."
+msgstr ""
+
+#. translators: %d: number of removed links
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1553
+#, php-format
+msgid "%d auto link removed."
+msgid_plural "%d auto links removed."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of removed links
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1616
+#, php-format
+msgid "%d rule link removed."
+msgid_plural "%d rule links removed."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1646
+msgid "Settings saved."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1689
+msgid "Rule not found."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1739
+msgid "Rule updated and refreshed."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1777
+msgid "Reports service is missing."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1789
+msgid "No report data found."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1809
+msgid "No data available yet."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:1930
+msgid "Internal Linking database layer is not loaded."
+msgstr ""
+
+#. translators: %s: detected AI provider
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:2032
+#, php-format
+msgid "AI connection successful. SEO Repair Kit detected %s and selected a compatible embedding model automatically."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:2135
+msgid "Language stopword services are not loaded."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-ajax.php:2194
+msgid "Internal Linking service is unavailable."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:103
+msgid "Auto Linking is disabled. Enable Auto Linking from Internal Linking Settings before creating a rule."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:118
+msgid "This keyword already points to this target URL."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:127
+msgid "Unable to save auto-link rule."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:163
+msgid "Destination URL is required."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:170
+msgid "Destination URL is invalid."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:183
+msgid "Only internal URLs are allowed by current settings."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:213
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:490
+msgid "Auto-link rule not found."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:474
+msgid "Auto Linking is disabled. Enable it before applying rules."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:580
+msgid "Auto Linking is disabled. No links were inserted."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:592
+msgid "Rule or post is invalid."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:618
+msgid "The keyword is not present in this post."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:628
+msgid "Self-linking is not allowed."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:638
+msgid "Target post is not published."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:646
+msgid "Target URL already exists in this post."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:663
+msgid "No safe keyword match found."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:988
+msgid "Invalid rule or post ID."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:1002
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:1159
+msgid "Auto-link rule was not found."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:1016
+msgid "Invalid post."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-auto-linker.php:1041
+msgid "No auto link from this rule was found in the post."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:178
+msgid "Internal Linking database migration is already running."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:226
+msgid "Internal Linking database migration failed."
+msgstr ""
+
+#. translators: %s: table key.
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:587
+#, php-format
+msgid "Internal Linking database table is missing: %s"
+msgstr ""
+
+#. translators: 1: table key, 2: column name.
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:601
+#, php-format
+msgid "Internal Linking database column is missing: %1$s.%2$s"
+msgstr ""
+
+#. translators: 1: table key, 2: index name.
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:617
+#, php-format
+msgid "Internal Linking database index is missing: %1$s.%2$s"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:2352
+msgid "Internal Linking opportunity data migration failed."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:2449
+msgid "Internal Linking opportunity deduplication failed."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:3413
+msgid "Invalid rule ID."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:3421
+msgid "Keyword and destination URL are required."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:3481
+msgid "Invalid post ID for embedding."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:3510
+msgid "Unable to update the embedding record."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:3525
+msgid "Unable to insert the embedding record."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:3534
+msgid "Embedding was inserted but no database ID was returned."
+msgstr ""
+
+#. translators: 1: critical pages, 2: low inbound pages
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:3928
+#, php-format
+msgid "%1$d pages have no inbound links and %2$d pages have only one inbound link."
+msgstr ""
+
+#. translators: %d: critical orphan pages
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:3935
+#, php-format
+msgid "%d page has no inbound links."
+msgid_plural "%d pages have no inbound links."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: low inbound pages
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:3941
+#, php-format
+msgid "%d page has only one inbound link."
+msgid_plural "%d pages have only one inbound link."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:3950
+msgid "All indexed content has healthy inbound link coverage."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:3971
+#, php-format
+msgid "%d current link opportunity"
+msgid_plural "%d current link opportunities"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:3979
+#, php-format
+msgid "%d orphan page detected"
+msgid_plural "%d orphan pages detected"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:3986
+#, php-format
+msgid "%d active auto link"
+msgid_plural "%d active auto links"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:3991
+msgid "Content index refreshed"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:4006
+#: includes/internal-linking-backend/class-srk-internal-linking-db.php:4012
+msgid "No activity yet"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:282
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1839
+msgid "Invalid opportunity ID."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:298
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1481
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1845
+msgid "Opportunity not found."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:314
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1489
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1849
+msgid "This opportunity is no longer pending."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:333
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1485
+msgid "This opportunity does not belong to the current post."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:352
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:847
+msgid "You do not have permission to edit this Elementor post."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:366
+msgid "The source post is not an Elementor document."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:389
+msgid "The target post is not available."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:425
+msgid "The anchor or target URL is invalid."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:466
+msgid "The suggested anchor was not found in supported Elementor content. Regenerate the suggestion or edit the anchor."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:482
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:576
+msgid "This Elementor page already links to the selected target."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:490
+msgid "Link staged for Elementor. Save or update the post to apply and confirm it."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:542
+msgid "The link already exists in Elementor content and has been synchronized."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:592
+msgid "No supported Elementor content was found."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:641
+msgid "The suggested anchor was not found in supported Elementor text content. Regenerate the suggestion or edit the anchor."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:701
+msgid "The anchor exists, but it is inside protected or unsupported Elementor markup."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:737
+msgid "Elementor saved the document, but the inserted link could not be verified."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:753
+msgid "The link was saved in Elementor, but the opportunity status could not be synchronized."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:765
+msgid "Link inserted into Elementor content successfully."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:810
+msgid "Inserted opportunity not found."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:826
+msgid "This opportunity is not currently inserted."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:872
+msgid "The stored link information is incomplete."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:936
+msgid "The inserted link could not be found in supported Elementor content."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:968
+msgid "Elementor saved the document, but the link removal could not be verified."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:988
+msgid "The Elementor link was removed, but the Internal Linking record could not be deleted."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:1000
+msgid "Elementor link removed successfully."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:1585
+msgid "Invalid Elementor document data."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:1602
+msgid "The Elementor document could not be loaded or edited."
+msgstr ""
+
+#. translators: %s: Elementor error message
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:1699
+#, php-format
+msgid "Elementor could not save the link: %s"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-elementor.php:1717
+msgid "Elementor rejected the document save. The internal link was not stored."
+msgstr ""
+
+#. translators: %d: post ID
+#: includes/internal-linking-backend/class-srk-internal-linking-indexer.php:223
+#, php-format
+msgid "Opportunity refresh queued for post #%d."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-indexer.php:294
+msgid "Content indexing started."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-indexer.php:344
+msgid "Content indexing completed."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-indexer.php:344
+msgid "Indexing content..."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-keywords.php:214
+msgid "Refreshing target keywords."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-keywords.php:258
+msgid "Target keywords refreshed."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-keywords.php:258
+msgid "Refreshing target keywords..."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:30
+msgid "Internal Linking is disabled. Enable it before generating opportunities."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:41
+msgid "Generating  opportunities."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:132
+msgid "Rule opportunities completed."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:136
+msgid "Generating rule opportunities..."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1309
+msgid "Internal Linking is disabled. Enable it before finding orphan opportunities."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1316
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:2469
+msgid "Invalid orphan target post."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1324
+msgid "The selected orphan target is not available for opportunity discovery."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1495
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1859
+msgid "Source post not found."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1539
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1869
+msgid "The target post is unavailable."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1545
+msgid "The target URL could not be resolved."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1549
+msgid "The current editor content already links to this target."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1557
+msgid "Anchor text was not found in the current editor content. Update the anchor or regenerate suggestions."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1564
+msgid "Link added to the editor. Save or update the post to confirm it."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1878
+msgid "The opportunity does not contain a valid anchor or target URL."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1909
+msgid "The link exists, but its opportunity status could not be updated."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1915
+msgid "The link already existed and its status has been synchronized."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1926
+msgid "This source post already links to the selected target using another anchor."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1933
+msgid "Anchor text was not found in current content. Regenerate suggestions."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1959
+msgid "WordPress updated the post, but the inserted link could not be verified."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1969
+msgid "The link was inserted, but the opportunity status could not be updated."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:1976
+msgid "Link inserted successfully."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:2131
+msgid "This link is no longer marked as inserted."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:2146
+msgid "Target URL could not be resolved."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:2154
+msgid "The inserted link could not be found in the current source content. It may already have been edited or removed manually."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:2175
+msgid "Inserted internal link removed successfully."
+msgstr ""
+
+#. translators: %s: semantic similarity percentage
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:2330
+#, php-format
+msgid "AI semantic match with %s similarity."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:2475
+msgid "The selected orphan content could not be found."
+msgstr ""
+
+#. translators: %d: number of existing opportunities
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:2492
+#, php-format
+msgid "%d existing opportunity found."
+msgid_plural "%d existing opportunities found."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:2511
+msgid "Opportunities are already being generated for this content."
+msgstr ""
+
+#. translators: %d: number of generated opportunities
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:2546
+#, php-format
+msgid "%d new opportunity found."
+msgid_plural "%d new opportunities found."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-opportunities.php:2548
+msgid "No suitable source posts or pages were found for this orphan content."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-queue.php:400
+#: includes/internal-linking-backend/class-srk-internal-linking-queue.php:491
+msgid "Generating AI link opportunities."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-queue.php:555
+msgid "AI link opportunity discovery completed."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-queue.php:608
+msgid "Canonical opportunities completed."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-queue.php:631
+msgid "Generating AI embeddings from WordPress content."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:44
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:97
+msgid "No Report"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:134
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:188
+msgid "Internal Links Report"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:196
+msgid "Target Page"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:221
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:283
+msgid "External Links Report"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:292
+msgid "External URL"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:527
+msgid "Auto Linking Report"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-reports.php:544
+msgid "Removed Links"
+msgstr ""
+
+#. translators: 1: semantic similarity percentage, 2: rule-based reason
+#: includes/internal-linking-backend/class-srk-internal-linking-scoring.php:69
+#, php-format
+msgid "AI semantic gate (%1$d%%) + %2$s"
+msgstr ""
+
+#. translators: 1: existing reason, 2: GPT validation note
+#: includes/internal-linking-backend/class-srk-internal-linking-scoring.php:91
+#, php-format
+msgid "%1$s | GPT: %2$s"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-scoring.php:365
+msgid "Exact target keyword found"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-scoring.php:367
+msgid "Target keyword phrase found in content"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-scoring.php:369
+msgid "Specific target keyword terms found close together"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-scoring.php:375
+msgid "strong target keyword source"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-scoring.php:377
+msgid "target title match"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-scoring.php:379
+msgid "target slug match"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-scoring.php:382
+msgid "natural anchor length"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-scoring.php:385
+msgid "same topic bucket"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-scoring.php:389
+msgid "low inbound target"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:37
+msgid "Indexer is not loaded."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:95
+msgid "Internal Linking is disabled. Enable it from Internal Linking Settings before generating suggestions."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:109
+msgid "Opportunities engine is not loaded."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:142
+msgid "Opportunity generation stopped because Internal Linking is disabled."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:160
+msgid "Internal Linking is disabled."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:258
+msgid "Internal Linking is disabled. Enable it before running the AI pipeline."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:273
+msgid "Enable the AI Engine and save a valid AI API key before running the AI pipeline."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:285
+msgid "AI semantic pipeline queued."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:299
+msgid "AI semantic pipeline queued. Processing runs in the background."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:661
+msgid "Not Processed"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:666
+msgid "Rule-based suggestions are available now.  AI-Powered will appear after background processing completes."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:680
+msgid "Rule-based suggestions are fully usable. AI semantic enhancement is optional and currently disabled."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:689
+msgid "Processing"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:694
+msgid "Rule-based suggestions are ready to use. AI is enhancing this post in the background and does not block linking."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:706
+msgid "Ready"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:711
+msgid "AI semantic analysis is ready for the current saved version of this post."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:723
+msgid "Needs Attention"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:728
+msgid " AI-Powered  could not complete for this post. Rule-based suggestions remain available and can still be applied."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:740
+msgid "Needs Refresh"
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:745
+msgid "This post changed after its last AI analysis. Rule-based suggestions remain available while AI is refreshed."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:885
+msgid "Rule suggestions completed."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:937
+msgid "Rule-based opportunities completed."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:999
+msgid "Internal Linking is disabled in Settings."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:1011
+msgid "The selected post could not be found."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-service.php:1021
+msgid "You do not have permission to scan this post."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-url-changer.php:75
+msgid "No matching href links were found."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-url-changer.php:101
+msgid "Could not create URL change log."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-url-changer.php:174
+msgid "Saved content did not match the expected URL replacement, so the post was restored."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-url-changer.php:217
+msgid "Rollback metadata could not be saved, so the post was restored."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-url-changer.php:280
+msgid "URL change log not found."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-url-changer.php:289
+msgid "This legacy URL change cannot be undone safely with the new rollback format."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-url-changer.php:306
+msgid "This URL change is not currently available for Undo."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-url-changer.php:318
+msgid "Rollback data is missing for this URL change."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-url-changer.php:338
+msgid "Rollback metadata is incomplete."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-url-changer.php:350
+msgid "The affected post no longer exists."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-url-changer.php:600
+msgid "Rollback patch data is incomplete."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-url-changer.php:611
+msgid "Rollback patch data is empty."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-url-changer.php:661
+msgid "The current post content no longer matches the stored rollback positions."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-url-changer.php:719
+msgid "Old URL and New URL are required."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-url-changer.php:729
+msgid "Old URL and New URL cannot be the same."
+msgstr ""
+
+#: includes/internal-linking-backend/class-srk-internal-linking-url-changer.php:739
+msgid "Only valid full URLs or root-relative paths are allowed."
+msgstr ""
+
 #: includes/spam-monitor-backend/class-srk-search-console-service.php:35
 msgid "Sitemap check skipped for local, test, private, or non-HTTPS sites. Use a live HTTPS domain for cleanup checks."
 msgstr ""
@@ -8683,44 +11110,44 @@ msgstr ""
 msgid "Review scan history, alerts, Spam Rules, and the guided cleanup workflow in SEO Repair Kit."
 msgstr ""
 
-#: admin/js/srk-gutenberg-meta-panel.js:1255
+#: admin/js/srk-gutenberg-meta-panel.js:1254
 msgid "SEO settings updated from Classic Editor"
 msgstr ""
 
-#: admin/js/srk-gutenberg-meta-panel.js:1335
+#: admin/js/srk-gutenberg-meta-panel.js:1334
 msgid "Following Content Type settings (no local override)"
 msgstr ""
 
-#: admin/js/srk-gutenberg-meta-panel.js:1336
-#: admin/js/srk-gutenberg-meta-panel.js:1581
+#: admin/js/srk-gutenberg-meta-panel.js:1335
+#: admin/js/srk-gutenberg-meta-panel.js:1580
 msgid "SEO settings saved successfully!"
 msgstr ""
 
-#: admin/js/srk-gutenberg-meta-panel.js:1343
+#: admin/js/srk-gutenberg-meta-panel.js:1342
 msgid "Error saving SEO settings"
 msgstr ""
 
-#: admin/js/srk-gutenberg-meta-panel.js:1372
+#: admin/js/srk-gutenberg-meta-panel.js:1371
 msgid "Advanced settings saved!"
 msgstr ""
 
-#: admin/js/srk-gutenberg-meta-panel.js:1378
+#: admin/js/srk-gutenberg-meta-panel.js:1377
 msgid "Error saving advanced settings"
 msgstr ""
 
-#: admin/js/srk-gutenberg-meta-panel.js:1469
+#: admin/js/srk-gutenberg-meta-panel.js:1468
 msgid "Reset successful - Now following Content Type dynamically"
 msgstr ""
 
-#: admin/js/srk-gutenberg-meta-panel.js:1474
-#: admin/js/srk-gutenberg-meta-panel.js:4425
+#: admin/js/srk-gutenberg-meta-panel.js:1473
+#: admin/js/srk-gutenberg-meta-panel.js:4415
 msgid "Reset failed"
 msgstr ""
 
-#: admin/js/srk-gutenberg-meta-panel.js:1479
+#: admin/js/srk-gutenberg-meta-panel.js:1478
 msgid "Error during reset"
 msgstr ""
 
-#: admin/js/srk-gutenberg-meta-panel.js:1639
+#: admin/js/srk-gutenberg-meta-panel.js:1636
 msgid "Edit SEO Snippet"
 msgstr ""

@@ -84,6 +84,7 @@ class SeoRepairKit_Dashboard {
         $link_scanner_url  = admin_url( 'admin.php?page=seo-repair-kit-link-scanner' );
         $keytrack_url      = admin_url( 'admin.php?page=seo-repair-kit-keytrack' );
         $schema_url        = admin_url( 'admin.php?page=srk-schema-manager' );
+        $internal_linking_url = admin_url( 'admin.php?page=seo-repair-kit-internal-linking' );
         $chatbot_url       = admin_url( 'admin.php?page=srk-ai-chatbot' );
         $bot_manager_url   = admin_url( 'admin.php?page=seo-repair-kit-robots-llms' );
         $meta_manager_url  = admin_url( 'admin.php?page=seo-repair-kit-meta-manager' );
@@ -138,9 +139,7 @@ class SeoRepairKit_Dashboard {
         ?>
         <?php
         if ( function_exists( 'srk_render_notices_after_navbar' ) ) {
-            echo '<div class="srk-notices-area">';
             srk_render_notices_after_navbar();
-            echo '</div>';
         }
         ?>
 
@@ -324,6 +323,17 @@ class SeoRepairKit_Dashboard {
                                 <div class="srk-plugin-info">
                                     <h5><?php esc_html_e( 'Schema Manager', 'seo-repair-kit' ); ?></h5>
                                     <p><?php esc_html_e( 'Add and manage rich schema markup for content.', 'seo-repair-kit' ); ?></p>
+                                </div>
+                            </a>
+                            <!-- Internal Linking -->
+                            <a href="<?php echo esc_url( $internal_linking_url ); ?>" class="srk-plugin-item srk-tool-internal-linking srk-plugin-item-pro">
+                                <span class="srk-pro-pill"><?php esc_html_e( 'Pro', 'seo-repair-kit' ); ?></span>
+                                <div class="srk-plugin-icon">
+                                    <span class="dashicons dashicons-editor-ul"></span>
+                                </div>
+                                <div class="srk-plugin-info">
+                                    <h5><?php esc_html_e( 'Internal Linking', 'seo-repair-kit' ); ?></h5>
+                                    <p><?php esc_html_e( 'Find contextual link opportunities and build stronger content paths.', 'seo-repair-kit' ); ?></p>
                                 </div>
                             </a>
                             <!-- AI Chatbot -->

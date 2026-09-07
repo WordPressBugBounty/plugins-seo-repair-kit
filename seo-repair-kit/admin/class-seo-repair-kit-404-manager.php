@@ -203,9 +203,7 @@ class SeoRepairKit_404_Manager {
         ?>
         <?php
         if ( function_exists( 'srk_render_notices_after_navbar' ) ) {
-            echo '<div class="srk-notices-area">';
             srk_render_notices_after_navbar();
-            echo '</div>';
         }
         ?>
 
