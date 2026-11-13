@@ -32,10 +32,7 @@ class SeoRepairKit_Admin {
 	 */
 	private $version;
     private $cached_license_info = null;
-	private $crm_endpoint;
     private $spam_monitor;
-    // Live key for production
-    private $crm_app_key = 'base64:S/1nezDK+azLBl1Mo5vvTYX0HieBnG5fJn6H9/r0ZrI=';
 
 	/**
 	 * Initialize the class and set its properties.
@@ -49,12 +46,17 @@ class SeoRepairKit_Admin {
 		add_action( 'admin_notices', array( $this, 'display_seo_repair_kit_notice' ) );
         add_action( 'admin_post_srkit_update_settings', array( $this, 'handle_update_settings' ) );
         add_action( 'admin_post_srk_refresh_license_status', array( $this, 'handle_refresh_license_status' ) );
+        add_action( 'admin_post_srk_connect_license', array( $this, 'handle_connect_license' ) );
+        add_action( 'admin_post_srk_request_account_access', array( $this, 'handle_request_account_access' ) );
 		add_action( 'admin_menu', array( $this, 'seo_repair_kit_menu_page' ) );
 		add_filter( 'admin_footer_text', array( $this, 'powered_by_torontodigits' ) );
 
 		// ADD THIS INSTEAD (navbar renders before notices)
 		add_action( 'in_admin_header', array( $this, 'display_seo_repair_kit_navbar' ), 20 );
 		add_action( 'admin_init', [$this, 'srk_check_and_store_license_after_payment'] );
+		add_action( 'admin_init', array( $this, 'maybe_activate_installation_credential' ), 5 );
+		add_action( 'admin_init', array( $this, 'add_privacy_policy_content' ) );
+		add_action( 'admin_notices', array( $this, 'display_license_migration_notice' ) );
 		
 		// Add loader HTML early in head for immediate availability
 		add_action( 'admin_head', array( $this, 'add_page_loader_html' ) );
@@ -365,10 +367,6 @@ class SeoRepairKit_Admin {
 
 		$this->seo_repair_kit = $seo_repair_kit;
 		$this->version = $version;
-
-		// The properties are now initialized inside the constructor.
-		$this->crm_endpoint = SRK_API_Client::get_api_url( SRK_API_Client::ENDPOINT_LICENSE_VALIDATE );
-		$this->crm_app_key  = SRK_API_APP_KEY;
 
 		// CRM shared secret check (silent - admin notices handle missing config)
 
@@ -746,6 +744,156 @@ class SeoRepairKit_Admin {
 		}
 	}
 
+	/** Connect this WordPress installation to a CRM license. */
+	public function handle_connect_license() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to connect a license.', 'seo-repair-kit' ) );
+		}
+
+		check_admin_referer( 'srk_connect_license' );
+		$license_key = isset( $_POST['license_key'] )
+			? sanitize_text_field( wp_unslash( $_POST['license_key'] ) )
+			: '';
+		$result = SRK_API_Client::activate_installation( $license_key );
+		$status = is_wp_error( $result ) ? 'error' : 'success';
+
+		if ( ! is_wp_error( $result ) ) {
+			if ( class_exists( 'SRK_License_Sync' ) ) {
+				SRK_License_Sync::clear_license_cache( site_url() );
+			}
+			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-activator.php';
+			if ( method_exists( 'SeoRepairKit_Activator', 'sync_plugin_data' ) ) {
+				SeoRepairKit_Activator::sync_plugin_data();
+			}
+		}
+
+		$redirect = add_query_arg(
+			'srk_connection',
+			$status,
+			add_query_arg( 'page', 'seo-repair-kit-upgrade-pro', admin_url( 'admin.php' ) )
+		);
+		wp_safe_redirect( $redirect );
+		exit;
+	}
+
+	/** Send My Account setup instructions to the verified billing email. */
+	public function handle_request_account_access() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to request account access.', 'seo-repair-kit' ) );
+		}
+
+		check_admin_referer( 'srk_request_account_access' );
+		$result = SRK_API_Client::request_account_access_email();
+		$status = is_wp_error( $result ) ? 'error' : 'sent';
+		$redirect = add_query_arg(
+			'srk_account_access',
+			$status,
+			add_query_arg( 'page', 'seo-repair-kit-upgrade-pro', admin_url( 'admin.php' ) )
+		);
+		wp_safe_redirect( $redirect );
+		exit;
+	}
+
+	/** Migrate an existing saved license without adding recurring requests. */
+	public function maybe_activate_installation_credential() {
+		if ( ! current_user_can( 'manage_options' ) || wp_doing_ajax() ) {
+			return;
+		}
+
+		if ( get_option( 'srk_installation_secret', '' ) || get_transient( 'srk_installation_activation_lock' ) ) {
+			return;
+		}
+
+		$license_key = $this->migration_license_key();
+		if ( '' === $license_key ) {
+			return;
+		}
+
+		set_transient( 'srk_installation_activation_lock', 1, 10 * MINUTE_IN_SECONDS );
+		$result = SRK_API_Client::activate_installation( $license_key );
+		if ( is_wp_error( $result ) ) {
+			return;
+		}
+
+		delete_transient( 'srk_installation_activation_lock' );
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-activator.php';
+		if ( method_exists( 'SeoRepairKit_Activator', 'sync_plugin_data' ) ) {
+			SeoRepairKit_Activator::sync_plugin_data();
+		}
+	}
+
+	/**
+	 * Reuse a previously saved key or a still-valid legacy licence cache.
+	 * This keeps the security upgrade automatic where an existing site has
+	 * enough local information, without sending extra background requests.
+	 */
+	private function migration_license_key() {
+		$saved_key = get_option( 'srk_pro_license_key', '' );
+		if ( is_string( $saved_key ) && '' !== trim( $saved_key ) ) {
+			return trim( sanitize_text_field( $saved_key ) );
+		}
+
+		$domains = array_unique( array_filter( array( site_url(), home_url() ) ) );
+		foreach ( $domains as $domain ) {
+			$cached     = get_transient( 'srk_license_status_' . md5( (string) $domain ) );
+			$cached_key = is_array( $cached ) ? ( $cached['license_key'] ?? '' ) : '';
+			if ( is_string( $cached_key ) && '' !== trim( $cached_key ) ) {
+				return trim( sanitize_text_field( $cached_key ) );
+			}
+		}
+
+		return '';
+	}
+
+	/** Show a scoped migration notice for sites with existing paid access. */
+	public function display_license_migration_notice() {
+		if ( ! current_user_can( 'manage_options' ) || get_option( 'srk_installation_secret', '' ) ) {
+			return;
+		}
+
+		$has_saved_key  = (bool) get_option( 'srk_pro_license_key', '' );
+		$cached_status  = get_transient( 'srk_license_status_' . md5( (string) site_url() ) );
+		$has_paid_cache = true === get_transient( 'srk_pro_license_status' )
+			|| ( is_array( $cached_status ) && 'active' === ( $cached_status['status'] ?? '' ) );
+
+		if ( ! $has_saved_key && ! $has_paid_cache ) {
+			return;
+		}
+
+        $connect_url = 'https://seorepairkit.com/my-account/';
+        $account_access_url = wp_nonce_url(
+            admin_url( 'admin-post.php?action=srk_request_account_access' ),
+            'srk_request_account_access'
+        );
+
+        echo '<div class="notice notice-warning"><p>';
+        echo '<strong>' . esc_html__( 'SEO Repair Kit – Action Required', 'seo-repair-kit' ) . '</strong> ';
+        echo esc_html__(
+            'to keep your Pro features active, log in or create an account using your registered email, then connect this website with your license key. Your existing plan and renewal date will remain unchanged.',
+            'seo-repair-kit'
+        );
+        echo ' <a href="' . esc_url( $connect_url ) . '">' . esc_html__( 'Reconnect This Website', 'seo-repair-kit' ) . '</a>';
+        echo ' <span aria-hidden="true">&middot;</span> <a href="' . esc_url( $account_access_url ) . '">' . esc_html__( 'Email Account Access Instructions', 'seo-repair-kit' ) . '</a>';
+        echo '</p></div>';
+	}
+
+	/** Add transparent external-service information to WordPress privacy tools. */
+	public function add_privacy_policy_content() {
+		if ( ! function_exists( 'wp_add_privacy_policy_content' ) ) {
+			return;
+		}
+
+		$content  = '<p>' . esc_html__( 'When a site administrator connects an SEO Repair Kit license, the plugin sends the website domain, a random installation identifier, the license key, plugin version, and activation status to the SEO Repair Kit service. The license key is exchanged for a credential unique to this WordPress installation. Optional cloud, Spam Monitor, AI, and diagnostic features may send the information required to provide those services only when configured or authorized.', 'seo-repair-kit' ) . '</p>';
+		$content .= '<p>' . sprintf(
+			/* translators: 1: privacy policy URL, 2: terms URL. */
+			wp_kses_post( __( 'See the <a href="%1$s">SEO Repair Kit Privacy Policy</a> and <a href="%2$s">Terms of Service</a> for retention, processing, and contact details.', 'seo-repair-kit' ) ),
+			esc_url( 'https://seorepairkit.com/privacy-policy/' ),
+			esc_url( 'https://seorepairkit.com/terms-and-conditions/' )
+		) . '</p>';
+
+		wp_add_privacy_policy_content( 'SEO Repair Kit', wp_kses_post( $content ) );
+	}
+
 	/**
 	 * Force-refresh the CRM license status and redirect back to Upgrade to Pro.
 	 *
@@ -794,20 +942,13 @@ class SeoRepairKit_Admin {
             return;
         }
 
-        $api_url = SRK_API_Client::get_api_url( SRK_API_Client::ENDPOINT_LICENSE_VALIDATE );
-
-        $response = wp_remote_post(
-            $api_url,
+        $response = SRK_API_Client::signed_post_json(
+            SRK_API_Client::ENDPOINT_LICENSE_VALIDATE,
             array(
-                'body'    => array(
-                    'license_key' => $license_key,
-                    'domain'      => site_url(),
-                ),
-                'timeout' => 15,
-                'headers' => array(
-                    'Accept' => 'application/json',
-                ),
-            )
+                'license_key' => $license_key,
+                'domain'      => site_url(),
+            ),
+            15
         );
 
         if ( is_wp_error( $response ) ) {
@@ -849,13 +990,7 @@ class SeoRepairKit_Admin {
         // Replaces `_encode($data['data'])` – ensure IDENTICAL encoding to server.
         // If your server signs the raw JSON (no spaces), wp_json_encode matches PHP's json_encode with sane defaults.
         $payload = json_encode( $data['data'] );
-        $key     = defined( 'SRK_API_APP_KEY' ) ? SRK_API_APP_KEY : SRK_SHARED_SECRET;
-        if ( 0 === strpos( $key, 'base64:' ) ) {
-            $decoded = base64_decode( substr( $key, 7 ), true );
-            if ( false !== $decoded ) {
-                $key = $decoded;
-            }
-        }
+        $key     = SRK_API_Client::resolve_shared_secret();
 
         $local_signature = hash_hmac( 'sha256', $payload, $key );
 
@@ -1580,12 +1715,11 @@ class SeoRepairKit_Admin {
             return $cached;
         }
 
-        $response = wp_remote_post($this->crm_endpoint, [
-            'method' 	=> 'POST',
-            'timeout' 	=> 15,
-            'headers' 	=> [ 'Content-Type' => 'application/json' ],
-            'body' 		=> json_encode(['domain' => $domain]),
-        ]);
+        $response = SRK_API_Client::signed_post_json(
+            SRK_API_Client::ENDPOINT_LICENSE_VALIDATE,
+            array( 'domain' => $domain ),
+            15
+        );
 
         if (is_wp_error($response)) {
             return $this->default_license_response('Request error: ' . $response->get_error_message());
@@ -1594,7 +1728,7 @@ class SeoRepairKit_Admin {
         $body = json_decode(wp_remote_retrieve_body($response), true);
 
         if (!isset($body['data'], $body['signature'])) {
-            return $this->default_license_response('Invalid response from CRM. Missing data or signature.');
+            return $this->default_license_response( __( 'SEO Repair Kit could not verify the license response. Please reconnect this website or contact support.', 'seo-repair-kit' ) );
         }
 
         if (!$this->is_signature_valid($body['data'], $body['signature'])) {
@@ -1656,15 +1790,13 @@ class SeoRepairKit_Admin {
      * Validates the signature using HMAC SHA256.
      */
     private function is_signature_valid($data, $signature) {
-        $key = $this->crm_app_key;
-        if (strpos($key, 'base64:') === 0) {
-            $decoded = base64_decode(substr($key, 7), true);
-            if (false !== $decoded) {
-                $key = $decoded;
-            }
+        $key = SRK_API_Client::resolve_shared_secret();
+
+        if ('' === $key) {
+            return false;
         }
-        $calculated = hash_hmac('sha256', json_encode($data), $key);
-        return hash_equals($calculated, $signature);
+        $calculated = hash_hmac('sha256', wp_json_encode($data), $key);
+        return hash_equals($calculated, (string) $signature);
     }
 
     /**

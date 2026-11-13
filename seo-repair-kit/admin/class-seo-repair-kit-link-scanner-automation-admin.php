@@ -56,7 +56,8 @@ class SeoRepairKit_LinkScanner_Automation_Admin {
 						<p>
 							<?php
 							printf(
-								esc_html__( 'Free Link Scanner can scan Pages only up to %d links per run. Posts, whole website scans, and public custom post types require the £1.49 unlimited Broken Links + 404 Monitor add-on.', 'seo-repair-kit' ),
+								/* translators: %d: Maximum number of links per free scan. */
+								esc_html__( 'Free Link Scanner can scan Pages only up to %d links per run. Posts, whole website scans, and public custom post types are included with every paid SEO Repair Kit plan.', 'seo-repair-kit' ),
 								absint( $scanner_free_limit )
 							);
 							?>
@@ -117,7 +118,7 @@ class SeoRepairKit_LinkScanner_Automation_Admin {
 								<?php
 								echo $scanner_unlimited
 									? esc_html__( 'Use Whole Website to automatically include posts, pages, and public custom post types.', 'seo-repair-kit' )
-									: esc_html__( 'Whole Website coverage is available with the Unlimited Broken Links + 404 Monitor add-on.', 'seo-repair-kit' );
+									: esc_html__( 'Whole Website coverage is included with every paid SEO Repair Kit plan.', 'seo-repair-kit' );
 								?>
 							</p>
 						</td>
@@ -133,7 +134,7 @@ class SeoRepairKit_LinkScanner_Automation_Admin {
 										<input type="checkbox" name="post_types[]" value="<?php echo esc_attr( $pt_slug ); ?>" <?php checked( $is_allowed && in_array( $pt_slug, (array) $settings['post_types'], true ) ); ?> <?php disabled( ! $is_allowed ); ?> />
 										<?php echo esc_html( $pt_obj->labels->name ); ?>
 										<?php if ( ! $is_allowed ) : ?>
-											<span class="srk-plan-lock"><?php esc_html_e( '£1.49 add-on', 'seo-repair-kit' ); ?></span>
+											<span class="srk-plan-lock"><?php esc_html_e( 'Paid plan', 'seo-repair-kit' ); ?></span>
 										<?php endif; ?>
 									</label>
 								<?php endforeach; ?>

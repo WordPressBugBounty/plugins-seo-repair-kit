@@ -632,6 +632,7 @@ class SRK_Spam_Monitor_Alerts {
 		$html .= '</table>';
 
 		if ( ! empty( $data['remaining_url_count'] ) ) {
+			/* translators: %d: Number of additional flagged URLs. */
 			$html .= '<p style="margin:0 0 24px;font-size:13px;line-height:1.7;color:#667085;">' . sprintf( esc_html__( '%d more flagged URLs are available in the Spam Monitor dashboard.', 'seo-repair-kit' ), absint( $data['remaining_url_count'] ) ) . '</p>';
 		}
 
@@ -849,6 +850,7 @@ class SRK_Spam_Monitor_Alerts {
 	 */
 	private static function describe_generic_evidence( $evidence ) {
 		if ( is_scalar( $evidence ) ) {
+			/* translators: %s: Description of the evidence for a flagged URL. */
 			return sprintf( __( 'Evidence: %s', 'seo-repair-kit' ), sanitize_text_field( (string) $evidence ) );
 		}
 
@@ -868,6 +870,7 @@ class SRK_Spam_Monitor_Alerts {
 
 			$flattened = array_filter( array_map( 'trim', $flattened ) );
 			if ( ! empty( $flattened ) ) {
+				/* translators: %s: Description of the evidence for a flagged URL. */
 				return sprintf( __( 'Evidence: %s', 'seo-repair-kit' ), implode( '; ', $flattened ) );
 			}
 		}

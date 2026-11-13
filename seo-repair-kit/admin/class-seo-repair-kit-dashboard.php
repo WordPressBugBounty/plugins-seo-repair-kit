@@ -221,8 +221,8 @@ class SeoRepairKit_Dashboard {
 							<p class="srk-summary-text srk-plan-summary-text">
 								<?php
 								echo $license_active
-									? esc_html__( 'Your Pro modules are active for this site.', 'seo-repair-kit' )
-									: esc_html__( 'Free tools are ready. Upgrade to unlock paid SEO Repair Kit modules.', 'seo-repair-kit' );
+									? esc_html__( 'Your paid plan is active for this website.', 'seo-repair-kit' )
+									: esc_html__( 'Free tools are ready. Choose a paid plan to unlock the complete SEO Repair Kit toolkit.', 'seo-repair-kit' );
 								?>
 							</p>
 
@@ -242,11 +242,12 @@ class SeoRepairKit_Dashboard {
 									</div>
 								</div>
 								<div class="srk-plan-feature-group">
-									<span class="srk-plan-feature-label"><?php esc_html_e( 'Pro modules', 'seo-repair-kit' ); ?></span>
+									<span class="srk-plan-feature-label"><?php esc_html_e( 'Included with every paid plan', 'seo-repair-kit' ); ?></span>
 									<div class="srk-plan-chip-row srk-plan-chip-row-pro">
 										<span><?php esc_html_e( 'Links Manager', 'seo-repair-kit' ); ?></span>
 										<span><?php esc_html_e( 'Spam Monitor', 'seo-repair-kit' ); ?></span>
 										<span><?php esc_html_e( 'Schema Manager', 'seo-repair-kit' ); ?></span>
+										<span><?php esc_html_e( 'Internal Linking', 'seo-repair-kit' ); ?></span>
 										<span><?php esc_html_e( 'AI Chatbot', 'seo-repair-kit' ); ?></span>
 									</div>
 								</div>
@@ -643,6 +644,7 @@ class SeoRepairKit_Dashboard {
             $issues[] = array(
                 'status'     => 'error',
                 'label'      => esc_html__( 'Critical', 'seo-repair-kit' ),
+				/* translators: %d: Number of broken links. */
                 'message'    => sprintf( _n( '%d broken link found on your site.', '%d broken links found on your site.', $broken_links, 'seo-repair-kit' ), $broken_links ),
                 'action_text' => esc_html__( 'Help Me Fix', 'seo-repair-kit' ),
                 'action_url' => $link_scanner_url,
@@ -723,6 +725,7 @@ class SeoRepairKit_Dashboard {
                     'status'      => 'success',
                     'label'       => esc_html__( 'Passed', 'seo-repair-kit' ),
                     'message'     => sprintf(
+						/* translators: %d: Number of configured schema types. */
                         _n(
                             '%d schema type is configured and active on your site.',
                             '%d schema types are configured and active on your site.',
@@ -801,6 +804,7 @@ class SeoRepairKit_Dashboard {
                 'status'      => 'warning',
                 'label'       => esc_html__( 'Warning', 'seo-repair-kit' ),
                 'message'     => sprintf(
+					/* translators: %d: Number of images missing alt text. */
                     _n(
                         '%d image is missing alt text. Fill in descriptive alt attributes to improve accessibility and image SEO.',
                         '%d images are missing alt text. Fill in descriptive alt attributes to improve accessibility and image SEO.',

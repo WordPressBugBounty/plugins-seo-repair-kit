@@ -1,12 +1,12 @@
-=== SEO Repair Kit - Spam Monitor, Meta Manager, Schema Manager, Internal Linking, SEO Content Monitoring, GSC Integration ===
+=== SEO Repair Kit - SEO, 301 Redirection, Internal Linking, Spam Monitor, Meta Manager, Schema Manager, SEO Content Monitoring, GSC Integration ===
 Contributors: torontodigits
 Donate link: https://seorepairkit.com/
-Tags: spam monitor, meta manager, internal linking, broken link, schema markup, 301 redirect, 404 monitor
+Tags: SEO, 301 redirect, internal linking, schema markup, 404 monitor, spam monitor, meta manager, broken link
 Requires at least: 5.0.0
-Tested up to: 7.1.3
+Tested up to: 7.1.4
 Requires PHP: 7.4.3
-Stable tag: 2.1.12
-Release Date: 07-10-2026
+Stable tag: 2.1.13
+Release Date: 13-11-2026
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,7 +54,7 @@ SEO Repair Kit is designed for site owners, developers, marketers, content teams
 * Map WordPress content to supported schema properties
 * Preview configured schema before output
 
-**Internal Linking (Paid Module)**
+**Internal Linking (Paid Plan)**
 * Find contextual internal-link opportunities
 * Review orphan content, approved links, target keywords, and reports
 * Use Auto Linking, Gutenberg suggestions, and AI/semantic workflows when enabled
@@ -80,7 +80,7 @@ SEO Repair Kit is designed for site owners, developers, marketers, content teams
 **Spam Monitor (Pro)**
 * Scan indexed Google results for suspicious URLs, configure rules, review history, schedule scans, and send alerts
 
-Custom SERP-provider connections and other advanced Spam Monitor capabilities require the paid module.
+Custom SERP-provider connections and other advanced Spam Monitor capabilities are included with every paid SEO Repair Kit plan.
 
 **Weekly SEO Summary**
 * Receive scheduled email summaries with key SEO status metrics
@@ -133,15 +133,24 @@ Custom SERP-provider connections and other advanced Spam Monitor capabilities re
 
 == Changelog ==
 
+= 2.1.13 =
+* Deferred automatic scan scheduling and translation loading until init to prevent early text-domain notices on WordPress 6.7 and later.
+* Updated the translation template for 2.1.13, clarified placeholder context for translators, and numbered robots.txt validation placeholders so translations can reorder them safely.
+* Made Bot Manager editor hints extractable for translation and added singular/plural license-expiry messages.
+* Added per-installation credentials and signed CRM requests for license validation and plugin status reporting.
+* Added automatic credential migration for sites with a saved license key and a manual Reconnect License flow for other paid sites.
+* Replaced feature-by-feature upgrade messaging with unified Starter, Growth, Pro, and Agency plans based on website allowance.
+* Clarified that every paid plan includes the complete SEO Repair Kit toolkit, including Spam Monitor, Internal Linking, Schema Manager, and unlimited link scanning.
+
 = 2.1.12 =
-* Added Internal Linking as a paid module with protected admin, AJAX, Gutenberg, indexing, and queue workflows.
+* Added protected Internal Linking admin, AJAX, Gutenberg, indexing, and queue workflows for paid plans.
 * Hardened Internal Linking database migrations with versioning, locking, schema verification, bounded backfills, and semantic links support.
 * Added Internal Linking to Dashboard Key Tools and Upgrade to Pro messaging.
 
 == Upgrade Notice ==
 
-= 2.1.12 =
-Internal Linking is now a paid module with hardened database migrations and protected admin, AJAX, Gutenberg, indexing, and queue workflows. Test Internal Linking on staging before production rollout.
+= 2.1.13 =
+Paid access now uses unified website-based plans. Existing subscriptions and legacy pricing remain unchanged. Back up the site and test license reconnection and paid access on staging before updating production.
 
 == Installation ==
 
@@ -168,14 +177,20 @@ After activation, open SEO Repair Kit from the WordPress admin menu.
    * Configure notification preferences (weekly reports, KeyTrack alerts, broken links notifications)
    * Enable alt text scanning
    * Enable redirection management
-   * Review Spam Monitor module settings when available
-   * Review Internal Linking module access and settings when available
+   * Review Spam Monitor settings when available
+   * Review Internal Linking plan access and settings when available
    * Set notification email address
 3. Complete the onboarding to save your preferences, or skip and configure later in Settings.
 
 = Dashboard Overview =
 
 Open SEO Repair Kit from the WordPress admin menu to view site health, plan status, reports, and quick-access tools including Internal Linking when available.
+
+= Paid Plans & License Connection =
+
+Starter, Growth, Pro, and Agency include the same paid toolkit with allowances of 1, 10, 25, and 100 websites respectively. WordPress and custom websites share the allowance managed by your SEO Repair Kit account.
+
+After upgrading to 2.1.13, websites with a saved license key connect automatically on an administrator page load. If prompted, open the plugin license screen and use Connect License or Reconnect License with the key assigned to this website. Existing subscriptions, renewal dates, and legacy pricing remain unchanged.
 
 = Links Manager =
 
@@ -225,13 +240,13 @@ Install Google Site Kit, connect Search Console, then open SEO Repair Kit > KeyT
 
 = Schema Manager (Pro Feature) =
 
-With the required Pro module active, open SEO Repair Kit > Schema Manager, choose a schema type, configure its field mappings, and save the schema.
+With an active paid plan, open SEO Repair Kit > Schema Manager, choose a schema type, configure its field mappings, and save the schema.
 
 Configured schema is output as JSON-LD on applicable pages.
 
-= Internal Linking (Paid Module) =
+= Internal Linking (Paid Plan) =
 
-With an active Internal Linking module, open SEO Repair Kit > Internal Linking to index content, review link opportunities, manage target keywords, configure Auto Linking, check orphan content, and use Gutenberg suggestions. If the module is inactive or expired, Internal Linking is locked while existing data remains preserved.
+With an active paid plan, open SEO Repair Kit > Internal Linking to index content, review link opportunities, manage target keywords, configure Auto Linking, check orphan content, and use Gutenberg suggestions. If website access is inactive or expired, Internal Linking is locked while existing data remains preserved.
 
 = Spam Monitor (Pro Feature) =
 
@@ -243,15 +258,18 @@ Open SEO Repair Kit > Meta Manager to configure global meta, content type templa
 
 = AI Chatbot (Pro Feature) =
 
-With an active Pro license, open SEO Repair Kit > AI Chatbot for plugin guidance, SEO workflow help, schema setup, redirection fixes, and KeyTrack insights.
+With an active paid plan, open SEO Repair Kit > AI Chatbot for plugin guidance, SEO workflow help, schema setup, redirection fixes, and KeyTrack insights.
 
 == External Services ==
 
 Some SEO Repair Kit features integrate with external services. These services are used only for functionality that requires external data or processing.
 
-**SEO Repair Kit Licensing / Module Entitlement**
+**SEO Repair Kit Licensing / Plan Entitlement**
 
-SEO Repair Kit may contact its licensing service to validate paid module access, including Schema Manager, Internal Linking, AI Chatbot, and supported Spam Monitor functionality.
+SEO Repair Kit contacts its licensing service to activate an installation credential, validate plan and website access, and report plugin status. Requests may include the website URL, a generated installation identifier, plugin version, license key during connection, and activation or deactivation status.
+
+Privacy Policy: https://seorepairkit.com/privacy-policy/
+Terms of Service: https://seorepairkit.com/terms-and-conditions/
 
 **Google Site Kit / Google Search Console**
 
@@ -309,10 +327,12 @@ When paid AI-assisted workflows are configured, SEO Repair Kit may send required
 
 == Troubleshooting ==
 
+* If paid access needs reconnecting after the 2.1.13 update, use Connect License or Reconnect License on the plugin license screen. The website domain must match the domain assigned to the active license.
+
 * If KeyTrack shows no data, confirm Google Site Kit is installed and connected to the correct Google Search Console property.
-* If Spam Monitor scans or provider settings are unavailable, verify the active module, configured SERP provider, and scan settings.
+* If Spam Monitor scans or provider settings are unavailable, verify the active plan, configured SERP provider, and scan settings.
 * If schema is not output, confirm Schema Manager is active and the schema assignment applies to the current content.
-* If Internal Linking is locked, confirm the Internal Linking paid module is active and refresh license status from the plugin license screen.
+* If Internal Linking is locked, confirm that this website is connected to an active paid plan and refresh license status from the plugin license screen.
 * If links are not detected, confirm the relevant post type is included in the scan settings.
 * If `llms.txt` redirects to the homepage, resave the Bot Manager `llms.txt` configuration and ensure SEO Repair Kit is installed.
 
@@ -322,7 +342,7 @@ When paid AI-assisted workflows are configured, SEO Repair Kit may send required
 Yes. You can limit scans by post type and configure scope, batch settings, and schedules to make larger scans easier to manage.
 
 = Do I need a SERP provider API key? =
-Provider requirements depend on the active Spam Monitor configuration. The paid module can support custom provider connections such as Serper.dev, SerpApi, and DataForSEO.
+Provider requirements depend on the active Spam Monitor configuration. Paid plans can support custom provider connections such as Serper.dev, SerpApi, and DataForSEO.
 
 = Does Schema Manager use JSON-LD? =
 Yes. Schema Manager outputs configured structured data in JSON-LD format.
@@ -334,10 +354,10 @@ Yes. Google Site Kit must be installed and connected to the appropriate Google S
 Confirm Google Site Kit is installed, connected, and linked to the correct Search Console property.
 
 = Why is Spam Monitor not running? =
-Check the Spam Monitor module status, provider status, saved schedule, quota, and alert email configuration.
+Check the Spam Monitor plan access, provider status, saved schedule, quota, and alert email configuration.
 
 = Why is schema not appearing? =
-Confirm the Pro module is active and the schema mapping is assigned to the correct content type.
+Confirm this website is connected to an active paid plan and the schema mapping is assigned to the correct content type.
 
 = Why are links not being detected? =
 Confirm the relevant post type is selected in SEO Repair Kit settings and that the content contains scan-supported links.
@@ -345,15 +365,19 @@ Confirm the relevant post type is selected in SEO Repair Kit settings and that t
 = Why does llms.txt redirect to the homepage? =
 Resave Bot Manager llms.txt content and confirm the site is running SEO Repair Kit.
 
-= Is Internal Linking a paid module? =
-Yes. Internal Linking requires an active paid module. If access is inactive or expired, the feature is locked and existing data is preserved.
+= Is Internal Linking included with paid plans? =
+Yes. Internal Linking is included with every paid SEO Repair Kit plan. If website access is inactive or expired, the feature is locked and existing data is preserved.
 
-= What should I check after updating to 2.1.12? =
+= What should I check after updating to 2.1.13? =
 Open the SEO Repair Kit dashboard, Links Manager, Redirection Manager, Auto Scan, 404 Monitor, Schema Manager, Internal Linking, Spam Monitor, KeyTrack, Gutenberg editor, and Settings screens to confirm they load normally. If you are upgrading from an older SEO Repair Kit version with existing data, back up the site first and run a staging migration test before updating production.
 
-= What are the Pro features? =
-Pro and paid-module capabilities include Schema Manager, Internal Linking, AI Chatbot, and supported paid Spam Monitor functionality such as advanced SERP-provider connections.
+= What is included with a paid plan? =
+Every paid plan includes the complete SEO Repair Kit toolkit, including Schema Manager, Internal Linking, AI Chatbot, unlimited link scanning, and supported Spam Monitor functionality such as advanced SERP-provider connections. Plans differ by website allowance rather than by individual features.
 
-Available free and paid functionality may vary by plugin version or active module.
+Available free and paid functionality may vary by plugin version and active website access.
 
 You can also find helpful resources and documentation to resolve common issues on the support website.
+
+= Can SEO Repair Kit be translated? =
+
+Yes. SEO Repair Kit uses the seo-repair-kit text domain. The languages/seo-repair-kit.pot file contains the translation template for 2.1.13. PHP translations use MO files, and JavaScript translations use JSON files.

@@ -113,7 +113,7 @@ class SeoRepairKit_InternalLinking {
 	}
 
 	/**
-	 * Check if the Internal Linking paid module is enabled.
+	 * Check if the active paid plan includes Internal Linking access.
 	 *
 	 * @return bool
 	 */
@@ -520,7 +520,7 @@ class SeoRepairKit_InternalLinking {
 
 				'internalLinkingPaidRequiredMessage' =>
 					__(
-						'Internal Linking is a paid module. Please upgrade or renew Internal Linking to use this feature.',
+						'Internal Linking is included with every paid SEO Repair Kit plan. Please activate or renew your plan to use this feature.',
 						'seo-repair-kit'
 					),
 			)
@@ -801,6 +801,7 @@ class SeoRepairKit_InternalLinking {
 		echo '<span class="srk-il-page-status">' .
 			esc_html(
 				sprintf(
+					/* translators: 1: Current page number, 2: Total number of pages. */
 					__(
 						'Page %1$d of %2$d',
 						'seo-repair-kit'

@@ -155,10 +155,6 @@ class SRK_Spam_Monitor_Cloud_Client {
 			return (string) SRK_CLOUD_SHARED_SECRET;
 		}
 
-		if ( defined( 'SRK_SHARED_SECRET' ) && SRK_SHARED_SECRET ) {
-			return (string) SRK_SHARED_SECRET;
-		}
-
 		return '';
 	}
 }

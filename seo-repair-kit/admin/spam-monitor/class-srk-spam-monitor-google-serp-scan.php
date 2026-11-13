@@ -707,8 +707,8 @@ class SeoRepairKit_SpamMonitor_Google_SERP_Scan {
 				<div class="srk-sm-schedule-compact__details">
 					<span><?php echo ! empty( $schedule['enabled'] ) ? esc_html__( 'Enabled', 'seo-repair-kit' ) : esc_html__( 'Disabled', 'seo-repair-kit' ); ?></span>
 					<span><?php echo esc_html( $schedule['frequency_label'] ?? __( 'Every day', 'seo-repair-kit' ) ); ?></span>
-					<span><?php echo esc_html( sprintf( __( '%1$d requests / up to %2$d records', 'seo-repair-kit' ), absint( $schedule['serp_requests'] ?? 3 ), absint( $schedule['max_results'] ?? 30 ) ) ); ?></span>
-					<span><?php echo esc_html( sprintf( __( 'Next: %s', 'seo-repair-kit' ), $schedule['next_run_display'] ?? '-' ) ); ?></span>
+					<span><?php /* translators: 1: Number of search requests, 2: Maximum number of result records. */ echo esc_html( sprintf( __( '%1$d requests / up to %2$d records', 'seo-repair-kit' ), absint( $schedule['serp_requests'] ?? 3 ), absint( $schedule['max_results'] ?? 30 ) ) ); ?></span>
+					<span><?php /* translators: %s: Next scheduled scan date and time, or a dash when unavailable. */ echo esc_html( sprintf( __( 'Next: %s', 'seo-repair-kit' ), $schedule['next_run_display'] ?? '-' ) ); ?></span>
 				</div>
 			</div>
 			<a class="button" href="<?php echo esc_url( $settings_url ); ?>"><?php esc_html_e( 'Manage Schedule', 'seo-repair-kit' ); ?></a>
@@ -838,7 +838,7 @@ class SeoRepairKit_SpamMonitor_Google_SERP_Scan {
 					<span class="dashicons dashicons-lock"></span>
 					<div>
 						<strong><?php esc_html_e( 'Free trial provider is active.', 'seo-repair-kit' ); ?></strong>
-						<p><?php esc_html_e( 'Free users can scan with the SEO Repair Kit trial provider. Add the Spam Monitor module to connect your own SERP provider API key.', 'seo-repair-kit' ); ?></p>
+						<p><?php esc_html_e( 'Free users can scan with the SEO Repair Kit trial provider. Activate any paid SEO Repair Kit plan to connect your own SERP provider API key.', 'seo-repair-kit' ); ?></p>
 						<div class="srk-serp-provider-education" aria-label="<?php esc_attr_e( 'Supported SERP providers', 'seo-repair-kit' ); ?>">
 							<span><?php esc_html_e( 'Supported providers:', 'seo-repair-kit' ); ?></span>
 							<em><?php esc_html_e( 'Serper.dev', 'seo-repair-kit' ); ?></em>
@@ -898,7 +898,7 @@ class SeoRepairKit_SpamMonitor_Google_SERP_Scan {
 	private function send_serp_provider_locked_response() {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Custom SERP provider keys require the paid Spam Monitor module. Free users can continue with the SEO Repair Kit trial provider.', 'seo-repair-kit' ),
+				'message' => __( 'Custom SERP provider keys are included with every paid SEO Repair Kit plan. Free users can continue with the SEO Repair Kit trial provider.', 'seo-repair-kit' ),
 				'code'    => 'srk_serp_provider_paid_required',
 			),
 			403

@@ -1066,6 +1066,7 @@ class SRK_Internal_Linking_AI_Provider {
 				self::extract_error_message(
 					$body,
 					sprintf(
+						/* translators: %d: HTTP response status code. */
 						__(
 							'AI embedding provider returned HTTP %d.',
 							'seo-repair-kit'
@@ -1561,6 +1562,7 @@ class SRK_Internal_Linking_AI_Provider {
                     $decoded['error']['message']
                 )
                 : sprintf(
+					/* translators: %d: HTTP response status code. */
                     __(
                         'Gemini embedding request returned HTTP %d.',
                         'seo-repair-kit'

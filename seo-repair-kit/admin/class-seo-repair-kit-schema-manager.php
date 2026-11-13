@@ -136,18 +136,18 @@ class SeoRepairKit_SchemaManager {
             delete_transient( $cache_key );
  
             if ( false === get_transient( $cache_key ) ) {
-                $message = esc_html__( 'License status refreshed from CRM successfully.', 'seo-repair-kit' );
+                $message = esc_html__( 'Your SEO Repair Kit license status was refreshed successfully.', 'seo-repair-kit' );
                 $status  = 'success';
             } else {
-                $message = esc_html__( 'License status could not be refreshed from CRM. Please check connectivity or CRM configuration.', 'seo-repair-kit' );
+                $message = esc_html__( 'We could not refresh your license status. Please make sure you have an active paid plan, then reconnect this website and try again. If the issue persists, contact SEO Repair Kit support.', 'seo-repair-kit' );
                 $status  = 'error';
             }
         }
 
         if ( 'success' === $status ) {
-            $message = esc_html__( 'License status refreshed from CRM successfully.', 'seo-repair-kit' );
+            $message = esc_html__( 'Your SEO Repair Kit license status was refreshed successfully.', 'seo-repair-kit' );
         } elseif ( 'error' === $status ) {
-            $message = esc_html__( 'License status could not be refreshed from CRM. Please check connectivity or CRM configuration.', 'seo-repair-kit' );
+            $message = esc_html__( 'We could not refresh your license status. Please make sure you have an active paid plan, then reconnect this website and try again. If the issue persists, contact SEO Repair Kit support.', 'seo-repair-kit' );
         }
  
         $enabled      = $this->is_schema_feature_enabled();
@@ -246,7 +246,7 @@ class SeoRepairKit_SchemaManager {
                                     </form>
                                 </div>
                                 <p style="margin:10px 2px 0; color:#a5b4fc; font-size:12px;">
-                                    <?php esc_html_e( 'If your license status looks outdated, refresh it from CRM and try again.', 'seo-repair-kit' ); ?>
+                                    <?php esc_html_e( 'If your license status looks outdated, refresh your SEO Repair Kit connection and try again.', 'seo-repair-kit' ); ?>
                                 </p>
                             </div>
                         </aside>

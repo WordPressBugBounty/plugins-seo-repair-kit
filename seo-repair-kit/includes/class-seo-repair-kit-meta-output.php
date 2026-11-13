@@ -3,6 +3,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( ! class_exists( 'SRK_Content_Extractor' ) ) {
+	require_once dirname( __FILE__ ) . '/class-seo-repair-kit-content-extractor.php';
+}
+
 /**
  * Class SRK_Meta_Output
  *
@@ -180,6 +184,7 @@ private function get_archive_title() {
 
 		$context = array(
 			'archive_title'       => $date_str,
+			/* translators: %s: Archive date. */
 			'archive_description' => sprintf( __( 'Posts published in %s', 'seo-repair-kit' ), $date_str ),
 			'date'                => $date_str,
 			'search'              => '',
@@ -189,7 +194,9 @@ private function get_archive_title() {
 		$search_str   = get_search_query();
 
 		$context = array(
+			/* translators: %s: Search query. */
 			'archive_title'       => sprintf( __( 'Search Results for: %s', 'seo-repair-kit' ), $search_str ),
+			/* translators: %s: Search query. */
 			'archive_description' => sprintf( __( 'Search results for %s', 'seo-repair-kit' ), $search_str ),
 			'search'              => $search_str,
 			'date'                => '',
@@ -341,6 +348,7 @@ private function replace_archive_variables( $template, $archive_type, $context =
 
 		$context = array(
 			'archive_title'       => $date_str,
+			/* translators: %s: Archive date. */
 			'archive_description' => sprintf( __( 'Posts published in %s', 'seo-repair-kit' ), $date_str ),
 			'date'                => $date_str,
 			'search'              => '',
@@ -350,7 +358,9 @@ private function replace_archive_variables( $template, $archive_type, $context =
 		$search_str   = get_search_query();
 
 		$context = array(
+			/* translators: %s: Search query. */
 			'archive_title'       => sprintf( __( 'Search Results for: %s', 'seo-repair-kit' ), $search_str ),
+			/* translators: %s: Search query. */
 			'archive_description' => sprintf( __( 'Search results for %s', 'seo-repair-kit' ), $search_str ),
 			'search'              => $search_str,
 			'date'                => '',
@@ -550,6 +560,7 @@ private function replace_archive_variables( $template, $archive_type, $context =
 			$title = get_the_archive_title();
 			$title = preg_replace( '/^[^:]+:\s*/', '', $title );
 		} elseif ( is_search() ) {
+			/* translators: %s: Search query. */
 			$title = sprintf( __( 'Search Results for: %s', 'seo-repair-kit' ), get_search_query() );
 		} elseif ( is_404() ) {
 			$title = __( 'Page Not Found', 'seo-repair-kit' );
@@ -604,14 +615,7 @@ private function replace_archive_variables( $template, $archive_type, $context =
 				$excerpt = get_the_excerpt( $post_id );
 
 				if ( empty( $excerpt ) ) {
-					$content_raw  = (string) get_post_field( 'post_content', $post_id );
-					$content_html = (string) apply_filters( 'the_content', $content_raw );
-					if ( preg_match( '/<p\b[^>]*>(.*?)<\/p>/is', $content_html, $m ) ) {
-						$excerpt = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( (string) $m[1] ) ) );
-					} else {
-						$text_only = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( $content_html ) ) );
-						$excerpt   = $text_only;
-					}
+					$excerpt = SRK_Content_Extractor::get_first_paragraph( $post_id );
 				}
 
 				$content_snippet = wp_trim_words(
@@ -737,6 +741,7 @@ private function replace_archive_variables( $template, $archive_type, $context =
 		if ( is_paged() ) {
 			$paged = get_query_var( 'paged' );
 			if ( $paged ) {
+				/* translators: %d: Current page number. */
 				$page_num = sprintf( __( 'Page %d', 'seo-repair-kit' ), $paged );
 			}
 		}

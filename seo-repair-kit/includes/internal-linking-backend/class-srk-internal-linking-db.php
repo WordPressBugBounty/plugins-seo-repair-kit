@@ -3968,6 +3968,7 @@ class SRK_Internal_Linking_DB {
 				array(
 					'type' => 'opportunities',
 					'text' => sprintf(
+						/* translators: %d: Number of current internal link opportunities. */
 						_n( '%d current link opportunity', '%d current link opportunities', $pending_opportunities, 'seo-repair-kit' ),
 						$pending_opportunities
 					),
@@ -3976,6 +3977,7 @@ class SRK_Internal_Linking_DB {
 				array(
 					'type' => 'orphans',
 					'text' => sprintf(
+						/* translators: %d: Number of orphan pages. */
 						_n( '%d orphan page detected', '%d orphan pages detected', $orphan_total, 'seo-repair-kit' ),
 						$orphan_total
 					),
@@ -3983,6 +3985,7 @@ class SRK_Internal_Linking_DB {
 				),
 				array(
 					'type' => 'auto',
+					/* translators: %d: Number of active automatic links. */
 					'text' => sprintf( _n( '%d active auto link', '%d active auto links', $auto_links, 'seo-repair-kit' ), $auto_links ),
 					'time' => self::format_dashboard_relative_time( $latest_auto_activity ),
 				),
@@ -4013,7 +4016,7 @@ class SRK_Internal_Linking_DB {
 		}
 
 		return sprintf(
-			/* translators: %s: human-readable time difference */
+			/* translators: %s: Human-readable time difference. */
 			__( '%s ago', 'seo-repair-kit' ),
 			human_time_diff( $timestamp, current_time( 'timestamp' ) )
 		);

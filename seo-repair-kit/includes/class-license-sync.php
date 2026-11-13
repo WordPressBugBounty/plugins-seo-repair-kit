@@ -53,12 +53,11 @@ class SRK_License_Sync
             return $normalized;
         }
 
-        $url = SRK_API_Client::get_api_url( SRK_API_Client::ENDPOINT_LICENSE_VALIDATE );
-        $response = wp_remote_post($url, [
-            'body'    => json_encode(['domain' => $domain]),
-            'headers' => ['Content-Type' => 'application/json'],
-            'timeout' => 15,
-        ]);
+        $response = SRK_API_Client::signed_post_json(
+            SRK_API_Client::ENDPOINT_LICENSE_VALIDATE,
+            array( 'domain' => $domain ),
+            15
+        );
 
         if (is_wp_error($response)) {
             return self::error_response($response->get_error_message());
@@ -68,21 +67,10 @@ class SRK_License_Sync
         $data = json_decode($body, true);
 
         if (!isset($data['data']) || !isset($data['signature'])) {
-            return self::error_response('Invalid CRM response');
+            return self::error_response( __( 'SEO Repair Kit could not verify the license response. Please reconnect this website or contact support.', 'seo-repair-kit' ) );
         }
 
-        $payload = json_encode($data['data']);
-        $secret = defined('SRK_API_APP_KEY') ? SRK_API_APP_KEY : (defined('SRK_SHARED_SECRET') ? SRK_SHARED_SECRET : '');
-        if (0 === strpos($secret, 'base64:')) {
-            $decoded = base64_decode(substr($secret, 7), true);
-            if (false !== $decoded) {
-                $secret = $decoded;
-            }
-        }
-
-        $local_signature = hash_hmac('sha256', $payload, $secret);
-
-        if (!hash_equals($local_signature, $data['signature'])) {
+        if (!self::is_response_signature_valid($data['data'], $data['signature'])) {
             return self::error_response('Signature mismatch');
         }
 
@@ -102,6 +90,20 @@ class SRK_License_Sync
         $response['message'] = $message;
 
         return $response;
+    }
+
+    /** Validate the CRM response with this installation's credential. */
+    private static function is_response_signature_valid($data, $signature)
+    {
+        $secret = class_exists('SRK_API_Client') ? SRK_API_Client::resolve_shared_secret() : '';
+        if ('' === $secret) {
+            return false;
+        }
+
+        return hash_equals(
+            hash_hmac('sha256', wp_json_encode($data), $secret),
+            (string) $signature
+        );
     }
 
     private static function normalize_license_info($license_info)

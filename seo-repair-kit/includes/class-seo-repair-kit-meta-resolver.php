@@ -11,6 +11,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( ! class_exists( 'SRK_Content_Extractor' ) ) {
+	require_once dirname( __FILE__ ) . '/class-seo-repair-kit-content-extractor.php';
+}
+
 class SRK_Meta_Resolver {
 
 	private static $option_cache = array();
@@ -24,29 +28,7 @@ class SRK_Meta_Resolver {
 	 * @return string
 	 */
 	private static function get_first_paragraph_excerpt( int $post_id ): string {
-		$content_raw = (string) get_post_field( 'post_content', $post_id );
-		if ( '' === trim( $content_raw ) ) {
-			return '';
-		}
-
-		// Apply content filters so blocks/shortcodes become normal HTML paragraphs.
-		$content_html = (string) apply_filters( 'the_content', $content_raw );
-
-		// Prefer the first real paragraph.
-		if ( preg_match( '/<p\b[^>]*>(.*?)<\/p>/is', $content_html, $m ) ) {
-			$first = wp_strip_all_tags( (string) $m[1] );
-			$first = trim( preg_replace( '/\s+/', ' ', $first ) );
-			return $first;
-		}
-
-		// Fallback: split by blank lines.
-		$text  = wp_strip_all_tags( $content_html );
-		$text  = trim( preg_replace( "/\r\n|\r/", "\n", $text ) );
-		$parts = preg_split( "/\n\s*\n/", $text );
-		$first = is_array( $parts ) && ! empty( $parts[0] ) ? (string) $parts[0] : $text;
-		$first = trim( preg_replace( '/\s+/', ' ', $first ) );
-
-		return $first;
+		return SRK_Content_Extractor::get_first_paragraph( $post_id );
 	}
 
 	private static function get_option_cached( $option, $default = false ) {

@@ -16,7 +16,7 @@
  * Plugin Name:       SEO Repair Kit
  * Plugin URI:        https://seorepairkit.com
  * Description:       SEO-friendly AI assistant with intelligent spam monitoring, meta management, schema management, link repair, keyword tracking, and sitemap control.
- * Version:           2.1.12
+ * Version:           2.1.13
  * Author:            TorontoDigits
  * Author URI:        https://torontodigits.com/
  * License:           GPL-2.0+
@@ -34,7 +34,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Currently plugin version.
  * Start at version 1.0.1 and use SemVer - https://semver.org
  */
-define( 'SEO_REPAIR_KIT_VERSION', '2.1.12' );
+define( 'SEO_REPAIR_KIT_VERSION', '2.1.13' );
 
 /**
  * Define the base URL for SRK Intelligence Cloud.
@@ -47,20 +47,24 @@ if ( ! defined( 'SRK_CLOUD_API_BASE_URL' ) ) {
 }
 
 /**
- * Secret Key
+ * Dedicated Spam Monitor request-signing credential.
  *
- * Developers can override these constants in wp-config.php before WordPress
- * loads the plugin. Keep the defaults production-safe for packaged ZIPs.
+ * This value is scoped only to SRK Intelligence Cloud. It is not used for
+ * CRM licensing, customer accounts, checkout, or plugin status reporting.
+ * Developers may override it in wp-config.php before the plugin loads.
  */
-if ( ! defined( 'SRK_SHARED_SECRET' ) ) {
-	define( 'SRK_SHARED_SECRET', 'S/1nezDK+azLBl1Mo5vvTYX0HieBnG5fJn6H9/r0ZrI=' );
+if ( ! defined( 'SRK_CLOUD_SHARED_SECRET' ) ) {
+	define( 'SRK_CLOUD_SHARED_SECRET', 'AfhhLfA+azLBl1Mo5LvvTYX0Hj8ikLiuuyLh6y76g6bmvbfj' );
 }
 
 /**
- * This key is used for authentication with the Laravel API.
+ * Public identifier for SEO Repair Kit WordPress requests.
+ *
+ * This value is not a secret. After an administrator connects a license, the
+ * CRM issues a unique signing credential for this WordPress installation.
  */
-if ( ! defined( 'SRK_API_APP_KEY' ) ) {
-	define( 'SRK_API_APP_KEY', 'base64:' . SRK_SHARED_SECRET );
+if ( ! defined( 'SRK_INTEGRATION_KEY_ID' ) ) {
+	define( 'SRK_INTEGRATION_KEY_ID', 'seo-repair-kit-wordpress-v1' );
 }
 
 /**

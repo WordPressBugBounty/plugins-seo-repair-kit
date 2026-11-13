@@ -3,6 +3,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( ! class_exists( 'SRK_Content_Extractor' ) ) {
+	require_once plugin_dir_path( dirname( dirname( __FILE__ ) ) ) . 'includes/class-seo-repair-kit-content-extractor.php';
+}
+
 /**
  * Main Meta Manager Controller
  */
@@ -1449,13 +1453,7 @@ function srk_parse_template( $template, $post_id = null ) {
 
 	$fallback_excerpt = '';
 	if ( $post_id ) {
-		$content_raw  = (string) get_post_field( 'post_content', $post_id );
-		$content_html = (string) apply_filters( 'the_content', $content_raw );
-		if ( preg_match( '/<p\b[^>]*>(.*?)<\/p>/is', $content_html, $m ) ) {
-			$fallback_excerpt = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( (string) $m[1] ) ) );
-		} else {
-			$fallback_excerpt = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( $content_html ) ) );
-		}
+		$fallback_excerpt = SRK_Content_Extractor::get_first_paragraph( $post_id );
 	}
 
 	$replacements = array(

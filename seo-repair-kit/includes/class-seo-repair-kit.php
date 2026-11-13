@@ -146,7 +146,7 @@ class Seo_Repair_Kit {
 
 		$plugin_i18n = new Seo_Repair_Kit_i18n();
 
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
+		$this->loader->add_action( 'init', $plugin_i18n, 'load_plugin_textdomain', 0 );
 
 	}
 

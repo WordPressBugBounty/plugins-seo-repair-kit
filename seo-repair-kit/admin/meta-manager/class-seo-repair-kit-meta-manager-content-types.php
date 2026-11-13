@@ -580,6 +580,7 @@ class SRK_Meta_Manager_Content_Types {
 													<strong>
 														<?php
 														printf(
+															/* translators: %s: Singular post type label. */
 															esc_html__( 'Meta Title for single %s', 'seo-repair-kit' ),
 															esc_html( $srk_post_type->labels->singular_name )
 														);
@@ -590,6 +591,7 @@ class SRK_Meta_Manager_Content_Types {
 													<p class="srk-example-desc">
 														<?php
 														printf(
+															/* translators: %s: Singular post type label. */
 															esc_html__( 'Default title format for single %s entries. You can override it per item in the post editor.', 'seo-repair-kit' ),
 															esc_html( strtolower( $srk_post_type->labels->singular_name ) )
 														);
@@ -620,6 +622,7 @@ class SRK_Meta_Manager_Content_Types {
 													<strong>
 														<?php
 														printf(
+															/* translators: %s: Singular post type label. */
 															esc_html__( 'Meta Description for single %s', 'seo-repair-kit' ),
 															esc_html( $srk_post_type->labels->singular_name )
 														);
@@ -630,6 +633,7 @@ class SRK_Meta_Manager_Content_Types {
 													<p class="srk-example-desc">
 														<?php
 														printf(
+															/* translators: %s: Singular post type label. */
 															esc_html__( 'Default meta description for single %s entries. You can override it per item in the post editor.', 'seo-repair-kit' ),
 															esc_html( strtolower( $srk_post_type->labels->singular_name ) )
 														);

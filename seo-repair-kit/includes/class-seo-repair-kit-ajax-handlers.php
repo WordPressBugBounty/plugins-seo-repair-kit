@@ -10,6 +10,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( ! class_exists( 'SRK_Content_Extractor' ) ) {
+	require_once dirname( __FILE__ ) . '/class-seo-repair-kit-content-extractor.php';
+}
+
 /**
  * Handles all AJAX operations for schema management.
  */
@@ -742,12 +746,7 @@ class SeoRepairKit_AjaxHandlers {
 						return trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( $raw_excerpt ) ) );
 					}
 
-					$content_raw  = (string) get_post_field( 'post_content', $post->ID );
-					$content_html = (string) apply_filters( 'the_content', $content_raw );
-					if ( preg_match( '/<p\b[^>]*>(.*?)<\/p>/is', $content_html, $m ) ) {
-						return trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( (string) $m[1] ) ) );
-					}
-					return trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( $content_html ) ) );
+					return SRK_Content_Extractor::get_first_paragraph( $post->ID );
 
 				case 'post_date':
 					return $post ? get_the_date( DATE_W3C, $post ) : '';
@@ -1425,7 +1424,7 @@ class SeoRepairKit_AjaxHandlers {
 										$actual_value = get_the_date( DATE_W3C, $post_id );
 										break;
 									case 'post_content':
-										$actual_value = apply_filters( 'the_content', get_post_field( 'post_content', $post_id ) );
+										$actual_value = SRK_Content_Extractor::get_plain_content( $post_id );
 										break;
 									default:
 										$actual_value = get_post_meta( $post_id, $meta_key, true );

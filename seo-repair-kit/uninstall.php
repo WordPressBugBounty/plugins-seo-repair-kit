@@ -12,7 +12,7 @@
  *
  * @link       https://seorepairkit.com
  * @since      1.0.1
- * @version    2.1.12
+ * @version    2.1.13
  * @package    Seo_Repair_Kit
  */
 
@@ -193,6 +193,8 @@ srk_uninstall_delete_options(
 		'srk_plugin_version',
 		'srk_plugin_id',
 		'srk_plugin_instance_id',
+		'srk_installation_secret',
+		'srk_pro_license_key',
 		'srk_update_pending',
 		'srk_setup',
 		'srk_should_run_modal_onboarding',

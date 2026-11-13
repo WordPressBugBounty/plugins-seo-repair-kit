@@ -133,6 +133,7 @@ class SeoRepairKit_SpamMonitor {
 			SRK_Spam_Monitor_Scheduler::clear_last_scan_reference();
 		}
 		wp_send_json_success( array(
+			/* translators: %d: Number of cleared records. */
 			'message' => sprintf( __( '%d records cleared successfully.', 'seo-repair-kit' ), absint( $deleted ) ),
 			'deleted' => absint( $deleted ),
 		) );
@@ -327,7 +328,7 @@ class SeoRepairKit_SpamMonitor {
 	}
 
 	/**
-	 * Render Spam Monitor module access status card.
+	 * Render Spam Monitor plan access status card.
 	 *
 	 * @return void
 	 */
@@ -349,7 +350,7 @@ class SeoRepairKit_SpamMonitor {
 				<div class="srk-sm-module-access-icon"><span class="dashicons dashicons-info-outline"></span></div>
 				<div class="srk-sm-module-access-copy">
 					<strong><?php esc_html_e( 'Free Spam Monitor access', 'seo-repair-kit' ); ?></strong>
-					<p><?php esc_html_e( 'Free sites can scan with the SEO Repair Kit trial provider. Add the Spam Monitor module to connect your own SERP provider API key and unlock the full Spam Monitor workflow.', 'seo-repair-kit' ); ?></p>
+					<p><?php esc_html_e( 'Free sites can scan with the SEO Repair Kit trial provider. Activate any paid SEO Repair Kit plan to connect your own SERP provider API key and unlock the full Spam Monitor workflow.', 'seo-repair-kit' ); ?></p>
 					<div class="srk-sm-module-access-chips">
 						<span><?php esc_html_e( 'Unlock integrations:', 'seo-repair-kit' ); ?></span>
 						<em><?php esc_html_e( 'Serper.dev', 'seo-repair-kit' ); ?></em>
@@ -365,8 +366,8 @@ class SeoRepairKit_SpamMonitor {
 			<div class="srk-sm-module-access-card srk-sm-module-access-card--active">
 				<div class="srk-sm-module-access-icon"><span class="dashicons dashicons-yes-alt"></span></div>
 				<div class="srk-sm-module-access-copy">
-					<strong><?php esc_html_e( 'Spam Monitor module active', 'seo-repair-kit' ); ?></strong>
-					<p><?php esc_html_e( 'Your site can use Spam Monitor module features, including custom SERP provider connections where supported by your plan.', 'seo-repair-kit' ); ?></p>
+					<strong><?php esc_html_e( 'Spam Monitor active', 'seo-repair-kit' ); ?></strong>
+					<p><?php esc_html_e( 'Your paid SEO Repair Kit plan includes the complete Spam Monitor workflow and supported custom SERP provider connections.', 'seo-repair-kit' ); ?></p>
 					<div class="srk-sm-module-access-chips">
 						<span><?php esc_html_e( 'Active features:', 'seo-repair-kit' ); ?></span>
 						<em><?php esc_html_e( 'Custom SERP providers', 'seo-repair-kit' ); ?></em>

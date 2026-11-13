@@ -431,7 +431,7 @@ class SeoRepairKit_SpamMonitor_Rules {
 				<div>
 					<div class="srk-rules-score-total__label"><?php esc_html_e( 'Final score', 'seo-repair-kit' ); ?></div>
 					<div class="srk-rules-score-total__note" style="color:<?php echo esc_attr( $risk_color ); ?>;">
-						<?php printf( esc_html__( 'Maps to %s (capped at 100)', 'seo-repair-kit' ), esc_html( $risk_label ) ); ?>
+						<?php /* translators: %s: Risk level label. */ printf( esc_html__( 'Maps to %s (capped at 100)', 'seo-repair-kit' ), esc_html( $risk_label ) ); ?>
 					</div>
 				</div>
 				<span class="srk-rules-score-total__value" style="color:<?php echo esc_attr( $risk_color ); ?>;"><?php echo esc_html( min( 100, $total ) ); ?></span>

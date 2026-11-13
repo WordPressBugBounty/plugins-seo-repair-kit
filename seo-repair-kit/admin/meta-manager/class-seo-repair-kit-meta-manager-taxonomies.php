@@ -390,7 +390,7 @@ class SRK_Meta_Manager_Taxonomies {
 		$field_id       = 'srk_title_' . $taxonomy_slug;
 		?>
 		<div class="srk-field-group">
-			<label class="srk-field-title"><h3><?php $taxonomy_label = $taxonomy_obj ? $taxonomy_obj->labels->singular_name : ucfirst( str_replace( '_', ' ', $taxonomy_slug ) ); printf( esc_html__( 'Meta Title for %s', 'seo-repair-kit' ), esc_html( $taxonomy_label ) ); ?></h3></label>
+			<label class="srk-field-title"><h3><?php /* translators: %s: Archive or taxonomy label. */ $taxonomy_label = $taxonomy_obj ? $taxonomy_obj->labels->singular_name : ucfirst( str_replace( '_', ' ', $taxonomy_slug ) ); printf( esc_html__( 'Meta Title for %s', 'seo-repair-kit' ), esc_html( $taxonomy_label ) ); ?></h3></label>
 			<div class="srk-field-example srk-important">
 				<?php
 				$taxonomy_label = $taxonomy_obj ? $taxonomy_obj->labels->singular_name : ucfirst( str_replace( '_', ' ', $taxonomy_slug ) );
@@ -398,6 +398,7 @@ class SRK_Meta_Manager_Taxonomies {
 				<p class="srk-example-desc">
 					<?php
 					printf(
+						/* translators: %s: Taxonomy label. */
 						esc_html__( 'Default title format for archive pages of %s.', 'seo-repair-kit' ),
 						esc_html( strtolower( $taxonomy_label ) )
 					);
@@ -425,7 +426,7 @@ class SRK_Meta_Manager_Taxonomies {
 		$field_id      = 'srk_desc_' . $taxonomy_slug;
 		?>
 		<div class="srk-field-group">
-			<label class="srk-field-title"><h3><?php $taxonomy_label = $taxonomy_obj ? $taxonomy_obj->labels->singular_name : ucfirst( str_replace( '_', ' ', $taxonomy_slug ) ); printf( esc_html__( 'Meta Description for %s', 'seo-repair-kit' ), esc_html( $taxonomy_label ) ); ?></h3></label>
+			<label class="srk-field-title"><h3><?php /* translators: %s: Taxonomy label. */ $taxonomy_label = $taxonomy_obj ? $taxonomy_obj->labels->singular_name : ucfirst( str_replace( '_', ' ', $taxonomy_slug ) ); printf( esc_html__( 'Meta Description for %s', 'seo-repair-kit' ), esc_html( $taxonomy_label ) ); ?></h3></label>
 			<div class="srk-field-example srk-important">
 				<?php
 				$taxonomy_label = $taxonomy_obj ? $taxonomy_obj->labels->singular_name : ucfirst( str_replace( '_', ' ', $taxonomy_slug ) );
@@ -433,6 +434,7 @@ class SRK_Meta_Manager_Taxonomies {
 				<p class="srk-example-desc">
 					<?php
 					printf(
+						/* translators: %s: Taxonomy label. */
 						esc_html__( 'Default meta description for archive pages of %s.', 'seo-repair-kit' ),
 						esc_html( strtolower( $taxonomy_label ) )
 					);
@@ -1097,10 +1099,11 @@ class SRK_Meta_Manager_Taxonomies {
 						data-taxonomy="<?php echo esc_attr( $tax_slug ); ?>">
 
 						<div class="srk-taxonomy-header">
-							<h3><?php printf( esc_html__( '%s Settings', 'seo-repair-kit' ), esc_html( $taxonomy->labels->name ) ); ?></h3>
+							<h3><?php /* translators: %s: Taxonomy label. */ printf( esc_html__( '%s Settings', 'seo-repair-kit' ), esc_html( $taxonomy->labels->name ) ); ?></h3>
 							<p class="description">
 								<?php
 								printf(
+									/* translators: %s: Taxonomy label. */
 									esc_html__( 'SEO settings for all %s terms', 'seo-repair-kit' ),
 									esc_html( strtolower( $taxonomy->labels->name ) )
 								);

@@ -107,7 +107,7 @@ class SeoRepairKit_Settings {
                                             <span class="srk-checkbox-title"><?php echo esc_html( $srkit_settingsposttype->label ); ?></span>
                                             <span class="srk-checkbox-slug"><?php echo esc_html( $srkit_settingsposttype->name ); ?></span>
                                             <?php if ( ! $is_allowed ) : ?>
-                                                <span class="srk-checkbox-plan-note"><?php esc_html_e( 'Unlimited Broken Links + 404 Monitor add-on', 'seo-repair-kit' ); ?></span>
+                                                <span class="srk-checkbox-plan-note"><?php esc_html_e( 'Included with every paid plan', 'seo-repair-kit' ); ?></span>
                                             <?php endif; ?>
                                         </span>
                                     </label>
@@ -122,7 +122,8 @@ class SeoRepairKit_Settings {
                                         <p>
                                             <?php
                                             printf(
-                                                esc_html__( 'Pages are available for free up to %d links per scan. Posts and public custom post types require the £1.49 Unlimited Broken Links + 404 Monitor add-on.', 'seo-repair-kit' ),
+												/* translators: %d: Maximum number of links per free scan. */
+                                                esc_html__( 'Pages are available for free up to %d links per scan. Posts and public custom post types are included with every paid SEO Repair Kit plan.', 'seo-repair-kit' ),
                                                 absint( $scanner_free_limit )
                                             );
                                             ?>
@@ -237,16 +238,18 @@ class SeoRepairKit_Settings {
                                     $ts       = strtotime( $time );
                                     $time_ago = $ts ? human_time_diff( $ts, current_time( 'timestamp' ) ) : '';
                                     if ( $time_ago ) {
-                                        /* translators: %s: human time diff */
+										/* translators: %s: Human-readable time difference. */
                                         $time_text = sprintf( __( '%s ago', 'seo-repair-kit' ), $time_ago );
                                     }
                                 }
 
                                 $parts = array();
                                 if ( $status_human ) {
+									/* translators: %s: Human-readable email delivery status. */
                                     $parts[] = sprintf( __( 'Status: %s', 'seo-repair-kit' ), $status_human );
                                 }
                                 if ( $time_text ) {
+									/* translators: %s: Date and time the last email was sent. */
                                     $parts[] = sprintf( __( 'Last sent: %s', 'seo-repair-kit' ), $time_text );
                                 }
                                 if ( $message ) {

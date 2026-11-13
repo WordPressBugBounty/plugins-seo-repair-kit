@@ -976,10 +976,12 @@ class SeoRepairKit_SmartRedirects {
 					<div class="srk-pagination-info">
 						<?php
 						if ( $show_all ) {
+							/* translators: %d: Total number of items. */
 							printf( esc_html__( 'Showing all %d smart redirect records', 'seo-repair-kit' ), (int) $total_items );
 						} else {
 							$start = $offset + 1;
 							$end   = min( $offset + $per_page, $total_items );
+							/* translators: 1: First displayed item number, 2: Last displayed item number, 3: Total number of items. */
 							printf( esc_html__( 'Showing %1$d to %2$d of %3$d smart redirect records', 'seo-repair-kit' ), (int) $start, (int) $end, (int) $total_items );
 						}
 						?>

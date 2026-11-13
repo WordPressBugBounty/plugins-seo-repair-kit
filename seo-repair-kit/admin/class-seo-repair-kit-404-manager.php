@@ -373,6 +373,7 @@ class SeoRepairKit_404_Manager {
                             <div class="srk-pagination-info">
                                 <?php
                                 printf(
+									/* translators: 1: First displayed item number, 2: Last displayed item number, 3: Total number of items. */
                                     esc_html__( 'Showing %1$d-%2$d of %3$d entries', 'seo-repair-kit' ),
                                     (int) ( $offset + 1 ),
                                     (int) min( $offset + $per_page, $total_items ),
@@ -565,6 +566,7 @@ class SeoRepairKit_404_Manager {
 
             if ( $result !== false ) {
                 wp_send_json_success( array( 
+					/* translators: %d: Number of deleted 404 logs. */
                     'message' => sprintf( _n( '%d 404 log deleted.', '%d 404 logs deleted.', count( $log_ids ), 'seo-repair-kit' ), count( $log_ids ) ),
                     'deleted' => count( $log_ids )
                 ) );
@@ -582,6 +584,7 @@ class SeoRepairKit_404_Manager {
 
             if ( $result !== false ) {
                 wp_send_json_success( array( 
+					/* translators: %d: Number of ignored 404 logs. */
                     'message' => sprintf( _n( '%d 404 log ignored.', '%d 404 logs ignored.', count( $log_ids ), 'seo-repair-kit' ), count( $log_ids ) ),
                     'ignored' => count( $log_ids )
                 ) );
@@ -631,6 +634,7 @@ class SeoRepairKit_404_Manager {
         }
 
         wp_send_json_success( array( 
+			/* translators: %d: Number of cleared log entries. */
             'message' => sprintf( _n( '%d log entry cleared.', '%d log entries cleared.', $deleted, 'seo-repair-kit' ), $deleted ),
             'deleted' => $deleted
         ) );

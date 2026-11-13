@@ -60,7 +60,7 @@ class SRK_Spam_Monitor_Admin_Pagination {
 		?>
 		<div class="srk-sm-pagination srk-pagination-wrapper">
 			<div class="srk-pagination-info">
-				<?php printf( esc_html__( 'Showing %1$d to %2$d of %3$d records', 'seo-repair-kit' ), absint( $start ), absint( $end ), absint( $total ) ); ?>
+				<?php /* translators: 1: First displayed item number, 2: Last displayed item number, 3: Total number of items. */ printf( esc_html__( 'Showing %1$d to %2$d of %3$d records', 'seo-repair-kit' ), absint( $start ), absint( $end ), absint( $total ) ); ?>
 			</div>
 			<nav class="srk-pagination" aria-label="<?php esc_attr_e( 'Table pagination', 'seo-repair-kit' ); ?>">
 				<?php if ( $page > 1 ) : ?>

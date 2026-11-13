@@ -1108,6 +1108,7 @@ class SeoRepairKit_InternalLinking_Settings {
 										<span id="srk-il-ai-progress-summary">
 											<?php
 											printf(
+												/* translators: 1: Localized number of analyzed content items, 2: Localized total number of content items. */
 												esc_html__(
 													'%1$s of %2$s content items analyzed',
 													'seo-repair-kit'

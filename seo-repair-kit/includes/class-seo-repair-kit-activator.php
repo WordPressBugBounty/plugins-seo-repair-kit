@@ -73,7 +73,8 @@ class SeoRepairKit_Activator {
 		return;
 	}
 
-	$plugin_data  = get_plugin_data( $plugin_file );
+	// Only the raw version header is needed; translating metadata can load the domain before init.
+	$plugin_data  = get_plugin_data( $plugin_file, false, false );
 	$file_version = trim( $plugin_data['Version'] );
 
 	if ( empty( $file_version ) ) {
@@ -136,18 +137,16 @@ class SeoRepairKit_Activator {
         $plugin_id = get_option('srk_plugin_id');
         if (!$plugin_id) return;
 
-        // Send to the correct endpoint ONLY
-        $api_url = SRK_API_Client::get_api_url(SRK_API_Client::ENDPOINT_PLUGIN_VERSION);
-
         $data = [
             'plugin_id'      => $plugin_id,
             'pluginversion'  => $new_version,
         ];
 
-        wp_remote_post($api_url, [
-            'body'    => wp_json_encode($data),
-            'headers' => ['Content-Type' => 'application/json'],
-        ]);
+        SRK_API_Client::signed_post_json(
+            SRK_API_Client::ENDPOINT_PLUGIN_VERSION,
+            $data,
+            15
+        );
     }
 
     /**
@@ -757,7 +756,6 @@ class SeoRepairKit_Activator {
      */
     private static function srk_send_data_to_api() {
 
-        $api_url            = SRK_API_Client::get_api_url( SRK_API_Client::ENDPOINT_PLUGIN_DATA );
         $site_title         = sanitize_text_field( get_bloginfo( 'name' ) );
         $post_count         = wp_count_posts();
         $admin_email        = sanitize_email( get_option( 'admin_email' ) );
@@ -783,11 +781,11 @@ class SeoRepairKit_Activator {
             'plugin_instance_id' => $plugin_instance_id,
         );
 
-        $response = wp_remote_post( esc_url_raw( $api_url ), array(
-            'body'    => wp_json_encode( $data ),
-            'headers' => array( 'Content-Type' => 'application/json' ),
-            'timeout' => 30,
-        ) );
+        $response = SRK_API_Client::signed_post_json(
+            SRK_API_Client::ENDPOINT_PLUGIN_DATA,
+            $data,
+            30
+        );
 
         if ( is_wp_error( $response ) ) {
             return;
@@ -801,6 +799,11 @@ class SeoRepairKit_Activator {
             // Now send status to CRM after we have plugin_id
             self::send_status_to_crm( 'activated' );
         }
+    }
+
+    /** Send the existing basic plugin record after a license is connected. */
+    public static function sync_plugin_data() {
+        self::srk_send_data_to_api();
     }
     /**
      * Send site health info to API when user grants consent.
@@ -841,7 +844,6 @@ class SeoRepairKit_Activator {
             }
         }
 
-        $api_url = SRK_API_Client::get_api_url( SRK_API_Client::ENDPOINT_PLUGIN_DATA );
         $site_info = self::get_site_health_info();
         
         $plugin_instance_id = get_option( 'srk_plugin_instance_id' );
@@ -869,11 +871,11 @@ class SeoRepairKit_Activator {
             'site_information'   => wp_json_encode( $site_info ),
         );
         
-        $response = wp_remote_post( esc_url_raw( $api_url ), array(
-            'body'    => wp_json_encode( $data ),
-            'headers' => array( 'Content-Type' => 'application/json' ),
-            'timeout' => 30,
-        ) );
+        $response = SRK_API_Client::signed_post_json(
+            SRK_API_Client::ENDPOINT_PLUGIN_DATA,
+            $data,
+            30
+        );
 
         // Handle errors if request fails
         if ( is_wp_error( $response ) ) {
@@ -907,7 +909,6 @@ class SeoRepairKit_Activator {
             return;
         }
 
-        $api_url   = SRK_API_Client::get_api_url(SRK_API_Client::ENDPOINT_PLUGIN_STATUS);
         $plugin_id = get_option('srk_plugin_id');
 
         if (!$plugin_id) {
@@ -919,10 +920,11 @@ class SeoRepairKit_Activator {
             'status'    => $status
         ];
 
-        $response = wp_remote_post($api_url, [
-            'body'    => wp_json_encode($data),
-            'headers' => ['Content-Type' => 'application/json']
-        ]);
+        SRK_API_Client::signed_post_json(
+            SRK_API_Client::ENDPOINT_PLUGIN_STATUS,
+            $data,
+            15
+        );
     }
 
     /**

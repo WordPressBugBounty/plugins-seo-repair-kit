@@ -945,6 +945,7 @@ class SeoRepairKit_Redirection
                             <?php
                             if ($logs_show_all) {
                                 printf(
+									/* translators: %1$d: Total number of items. */
                                     esc_html__('Showing all %1$d log entries', 'seo-repair-kit'),
                                     (int) $logs_total_items
                                 );
@@ -952,6 +953,7 @@ class SeoRepairKit_Redirection
                                 $logs_start = $logs_offset + 1;
                                 $logs_end = min($logs_offset + $logs_per_page, $logs_total_items);
                                 printf(
+									/* translators: 1: First displayed item number, 2: Last displayed item number, 3: Total number of items. */
                                     esc_html__('Showing %1$d to %2$d of %3$d log entries', 'seo-repair-kit'),
                                     (int) $logs_start,
                                     (int) $logs_end,
@@ -1335,6 +1337,7 @@ class SeoRepairKit_Redirection
                                 $needs_migration = true;
                                 // Use identifier escaping for table name in SELECT.
                                 $old_count = $wpdb->get_var( "SELECT COUNT(*) FROM {$table_name_sql}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Cached migration status panel check for plugin-owned custom table; identifier is derived from $wpdb->prefix.
+								/* translators: %d: Number of legacy records requiring migration. */
                                 $migration_status = sprintf( esc_html__( 'Found %d records from old version that need migration.', 'seo-repair-kit' ), $old_count );
                             } elseif ( $has_old_schema && $has_new_schema ) {
                                 // Use identifier escaping for table name in SELECT.
@@ -1345,6 +1348,7 @@ class SeoRepairKit_Redirection
                                 );
                                 if ( $unmigrated > 0 ) {
                                     $needs_migration = true;
+									/* translators: %d: Number of records awaiting migration. */
                                     $migration_status = sprintf( esc_html__( 'Found %d unmigrated records.', 'seo-repair-kit' ), $unmigrated );
                                 } else {
                                     $migration_status = esc_html__( 'All records have been migrated successfully.', 'seo-repair-kit' );
@@ -2196,6 +2200,7 @@ class SeoRepairKit_Redirection
                         <?php
                         if ($show_all) {
                             printf(
+								/* translators: %1$d: Total number of items. */
                                 esc_html__('Showing all %1$d redirections', 'seo-repair-kit'),
                                 (int) $total_items
                             );
@@ -2203,6 +2208,7 @@ class SeoRepairKit_Redirection
                             $start = $offset + 1;
                             $end = min($offset + $per_page, $total_items);
                             printf(
+								/* translators: 1: First displayed item number, 2: Last displayed item number, 3: Total number of items. */
                                 esc_html__('Showing %1$d to %2$d of %3$d redirections', 'seo-repair-kit'),
                                 (int) $start,
                                 (int) $end,
@@ -4323,12 +4329,14 @@ class SeoRepairKit_Redirection
             set_transient('srk_migration_log', array($migration_result['message']), 3600);
             
             $response_message = sprintf(
+				/* translators: %d: Number of successfully migrated records. */
                 esc_html__('Migration completed successfully! %d records migrated.', 'seo-repair-kit'),
                 $migration_result['records_migrated']
             );
             
             if ($migration_result['records_failed'] > 0) {
                 $response_message .= ' ' . sprintf(
+					/* translators: %d: Number of records that failed to migrate. */
                     esc_html__('%d records failed to migrate.', 'seo-repair-kit'),
                     $migration_result['records_failed']
                 );

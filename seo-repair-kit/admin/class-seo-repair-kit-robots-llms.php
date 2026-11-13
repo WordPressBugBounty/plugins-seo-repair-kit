@@ -515,7 +515,7 @@ class SeoRepairKit_Robots_LLMs {
                                     id="srk-llms-editor" 
                                     class="srk-text-editor" 
                                     rows="20"
-                                    placeholder="<?php esc_attr_e( '# LLMs.txt for ' . get_bloginfo( 'name' ) . '&#10;# This file helps AI models understand our content&#10;&#10;## Primary Content', 'seo-repair-kit' ); ?>"
+                                    placeholder="<?php /* translators: %s: Website name. Preserve the Markdown heading markers and line breaks. */ echo esc_attr( sprintf( __( '# LLMs.txt for %s&#10;# This file helps AI models understand our content&#10;&#10;## Primary Content', 'seo-repair-kit' ), get_bloginfo( 'name' ) ) ); ?>"
                                 ><?php echo esc_textarea( $llms_content ); ?></textarea>
                                 <div class="srk-editor-actions">
                                     <button type="button" class="srk-btn srk-btn-primary" id="srk-save-llms">
@@ -617,7 +617,7 @@ class SeoRepairKit_Robots_LLMs {
                                     id="srk-robots-editor" 
                                     class="srk-text-editor" 
                                     rows="20" 
-                                    placeholder="<?php esc_attr_e( 'User-agent: *&#10;Disallow: /wp-admin/&#10;Allow: /wp-admin/admin-ajax.php&#10;Disallow: /wp-includes/&#10;&#10;Sitemap: ' . esc_url( home_url( '/sitemap.xml' ) ), 'seo-repair-kit' ); ?>"
+                                    placeholder="<?php /* translators: %s: Sitemap URL. Preserve the robots.txt directives, paths, and line breaks. */ echo esc_attr( sprintf( __( 'User-agent: *&#10;Disallow: /wp-admin/&#10;Allow: /wp-admin/admin-ajax.php&#10;Disallow: /wp-includes/&#10;&#10;Sitemap: %s', 'seo-repair-kit' ), esc_url( home_url( '/sitemap.xml' ) ) ) ); ?>"
                                 ><?php echo esc_textarea( $robots_content ); ?></textarea>
                             </div>
                         </div>

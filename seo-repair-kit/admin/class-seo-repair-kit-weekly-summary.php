@@ -36,8 +36,8 @@ class SeoRepairKit_WeeklySummaryService {
 		// Register cron hook.
 		add_action( 'srk_weekly_seo_summary_cron', array( $this, 'srk_send_complete_seo_summary' ) );
 
-		// Initialize on plugins_loaded to ensure hooks are set.
-		add_action( 'plugins_loaded', array( $this, 'srk_init_cron' ) );
+		// Scheduling resolves translated interval labels, so wait until init.
+		add_action( 'init', array( $this, 'srk_init_cron' ) );
 
 		// Schedule cron on plugin activation.
 		register_activation_hook( SEOREPAIRKIT_PLUGIN_FILE, array( $this, 'srk_schedule_weekly_cron' ) );
@@ -70,7 +70,7 @@ class SeoRepairKit_WeeklySummaryService {
 		// Add 7 days schedule for testing.
 		$schedules['srk_seven_days'] = array(
 			'interval' => 7 * DAY_IN_SECONDS,
-			'display'  => __( 'Every 7 Days (SEO Repair Kit)', 'seo-repair-kit' ),
+			'display'  => did_action( 'init' ) ? __( 'Every 7 Days (SEO Repair Kit)', 'seo-repair-kit' ) : 'Every 7 Days (SEO Repair Kit)',
 		);
 
 		return $schedules;
@@ -148,6 +148,7 @@ class SeoRepairKit_WeeklySummaryService {
 		);
 
 		$srk_subject = sprintf(
+			/* translators: 1: Website name, 2: Report date. */
 			__( '📊 Weekly SEO Report: Search Performance, Links Scan, Alt Text & Redirections - %1$s - %2$s', 'seo-repair-kit' ),
 			$srk_site_name,
 			date_i18n( 'M j, Y' )
@@ -398,7 +399,8 @@ class SeoRepairKit_WeeklySummaryService {
 		$srk_period = __( 'All Time', 'seo-repair-kit' );
 		if ( $srk_last_scan_ts > 0 ) {
 			$srk_scan_date = date_i18n( 'M j, Y', $srk_last_scan_ts );
-			$srk_period    = sprintf( __( 'Last scan: %s', 'seo-repair-kit' ), $srk_scan_date );
+			/* translators: %s: Date of the last link scan. */
+			$srk_period = sprintf( __( 'Last scan: %s', 'seo-repair-kit' ), $srk_scan_date );
 		}
 
 		return array(
@@ -839,6 +841,7 @@ class SeoRepairKit_WeeklySummaryService {
 						<?php
 						echo wp_kses_post(
 							sprintf(
+								/* translators: %s: Website name. */
 								__( 'Hello! Here\'s your <strong style="color: #0b1d51;">weekly SEO performance report</strong> for <strong style="color: #F28500;">%s</strong>. Below is a comprehensive overview of your site\'s search performance and technical health.', 'seo-repair-kit' ),
 								esc_html( $site_name )
 							)
@@ -1035,6 +1038,7 @@ class SeoRepairKit_WeeklySummaryService {
 								<div style="font-size: 14px; color: #666;">
 									<?php
 									printf(
+										/* translators: 1: Number of broken links, 2: Total number of scanned links. */
 										esc_html__( '%1$d broken links found out of %2$d total links', 'seo-repair-kit' ),
 										(int) ( isset( $broken_links_data['broken_links'] ) ? $broken_links_data['broken_links'] : 0 ),
 										(int) ( isset( $broken_links_data['total_links'] ) ? $broken_links_data['total_links'] : 0 )
@@ -1056,6 +1060,7 @@ class SeoRepairKit_WeeklySummaryService {
 									<div style="font-size: 12px; color: #999;">
 										<?php
 										printf(
+											/* translators: %d: Percentage of broken links. %% is a literal percent sign. */
 											esc_html__( '%d%% broken rate', 'seo-repair-kit' ),
 											(int) $broken_percentage
 										);
@@ -1106,6 +1111,7 @@ class SeoRepairKit_WeeklySummaryService {
 									<div style="font-size: 12px; color: #999;">
 										<?php
 										printf(
+											/* translators: %d: Percentage of images missing alt text. %% is a literal percent sign. */
 											esc_html__( '%d%% improvement needed', 'seo-repair-kit' ),
 											(int) ( 100 - $alt_percentage )
 										);

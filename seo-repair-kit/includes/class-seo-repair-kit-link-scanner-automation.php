@@ -87,6 +87,20 @@ class SeoRepairKit_LinkScanner_Automation {
 		add_action( 'wp_ajax_srk_ajax_run_scan_now', array( $this, 'ajax_run_scan_now' ) );
 		add_action( 'wp_ajax_srk_ajax_reset_scan_table', array( $this, 'ajax_reset_scan_table' ) );
 
+		// Settings resolve license messages and post types, which are not ready during plugins_loaded.
+		if ( did_action( 'init' ) ) {
+			$this->maybe_schedule_event();
+		} else {
+			add_action( 'init', array( $this, 'maybe_schedule_event' ) );
+		}
+	}
+
+	/**
+	 * Restore a missing enabled schedule after translations and post types are ready.
+	 *
+	 * @return void
+	 */
+	public function maybe_schedule_event() {
 		$settings = self::get_settings();
 
 		if ( ! empty( $settings['enabled'] ) && ! wp_next_scheduled( self::EVENT_HOOK ) ) {
@@ -124,22 +138,24 @@ class SeoRepairKit_LinkScanner_Automation {
 	 * @return array
 	 */
 	public static function register_custom_intervals( $schedules ) {
+		// Other plugins can request cron intervals before init; translate only once it is safe.
+		$can_translate = did_action( 'init' );
 		$custom_intervals = array(
 			'srk_every_10_minutes' => array(
 				'interval' => 10 * MINUTE_IN_SECONDS,
-				'display'  => __( 'Every 10 Minutes', 'seo-repair-kit' ),
+				'display'  => $can_translate ? __( 'Every 10 Minutes', 'seo-repair-kit' ) : 'Every 10 Minutes',
 			),
 			'srk_every_3_days'    => array(
 				'interval' => 3 * DAY_IN_SECONDS,
-				'display'  => __( 'Every 3 Days', 'seo-repair-kit' ),
+				'display'  => $can_translate ? __( 'Every 3 Days', 'seo-repair-kit' ) : 'Every 3 Days',
 			),
 			'srk_biweekly'        => array(
 				'interval' => 14 * DAY_IN_SECONDS,
-				'display'  => __( 'Bi-Weekly', 'seo-repair-kit' ),
+				'display'  => $can_translate ? __( 'Bi-Weekly', 'seo-repair-kit' ) : 'Bi-Weekly',
 			),
 			'srk_monthly'         => array(
 				'interval' => 30 * DAY_IN_SECONDS,
-				'display'  => __( 'Monthly', 'seo-repair-kit' ),
+				'display'  => $can_translate ? __( 'Monthly', 'seo-repair-kit' ) : 'Monthly',
 			),
 		);
 
@@ -384,6 +400,7 @@ class SeoRepairKit_LinkScanner_Automation {
 					'broken'  => $broken,
 					'total'   => isset( $result['data']['totalLinks'] ) ? (int) $result['data']['totalLinks'] : 0,
 					'message' => sprintf(
+						/* translators: %d: Number of broken links found. */
 						__( 'Scan complete. Broken links found: %d.', 'seo-repair-kit' ),
 						$broken
 					),

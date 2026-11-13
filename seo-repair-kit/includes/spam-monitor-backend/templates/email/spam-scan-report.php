@@ -25,7 +25,7 @@ $risk_colors = array(
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="color-scheme" content="light only">
-	<title><?php echo esc_html( sprintf( __( 'Spam Monitor report for %s', 'seo-repair-kit' ), $template_data['domain'] ) ); ?></title>
+	<title><?php /* translators: %s: Website domain. */ echo esc_html( sprintf( __( 'Spam Monitor report for %s', 'seo-repair-kit' ), $template_data['domain'] ) ); ?></title>
 	<style>
 		@media only screen and (max-width:620px) {
 			.srk-shell { width:100% !important; }
@@ -75,7 +75,7 @@ $risk_colors = array(
 								);
 								?>
 							</p>
-							<p style="margin:12px 0 0;color:#89929c;font-size:12px;"><?php echo esc_html( sprintf( __( 'Generated %s', 'seo-repair-kit' ), $template_data['generated_at'] ) ); ?></p>
+							<p style="margin:12px 0 0;color:#89929c;font-size:12px;"><?php /* translators: %s: Report generation date and time. */ echo esc_html( sprintf( __( 'Generated %s', 'seo-repair-kit' ), $template_data['generated_at'] ) ); ?></p>
 						</td>
 					</tr>
 					<tr>
@@ -140,7 +140,7 @@ $risk_colors = array(
 									<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border:1px solid #e0e4e8;border-radius:6px;"><tr><td class="srk-finding-pad" style="padding:20px;">
 										<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"><tr>
 											<td><span style="display:inline-block;padding:5px 9px;background-color:<?php echo esc_attr( $colors[0] ); ?>;border-radius:4px;color:<?php echo esc_attr( $colors[1] ); ?>;font-size:11px;font-weight:700;text-transform:uppercase;"><?php echo esc_html( $result['risk'] ); ?></span></td>
-											<td align="right" style="color:#6f7883;font-size:12px;"><?php if ( $result['position'] ) : ?><?php echo esc_html( sprintf( __( 'Position %d', 'seo-repair-kit' ), $result['position'] ) ); ?> &nbsp; | &nbsp; <?php endif; ?><strong style="color:#18202a;"><?php echo esc_html( sprintf( __( 'Risk score %d/100', 'seo-repair-kit' ), $result['score'] ) ); ?></strong></td>
+											<td align="right" style="color:#6f7883;font-size:12px;"><?php if ( $result['position'] ) : ?><?php /* translators: %d: Search result position. */ echo esc_html( sprintf( __( 'Position %d', 'seo-repair-kit' ), $result['position'] ) ); ?> &nbsp; | &nbsp; <?php endif; ?><strong style="color:#18202a;"><?php /* translators: %d: Risk score from 0 to 100. */ echo esc_html( sprintf( __( 'Risk score %d/100', 'seo-repair-kit' ), $result['score'] ) ); ?></strong></td>
 										</tr></table>
 										<h3 style="margin:14px 0 6px;color:#18202a;font-size:16px;line-height:1.45;"><?php echo esc_html( $result['title'] ); ?></h3>
 										<a href="<?php echo esc_url( $result['url'] ); ?>" style="color:#e55d0a;font-size:12px;line-height:1.45;text-decoration:none;word-break:break-all;"><?php echo esc_html( $result['url'] ); ?></a>
@@ -166,7 +166,7 @@ $risk_colors = array(
 						<?php endforeach; ?>
 					<?php endif; ?>
 					<?php if ( ! empty( $template_data['remaining_result_count'] ) ) : ?>
-						<tr><td class="srk-pad" style="padding:12px 32px 8px;color:#6f7883;font-size:13px;line-height:1.5;"><?php echo esc_html( sprintf( __( '%d additional results are available in the WordPress dashboard.', 'seo-repair-kit' ), absint( $template_data['remaining_result_count'] ) ) ); ?></td></tr>
+						<tr><td class="srk-pad" style="padding:12px 32px 8px;color:#6f7883;font-size:13px;line-height:1.5;"><?php /* translators: %d: Number of additional scan results. */ echo esc_html( sprintf( __( '%d additional results are available in the WordPress dashboard.', 'seo-repair-kit' ), absint( $template_data['remaining_result_count'] ) ) ); ?></td></tr>
 					<?php endif; ?>
 					<tr>
 						<td class="srk-pad" style="padding:28px 32px 32px;">

@@ -768,7 +768,7 @@ class SRK_Spam_Monitor_SERP_Provider {
 			'masked_credentials' => '',
 			'masked_key'    => '',
 			'last_tested_at'=> '',
-			'message'       => __( 'Free users can scan with the SEO Repair Kit trial provider. Add the Spam Monitor module to connect your own SERP provider API key.', 'seo-repair-kit' ),
+			'message'       => __( 'Free users can scan with the SEO Repair Kit trial provider. Activate any paid SEO Repair Kit plan to connect your own SERP provider API key.', 'seo-repair-kit' ),
 		);
 	}
 
@@ -780,7 +780,7 @@ class SRK_Spam_Monitor_SERP_Provider {
 	private function get_serp_provider_locked_error() {
 		return new WP_Error(
 			'srk_serp_provider_paid_required',
-			__( 'Custom SERP provider keys require the paid Spam Monitor module. Free users can continue with the SEO Repair Kit trial provider.', 'seo-repair-kit' )
+			__( 'Custom SERP provider keys are included with every paid SEO Repair Kit plan. Free users can continue with the SEO Repair Kit trial provider.', 'seo-repair-kit' )
 		);
 	}
 

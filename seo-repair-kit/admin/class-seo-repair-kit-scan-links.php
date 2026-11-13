@@ -209,7 +209,8 @@ class SeoRepairKit_ScanLinks {
             </div>
         </div>';
         if ( $srkit_limit_reached ) {
-            echo '<div class="srk-scanner-limit-message"><span class="dashicons dashicons-lock"></span><p>' . esc_html( sprintf( __( 'Free Link Scanner stopped at %d links. Add Unlimited Broken Links + 404 Monitor for £1.49/month to scan all links, Posts, and public custom post types.', 'seo-repair-kit' ), absint( $scanner_free_limit ) ) ) . '</p></div>';
+			/* translators: %d: Maximum number of links per free scan. */
+            echo '<div class="srk-scanner-limit-message"><span class="dashicons dashicons-lock"></span><p>' . esc_html( sprintf( __( 'Free Link Scanner stopped at %d links. Activate any paid SEO Repair Kit plan to scan all links, Posts, and public custom post types.', 'seo-repair-kit' ), absint( $scanner_free_limit ) ) ) . '</p></div>';
         }
         echo '<p class="srk-csv-download"><a href="#" id="download-links-csv" class="srk-dashboard-button srk-button-with-icon"><span class="dashicons dashicons-download"></span>' . esc_html__( 'Download CSV', 'seo-repair-kit' ) . '</a></p>';
 

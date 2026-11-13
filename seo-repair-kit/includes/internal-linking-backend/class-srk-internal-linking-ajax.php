@@ -151,7 +151,7 @@ class SRK_Internal_Linking_Ajax {
 
 		wp_send_json_error(
 			array(
-				'message' => __( 'Internal Linking is a paid module. Please upgrade or renew Internal Linking to use this feature.', 'seo-repair-kit' ),
+				'message' => __( 'Internal Linking is included with every paid SEO Repair Kit plan. Please activate or renew your plan to use this feature.', 'seo-repair-kit' ),
 				'code'    => 'srk_il_paid_required',
 			),
 			403
@@ -1427,6 +1427,7 @@ class SRK_Internal_Linking_Ajax {
 			array(
 				'html'       => $html,
 				'count_text' => sprintf(
+					/* translators: %d: Number of rules. */
 					__( 'Showing %d rules', 'seo-repair-kit' ),
 					count( $rules )
 				),

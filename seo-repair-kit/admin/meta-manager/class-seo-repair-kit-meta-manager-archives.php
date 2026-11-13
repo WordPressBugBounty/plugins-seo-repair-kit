@@ -404,6 +404,7 @@ class SRK_Meta_Manager_Archives {
 										<strong>
 											<?php
 											$archive_label = ucfirst( str_replace( '_', ' ', $archive_key ) );
+											/* translators: %s: Archive or taxonomy label. */
 											printf( esc_html__( 'Meta Title for %s', 'seo-repair-kit' ), esc_html( $archive_label ) );
 											?>
 										</strong>

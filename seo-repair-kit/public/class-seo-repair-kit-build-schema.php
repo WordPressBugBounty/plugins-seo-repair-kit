@@ -10,6 +10,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( ! class_exists( 'SRK_Content_Extractor' ) ) {
+	require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-seo-repair-kit-content-extractor.php';
+}
+
 if ( ! class_exists( 'Seo_Repair_Kit_Build_Schema' ) ) {
 
 	/**
@@ -996,7 +1000,7 @@ if ( ! class_exists( 'Seo_Repair_Kit_Build_Schema' ) ) {
 				return get_the_excerpt( $post_id );
 
 			case 'post_content':
-				return wp_strip_all_tags( apply_filters( 'the_content', get_post_field( 'post_content', $post_id ) ) );
+				return SRK_Content_Extractor::get_plain_content( $post_id );
 
 			case 'post_date':
 				return get_the_date( 'c', $post_id );

@@ -240,6 +240,7 @@ class SeoRepairKit_LinkScanner {
 
 		$last_scan_relative = $last_scan_ts ? human_time_diff( $last_scan_ts, $now ) : '';
 		$last_scan_label    = $last_scan_ts
+			/* translators: %s: Human-readable time difference. */
 			? sprintf( esc_html__( '%s ago', 'seo-repair-kit' ), $last_scan_relative )
 			: esc_html__( 'No scans yet', 'seo-repair-kit' );
 
@@ -259,15 +260,18 @@ class SeoRepairKit_LinkScanner {
 		$schedule_label       = isset( $schedule_map[ $links_schedule ] ) ? $schedule_map[ $links_schedule ] : esc_html__( 'Manual', 'seo-repair-kit' );
 		$automation_active    = 'manual' !== $links_schedule;
 		$schedule_description = $automation_active
+			/* translators: %s: Scan schedule label, such as daily or weekly. */
 			? sprintf( esc_html__( 'Runs automatically (%s cadence).', 'seo-repair-kit' ), strtolower( $schedule_label ) )
 			: esc_html__( 'Launch scans manually whenever you need a health check.', 'seo-repair-kit' );
 
 		$scan_count_label = $scan_count > 0
+			/* translators: %s: Localized number of checked URLs. */
 			? sprintf( esc_html__( '%s URLs have been checked so far.', 'seo-repair-kit' ), number_format_i18n( $scan_count ) )
 			: esc_html__( 'Run your first scan to capture a baseline.', 'seo-repair-kit' );
 
 		$broken_desc = $broken_links > 0
 			? sprintf(
+				/* translators: %1$s: Localized percentage of broken links. %% is a literal percent sign. */
 				esc_html__( '%1$s%% of the scanned links need fixes.', 'seo-repair-kit' ),
 				number_format_i18n( $broken_percentage )
 			)
@@ -349,7 +353,7 @@ class SeoRepairKit_LinkScanner {
 						<span class="srk-summary-eyebrow"><?php esc_html_e( 'broken links detected', 'seo-repair-kit' ); ?></span>
 						<div class="srk-summary-value">
 							<?php echo esc_html( number_format_i18n( $broken_links ) ); ?>
-							<span class="srk-summary-pill"><?php echo esc_html( sprintf( __( '%s%%', 'seo-repair-kit' ), number_format_i18n( $broken_percentage ) ) ); ?></span>
+							<span class="srk-summary-pill"><?php /* translators: %s: Localized percentage. %% is a literal percent sign. */ echo esc_html( sprintf( __( '%s%%', 'seo-repair-kit' ), number_format_i18n( $broken_percentage ) ) ); ?></span>
 						</div>
 						<p class="srk-summary-subtext"><?php echo esc_html( $broken_desc ); ?></p>
 					</div>
@@ -357,7 +361,7 @@ class SeoRepairKit_LinkScanner {
 						<span class="srk-summary-eyebrow"><?php esc_html_e( 'Healthy links', 'seo-repair-kit' ); ?></span>
 						<div class="srk-summary-value">
 							<?php echo esc_html( number_format_i18n( $working_links ) ); ?>
-							<span class="srk-summary-pill srk-pill-success"><?php echo esc_html( sprintf( __( '%s%%', 'seo-repair-kit' ), number_format_i18n( $working_percentage ) ) ); ?></span>
+							<span class="srk-summary-pill srk-pill-success"><?php /* translators: %s: Localized percentage. %% is a literal percent sign. */ echo esc_html( sprintf( __( '%s%%', 'seo-repair-kit' ), number_format_i18n( $working_percentage ) ) ); ?></span>
 						</div>
 						<p class="srk-summary-subtext"><?php esc_html_e( 'Working links confirmed in your last scan.', 'seo-repair-kit' ); ?></p>
 					</div>
@@ -380,7 +384,8 @@ class SeoRepairKit_LinkScanner {
 							<p>
 								<?php
 								printf(
-									esc_html__( 'Free sites can scan Pages only up to %d links per scan. Add Unlimited Broken Links + 404 Monitor for £1.49/month to scan Posts and public custom post types and remove the scan limit.', 'seo-repair-kit' ),
+									/* translators: %d: Maximum number of links per free scan. */
+									esc_html__( 'Free sites can scan Pages only up to %d links per scan. Activate any paid SEO Repair Kit plan to scan Posts and public custom post types and remove the scan limit.', 'seo-repair-kit' ),
 									absint( $scanner_free_limit )
 								);
 								?>
@@ -395,7 +400,7 @@ class SeoRepairKit_LinkScanner {
 							<?php endif; ?>
 						</div>
 						<a class="srk-scanner-upgrade-link" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( SRK_API_Client::get_api_url( SRK_API_Client::ENDPOINT_SUBSCRIBE, array( 'domain' => site_url() ) ) ); ?>">
-							<?php esc_html_e( 'Customize Plan', 'seo-repair-kit' ); ?>
+							<?php esc_html_e( 'View Plans', 'seo-repair-kit' ); ?>
 						</a>
 					</div>
 				<?php else : ?>
@@ -831,7 +836,7 @@ class SeoRepairKit_LinkScanner {
 							<span class="dashicons dashicons-warning"></span>
 							<h3><?php esc_html_e( '404 Error Logs', 'seo-repair-kit' ); ?></h3>
 						</div>
-						<span class="srk-table-count"><?php echo esc_html( sprintf( _n( '%s entry', '%s entries', $total_items, 'seo-repair-kit' ), number_format_i18n( $total_items ) ) ); ?></span>
+						<span class="srk-table-count"><?php /* translators: %s: Localized number of log entries. */ echo esc_html( sprintf( _n( '%s entry', '%s entries', $total_items, 'seo-repair-kit' ), number_format_i18n( $total_items ) ) ); ?></span>
 					</div>
 
 					<div class="srk-table-scroll">
@@ -918,6 +923,7 @@ class SeoRepairKit_LinkScanner {
 								<?php
 								if ( $show_all ) {
 									printf(
+										/* translators: %1$d: Total number of items. */
 										esc_html__( 'Showing all %1$d log entries', 'seo-repair-kit' ),
 										(int) $total_items
 									);
@@ -925,6 +931,7 @@ class SeoRepairKit_LinkScanner {
 									$start = $offset + 1;
 									$end   = min( $offset + $per_page, $total_items );
 									printf(
+										/* translators: 1: First displayed item number, 2: Last displayed item number, 3: Total number of items. */
 										esc_html__( 'Showing %1$d to %2$d of %3$d log entries', 'seo-repair-kit' ),
 										(int) $start,
 										(int) $end,
@@ -1182,7 +1189,9 @@ class SeoRepairKit_LinkScanner {
 
 				$key = ( 'delete' === $action ) ? 'deleted' : 'ignored';
 				$msg = ( 'delete' === $action )
+					/* translators: %d: Number of deleted 404 logs. */
 					? sprintf( _n( '%d 404 log deleted.', '%d 404 logs deleted.', $result, 'seo-repair-kit' ), $result )
+					/* translators: %d: Number of ignored 404 logs. */
 					: sprintf( _n( '%d 404 log ignored.', '%d 404 logs ignored.', $result, 'seo-repair-kit' ), $result );
 
 				wp_send_json_success(
@@ -1288,6 +1297,7 @@ class SeoRepairKit_LinkScanner {
 
 		wp_send_json_success(
 			array(
+				/* translators: %d: Number of cleared log entries. */
 				'message' => sprintf( _n( '%d log entry cleared.', '%d log entries cleared.', $deleted, 'seo-repair-kit' ), $deleted ),
 				'deleted' => $deleted,
 			)

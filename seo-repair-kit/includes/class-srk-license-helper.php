@@ -165,7 +165,7 @@ class SRK_License_Helper {
 	}
 
 	/**
-	 * Schema Manager requires its paid module.
+	 * Schema Manager requires an active paid plan.
 	 *
 	 * @return bool
 	 */
@@ -174,7 +174,7 @@ class SRK_License_Helper {
 	}
 
 	/**
-	 * Internal Linking requires its paid module.
+	 * Internal Linking requires an active paid plan.
 	 *
 	 * @return bool
 	 */
@@ -183,7 +183,7 @@ class SRK_License_Helper {
 	}
 
 	/**
-	 * Spam Monitor requires its paid module.
+	 * Spam Monitor requires an active paid plan.
 	 *
 	 * @return bool
 	 */
@@ -201,7 +201,7 @@ class SRK_License_Helper {
 	}
 
 	/**
-	 * Paid $1 add-on unlocks Posts, custom post types, and unlimited scanning.
+	 * Any paid plan unlocks Posts, custom post types, and unlimited scanning.
 	 *
 	 * @return bool
 	 */
@@ -251,7 +251,7 @@ class SRK_License_Helper {
 	}
 
 	/**
-	 * Get public post types that require the paid scanner add-on.
+	 * Get public post types that require paid-plan scanner access.
 	 *
 	 * @return array<string,WP_Post_Type>
 	 */

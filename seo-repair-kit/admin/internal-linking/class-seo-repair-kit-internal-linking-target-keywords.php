@@ -287,6 +287,7 @@ class SeoRepairKit_InternalLinking_Target_Keywords {
 					<span>
 						<?php
 						printf(
+							/* translators: 1: First displayed item number, 2: Last displayed item number, 3: Total number of items. */
 							esc_html__( 'Showing %1$d-%2$d of %3$d keyword groups', 'seo-repair-kit' ),
 							absint( $from ),
 							absint( $to ),

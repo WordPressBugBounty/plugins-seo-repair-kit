@@ -62,6 +62,7 @@ class SRK_Robots_Validator {
                 // Validate user-agent value
                 if ( empty( $user_agent ) ) {
                     $errors[] = sprintf(
+						/* translators: %d: Line number in robots.txt. */
                         __( 'Line %d: User-agent directive is empty.', 'seo-repair-kit' ),
                         $line_number
                     );
@@ -74,6 +75,7 @@ class SRK_Robots_Validator {
             if ( preg_match( '/^Disallow:\s*(.+)$/i', $line, $matches ) ) {
                 if ( ! $has_user_agent && empty( $user_agents ) ) {
                     $errors[] = sprintf(
+						/* translators: %d: Line number in robots.txt. */
                         __( 'Line %d: Disallow directive found before User-agent. Each Disallow must follow a User-agent.', 'seo-repair-kit' ),
                         $line_number
                     );
@@ -85,7 +87,8 @@ class SRK_Robots_Validator {
                 // Validate path format
                 if ( ! empty( $path ) && ! preg_match( '/^(\/|$|\*|\$)/', $path ) && ! preg_match( '/^\/.*/', $path ) ) {
                     $warnings[] = sprintf(
-                        __( 'Line %d: Disallow path "%s" should start with "/" for proper formatting.', 'seo-repair-kit' ),
+						/* translators: 1: Line number in robots.txt, 2: Disallow path. */
+                        __( 'Line %1$d: Disallow path "%2$s" should start with "/" for proper formatting.', 'seo-repair-kit' ),
                         $line_number,
                         esc_html( $path )
                     );
@@ -97,6 +100,7 @@ class SRK_Robots_Validator {
             if ( preg_match( '/^Allow:\s*(.+)$/i', $line, $matches ) ) {
                 if ( ! $has_user_agent && empty( $user_agents ) ) {
                     $errors[] = sprintf(
+						/* translators: %d: Line number in robots.txt. */
                         __( 'Line %d: Allow directive found before User-agent. Each Allow must follow a User-agent.', 'seo-repair-kit' ),
                         $line_number
                     );
@@ -112,7 +116,8 @@ class SRK_Robots_Validator {
                 // Validate URL format
                 if ( ! filter_var( $sitemap_url, FILTER_VALIDATE_URL ) ) {
                     $errors[] = sprintf(
-                        __( 'Line %d: Invalid Sitemap URL format: "%s".', 'seo-repair-kit' ),
+						/* translators: 1: Line number in robots.txt, 2: Invalid sitemap URL. */
+                        __( 'Line %1$d: Invalid Sitemap URL format: "%2$s".', 'seo-repair-kit' ),
                         $line_number,
                         esc_html( $sitemap_url )
                     );
@@ -125,6 +130,7 @@ class SRK_Robots_Validator {
             if ( preg_match( '/^Crawl-delay:\s*(.+)$/i', $line, $matches ) ) {
                 if ( ! $has_user_agent && empty( $user_agents ) ) {
                     $errors[] = sprintf(
+						/* translators: %d: Line number in robots.txt. */
                         __( 'Line %d: Crawl-delay directive found before User-agent.', 'seo-repair-kit' ),
                         $line_number
                     );
@@ -134,6 +140,7 @@ class SRK_Robots_Validator {
                 $delay = trim( $matches[1] );
                 if ( ! is_numeric( $delay ) || $delay < 0 ) {
                     $errors[] = sprintf(
+						/* translators: %d: Line number in robots.txt. */
                         __( 'Line %d: Crawl-delay must be a positive number.', 'seo-repair-kit' ),
                         $line_number
                     );
@@ -145,7 +152,8 @@ class SRK_Robots_Validator {
             // Unknown directive
             if ( ! empty( $line ) ) {
                 $warnings[] = sprintf(
-                    __( 'Line %d: Unknown directive or invalid format: "%s".', 'seo-repair-kit' ),
+					/* translators: 1: Line number in robots.txt, 2: Unrecognized directive or line content. */
+                    __( 'Line %1$d: Unknown directive or invalid format: "%2$s".', 'seo-repair-kit' ),
                     $line_number,
                     esc_html( $line )
                 );

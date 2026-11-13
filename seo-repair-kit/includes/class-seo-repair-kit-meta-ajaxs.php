@@ -181,6 +181,7 @@ class SRK_Meta_Ajax_Handler {
 		} catch ( Exception $e ) {
 			wp_send_json_error(
 				array(
+					/* translators: %s: Error message. */
 					'message' => sprintf( __( 'Error resetting settings: %s', 'seo-repair-kit' ), $e->getMessage() ),
 				)
 			);
@@ -251,6 +252,7 @@ class SRK_Meta_Ajax_Handler {
 
 				wp_send_json_success(
 					array(
+						/* translators: %s: Taxonomy name. */
 						'message'  => sprintf( __( '%s settings reset to defaults.', 'seo-repair-kit' ), $taxonomy ),
 						'settings' => $defaults[ $taxonomy ],
 					)
@@ -261,6 +263,7 @@ class SRK_Meta_Ajax_Handler {
 		} catch ( Exception $e ) {
 			wp_send_json_error(
 				array(
+					/* translators: %s: Error message. */
 					'message' => sprintf( __( 'Error: %s', 'seo-repair-kit' ), $e->getMessage() ),
 				)
 			);
@@ -320,6 +323,7 @@ class SRK_Meta_Ajax_Handler {
 		} catch ( Exception $e ) {
 			wp_send_json_error(
 				array(
+					/* translators: %s: Error message. */
 					'message' => sprintf( __( 'Error saving settings: %s', 'seo-repair-kit' ), $e->getMessage() ),
 				)
 			);
@@ -370,6 +374,7 @@ class SRK_Meta_Ajax_Handler {
 		} catch ( Exception $e ) {
 			wp_send_json_error(
 				array(
+					/* translators: %s: Error message. */
 					'message' => sprintf( __( 'Error retrieving settings: %s', 'seo-repair-kit' ), $e->getMessage() ),
 				)
 			);

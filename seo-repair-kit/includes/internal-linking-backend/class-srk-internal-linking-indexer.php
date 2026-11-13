@@ -281,7 +281,7 @@ class SRK_Internal_Linking_Indexer {
 				'total_items' => 0,
 				'page'        => 1,
 				'status'      => 'disabled',
-				'message'     => __( 'Internal Linking is a paid module. Please upgrade or renew Internal Linking to use this feature.', 'seo-repair-kit' ),
+				'message'     => __( 'Internal Linking is included with every paid SEO Repair Kit plan. Please activate or renew your plan to use this feature.', 'seo-repair-kit' ),
 			);
 		}
 

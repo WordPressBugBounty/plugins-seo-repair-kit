@@ -250,6 +250,7 @@ class SeoRepairKit_AltTextPage {
                             <?php
                             if ( $show_all ) {
                                 printf(
+									/* translators: %1$d: Total number of items. */
                                     esc_html__( 'Showing all %1$d images', 'seo-repair-kit' ),
                                     (int) $srkit_countposts
                                 );
@@ -257,6 +258,7 @@ class SeoRepairKit_AltTextPage {
                                 $start = $offset + 1;
                                 $end = min( $offset + $srkit_noperpage, $srkit_countposts );
                                 printf(
+									/* translators: 1: First displayed item number, 2: Last displayed item number, 3: Total number of items. */
                                     esc_html__( 'Showing %1$d to %2$d of %3$d', 'seo-repair-kit' ),
                                     (int) $start,
                                     (int) $end,
