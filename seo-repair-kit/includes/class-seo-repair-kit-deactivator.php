@@ -43,7 +43,7 @@ class SeoRepairKit_Deactivator {
         );
 
         // Send the status update
-        $response = SRK_API_Client::signed_post_json(
+        $response = SRK_API_Client::reporting_post_json(
             SRK_API_Client::ENDPOINT_PLUGIN_STATUS,
             $data,
             15

@@ -143,6 +143,34 @@ class SRK_API_Client {
     }
 
     /**
+     * Send plugin telemetry through the established reporting endpoint.
+     *
+     * Paid/connected installations use their site-specific signature. Free
+     * and older installations keep the original unsigned reporting contract;
+     * CRM limits that compatibility path to non-privileged plugin telemetry.
+     *
+     * @return array|WP_Error
+     */
+    public static function reporting_post_json( $path, $data = array(), $timeout = 15 ) {
+        if ( '' !== self::resolve_shared_secret() ) {
+            return self::signed_post_json( $path, $data, $timeout );
+        }
+
+        return wp_remote_post(
+            self::get_api_url( $path ),
+            array(
+                'body'      => wp_json_encode( is_array( $data ) ? $data : array() ),
+                'headers'   => array(
+                    'Accept'       => 'application/json',
+                    'Content-Type' => 'application/json',
+                ),
+                'timeout'   => max( 1, (int) $timeout ),
+                'sslverify' => true,
+            )
+        );
+    }
+
+    /**
      * Exchange a paid license key once for this site's unique credential.
      *
      * @return array|WP_Error

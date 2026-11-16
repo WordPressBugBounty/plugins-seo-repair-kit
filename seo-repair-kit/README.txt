@@ -5,8 +5,8 @@ Tags: SEO, 301 redirect, internal linking, schema markup, 404 monitor, spam moni
 Requires at least: 5.0.0
 Tested up to: 7.1.4
 Requires PHP: 7.4.3
-Stable tag: 2.1.13
-Release Date: 13-11-2026
+Stable tag: 2.1.14
+Release Date: 16-11-2026
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -133,6 +133,11 @@ Custom SERP-provider connections and other advanced Spam Monitor capabilities ar
 
 == Changelog ==
 
+= 2.1.14 =
+* Restored the established plugin-data and status reporting flow for free and legacy installations.
+* Kept site-specific signed reporting for connected paid installations while preserving compatibility with previously released plugin versions.
+* Kept paid license validation protected by per-installation credentials; compatibility reporting cannot grant premium access.
+
 = 2.1.13 =
 * Deferred automatic scan scheduling and translation loading until init to prevent early text-domain notices on WordPress 6.7 and later.
 * Updated the translation template for 2.1.13, clarified placeholder context for translators, and numbered robots.txt validation placeholders so translations can reorder them safely.
@@ -142,12 +147,10 @@ Custom SERP-provider connections and other advanced Spam Monitor capabilities ar
 * Replaced feature-by-feature upgrade messaging with unified Starter, Growth, Pro, and Agency plans based on website allowance.
 * Clarified that every paid plan includes the complete SEO Repair Kit toolkit, including Spam Monitor, Internal Linking, Schema Manager, and unlimited link scanning.
 
-= 2.1.12 =
-* Added protected Internal Linking admin, AJAX, Gutenberg, indexing, and queue workflows for paid plans.
-* Hardened Internal Linking database migrations with versioning, locking, schema verification, bounded backfills, and semantic links support.
-* Added Internal Linking to Dashboard Key Tools and Upgrade to Pro messaging.
-
 == Upgrade Notice ==
+
+= 2.1.14 =
+Restores free and legacy installation reporting compatibility while keeping paid license validation and connected-site reporting securely signed.
 
 = 2.1.13 =
 Paid access now uses unified website-based plans. Existing subscriptions and legacy pricing remain unchanged. Back up the site and test license reconnection and paid access on staging before updating production.
@@ -190,7 +193,7 @@ Open SEO Repair Kit from the WordPress admin menu to view site health, plan stat
 
 Starter, Growth, Pro, and Agency include the same paid toolkit with allowances of 1, 10, 25, and 100 websites respectively. WordPress and custom websites share the allowance managed by your SEO Repair Kit account.
 
-After upgrading to 2.1.13, websites with a saved license key connect automatically on an administrator page load. If prompted, open the plugin license screen and use Connect License or Reconnect License with the key assigned to this website. Existing subscriptions, renewal dates, and legacy pricing remain unchanged.
+After upgrading to 2.1.14, websites with a saved license key connect automatically on an administrator page load. If prompted, open the plugin license screen and use Connect License or Reconnect License with the key assigned to this website. Existing subscriptions, renewal dates, and legacy pricing remain unchanged.
 
 = Links Manager =
 
@@ -368,7 +371,7 @@ Resave Bot Manager llms.txt content and confirm the site is running SEO Repair K
 = Is Internal Linking included with paid plans? =
 Yes. Internal Linking is included with every paid SEO Repair Kit plan. If website access is inactive or expired, the feature is locked and existing data is preserved.
 
-= What should I check after updating to 2.1.13? =
+= What should I check after updating to 2.1.14? =
 Open the SEO Repair Kit dashboard, Links Manager, Redirection Manager, Auto Scan, 404 Monitor, Schema Manager, Internal Linking, Spam Monitor, KeyTrack, Gutenberg editor, and Settings screens to confirm they load normally. If you are upgrading from an older SEO Repair Kit version with existing data, back up the site first and run a staging migration test before updating production.
 
 = What is included with a paid plan? =
@@ -380,4 +383,4 @@ You can also find helpful resources and documentation to resolve common issues o
 
 = Can SEO Repair Kit be translated? =
 
-Yes. SEO Repair Kit uses the seo-repair-kit text domain. The languages/seo-repair-kit.pot file contains the translation template for 2.1.13. PHP translations use MO files, and JavaScript translations use JSON files.
+Yes. SEO Repair Kit uses the seo-repair-kit text domain. The languages/seo-repair-kit.pot file contains the translation template for 2.1.14. PHP translations use MO files, and JavaScript translations use JSON files.

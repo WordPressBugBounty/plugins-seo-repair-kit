@@ -142,7 +142,7 @@ class SeoRepairKit_Activator {
             'pluginversion'  => $new_version,
         ];
 
-        SRK_API_Client::signed_post_json(
+        SRK_API_Client::reporting_post_json(
             SRK_API_Client::ENDPOINT_PLUGIN_VERSION,
             $data,
             15
@@ -781,7 +781,7 @@ class SeoRepairKit_Activator {
             'plugin_instance_id' => $plugin_instance_id,
         );
 
-        $response = SRK_API_Client::signed_post_json(
+        $response = SRK_API_Client::reporting_post_json(
             SRK_API_Client::ENDPOINT_PLUGIN_DATA,
             $data,
             30
@@ -796,7 +796,6 @@ class SeoRepairKit_Activator {
 
         if ( isset( $decoded_response->plugin_id ) ) {
             update_option( 'srk_plugin_id', $decoded_response->plugin_id );
-            // Now send status to CRM after we have plugin_id
             self::send_status_to_crm( 'activated' );
         }
     }
@@ -871,7 +870,7 @@ class SeoRepairKit_Activator {
             'site_information'   => wp_json_encode( $site_info ),
         );
         
-        $response = SRK_API_Client::signed_post_json(
+        $response = SRK_API_Client::reporting_post_json(
             SRK_API_Client::ENDPOINT_PLUGIN_DATA,
             $data,
             30
@@ -920,7 +919,7 @@ class SeoRepairKit_Activator {
             'status'    => $status
         ];
 
-        SRK_API_Client::signed_post_json(
+        SRK_API_Client::reporting_post_json(
             SRK_API_Client::ENDPOINT_PLUGIN_STATUS,
             $data,
             15
