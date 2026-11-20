@@ -359,7 +359,7 @@ class SeoRepairKit_SpamMonitor {
 					</div>
 				</div>
 				<a class="srk-sm-module-access-button" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( $subscribe_url ); ?>">
-					<?php esc_html_e( 'Buy Spam Monitor Module', 'seo-repair-kit' ); ?>
+					<?php esc_html_e( 'Upgrade to Pro', 'seo-repair-kit' ); ?>
 				</a>
 			</div>
 		<?php else : ?>

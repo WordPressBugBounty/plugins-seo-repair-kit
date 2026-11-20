@@ -2,22 +2,22 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: SEO Repair Kit 2.1.14\n"
+"Project-Id-Version: SEO Repair Kit 2.1.15\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/seo-repair-kit\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-16T14:56:23+00:00\n"
+"POT-Creation-Date: 2026-11-20T13:29:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: seo-repair-kit\n"
 
 #. Plugin Name of the plugin
 #: seo-repair-kit.php
-#: admin/class-seo-repair-kit-admin.php:1488
-#: admin/class-seo-repair-kit-admin.php:1489
+#: admin/class-seo-repair-kit-admin.php:1506
+#: admin/class-seo-repair-kit-admin.php:1507
 #: admin/class-seo-repair-kit-keytrack.php:88
 #: admin/class-seo-repair-kit-keytrack.php:90
 #: admin/class-seo-repair-kit-keytrack.php:235
@@ -401,7 +401,7 @@ msgstr ""
 #: admin/class-seo-repair-kit-404-manager.php:740
 #: admin/class-seo-repair-kit-404-manager.php:814
 #: admin/class-seo-repair-kit-admin.php:592
-#: admin/class-seo-repair-kit-dashboard.php:455
+#: admin/class-seo-repair-kit-dashboard.php:458
 #: admin/class-seo-repair-kit-link-scanner-automation-admin.php:380
 #: admin/class-seo-repair-kit-link-scanner-automation-admin.php:439
 #: admin/class-seo-repair-kit-link-scanner-automation-admin.php:463
@@ -571,7 +571,7 @@ msgid "Exit Guided Setup"
 msgstr ""
 
 #: admin/class-seo-repair-kit-admin.php:294
-#: admin/class-seo-repair-kit-admin.php:1866
+#: admin/class-seo-repair-kit-admin.php:1884
 #: admin/class-seo-repair-kit-scan-links.php:197
 #: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:543
 msgid "Loading..."
@@ -664,99 +664,107 @@ msgstr ""
 msgid "Powered By: TorontoDigits"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1499
-#: admin/class-seo-repair-kit-admin.php:1500
-#: admin/class-seo-repair-kit-dashboard.php:247
-#: admin/class-seo-repair-kit-dashboard.php:282
+#: admin/class-seo-repair-kit-admin.php:1468
+msgid "SEO Repair Kit Pro plan active"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:1468
+msgid "View SEO Repair Kit Pro plans"
+msgstr ""
+
+#: admin/class-seo-repair-kit-admin.php:1517
+#: admin/class-seo-repair-kit-admin.php:1518
+#: admin/class-seo-repair-kit-dashboard.php:249
+#: admin/class-seo-repair-kit-dashboard.php:285
 msgid "Links Manager"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1514
-#: admin/class-seo-repair-kit-admin.php:1515
+#: admin/class-seo-repair-kit-admin.php:1532
+#: admin/class-seo-repair-kit-admin.php:1533
 msgid "Redirection"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1524
-#: admin/class-seo-repair-kit-admin.php:1525
-#: admin/class-seo-repair-kit-dashboard.php:248
-#: admin/class-seo-repair-kit-dashboard.php:293
-#: admin/class-seo-repair-kit-upgrade-pro.php:277
+#: admin/class-seo-repair-kit-admin.php:1542
+#: admin/class-seo-repair-kit-admin.php:1543
+#: admin/class-seo-repair-kit-dashboard.php:250
+#: admin/class-seo-repair-kit-dashboard.php:296
+#: admin/class-seo-repair-kit-upgrade-pro.php:276
 #: includes/spam-monitor-backend/templates/email/spam-scan-report.php:59
 msgid "Spam Monitor"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1540
-#: admin/class-seo-repair-kit-admin.php:1541
-#: admin/class-seo-repair-kit-dashboard.php:250
-#: admin/class-seo-repair-kit-dashboard.php:336
+#: admin/class-seo-repair-kit-admin.php:1558
+#: admin/class-seo-repair-kit-admin.php:1559
+#: admin/class-seo-repair-kit-dashboard.php:252
+#: admin/class-seo-repair-kit-dashboard.php:339
 #: admin/class-seo-repair-kit-internal-linking.php:577
 #: admin/class-seo-repair-kit-internal-linking.php:670
 #: admin/class-seo-repair-kit-link-scanner.php:340
-#: admin/class-seo-repair-kit-upgrade-pro.php:295
+#: admin/class-seo-repair-kit-upgrade-pro.php:294
 msgid "Internal Linking"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1556
-#: admin/class-seo-repair-kit-admin.php:1557
-#: admin/class-seo-repair-kit-dashboard.php:238
-#: admin/class-seo-repair-kit-dashboard.php:407
+#: admin/class-seo-repair-kit-admin.php:1574
+#: admin/class-seo-repair-kit-admin.php:1575
+#: admin/class-seo-repair-kit-dashboard.php:240
+#: admin/class-seo-repair-kit-dashboard.php:410
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-image-seo.php:33
 msgid "Image Alt Missing"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1570
-#: admin/class-seo-repair-kit-admin.php:1571
-#: admin/class-seo-repair-kit-dashboard.php:249
-#: admin/class-seo-repair-kit-dashboard.php:325
+#: admin/class-seo-repair-kit-admin.php:1588
+#: admin/class-seo-repair-kit-admin.php:1589
+#: admin/class-seo-repair-kit-dashboard.php:251
+#: admin/class-seo-repair-kit-dashboard.php:328
 #: admin/class-seo-repair-kit-schema-manager.php:186
-#: admin/class-seo-repair-kit-upgrade-pro.php:304
+#: admin/class-seo-repair-kit-upgrade-pro.php:303
 msgid "Schema Manager"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1585
-#: admin/class-seo-repair-kit-admin.php:1586
-#: admin/class-seo-repair-kit-dashboard.php:233
-#: admin/class-seo-repair-kit-dashboard.php:357
-#: admin/class-seo-repair-kit-upgrade-pro.php:313
+#: admin/class-seo-repair-kit-admin.php:1603
+#: admin/class-seo-repair-kit-admin.php:1604
+#: admin/class-seo-repair-kit-dashboard.php:235
+#: admin/class-seo-repair-kit-dashboard.php:360
+#: admin/class-seo-repair-kit-upgrade-pro.php:312
 msgid "KeyTrack"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1600
-#: admin/class-seo-repair-kit-admin.php:1601
-#: admin/class-seo-repair-kit-dashboard.php:234
-#: admin/class-seo-repair-kit-dashboard.php:377
+#: admin/class-seo-repair-kit-admin.php:1618
+#: admin/class-seo-repair-kit-admin.php:1619
+#: admin/class-seo-repair-kit-dashboard.php:236
+#: admin/class-seo-repair-kit-dashboard.php:380
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-main.php:787
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-main.php:788
 msgid "Meta Manager"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1614
-#: admin/class-seo-repair-kit-admin.php:1615
-#: admin/class-seo-repair-kit-dashboard.php:239
-#: admin/class-seo-repair-kit-dashboard.php:417
+#: admin/class-seo-repair-kit-admin.php:1632
+#: admin/class-seo-repair-kit-admin.php:1633
+#: admin/class-seo-repair-kit-dashboard.php:241
+#: admin/class-seo-repair-kit-dashboard.php:420
 #: includes/class-seo-repair-kit-sitemap-manager.php:462
 msgid "Sitemap Manager"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1632
-#: admin/class-seo-repair-kit-admin.php:1633
-#: admin/class-seo-repair-kit-dashboard.php:237
-#: admin/class-seo-repair-kit-dashboard.php:397
+#: admin/class-seo-repair-kit-admin.php:1650
+#: admin/class-seo-repair-kit-admin.php:1651
+#: admin/class-seo-repair-kit-dashboard.php:239
+#: admin/class-seo-repair-kit-dashboard.php:400
 #: admin/class-seo-repair-kit-robots-llms.php:278
 msgid "Bot Manager"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1647
-#: admin/class-seo-repair-kit-admin.php:1648
-#: admin/class-seo-repair-kit-dashboard.php:251
-#: admin/class-seo-repair-kit-dashboard.php:347
+#: admin/class-seo-repair-kit-admin.php:1665
+#: admin/class-seo-repair-kit-admin.php:1666
+#: admin/class-seo-repair-kit-dashboard.php:253
+#: admin/class-seo-repair-kit-dashboard.php:350
 msgid "AI Chatbot"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1662
-#: admin/class-seo-repair-kit-admin.php:1663
-#: admin/class-seo-repair-kit-dashboard.php:240
-#: admin/class-seo-repair-kit-dashboard.php:427
+#: admin/class-seo-repair-kit-admin.php:1680
+#: admin/class-seo-repair-kit-admin.php:1681
+#: admin/class-seo-repair-kit-dashboard.php:242
+#: admin/class-seo-repair-kit-dashboard.php:430
 #: admin/class-seo-repair-kit-internal-linking.php:107
 #: admin/class-seo-repair-kit-link-scanner.php:433
 #: admin/class-seo-repair-kit-redirection.php:690
@@ -765,13 +773,17 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1677
-#: admin/class-seo-repair-kit-admin.php:1678
-#: admin/class-seo-repair-kit-dashboard.php:261
+#: admin/class-seo-repair-kit-admin.php:1695
+#: admin/class-seo-repair-kit-admin.php:1696
+#: admin/class-seo-repair-kit-dashboard.php:263
+#: admin/class-seo-repair-kit-internal-linking.php:681
+#: admin/class-seo-repair-kit-spam-monitor.php:362
+#: admin/class-seo-repair-kit-upgrade-pro.php:223
+#: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:849
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: admin/class-seo-repair-kit-admin.php:1731
+#: admin/class-seo-repair-kit-admin.php:1749
 #: includes/class-license-sync.php:70
 msgid "SEO Repair Kit could not verify the license response. Please reconnect this website or contact support."
 msgstr ""
@@ -1074,20 +1086,20 @@ msgstr ""
 msgid "Upgrade to unlock all features"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:153
+#: admin/class-seo-repair-kit-dashboard.php:154
 msgid "Site SEO Analysis"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:156
+#: admin/class-seo-repair-kit-dashboard.php:157
 msgid "Re-check Status"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:165
+#: admin/class-seo-repair-kit-dashboard.php:166
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:231
 msgid "Issue"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:166
+#: admin/class-seo-repair-kit-dashboard.php:167
 #: admin/class-seo-repair-kit-redirection.php:814
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-dashboard.php:311
 #: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:212
@@ -1095,145 +1107,145 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:187
+#: admin/class-seo-repair-kit-dashboard.php:188
 msgid "View Details"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:199
+#: admin/class-seo-repair-kit-dashboard.php:200
 msgid "No SEO issues detected. Your site looks great!"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:213
-msgid "Your Plan"
+#: admin/class-seo-repair-kit-dashboard.php:215
+msgid "Your Current Plan"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:224
+#: admin/class-seo-repair-kit-dashboard.php:226
 msgid "Your paid plan is active for this website."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:225
+#: admin/class-seo-repair-kit-dashboard.php:227
 msgid "Free tools are ready. Choose a paid plan to unlock the complete SEO Repair Kit toolkit."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:231
+#: admin/class-seo-repair-kit-dashboard.php:233
 msgid "Free tools"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:235
-#: admin/class-seo-repair-kit-dashboard.php:367
+#: admin/class-seo-repair-kit-dashboard.php:237
+#: admin/class-seo-repair-kit-dashboard.php:370
 #: admin/class-seo-repair-kit-link-scanner.php:324
 msgid "404 Monitor"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:236
-#: admin/class-seo-repair-kit-dashboard.php:387
+#: admin/class-seo-repair-kit-dashboard.php:238
+#: admin/class-seo-repair-kit-dashboard.php:390
 #: admin/class-seo-repair-kit-redirection.php:687
 msgid "Redirections"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:241
-#: admin/class-seo-repair-kit-dashboard.php:437
+#: admin/class-seo-repair-kit-dashboard.php:243
+#: admin/class-seo-repair-kit-dashboard.php:440
 msgid "Get Support"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:245
+#: admin/class-seo-repair-kit-dashboard.php:247
 #: admin/class-seo-repair-kit-settings.php:110
 msgid "Included with every paid plan"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:260
+#: admin/class-seo-repair-kit-dashboard.php:262
 msgid "Manage License"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:273
+#: admin/class-seo-repair-kit-dashboard.php:276
 msgid "Key Tools"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:277
-#: admin/class-seo-repair-kit-dashboard.php:288
-#: admin/class-seo-repair-kit-dashboard.php:320
-#: admin/class-seo-repair-kit-dashboard.php:331
-#: admin/class-seo-repair-kit-dashboard.php:342
-#: admin/class-seo-repair-kit-upgrade-pro.php:205
+#: admin/class-seo-repair-kit-dashboard.php:280
+#: admin/class-seo-repair-kit-dashboard.php:291
+#: admin/class-seo-repair-kit-dashboard.php:323
+#: admin/class-seo-repair-kit-dashboard.php:334
+#: admin/class-seo-repair-kit-dashboard.php:345
+#: admin/class-seo-repair-kit-upgrade-pro.php:204
 msgid "Pro"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:283
+#: admin/class-seo-repair-kit-dashboard.php:286
 msgid "Scan your site for broken links and fix them fast."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:297
+#: admin/class-seo-repair-kit-dashboard.php:300
 msgid "Spam Monitor services are currently unavailable."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:299
+#: admin/class-seo-repair-kit-dashboard.php:302
 msgid "Run your first Google indexed-spam scan."
 msgstr ""
 
 #. translators: 1: number of scans, 2: number of risky results.
-#: admin/class-seo-repair-kit-dashboard.php:303
+#: admin/class-seo-repair-kit-dashboard.php:306
 #, php-format
 msgid "%1$d scans completed; %2$d flagged results in saved history."
 msgstr ""
 
 #. translators: %d: number of completed scans.
-#: admin/class-seo-repair-kit-dashboard.php:310
+#: admin/class-seo-repair-kit-dashboard.php:313
 #, php-format
 msgid "%d scan completed with no risky results."
 msgid_plural "%d scans completed with no risky results."
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-dashboard.php:326
+#: admin/class-seo-repair-kit-dashboard.php:329
 msgid "Add and manage rich schema markup for content."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:337
+#: admin/class-seo-repair-kit-dashboard.php:340
 msgid "Find contextual link opportunities and build stronger content paths."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:348
+#: admin/class-seo-repair-kit-dashboard.php:351
 msgid "Get real-time SEO assistance and answers."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:358
+#: admin/class-seo-repair-kit-dashboard.php:361
 msgid "Monitor keyword rankings and search performance."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:368
+#: admin/class-seo-repair-kit-dashboard.php:371
 msgid "Track 404 errors and convert them into redirects."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:378
+#: admin/class-seo-repair-kit-dashboard.php:381
 msgid "Manage meta tags and descriptions for your site."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:388
+#: admin/class-seo-repair-kit-dashboard.php:391
 msgid "Create and manage redirects to recover SEO value."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:398
+#: admin/class-seo-repair-kit-dashboard.php:401
 msgid "Control search engines and AI crawlers with robots.txt and llms.txt."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:408
+#: admin/class-seo-repair-kit-dashboard.php:411
 msgid "Find images missing alt text and improve accessibility."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:418
+#: admin/class-seo-repair-kit-dashboard.php:421
 msgid "Control and customize your WordPress core sitemap easily."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:428
+#: admin/class-seo-repair-kit-dashboard.php:431
 msgid "Configure how SEO Repair Kit works on your site."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:438
+#: admin/class-seo-repair-kit-dashboard.php:441
 msgid "Contact our team if you need help or have questions."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:646
-#: admin/class-seo-repair-kit-dashboard.php:859
+#: admin/class-seo-repair-kit-dashboard.php:649
+#: admin/class-seo-repair-kit-dashboard.php:862
 #: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:189
 #: admin/internal-linking/class-seo-repair-kit-internal-linking-orphan-content.php:449
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-alerts.php:156
@@ -1249,197 +1261,196 @@ msgid "Critical"
 msgstr ""
 
 #. translators: %d: Number of broken links.
-#: admin/class-seo-repair-kit-dashboard.php:648
+#: admin/class-seo-repair-kit-dashboard.php:651
 #, php-format
 msgid "%d broken link found on your site."
 msgid_plural "%d broken links found on your site."
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-dashboard.php:649
-#: admin/class-seo-repair-kit-dashboard.php:683
-#: admin/class-seo-repair-kit-dashboard.php:720
-#: admin/class-seo-repair-kit-dashboard.php:752
-#: admin/class-seo-repair-kit-dashboard.php:816
+#: admin/class-seo-repair-kit-dashboard.php:652
+#: admin/class-seo-repair-kit-dashboard.php:686
+#: admin/class-seo-repair-kit-dashboard.php:723
+#: admin/class-seo-repair-kit-dashboard.php:755
+#: admin/class-seo-repair-kit-dashboard.php:819
 msgid "Help Me Fix"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:658
-#: admin/class-seo-repair-kit-dashboard.php:691
-#: admin/class-seo-repair-kit-dashboard.php:726
-#: admin/class-seo-repair-kit-dashboard.php:760
-#: admin/class-seo-repair-kit-dashboard.php:773
-#: admin/class-seo-repair-kit-dashboard.php:823
-#: admin/class-seo-repair-kit-dashboard.php:884
-#: admin/class-seo-repair-kit-dashboard.php:905
+#: admin/class-seo-repair-kit-dashboard.php:661
+#: admin/class-seo-repair-kit-dashboard.php:694
+#: admin/class-seo-repair-kit-dashboard.php:729
+#: admin/class-seo-repair-kit-dashboard.php:763
+#: admin/class-seo-repair-kit-dashboard.php:776
+#: admin/class-seo-repair-kit-dashboard.php:826
+#: admin/class-seo-repair-kit-dashboard.php:887
+#: admin/class-seo-repair-kit-dashboard.php:908
 msgid "Passed"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:659
+#: admin/class-seo-repair-kit-dashboard.php:662
 msgid "No broken links detected. Your internal and external links look healthy."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:666
-#: admin/class-seo-repair-kit-dashboard.php:708
-#: admin/class-seo-repair-kit-dashboard.php:750
-#: admin/class-seo-repair-kit-dashboard.php:781
-#: admin/class-seo-repair-kit-dashboard.php:791
-#: admin/class-seo-repair-kit-dashboard.php:831
-#: admin/class-seo-repair-kit-dashboard.php:850
-#: admin/class-seo-repair-kit-dashboard.php:915
+#: admin/class-seo-repair-kit-dashboard.php:669
+#: admin/class-seo-repair-kit-dashboard.php:711
+#: admin/class-seo-repair-kit-dashboard.php:753
+#: admin/class-seo-repair-kit-dashboard.php:784
+#: admin/class-seo-repair-kit-dashboard.php:794
+#: admin/class-seo-repair-kit-dashboard.php:834
+#: admin/class-seo-repair-kit-dashboard.php:853
+#: admin/class-seo-repair-kit-dashboard.php:918
 msgid "Suggestion"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:667
+#: admin/class-seo-repair-kit-dashboard.php:670
 msgid "Run a Links Manager scan to establish the current broken-link status."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:668
+#: admin/class-seo-repair-kit-dashboard.php:671
 msgid "Run Link Scan"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:681
-#: admin/class-seo-repair-kit-dashboard.php:718
-#: admin/class-seo-repair-kit-dashboard.php:805
-#: admin/class-seo-repair-kit-dashboard.php:842
-#: admin/class-seo-repair-kit-dashboard.php:872
-#: admin/class-seo-repair-kit-dashboard.php:897
+#: admin/class-seo-repair-kit-dashboard.php:684
+#: admin/class-seo-repair-kit-dashboard.php:721
+#: admin/class-seo-repair-kit-dashboard.php:808
+#: admin/class-seo-repair-kit-dashboard.php:845
+#: admin/class-seo-repair-kit-dashboard.php:875
+#: admin/class-seo-repair-kit-dashboard.php:900
 msgid "Warning"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:682
+#: admin/class-seo-repair-kit-dashboard.php:685
 msgid "KeyTrack is not enabled. Enable it to track search performance."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:692
+#: admin/class-seo-repair-kit-dashboard.php:695
 msgid "KeyTrack is enabled. Your keyword performance is being monitored."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:709
+#: admin/class-seo-repair-kit-dashboard.php:712
 msgid "Schema Manager is a Pro feature. Activate a Pro license to enable schema markup and rich results."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:710
-#: admin/class-seo-repair-kit-dashboard.php:899
+#: admin/class-seo-repair-kit-dashboard.php:713
+#: admin/class-seo-repair-kit-dashboard.php:902
 #: admin/class-seo-repair-kit-link-scanner.php:403
-#: admin/class-seo-repair-kit-upgrade-pro.php:224
 msgid "View Plans"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:719
+#: admin/class-seo-repair-kit-dashboard.php:722
 msgid "No schema markup is enabled. Turn on at least one schema type to improve rich results."
 msgstr ""
 
 #. translators: %d: Number of configured schema types.
-#: admin/class-seo-repair-kit-dashboard.php:729
+#: admin/class-seo-repair-kit-dashboard.php:732
 #, php-format
 msgid "%d schema type is configured and active on your site."
 msgid_plural "%d schema types are configured and active on your site."
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-dashboard.php:751
+#: admin/class-seo-repair-kit-dashboard.php:754
 msgid "AI Assistant is not enabled. Turn it on to get real-time SEO guidance inside WordPress."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:761
+#: admin/class-seo-repair-kit-dashboard.php:764
 msgid "AI Assistant is active. You can ask SEO questions and get instant answers."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:774
+#: admin/class-seo-repair-kit-dashboard.php:777
 msgid "Redirections are enabled and available for SEO-friendly URL recovery."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:782
+#: admin/class-seo-repair-kit-dashboard.php:785
 msgid "Redirections are not enabled. Review the module before creating redirect rules."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:783
+#: admin/class-seo-repair-kit-dashboard.php:786
 msgid "Open Redirections"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:792
+#: admin/class-seo-repair-kit-dashboard.php:795
 msgid "Review your 404 Error Monitor regularly to catch and fix high-traffic 404 pages."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:793
+#: admin/class-seo-repair-kit-dashboard.php:796
 msgid "Open 404 Monitor"
 msgstr ""
 
 #. translators: %d: Number of images missing alt text.
-#: admin/class-seo-repair-kit-dashboard.php:808
+#: admin/class-seo-repair-kit-dashboard.php:811
 #, php-format
 msgid "%d image is missing alt text. Fill in descriptive alt attributes to improve accessibility and image SEO."
 msgid_plural "%d images are missing alt text. Fill in descriptive alt attributes to improve accessibility and image SEO."
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-dashboard.php:824
+#: admin/class-seo-repair-kit-dashboard.php:827
 msgid "No images are currently missing alt text. Your image accessibility looks good."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:832
+#: admin/class-seo-repair-kit-dashboard.php:835
 msgid "Run the Image Alt Missing scan to calculate the current image accessibility status."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:833
+#: admin/class-seo-repair-kit-dashboard.php:836
 msgid "Run Alt Scan"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:843
+#: admin/class-seo-repair-kit-dashboard.php:846
 msgid "Spam Monitor status is unavailable. Open the module to verify its database setup."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:844
+#: admin/class-seo-repair-kit-dashboard.php:847
 msgid "Open Spam Monitor"
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:851
+#: admin/class-seo-repair-kit-dashboard.php:854
 msgid "Spam Monitor has no Google SERP scans yet. Run a manual scan before enabling automation."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:852
+#: admin/class-seo-repair-kit-dashboard.php:855
 msgid "Run First Scan"
 msgstr ""
 
 #. translators: %d: number of spam or critical Google results.
-#: admin/class-seo-repair-kit-dashboard.php:862
+#: admin/class-seo-repair-kit-dashboard.php:865
 #, php-format
 msgid "%d spam or critical Google result needs review."
 msgid_plural "%d spam or critical Google results need review."
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-dashboard.php:865
-#: admin/class-seo-repair-kit-dashboard.php:878
+#: admin/class-seo-repair-kit-dashboard.php:868
+#: admin/class-seo-repair-kit-dashboard.php:881
 msgid "Review Results"
 msgstr ""
 
 #. translators: %d: number of suspicious Google results.
-#: admin/class-seo-repair-kit-dashboard.php:875
+#: admin/class-seo-repair-kit-dashboard.php:878
 #, php-format
 msgid "%d suspicious Google result needs review."
 msgid_plural "%d suspicious Google results need review."
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-dashboard.php:885
+#: admin/class-seo-repair-kit-dashboard.php:888
 msgid "Spam Monitor has no suspicious, spam, or critical results in its saved scan history."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:898
+#: admin/class-seo-repair-kit-dashboard.php:901
 msgid "Your Pro license is not active. Some advanced features may be limited."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:906
+#: admin/class-seo-repair-kit-dashboard.php:909
 msgid "Your Pro license is active. All premium SEO features are available."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:916
+#: admin/class-seo-repair-kit-dashboard.php:919
 msgid "Complete the Guided Setup to make sure all SEO Repair Kit features are configured for your site."
 msgstr ""
 
-#: admin/class-seo-repair-kit-dashboard.php:917
+#: admin/class-seo-repair-kit-dashboard.php:920
 msgid "Open Settings"
 msgstr ""
 
@@ -1537,17 +1548,13 @@ msgstr ""
 msgid "Your existing Internal Linking data and already inserted links are preserved."
 msgstr ""
 
-#: admin/class-seo-repair-kit-internal-linking.php:681
-msgid "Upgrade Internal Linking"
-msgstr ""
-
 #: admin/class-seo-repair-kit-internal-linking.php:688
 #: admin/class-seo-repair-kit-schema-manager.php:244
 #: admin/class-seo-repair-kit-schema-manager.php:434
 #: admin/class-seo-repair-kit-schema-ui.php:294
+#: admin/class-seo-repair-kit-upgrade-pro.php:233
 #: admin/class-seo-repair-kit-upgrade-pro.php:234
-#: admin/class-seo-repair-kit-upgrade-pro.php:235
-#: admin/class-seo-repair-kit-upgrade-pro.php:257
+#: admin/class-seo-repair-kit-upgrade-pro.php:256
 msgid "Refresh License Status"
 msgstr ""
 
@@ -3053,7 +3060,7 @@ msgstr ""
 
 #: admin/class-seo-repair-kit-redirection.php:1299
 #: admin/class-seo-repair-kit-spam-monitor.php:92
-#: admin/class-seo-repair-kit-upgrade-pro.php:382
+#: admin/class-seo-repair-kit-upgrade-pro.php:381
 #: admin/class-seo-repair-kit-weekly-summary.php:877
 #: admin/meta-manager/class-seo-repair-kit-meta-manager-archives.php:497
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-settings.php:119
@@ -3151,7 +3158,7 @@ msgstr ""
 #: admin/class-seo-repair-kit-redirection.php:2121
 #: admin/class-seo-repair-kit-scan-links.php:146
 #: admin/class-seo-repair-kit-smart-redirects.php:923
-#: admin/class-seo-repair-kit-upgrade-pro.php:375
+#: admin/class-seo-repair-kit-upgrade-pro.php:374
 #: admin/internal-linking/class-seo-repair-kit-internal-linking-approved-links.php:41
 #: admin/internal-linking/class-seo-repair-kit-internal-linking-auto-linking.php:271
 #: admin/internal-linking/class-seo-repair-kit-internal-linking-content-index.php:212
@@ -3754,13 +3761,13 @@ msgstr ""
 
 #: admin/class-seo-repair-kit-schema-manager.php:139
 #: admin/class-seo-repair-kit-schema-manager.php:148
-#: admin/class-seo-repair-kit-upgrade-pro.php:52
+#: admin/class-seo-repair-kit-upgrade-pro.php:51
 msgid "Your SEO Repair Kit license status was refreshed successfully."
 msgstr ""
 
 #: admin/class-seo-repair-kit-schema-manager.php:142
 #: admin/class-seo-repair-kit-schema-manager.php:150
-#: admin/class-seo-repair-kit-upgrade-pro.php:54
+#: admin/class-seo-repair-kit-upgrade-pro.php:53
 msgid "We could not refresh your license status. Please make sure you have an active paid plan, then reconnect this website and try again. If the issue persists, contact SEO Repair Kit support."
 msgstr ""
 
@@ -4141,13 +4148,13 @@ msgstr ""
 
 #. translators: %d: Number of days remaining on the license.
 #: admin/class-seo-repair-kit-smart-redirects.php:881
-#: admin/class-seo-repair-kit-upgrade-pro.php:173
+#: admin/class-seo-repair-kit-upgrade-pro.php:172
 #: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:764
 msgid "Active"
 msgstr ""
 
 #: admin/class-seo-repair-kit-smart-redirects.php:882
-#: admin/class-seo-repair-kit-upgrade-pro.php:176
+#: admin/class-seo-repair-kit-upgrade-pro.php:175
 msgid "Inactive"
 msgstr ""
 
@@ -4336,11 +4343,6 @@ msgstr ""
 msgid "Data for SEO"
 msgstr ""
 
-#: admin/class-seo-repair-kit-spam-monitor.php:362
-#: admin/spam-monitor/class-srk-spam-monitor-google-serp-scan.php:849
-msgid "Buy Spam Monitor Module"
-msgstr ""
-
 #: admin/class-seo-repair-kit-spam-monitor.php:369
 msgid "Spam Monitor active"
 msgstr ""
@@ -4369,287 +4371,287 @@ msgstr ""
 msgid "Tab module not available"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:57
+#: admin/class-seo-repair-kit-upgrade-pro.php:56
 msgid "This website is securely connected to your SEO Repair Kit license."
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:60
+#: admin/class-seo-repair-kit-upgrade-pro.php:59
 msgid "The website could not be connected. Confirm that the license key is active for this exact domain."
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:64
+#: admin/class-seo-repair-kit-upgrade-pro.php:63
 msgid "If this website has an eligible paid license, account access instructions were sent to the billing email. Otherwise, please contact SEO Repair Kit support."
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:67
+#: admin/class-seo-repair-kit-upgrade-pro.php:66
 #: includes/class-srk-api-client.php:257
 msgid "We could not request account access right now. Please try again or contact SEO Repair Kit support."
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:106
+#: admin/class-seo-repair-kit-upgrade-pro.php:105
 msgid "SEO Repair Kit Plans"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:107
+#: admin/class-seo-repair-kit-upgrade-pro.php:106
 msgid "Every paid plan includes the complete SEO Repair Kit toolkit. Choose only the number of websites you need."
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:116
+#: admin/class-seo-repair-kit-upgrade-pro.php:115
 msgid "Simple, Flexible SEO Pricing"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:117
+#: admin/class-seo-repair-kit-upgrade-pro.php:116
 msgid "One bundled plan covers WordPress and custom websites from the same website allowance."
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:120
+#: admin/class-seo-repair-kit-upgrade-pro.php:119
 msgid "ALL PAID FEATURES INCLUDED"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:131
+#: admin/class-seo-repair-kit-upgrade-pro.php:130
 msgid "Your license has expired"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:134
-#: admin/class-seo-repair-kit-upgrade-pro.php:147
+#: admin/class-seo-repair-kit-upgrade-pro.php:133
+#: admin/class-seo-repair-kit-upgrade-pro.php:146
 msgid "Renew Now"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:142
+#: admin/class-seo-repair-kit-upgrade-pro.php:141
 msgid "Your license expires today."
 msgstr ""
 
 #. translators: %d: Number of days until the license expires.
-#: admin/class-seo-repair-kit-upgrade-pro.php:144
+#: admin/class-seo-repair-kit-upgrade-pro.php:143
 #, php-format
 msgid "Your license will expire in %d day."
 msgid_plural "Your license will expire in %d days."
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:157
+#: admin/class-seo-repair-kit-upgrade-pro.php:156
 msgid "Upgrade Card"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:161
+#: admin/class-seo-repair-kit-upgrade-pro.php:160
 msgid "Take SEO to the Next Level!"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:162
+#: admin/class-seo-repair-kit-upgrade-pro.php:161
 msgid "Everything you need to grow – in one toolkit."
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:171
+#: admin/class-seo-repair-kit-upgrade-pro.php:170
 msgid "Expired"
 msgstr ""
 
 #. translators: %d: Number of days remaining on the license.
-#: admin/class-seo-repair-kit-upgrade-pro.php:173
+#: admin/class-seo-repair-kit-upgrade-pro.php:172
 #, php-format
 msgid "Active · %d day left"
 msgid_plural "Active · %d days left"
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:181
+#: admin/class-seo-repair-kit-upgrade-pro.php:180
 msgid "SEO Repair Kit plan pricing"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:185
+#: admin/class-seo-repair-kit-upgrade-pro.php:184
 msgid "Plan"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:186
+#: admin/class-seo-repair-kit-upgrade-pro.php:185
 msgid "Websites"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:187
+#: admin/class-seo-repair-kit-upgrade-pro.php:186
 msgid "Access"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:188
+#: admin/class-seo-repair-kit-upgrade-pro.php:187
 msgid "Billing"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:193
+#: admin/class-seo-repair-kit-upgrade-pro.php:192
 msgid "Starter"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:194
+#: admin/class-seo-repair-kit-upgrade-pro.php:193
 msgid "1"
+msgstr ""
+
+#: admin/class-seo-repair-kit-upgrade-pro.php:194
+#: admin/class-seo-repair-kit-upgrade-pro.php:200
+#: admin/class-seo-repair-kit-upgrade-pro.php:206
+#: admin/class-seo-repair-kit-upgrade-pro.php:212
+msgid "Complete SEO toolkit"
 msgstr ""
 
 #: admin/class-seo-repair-kit-upgrade-pro.php:195
 #: admin/class-seo-repair-kit-upgrade-pro.php:201
 #: admin/class-seo-repair-kit-upgrade-pro.php:207
 #: admin/class-seo-repair-kit-upgrade-pro.php:213
-msgid "Complete SEO toolkit"
-msgstr ""
-
-#: admin/class-seo-repair-kit-upgrade-pro.php:196
-#: admin/class-seo-repair-kit-upgrade-pro.php:202
-#: admin/class-seo-repair-kit-upgrade-pro.php:208
-#: admin/class-seo-repair-kit-upgrade-pro.php:214
 msgid "Monthly or yearly"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:199
+#: admin/class-seo-repair-kit-upgrade-pro.php:198
 msgid "Growth"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:200
+#: admin/class-seo-repair-kit-upgrade-pro.php:199
 msgid "10"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:206
+#: admin/class-seo-repair-kit-upgrade-pro.php:205
 msgid "25"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:211
+#: admin/class-seo-repair-kit-upgrade-pro.php:210
 msgid "Agency"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:212
+#: admin/class-seo-repair-kit-upgrade-pro.php:211
 msgid "100"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:224
+#: admin/class-seo-repair-kit-upgrade-pro.php:223
 msgid "Renew License"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:228
-#: admin/class-seo-repair-kit-upgrade-pro.php:251
+#: admin/class-seo-repair-kit-upgrade-pro.php:227
+#: admin/class-seo-repair-kit-upgrade-pro.php:250
 msgid "Manage Plan"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:240
+#: admin/class-seo-repair-kit-upgrade-pro.php:239
 msgid "License Active"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:243
+#: admin/class-seo-repair-kit-upgrade-pro.php:242
 msgid "Expires on"
 msgstr ""
 
 #. translators: %d: Number of days remaining on the license.
-#: admin/class-seo-repair-kit-upgrade-pro.php:246
+#: admin/class-seo-repair-kit-upgrade-pro.php:245
 #, php-format
 msgid "%d day left"
 msgid_plural "%d days left"
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:269
+#: admin/class-seo-repair-kit-upgrade-pro.php:268
 msgid "Choose the plan that fits your workflow"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:270
+#: admin/class-seo-repair-kit-upgrade-pro.php:269
 msgid "Starter, Growth, Pro, and Agency include the same paid tools and scale only by website allowance."
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:278
+#: admin/class-seo-repair-kit-upgrade-pro.php:277
 msgid "Included with every paid plan: detect suspicious indexed URLs, schedule scans, and connect supported SERP providers."
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:286
+#: admin/class-seo-repair-kit-upgrade-pro.php:285
 msgid "Unlimited Broken Links + 404 Monitor"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:287
+#: admin/class-seo-repair-kit-upgrade-pro.php:286
 msgid "Find broken links, check internal and external URLs, monitor 404 errors, view source pages, and keep scan history."
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:296
+#: admin/class-seo-repair-kit-upgrade-pro.php:295
 msgid "Discover contextual link opportunities, index content, review orphan pages, and improve topic paths with editor and AI-assisted suggestions."
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:305
+#: admin/class-seo-repair-kit-upgrade-pro.php:304
 msgid "Create, manage, validate, and deploy structured data without manually writing complex Schema markup."
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:314
+#: admin/class-seo-repair-kit-upgrade-pro.php:313
 msgid "Review SEO health signals, receive alerts, and keep visibility into issues that need attention."
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:322
+#: admin/class-seo-repair-kit-upgrade-pro.php:321
 msgid "Priority Support"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:324
+#: admin/class-seo-repair-kit-upgrade-pro.php:323
 msgid "Need help choosing the right website allowance for your account?"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:334
+#: admin/class-seo-repair-kit-upgrade-pro.php:333
 msgid "License Status"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:339
+#: admin/class-seo-repair-kit-upgrade-pro.php:338
 msgid "Connect this website with your license key"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:343
+#: admin/class-seo-repair-kit-upgrade-pro.php:342
 msgid "Paste license key from My Account"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:347
+#: admin/class-seo-repair-kit-upgrade-pro.php:346
 msgid "Reconnect License"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:348
+#: admin/class-seo-repair-kit-upgrade-pro.php:347
 msgid "Connect License"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:352
+#: admin/class-seo-repair-kit-upgrade-pro.php:351
 msgid "How to connect your paid plan"
 msgstr ""
 
 #. translators: %s: SEO Repair Kit My Account URL.
-#: admin/class-seo-repair-kit-upgrade-pro.php:358
+#: admin/class-seo-repair-kit-upgrade-pro.php:357
 #, php-format
 msgid "Open <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">My Account on seorepairkit.com</a> and sign in to the account used to purchase your paid plan."
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:363
+#: admin/class-seo-repair-kit-upgrade-pro.php:362
 msgid "Find your active paid plan and copy the license key assigned to this website. Make sure the assigned domain matches this website."
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:364
+#: admin/class-seo-repair-kit-upgrade-pro.php:363
 msgid "Paste the key into the field above, then select Connect License. If this website is already connected, select Reconnect License instead."
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:369
+#: admin/class-seo-repair-kit-upgrade-pro.php:368
 msgid "License Key"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:372
+#: admin/class-seo-repair-kit-upgrade-pro.php:371
 msgid "Plan ID"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:378
+#: admin/class-seo-repair-kit-upgrade-pro.php:377
 msgid "Expires At"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:381
+#: admin/class-seo-repair-kit-upgrade-pro.php:380
 msgid "Chatbot Access"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:382
+#: admin/class-seo-repair-kit-upgrade-pro.php:381
 msgid "Not included"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:384
+#: admin/class-seo-repair-kit-upgrade-pro.php:383
 #: admin/spam-monitor/class-seo-repair-kit-spam-monitor-gsc-cleanup.php:290
 msgid "Last Checked"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:385
+#: admin/class-seo-repair-kit-upgrade-pro.php:384
 msgid "Not checked yet"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:387
+#: admin/class-seo-repair-kit-upgrade-pro.php:386
 msgid "Cache Expires"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:388
+#: admin/class-seo-repair-kit-upgrade-pro.php:387
 #: admin/class-seo-repair-kit-weekly-summary.php:253
 #: admin/class-seo-repair-kit-weekly-summary.php:311
 #: admin/class-seo-repair-kit-weekly-summary.php:312
@@ -4666,7 +4668,7 @@ msgstr ""
 msgid "N/A"
 msgstr ""
 
-#: admin/class-seo-repair-kit-upgrade-pro.php:403
+#: admin/class-seo-repair-kit-upgrade-pro.php:402
 msgid "All payments are securely processed through Stripe. You will be redirected to complete your purchase."
 msgstr ""
 

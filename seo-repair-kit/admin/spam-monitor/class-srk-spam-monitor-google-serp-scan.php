@@ -846,7 +846,7 @@ class SeoRepairKit_SpamMonitor_Google_SERP_Scan {
 							<em><?php esc_html_e( 'Data for SEO', 'seo-repair-kit' ); ?></em>
 						</div>
 						<a class="button button-primary srk-serp-provider-lock-cta" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( $subscribe_url ); ?>">
-							<?php esc_html_e( 'Buy Spam Monitor Module', 'seo-repair-kit' ); ?>
+							<?php esc_html_e( 'Upgrade to Pro', 'seo-repair-kit' ); ?>
 						</a>
 					</div>
 				</div>

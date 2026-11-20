@@ -1458,11 +1458,17 @@ class SeoRepairKit_Admin {
         $current_user = wp_get_current_user();
         $admin_name   = esc_html( $current_user->display_name );
         $admin_avatar = esc_url( get_avatar_url( $current_user->ID ) );
+        $license_active = class_exists( 'SRK_License_Helper' ) && SRK_License_Helper::is_license_active();
+        $upgrade_url = 'https://seorepairkit.com/pricing/';
         ?>
         <!-- SRK Admin Navbar -->
         <div class="srkit-gsc-navbar">
             <div class="srkit-gsc-brand">SEO Repair Kit</div>
             <div class="srkit-gsc-user-info">
+                <a class="srk-admin-plan-badge <?php echo $license_active ? 'is-active' : 'is-free'; ?>" href="<?php echo esc_url( $upgrade_url ); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr( $license_active ? __( 'SEO Repair Kit Pro plan active', 'seo-repair-kit' ) : __( 'View SEO Repair Kit Pro plans', 'seo-repair-kit' ) ); ?>">
+                <span>PRO</span>    
+                <svg class="srk-crown-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 18.5 1.8 7.2l5.1 3.8L12 3l5.1 8 5.1-3.8L21 18.5H3Zm.4 2h17.2v1.7H3.4v-1.7Z"/></svg>
+                </a>
                 <div class="srkit-gsc-help-icon">?</div>
                 <div class="srkit-gsc-user-icons">
                     <img src="<?php echo esc_url( $admin_avatar ); ?>" alt="Admin Avatar" class="admin-avatar">
@@ -1471,6 +1477,18 @@ class SeoRepairKit_Admin {
             </div>
         </div>
         <?php
+    }
+
+    /** Add a PRO badge to paid features not enabled on the current site. */
+    private function premium_menu_label( $label, $enabled ) {
+        if ( $enabled ) {
+            return esc_html( $label );
+        }
+
+        return sprintf(
+            '<span class="srk-premium-menu-label">%1$s <span class="srk-premium-menu-badge"><span>PRO</span><svg class="srk-crown-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 18.5 1.8 7.2l5.1 3.8L12 3l5.1 8 5.1-3.8L21 18.5H3Zm.4 2h17.2v1.7H3.4v-1.7Z"/></svg></span></span>',
+            esc_html( $label )
+        );
     }
 
 	/**
@@ -1497,7 +1515,7 @@ class SeoRepairKit_Admin {
 		add_submenu_page(
 			'seo-repair-kit-dashboard',
 			esc_html__( 'Links Manager', 'seo-repair-kit' ),
-			esc_html__( 'Links Manager', 'seo-repair-kit' ),
+			$this->premium_menu_label( __( 'Links Manager', 'seo-repair-kit' ), class_exists( 'SRK_License_Helper' ) && SRK_License_Helper::is_link_scanner_unlimited() ),
 			'manage_options',
 			'seo-repair-kit-link-scanner',
 			array( $this, 'seorepairkit_link_scanner_page' )
@@ -1522,7 +1540,7 @@ class SeoRepairKit_Admin {
         add_submenu_page(
             'seo-repair-kit-dashboard',
             esc_html__( 'Spam Monitor', 'seo-repair-kit' ),
-            esc_html__( 'Spam Monitor', 'seo-repair-kit' ),
+            $this->premium_menu_label( __( 'Spam Monitor', 'seo-repair-kit' ), class_exists( 'SRK_License_Helper' ) && SRK_License_Helper::is_spam_monitor_enabled() ),
             'manage_options',
             'seo-repair-kit-spam-monitor',
             array( $srkit_spam_monitor, 'seorepairkit_spam_monitor_page' )
@@ -1538,7 +1556,7 @@ class SeoRepairKit_Admin {
         add_submenu_page(
             'seo-repair-kit-dashboard',
             esc_html__( 'Internal Linking', 'seo-repair-kit' ),
-            esc_html__( 'Internal Linking', 'seo-repair-kit' ),
+            $this->premium_menu_label( __( 'Internal Linking', 'seo-repair-kit' ), class_exists( 'SRK_License_Helper' ) && SRK_License_Helper::is_internal_linking_enabled() ),
             'manage_options',
             'seo-repair-kit-internal-linking',
             array( $srkit_internal_linking, 'render_admin_page' )
@@ -1568,7 +1586,7 @@ class SeoRepairKit_Admin {
 		add_submenu_page(
 			'seo-repair-kit-dashboard',
 			esc_html__( 'Schema Manager', 'seo-repair-kit' ),
-			esc_html__( 'Schema Manager', 'seo-repair-kit' ),
+			$this->premium_menu_label( __( 'Schema Manager', 'seo-repair-kit' ), class_exists( 'SRK_License_Helper' ) && SRK_License_Helper::is_schema_manager_enabled() ),
 			'manage_options',
 			'srk-schema-manager',
 			[ new SeoRepairKit_SchemaManager(), 'seo_repair_kit_schema_page' ]
@@ -1644,8 +1662,8 @@ class SeoRepairKit_Admin {
         $srkit_chatbot = new SeoRepairKit_Chatbot();
         add_submenu_page(
             'seo-repair-kit-dashboard',
-            esc_html__('AI Chatbot', 'seo-repair-kit'),
-            esc_html__('AI Chatbot', 'seo-repair-kit'),
+            esc_html__( 'AI Chatbot', 'seo-repair-kit' ),
+            $this->premium_menu_label( __( 'AI Chatbot', 'seo-repair-kit' ), class_exists( 'SRK_License_Helper' ) && SRK_License_Helper::is_feature_enabled( SRK_License_Helper::FEATURE_AI_CHATBOT ) ),
             'manage_options',
             'srk-ai-chatbot',
             array($srkit_chatbot, 'render_chatbot_page')
@@ -1675,7 +1693,7 @@ class SeoRepairKit_Admin {
 		add_submenu_page(
 			'seo-repair-kit-dashboard',
 			esc_html__( 'Upgrade to Pro', 'seo-repair-kit' ),
-			esc_html__( 'Upgrade to Pro', 'seo-repair-kit' ),
+			'<span class="srk-upgrade-menu-label">' . esc_html__( 'Upgrade to Pro', 'seo-repair-kit' ) . ' <svg class="srk-crown-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 18.5 1.8 7.2l5.1 3.8L12 3l5.1 8 5.1-3.8L21 18.5H3Zm.4 2h17.2v1.7H3.4v-1.7Z"/></svg></span>',
 			'manage_options',
 			'seo-repair-kit-upgrade-pro',
 			array( $srkit_srkupgradepage, 'seo_repair_kit_upgrade_pro' )

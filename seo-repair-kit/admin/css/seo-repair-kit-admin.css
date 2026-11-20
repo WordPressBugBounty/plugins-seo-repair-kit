@@ -120,7 +120,6 @@ body[class*="seo-repair-kit"] #wpbody-content {
 }
 
 .srkit-gsc-help-icon {
-  margin-right: -10px;
   font-size: 20px;
   cursor: pointer;
   border-radius: 50%;
@@ -129,7 +128,6 @@ body[class*="seo-repair-kit"] #wpbody-content {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 20px;
   background-color: #FFFAF1;
 }
 
@@ -279,3 +277,25 @@ body[class*="seo-repair-kit"] #wpbody-content {
 }
 
 /*overview table style end here*/
+
+.srkit-gsc-navbar .srk-admin-plan-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-right: 12px;
+  padding: 6px 10px;
+  border-radius: 16px;
+  color: #F28500;
+  background: #FFF3E0;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+}
+.srkit-gsc-navbar .srk-admin-plan-badge.is-active { color: #16733C; background: #E7F6EC; }
+.srk-crown-icon { display: inline-block; width: 14px; height: 14px; fill: currentColor; vertical-align: -2px; }
+.srk-premium-menu-label, .srk-premium-menu-badge, .srk-upgrade-menu-label { display: inline-flex; align-items: center; }
+.srk-premium-menu-badge { gap: 2px; margin-left: 5px; padding: 2px 5px; border-radius: 9px; color: #fff; background: #5A45D6; font-size: 9px; font-weight: 700; line-height: 1.2; }
+.srk-premium-menu-badge .srk-crown-icon { width: 10px; height: 10px; }
+#adminmenu .srk-upgrade-menu-label, #adminmenu .srk-upgrade-menu-label .srk-crown-icon { color: #F28500; font-weight: 700; gap: 5px; }
+#adminmenu li:hover > a .srk-upgrade-menu-label, #adminmenu li.current > a .srk-upgrade-menu-label, #adminmenu li.wp-has-current-submenu > a .srk-upgrade-menu-label { color: #fff; }

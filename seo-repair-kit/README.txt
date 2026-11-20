@@ -3,10 +3,10 @@ Contributors: torontodigits
 Donate link: https://seorepairkit.com/
 Tags: SEO, 301 redirect, internal linking, schema markup, 404 monitor, spam monitor, meta manager, broken link
 Requires at least: 5.0.0
-Tested up to: 7.1.4
+Tested up to: 7.1.5
 Requires PHP: 7.4.3
-Stable tag: 2.1.14
-Release Date: 16-11-2026
+Stable tag: 2.1.15
+Release Date: 20-11-2026
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -133,21 +133,20 @@ Custom SERP-provider connections and other advanced Spam Monitor capabilities ar
 
 == Changelog ==
 
+= 2.1.15 =
+* Added license-aware PRO and crown markers to Links Manager and other paid admin menu items.
+* Added a plan-status badge to the SEO Repair Kit admin header.
+* Updated Upgrade to Pro calls to action to link to the public pricing page.
+
 = 2.1.14 =
 * Restored the established plugin-data and status reporting flow for free and legacy installations.
 * Kept site-specific signed reporting for connected paid installations while preserving compatibility with previously released plugin versions.
 * Kept paid license validation protected by per-installation credentials; compatibility reporting cannot grant premium access.
 
-= 2.1.13 =
-* Deferred automatic scan scheduling and translation loading until init to prevent early text-domain notices on WordPress 6.7 and later.
-* Updated the translation template for 2.1.13, clarified placeholder context for translators, and numbered robots.txt validation placeholders so translations can reorder them safely.
-* Made Bot Manager editor hints extractable for translation and added singular/plural license-expiry messages.
-* Added per-installation credentials and signed CRM requests for license validation and plugin status reporting.
-* Added automatic credential migration for sites with a saved license key and a manual Reconnect License flow for other paid sites.
-* Replaced feature-by-feature upgrade messaging with unified Starter, Growth, Pro, and Agency plans based on website allowance.
-* Clarified that every paid plan includes the complete SEO Repair Kit toolkit, including Spam Monitor, Internal Linking, Schema Manager, and unlimited link scanning.
-
 == Upgrade Notice ==
+
+= 2.1.15 =
+Highlights premium features in the WordPress admin, directs upgrade actions to the SEO Repair Kit pricing page, and includes compatibility testing with WordPress version 7.1.5.
 
 = 2.1.14 =
 Restores free and legacy installation reporting compatibility while keeping paid license validation and connected-site reporting securely signed.

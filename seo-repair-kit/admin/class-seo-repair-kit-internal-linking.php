@@ -678,7 +678,7 @@ class SeoRepairKit_InternalLinking {
 				<p><?php esc_html_e( 'Your existing Internal Linking data and already inserted links are preserved.', 'seo-repair-kit' ); ?></p>
 				<p>
 					<a class="button button-primary" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( $subscribe_url ); ?>">
-						<?php esc_html_e( 'Upgrade Internal Linking', 'seo-repair-kit' ); ?>
+						<?php esc_html_e( 'Upgrade to Pro', 'seo-repair-kit' ); ?>
 					</a>
 				</p>
 				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">

@@ -73,7 +73,7 @@ class SeoRepairKit_Dashboard {
 		$onboarding_setup      = get_option( 'srk_setup', array() );
 		$onboarding_completed  = ! empty( $onboarding_setup['completed'] );
 
-		// License / plan information for "Your Plan" widget.
+		// License / plan information for "Your Current Plan" widget.
 		$license_active   = class_exists( 'SRK_License_Helper' ) ? SRK_License_Helper::is_license_active() : false;
 		$plan_label       = $license_active ? esc_html__( 'Pro Plan', 'seo-repair-kit' ) : esc_html__( 'Free Plan', 'seo-repair-kit' );
 		$plan_status      = $license_active ? esc_html__( 'License active', 'seo-repair-kit' ) : esc_html__( 'Upgrade to unlock all features', 'seo-repair-kit' );
@@ -147,6 +147,7 @@ class SeoRepairKit_Dashboard {
             <div class="srk-dashboard-container">
                 <!-- Main Content Area (Left) -->
                 <div class="srk-dashboard-main">
+					
                     <!-- Site SEO Analysis Section -->
                     <div class="srk-seo-analysis-card">
                         <div class="srk-seo-analysis-header">
@@ -156,7 +157,7 @@ class SeoRepairKit_Dashboard {
                                 <?php esc_html_e( 'Re-check Status', 'seo-repair-kit' ); ?>
                             </button>
                         </div>
-                        
+
                         <?php if ( ! empty( $seo_issues ) ) : ?>
                             <div class="srk-seo-issues-table">
                                 <table class="srk-issues-table">
@@ -201,8 +202,9 @@ class SeoRepairKit_Dashboard {
                         <?php endif; ?>
                     </div>
 
-					<!-- Summary Widgets -->
-					<div class="srk-summary-grid">
+                    <!-- Summary Widgets -->
+                     
+                    <div class="srk-summary-grid">
 						<!-- Your Plan Widget -->
 						<div class="srk-summary-card srk-summary-plan <?php echo $license_active ? 'srk-plan-card-pro' : 'srk-plan-card-free'; ?>">
 							<div class="srk-plan-card-head">
@@ -210,7 +212,7 @@ class SeoRepairKit_Dashboard {
 									<span class="dashicons <?php echo $license_active ? 'dashicons-awards' : 'dashicons-lock'; ?>"></span>
 								</div>
 								<div>
-									<h4 class="srk-summary-title"><?php esc_html_e( 'Your Plan', 'seo-repair-kit' ); ?></h4>
+									<h4 class="srk-summary-title"><?php esc_html_e( 'Your Current Plan', 'seo-repair-kit' ); ?></h4>
 									<div class="srk-plan-pill <?php echo $license_active ? 'srk-plan-pill-pro' : 'srk-plan-pill-free'; ?>">
 										<span class="srk-plan-dot"></span>
 										<span><?php echo esc_html( $plan_label ); ?></span>
@@ -264,6 +266,7 @@ class SeoRepairKit_Dashboard {
 							</div>
 						</div>
 					</div>
+
                 </div>
 
                 <!-- Sidebar (Right) -->

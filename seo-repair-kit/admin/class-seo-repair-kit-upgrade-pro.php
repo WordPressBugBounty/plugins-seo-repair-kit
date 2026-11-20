@@ -42,7 +42,6 @@ class SeoRepairKit_Upgrade {
         // ─────────────────────────────────────────────────────────────────────
         // License cache controls (unchanged core behavior)
         // ─────────────────────────────────────────────────────────────────────
-        $domain     = site_url();
         $message    = '';
         $status     = isset( $_GET['srk_license_refresh'] ) ? sanitize_key( wp_unslash( $_GET['srk_license_refresh'] ) ) : '';
         $connection_status = isset( $_GET['srk_connection'] ) ? sanitize_key( wp_unslash( $_GET['srk_connection'] ) ) : '';
@@ -99,7 +98,7 @@ class SeoRepairKit_Upgrade {
         $is_expired         = ( $expires_ts && $days_left !== null && $days_left < 0 );
 
         // Build subscribe URL (kept as-is – change if you move your CRM host)
-        $subscribe_url = SRK_API_Client::get_api_url( SRK_API_Client::ENDPOINT_SUBSCRIBE, [ 'domain' => $domain ] );
+        $subscribe_url = 'https://seorepairkit.com/pricing/';
 
         ?>
         <div class="wrap srk-upgrade-wrap">
@@ -221,7 +220,7 @@ class SeoRepairKit_Upgrade {
                     <div class="srk-cta-footer">
                         <?php if ( $license_status !== 'active' || $is_expired ) : ?>
                             <a class="srk-btn srk-btn-primary" target="_blank" href="<?php echo esc_url( $subscribe_url ); ?>">
-                                <?php echo $is_expired ? esc_html__( 'Renew License', 'seo-repair-kit' ) : esc_html__( 'View Plans', 'seo-repair-kit' ); ?>
+                                <?php echo $is_expired ? esc_html__( 'Renew License', 'seo-repair-kit' ) : esc_html__( 'Upgrade to Pro', 'seo-repair-kit' ); ?>
                             </a>
                             <?php if ( 'active' === $license_status && ! $is_expired ) : ?>
                                 <a class="srk-btn srk-btn-secondary" target="_blank" href="<?php echo esc_url( $subscribe_url ); ?>">
